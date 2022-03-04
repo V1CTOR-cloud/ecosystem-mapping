@@ -1,0 +1,15 @@
+{
+    "location": [
+        { "id": 1, "name": "New York" },
+        { "id": 2, "name": "Paris"},
+        { "id": 3, "name": "Delhi"},
+        { "id": 4, "name": "Mumbai"},
+        { "id": 5, "name": "Pune"},
+        { "id": 6, "name": "New York" },
+        { "id": 7, "name": "Paris"},
+        { "id": 8, "name": "Delhi"},
+        { "id": 9, "name": "Mumbai"},
+        { "id": 10, "name": "Pune"}
+    ]
+    
+}
