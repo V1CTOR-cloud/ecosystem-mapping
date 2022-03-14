@@ -13,7 +13,7 @@ import {
 import { useHistory, useParams, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { Sidebar } from "components/miscellaneousComponents/Sidebar";
+import SideBar from "components/miscellaneousComponents/SideBar";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
 import UserRightTopBar from "components/miscellaneousComponents/UserRightTopbar";
@@ -180,7 +180,7 @@ const HomePage = () => {
 
   return (
     <div className="body-bg">
-      <Sidebar items={item} />
+      <SideBar items={item} />
       <div className="v-stack">
         <VStack style={{ height: "inherit" }} spacing={"16px"} align="stretch">
           <Box justifyContent="center" className="first-stack" w="100%">
