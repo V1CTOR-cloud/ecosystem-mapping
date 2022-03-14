@@ -1,40 +1,147 @@
-import React from "react";
-import { Sidebar } from "components/miscellaneousComponents/Sidebar";
+import React, { useEffect, useState } from "react";
+
 import {
   Box,
-  VStack,
   Grid,
   GridItem,
   Image,
+  Select,
+  useToast,
+  VStack,
   WrapItem,
-  Select
 } from "@chakra-ui/react";
-import AddServiceModal from "components/serviceComponents/AddServiceModal";
+import { useHistory, useParams, withRouter } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+import { Sidebar } from "components/miscellaneousComponents/Sidebar";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
-import imgLocation from "../assets/images/location 2.png";
+import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
+import UserRightTopBar from "components/miscellaneousComponents/UserRightTopbar";
+import AddServiceModal from "components/serviceComponents/AddServiceModal";
 import ServiceFilter from "components/serviceComponents/ServiceFilter";
-import { useEffect } from "react";
+import { ServiceMap } from "components/serviceMapComponents/serviceMap";
 import Service from "service/EcosystemMapServices";
 import ServiceRegion from "service/RegionServices";
-import { useState } from "react";
-import { ServiceMap } from "components/serviceMapComponents/serviceMap";
-import { UserRightTopbar } from "../components/miscellaneousComponents/UserRightTopbar";
-import { useHistory, withRouter ,useParams} from "react-router-dom";
-import { useToast } from "@chakra-ui/react";
-import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import { useTranslation } from 'react-i18next';
+import imgLocation from "../assets/images/location 2.png";
 
-const HomePage = ({ location }) => { 
+const HomePage = () => {
   const { t } = useTranslation();
+  const { serviceId } = useParams();
   const toast = useToast();
-  const { serviceId }= useParams();
-  const {replace} = useHistory()
-  const [item, setItem] = useState([]);
-  const [maplist, setMaplist] = useState([]);
-  const [mapName, setMapName] = useState({});
-  const [filter,setFilter]=useState({})
   const history = useHistory();
-  const [tempService,setTempService]=useState([])
+
+  const [item, setItem] = useState([]);
+  const [mapList, setMapList] = useState([]);
+  const [mapName, setMapName] = useState({});
+  const [filter, setFilter] = useState({});
+  const [tempService, setTempService] = useState([]);
+
+  const handleServiceCategoryValCallback = () => {
+    const filteredData = handleFilterByMultipleColumns(item, filter);
+    setItem(filteredData);
+  };
+
+  const handleFilterValuesCallback = (key, value) => {
+    filter[key] = value;
+    setFilter(filter);
+  };
+
+  const handleClearFilter = () => {
+    getService(mapName.id);
+    setFilter({});
+  };
+
+  const handleMapChange = (e) => {
+    const { value } = e.target;
+    const selectedMap = mapList.find((map) => map.id === value);
+    if (selectedMap) {
+      setMapName(selectedMap);
+      history.replace("/services/" + value);
+    }
+    if (
+      value === t("startup.landing.page.header.user.profile.menu.list.map.text")
+    ) {
+      history.push("/ecosystemmap");
+    }
+  };
+
+  const handleCreateNewService = (data) => {
+    Service.pushService(data).then((res) => {
+      getService(mapName.id);
+      if (res.message !== undefined) {
+        getToast();
+      }
+    });
+  };
+
+  const handleFilterByMultipleColumns = (items, filterCriteria) => {
+    let result = tempService;
+
+    Object.keys(filterCriteria).forEach((criteria) => {
+      switch (criteria) {
+        case "serviceName":
+          result =
+            filterCriteria.serviceName !== ""
+              ? result.filter((i) =>
+                  i.serviceName
+                    .toLowerCase()
+                    .includes(filterCriteria.serviceName.toLowerCase())
+                )
+              : result;
+          break;
+        case "location":
+          result = filterCriteria.location
+            ? result.filter(
+                (item) =>
+                  (filterCriteria.location.onlineService ===
+                    item.onlineService ||
+                    filterCriteria.location.offlineSerivce ===
+                      item.offlineSerivce) &&
+                  item.serviceLocation !== ""
+              )
+            : result;
+          break;
+        case "serviceFocus":
+          result =
+            filterCriteria.serviceFocus.length > 0
+              ? result.filter((i) =>
+                  filterCriteria.serviceFocus.includes(i.serviceFocus)
+                )
+              : result;
+          break;
+        case "serviceStatus":
+          result =
+            filterCriteria.serviceStatus.length > 0
+              ? result.filter((i) =>
+                  filterCriteria.serviceStatus.includes(i.serviceStatus)
+                )
+              : result;
+          break;
+        case "applicationType":
+          result =
+            filterCriteria.applicationType.length > 0
+              ? result.filter((i) =>
+                  filterCriteria.applicationType.includes(i.applicationType)
+                )
+              : result;
+          break;
+        case "phase":
+          result = result.filter(
+            (i) =>
+              ConverterSDP.getPoint(i.fromPhase) >=
+                ConverterSDP.getPoint(filterCriteria.phase.fromPhase) &&
+              ConverterSDP.getPoint(i.toPhase) <=
+                ConverterSDP.getPoint(filterCriteria.phase.toPhase)
+          );
+          break;
+        default:
+          result = tempService;
+          break;
+      }
+    });
+    return result;
+  };
+
   const getService = (mapID) => {
     Service.getServicesList(mapID).then((res) => {
       setItem(res);
@@ -42,10 +149,10 @@ const HomePage = ({ location }) => {
     });
   };
 
-  const callToast = () => {
+  const getToast = () => {
     toast({
-      title: (t('startup.toast.service.name.error')),
-      description: (t('startup.toast.service.name.message')),
+      title: t("startup.toast.service.name.error"),
+      description: t("startup.toast.service.name.message"),
       status: "error",
       position: "top-right",
       duration: 9000,
@@ -53,153 +160,24 @@ const HomePage = ({ location }) => {
     });
   };
 
-  // useEffect(() => {
-  //   //fetchAllEcoMaps();
-  //   if (location && location.state) {
-  //     setMapName(location.state.mapName);
-  //   }
-  //   // if(serviceId){
-  //   //   debugger
-  //   //  const selectedService = maplist.find((map)=>map.id==serviceId)
-  //   //   if(selectedService){
-  //   //     setMapName(selectedService.name);
-
-  //   //   }
-  //   // }
-  // }, [location]);
-
   useEffect(() => {
     ServiceRegion.getAllEcoMap().then((res) => {
-      setMaplist(res);
-      if(serviceId && res.length>0){
-       const selectedService = res.find((map)=>map.id===serviceId)
-        if(selectedService){
+      setMapList(res);
+      if (serviceId && res.length > 0) {
+        const selectedService = res.find((map) => map.id === serviceId);
+        if (selectedService) {
           setMapName(selectedService);
         }
       }
     });
-  //  getService(mapName.id); 
   }, [serviceId]);
 
-  useEffect(()=>{
-    if(mapName){
+  useEffect(() => {
+    if (mapName) {
       getService(mapName.id);
     }
-  },[mapName])
+  }, [mapName]);
 
-  const filterByMultipleColumns=(items, filterCriteria)=> {
-   
-    let result=tempService
-    // tempService.forEach((item)=>{
-    //   Object.keys(filterCriteria).forEach((criteria)=>{
-       
-    //     if(typeof filterCriteria[criteria]==='boolean'){
-    //       if(item[criteria]===filterCriteria[criteria]){
-    //         result.add(item)
-    //       }
-    //     }
-    //     else{
-    //       if(item[criteria].includes(filterCriteria[criteria])){
-    //         result.add(item)
-    //       }
-    //     }
-    //   })
-    // })
-
-    Object.keys(filterCriteria).forEach((criteria)=>{
-      switch(criteria){
-        case "serviceName":
-        result= filterCriteria.serviceName!=="" ? result.filter((i)=>i.serviceName.toLowerCase().includes(filterCriteria.serviceName.toLowerCase())) : result
-        break;
-        // case "onlineService":
-        //   result=result.filter((i)=>i.onlineService===filterCriteria.onlineService)
-        // break;
-        // case "offlineSerivce":
-        //   result=result.filter((i)=>i.offlineSerivce===filterCriteria.offlineSerivce)
-        // break;
-        case "location":
-          result = filterCriteria.location ?  result.filter((item)=> ( filterCriteria.location.onlineService===item.onlineService || filterCriteria.location.offlineSerivce===item.offlineSerivce ) && ( item.serviceLocation !== "") ): result
-          break;
-        case "serviceFocus":
-          result= filterCriteria.serviceFocus.length>0 ? result.filter((i)=>filterCriteria.serviceFocus.includes(i.serviceFocus)) : result
-        break;
-        case "serviceStatus":
-          result= filterCriteria.serviceStatus.length>0 ? result.filter((i)=>filterCriteria.serviceStatus.includes(i.serviceStatus)) : result
-        break;
-        case "applicationType":
-          result= filterCriteria.applicationType.length > 0 ? result.filter((i)=>filterCriteria.applicationType.includes(i.applicationType)) : result
-        break;
-        case "phase":
-        result = result.filter((i)=>ConverterSDP.getPoint(i.fromPhase) >= ConverterSDP.getPoint(filterCriteria.phase.fromPhase) &&  ConverterSDP.getPoint(i.toPhase) <= ConverterSDP.getPoint(filterCriteria.phase.toPhase) )
-        break;
-        default:
-          result=tempService
-        break;
-      }
-    })
-  return result;
-  }
-
-  const ServiceCategoryVal = (val) => {
-      var filteredData = filterByMultipleColumns(item, filter);
-      setItem(filteredData);
-  };
-
-  const ServiceCategorySDPVal = (phase) => {
-    // Service.getServicesListBySDPFilter(phase).then((res) => {
-    //   let items = [];
-    //   items = res;
-    //   setItem(items);
-    // });
-  };
-
-  const clearFilter = () => {
-    getService(mapName.id);
-    setFilter({});
-  };
-  // const fetchAllEcoMaps = () => {
-  //   ServiceRegion.getAllEcoMap().then((res) => {
-  //     setMaplist(res);
-  //     if(serviceId && res.length>0){
-  //      const selectedService = res.find((map)=>map.id===serviceId)
-  //       if(selectedService){
-  //         setMapName(selectedService);
-  //       }
-  //     }
-  //   });
-  // };
-  const handleChanged = (e) => {
-    const { value } = e.target;
-    const selectedMap = maplist.find((map)=>map.id===value)
-        if(selectedMap){
-          setMapName(selectedMap);
-          replace("/services/"+value);
-        }
-        if(value === (t('startup.landing.page.header.user.profile.menu.list.map.text'))){
-          history.push("/ecosystemmap")
-        }
-   // sessionStorage.setItem("ecomapid", value)
-  //  getService(value);  
-  }
-  const createNewService=(data)=>{
- Service.pushService(data).then((res) => {
-      // setBasicInfo(["", "", "", ""]);
-      // setRes(true);
-      // sendData(true)
-      // setTimeout(() => {
-      //   onOpen(false);
-      //   onClose(true);
-      // }, 1000);
-      getService(mapName.id)
-      if (res.message !== undefined) {
-        callToast();
-      }
-    });
-  }
-  const filterValuesCallback=(key,value)=>{
-    filter[key]=value
-    setFilter(filter)
-  }
   return (
     <div className="body-bg">
       <Sidebar items={item} />
@@ -226,22 +204,24 @@ const HomePage = ({ location }) => {
                 <Select
                   value={mapName.id}
                   width="100%"
-                  onChange={(e) => handleChanged(e)}
-                  // placeholder={mapName.name}
+                  onChange={(e) => handleMapChange(e)}
                 >
-                  {maplist.map((result) => (
+                  {mapList.map((result) => (
                     <option value={result.id}>{result.name}</option>
                   ))}
-                  <option disabled="disabled"> ------------------------------------ </option>
- 
-                  <option>{t('startup.landing.page.header.user.profile.menu.list.map.text')}</option>
+                  <option disabled="disabled">
+                    {" "}
+                    ------------------------------------
+                  </option>
+                  <option>
+                    {t(
+                      "startup.landing.page.header.user.profile.menu.list.map.text"
+                    )}
+                  </option>
                 </Select>
-                {/* <Text className="nb-hdr check-text">
-                  {props.location.state.mapName}
-                </Text> */}
               </GridItem>
               <GridItem colStart={5} colEnd={9}>
-              <AddMapModal isHome={true}/>
+                <AddMapModal isHome={true} />
               </GridItem>
               <GridItem colStart={9} colEnd={11}>
                 <AddServiceModal
@@ -253,36 +233,31 @@ const HomePage = ({ location }) => {
                     }
                   }}
                   mapId={mapName.id}
-                  createNewServiceCallback={createNewService}
+                  createNewServiceCallback={handleCreateNewService}
                 />
               </GridItem>
-              
               <GridItem colStart={11} colEnd={13}>
                 <WrapItem float={"right"} display="flex">
                   <ServiceFilter
-                    clearFilter={() => {
-                      clearFilter();
+                    onClearFilter={() => {
+                      handleClearFilter();
                     }}
-                    ServiceCategoryVal={(name) => {
-                      ServiceCategoryVal(name);
+                    onServiceCategoryValCallback={(name) => {
+                      handleServiceCategoryValCallback(name);
                     }}
-                    ServiceCategorySDPVal={(renge) => {
-                      ServiceCategorySDPVal(renge);
-                    }}
-                    filterValuesCallback={filterValuesCallback}
+                    onFilterValuesCallback={handleFilterValuesCallback}
                     filterCriteria={filter}
                   />
-                  <div className="divider"></div>
+                  <div className="divider" />
                 </WrapItem>
               </GridItem>
-
               <GridItem colStart={14} colEnd={15}>
-                <UserRightTopbar />
+                <UserRightTopBar />
               </GridItem>
             </Grid>
           </Box>
           <Box className="first-stack" h="100%" w="100%">
-            <ServiceMap reloadServices={(id)=>getService(id)} data={item} />
+            <ServiceMap reloadServices={(id) => getService(id)} data={item} />
           </Box>
         </VStack>
       </div>
