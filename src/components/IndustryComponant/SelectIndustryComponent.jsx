@@ -2,7 +2,7 @@ import React from "react";
 
 import { Box, Select } from "@chakra-ui/react";
 
-const IndustrySelectComponent = (props) => {
+const SelectIndustryComponent = (props) => {
   return (
     <Box>
       {props.data && (
@@ -29,4 +29,4 @@ const IndustrySelectComponent = (props) => {
   );
 };
 
-export default IndustrySelectComponent;
+export default SelectIndustryComponent;
