@@ -1,28 +1,32 @@
-import React from 'react'
-import { Select, Box } from "@chakra-ui/react";
+import React from "react";
+
+import { Box, Select } from "@chakra-ui/react";
 
 const IndustrySelectComponent = (props) => {
-    return (
-        <Box>
-      {props.data &&
-        <Select size='sm'
-          disabled={props.data.length > 0 ? false : true}
+  return (
+    <Box>
+      {props.data && (
+        <Select
+          size="sm"
+          disabled={props.data.length <= 0}
           placeholder={"Select Industry"}
           value={props.industry}
-          onChange={(e)=>{props.selectedIndustry(e.target.value)}}
+          onChange={(e) => {
+            props.selectedIndustry(e.target.value);
+          }}
         >
-          { props.data.length > 0 &&
-            props.data.map((industrie, key) => {
+          {props.data.length > 0 &&
+            props.data.map((industry, key) => {
               return (
-                <option value={industrie.industryName} key={key}>
-                  {industrie.industryName}
+                <option value={industry.industryName} key={key}>
+                  {industry.industryName}
                 </option>
               );
             })}
         </Select>
-      }
-      </Box> 
-    )
-}
+      )}
+    </Box>
+  );
+};
 
-export { IndustrySelectComponent }
+export default IndustrySelectComponent;
