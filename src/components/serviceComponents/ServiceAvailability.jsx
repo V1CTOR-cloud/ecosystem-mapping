@@ -12,7 +12,7 @@ import SelectDate from "components/microComponents/SelectDate";
 import SelectTime from "components/microComponents/SelectTime";
 import { LocationMap } from "./LocationMap";
 import { Stack } from "@chakra-ui/react";
-import { TimezoneComponent } from "components/microComponents/TimeZoneComponenet";
+import TimezoneComponent from "components/microComponents/TimeZoneComponenet";
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 //import { MultiInput } from "components/microComponents/MultiStackInput";
@@ -400,4 +400,4 @@ const ServiceAvailability = ({
   );
 };
 
-export {ServiceAvailability};
+export { ServiceAvailability };
