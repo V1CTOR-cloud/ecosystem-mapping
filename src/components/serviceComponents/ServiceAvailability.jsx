@@ -14,7 +14,7 @@ import { LocationMap } from "./LocationMap";
 import { Stack } from "@chakra-ui/react";
 import { TimezoneComponent } from "components/microComponents/TimeZoneComponenet";
 import { useState, useEffect, useMemo } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 //import { MultiInput } from "components/microComponents/MultiStackInput";
 
 const ServiceAvailability = ({
@@ -67,10 +67,8 @@ const ServiceAvailability = ({
       setOnline(dataS.onlineService);
       setVenue(dataS.offlineSerivce);
       setServiceLocation(dataS.serviceLocation);
-      if(dataS.onlineService)
-      setVal("Online");
-      if(dataS.offlineSerivce)
-      setVal("Venue");
+      if (dataS.onlineService) setVal("Online");
+      if (dataS.offlineSerivce) setVal("Venue");
       //setMultiInput(dataS.multi);
     }
   }, [dataS, isEdit]);
@@ -120,7 +118,9 @@ const ServiceAvailability = ({
       >
         <Box>
           <FormControl>
-            <FormLabel className="frm-lbl">{t('startup.popup.service.details.content.service.starts')}</FormLabel>
+            <FormLabel className="frm-lbl">
+              {t("startup.popup.service.details.content.service.starts")}
+            </FormLabel>
             <SelectDate
               IsEdit={isEdit}
               date={serviceStartDate}
@@ -144,7 +144,9 @@ const ServiceAvailability = ({
 
         <Box>
           <FormControl>
-            <FormLabel className="frm-lbl">{t('startup.popup.service.details.content.start.time')}</FormLabel>
+            <FormLabel className="frm-lbl">
+              {t("startup.popup.service.details.content.start.time")}
+            </FormLabel>
             <SelectTime
               getTime={(e) => {
                 setServiceStartTime(e);
@@ -165,7 +167,9 @@ const ServiceAvailability = ({
         </Box>
         <Box>
           <FormControl>
-            <FormLabel className="frm-lbl">{t('startup.popup.service.details.content.service.ends')}</FormLabel>
+            <FormLabel className="frm-lbl">
+              {t("startup.popup.service.details.content.service.ends")}
+            </FormLabel>
             {/* <SelectDate
               IsEdit={isEdit}
               enddateval={serviceEndDate}
@@ -202,7 +206,7 @@ const ServiceAvailability = ({
                 //   multiInput: multiInput,
                 // });
               }}
-              validationdate={serviceStartDate}
+              validationDate={serviceStartDate}
               className="fm-ip-flds"
             />
           </FormControl>
@@ -210,7 +214,9 @@ const ServiceAvailability = ({
 
         <Box>
           <FormControl>
-            <FormLabel className="frm-lbl">{t('startup.popup.service.details.content.end.time')}</FormLabel>
+            <FormLabel className="frm-lbl">
+              {t("startup.popup.service.details.content.end.time")}
+            </FormLabel>
             <SelectTime
               getTime={(e) => {
                 setServiceEndTime(e);
@@ -233,7 +239,9 @@ const ServiceAvailability = ({
       </Grid>
 
       <FormControl>
-        <FormLabel className="frm-lbl">{t('startup.popup.service.details.content.timezone')}</FormLabel>
+        <FormLabel className="frm-lbl">
+          {t("startup.popup.service.details.content.timezone")}
+        </FormLabel>
         {/* <LocationDropdown className="fm-ip-flds" /> */}
         <TimezoneComponent
           data={dataS && dataS.timezone ? dataS.timezone : timeZone}
@@ -255,20 +263,24 @@ const ServiceAvailability = ({
       </FormControl>
 
       <FormControl mt={4}>
-        <FormLabel className="frm-lbl">{t('startup.popup.filter.location')}</FormLabel>
+        <FormLabel className="frm-lbl">
+          {t("startup.popup.filter.location")}
+        </FormLabel>
         <HStack spacing={10} display="grid" direction="row">
           <Stack className="d-grid" direction="row">
             <Box display="inline-flex" className="pd-radio">
               <RadioGroup
                 value={val}
                 onChange={(e) => {
-                  handleChange(e)
+                  handleChange(e);
                 }}
                 w="100%"
               >
                 <Box pb="10px">
                   <Flex>
-                    <Radio value="Online">{t('startup.popup.service.details.content.online')}</Radio>
+                    <Radio value="Online">
+                      {t("startup.popup.service.details.content.online")}
+                    </Radio>
                     <Box ml="30px" w="70%">
                       {val === "Online" && (
                         <Input
@@ -287,7 +299,9 @@ const ServiceAvailability = ({
                 </Box>
                 <Box>
                   <Flex>
-                    <Radio value="Venue">{t('startup.popup.service.details.content.venue')}</Radio>
+                    <Radio value="Venue">
+                      {t("startup.popup.service.details.content.venue")}
+                    </Radio>
                     <Box ml="30px" w="70%">
                       {val === "Venue" && (
                         <Input
@@ -386,4 +400,4 @@ const ServiceAvailability = ({
   );
 };
 
-export { ServiceAvailability };
+export {ServiceAvailability};
