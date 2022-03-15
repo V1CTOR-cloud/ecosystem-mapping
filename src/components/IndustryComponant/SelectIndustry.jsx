@@ -1,5 +1,7 @@
 import React from "react";
+
 import { SimpleGrid } from "@chakra-ui/react";
+
 import IndustrySelectComponent from "./IndustrySelectComponent";
 import { SubIndustryselectComponent } from "./SubIndustryselectComponent";
 
@@ -12,11 +14,12 @@ const SelectIndustry = (props) => {
         selectedIndustry={(s) => props.createMapCallback("industry", s)}
       />
       <SubIndustryselectComponent
-        data={props.subindustries}
+        data={props.subIndustries}
         subIndustry={props.locationData.subIndustry}
-        selectedSubindustries={(s) => props.createMapCallback("subIndustry", s)}
+        selectedSubIndustry={(s) => props.createMapCallback("subIndustry", s)}
       />
     </SimpleGrid>
   );
 };
-export { SelectIndustry };
+
+export default SelectIndustry;
