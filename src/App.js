@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ChakraProvider, Box, Grid, theme } from "@chakra-ui/react";
 import LandingPage from "./pages/LandingPage";
 import HomePage from "./pages/HomePage";
-import { Sandbox } from "./pages/Sandbox";
+import Sandbox from "./pages/Sandbox";
 import ListMapPage from "./pages/ListMapPage";
 import {
   BrowserRouter as Router,
