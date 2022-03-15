@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import SideBar from "components/miscellaneousComponents/SideBar";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import UserRightTopBar from "components/miscellaneousComponents/UserRightTopbar";
+import UserRightTopBar from "components/miscellaneousComponents/UserRightTopBar";
 import AddServiceModal from "components/serviceComponents/AddServiceModal";
 import ServiceFilter from "components/serviceComponents/ServiceFilter";
 import { ServiceMap } from "components/serviceMapComponents/serviceMap";

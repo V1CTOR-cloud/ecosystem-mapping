@@ -30,7 +30,7 @@ const LogMenuList = chakra(MenuList, {
     letterSpacing: "0.02em",
   },
 });
-const UserRightTopbar = () => {
+const UserRightTopBar = () => {
   const { t } = useTranslation();
   let history = useHistory();
   //let user = JSON.parse(sessionStorage.getItem("user"))
@@ -92,4 +92,4 @@ const UserRightTopbar = () => {
     </WrapItem>
   );
 };
-export default UserRightTopbar;
+export default UserRightTopBar;
