@@ -24,7 +24,7 @@ import {
 import "../../assets/fonts/fonts.css";
 import { withRouter } from "react-router";
 import { RegionComponent } from "components/regionComponents/RegionComponent";
-import SelectIndustry from "components/IndustryComponant/SelectIndustry";
+import SelectIndustry from "components/industryComponant/SelectIndustry";
 import Service from "../../service/RegionServices";
 import { useHistory } from "react-router-dom";
 import { isLoggedIn } from "../../service/AuthenticationService";
