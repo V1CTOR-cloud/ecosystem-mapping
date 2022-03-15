@@ -21,7 +21,7 @@ import {
 } from "../components/miscellaneousComponents";
 import Service from "../service/RegionServices";
 import { useHistory } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Card = chakra(Box, {
   baseStyle: {
@@ -68,7 +68,7 @@ const LogMenuList = chakra(MenuList, {
   },
 });
 const ListMapPage = () => {
-  const history=useHistory();
+  const history = useHistory();
   const { t } = useTranslation();
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -84,25 +84,21 @@ const ListMapPage = () => {
       setData(res);
     });
   };
-  const handleServiceClick=(id)=>{
-    history.push({pathname:"/services/"+id})
-  }
+  const handleServiceClick = (id) => {
+    history.push({ pathname: "/services/" + id });
+  };
   return (
     <>
       <Box className="wrapper">
-        <Grid className="topnav">
-          <NavBar/>
-          </Grid>
+        <Grid className="topNav">
+          <NavBar />
+        </Grid>
         <Text textAlign="center" mt="20px">
-        {t('startup.list.map.page.header')}
+          {t("startup.list.map.page.header")}
         </Text>
         <Grid templateColumns="repeat(5, 1fr)" gap={5} mt="20px">
           {data.map((data) => (
-            <Card
-              w="80%"
-              h="170"
-              cursor="pointer"
-            >
+            <Card w="80%" h="170" cursor="pointer">
               <WrapItem float="right" display="flex">
                 <Menu>
                   <MenuButton as={CreateButton}>
@@ -123,14 +119,19 @@ const ListMapPage = () => {
                   </LogMenuList>
                 </Menu>
               </WrapItem>
-              <Box marginTop="15px" padding="20px" onClick={() => handleServiceClick(data.id)} textOverflow="ellipsis">
+              <Box
+                marginTop="15px"
+                padding="20px"
+                onClick={() => handleServiceClick(data.id)}
+                textOverflow="ellipsis"
+              >
                 <Box fontWeight="bold"> {data.name}</Box>
                 <Box>
                   <span>{data.region}</span>
-                  <br/>
+                  <br />
                   <span>{data.country}</span>
-                  <br/>
-                  <span>{data.state}</span>  
+                  <br />
+                  <span>{data.state}</span>
                 </Box>
               </Box>
             </Card>
@@ -146,7 +147,7 @@ const ListMapPage = () => {
               textAlign="center"
               marginTop="15px"
             >
-              {t('startup.list.map.page.add.map.card')}
+              {t("startup.list.map.page.add.map.card")}
             </Text>
           </Card>
         </Grid>
@@ -155,4 +156,4 @@ const ListMapPage = () => {
   );
 };
 
-export { ListMapPage };
+export {ListMapPage};
