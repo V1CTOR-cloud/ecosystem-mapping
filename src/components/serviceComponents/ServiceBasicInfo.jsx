@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ServiceType } from "./ServiceType";
 import { ApplicationType } from "./ApplicationType";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import {
   FormControl,
   FormLabel,
@@ -11,10 +11,14 @@ import {
 } from "@chakra-ui/react";
 import Organiser from "components/organiserComponent/organiserComponenet";
 import Service from "service/EcosystemMapServices";
-import { AddOrganisation } from "components/organiserComponent/AddOrganisation";
+import AddOrganisation from "components/organiserComponent/AddOrganisation";
 import { DebounceInput } from "react-debounce-input";
 
-const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* name, onChangeBasicInfo*/}) => {
+const ServiceBasicInfo = ({
+  basicInfoData,
+  dataS = { serviceName: "" },
+  isEdit /* name, onChangeBasicInfo*/,
+}) => {
   const { t } = useTranslation();
   const [serviceName, setServiceName] = useState("");
   const [data, setData] = useState([]);
@@ -38,7 +42,7 @@ const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* na
     });
     if (isEdit) {
       //setServiceName(name);
-      setServiceName(dataS.serviceName)
+      setServiceName(dataS.serviceName);
       setServiceFocus(dataS.serviceFocus);
       setServiceOwner(dataS.serviceOwner[0].id);
       setApplicationType(dataS.applicationType);
@@ -64,9 +68,8 @@ const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* na
   };
   const showToast = () => {
     toast({
-      title: (t('startup.toast.create')),
-      description:
-        (t('startup.toast.service.owner.message')),
+      title: t("startup.toast.create"),
+      description: t("startup.toast.service.owner.message"),
       status: "success",
       duration: 9000,
       position: "top-right",
@@ -82,7 +85,7 @@ const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* na
       <FormControl>
         <FormControl>
           <FormLabel className="frm-lbl" mt="15px">
-            {t('startup.popup.service.content.service.name')}
+            {t("startup.popup.service.content.service.name")}
           </FormLabel>
           <DebounceInput
             className="service-name"
@@ -107,7 +110,9 @@ const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* na
         </FormControl>
 
         <FormControl mt={4}>
-          <FormLabel className="frm-lbl">{t('startup.popup.service.content.service.owner.organisation')}</FormLabel>
+          <FormLabel className="frm-lbl">
+            {t("startup.popup.service.content.service.owner.organisation")}
+          </FormLabel>
           <Box display="inline-flex">
             <Organiser
               valueData={dataS}
@@ -138,7 +143,7 @@ const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* na
           }}
           val={applicationType}
         />
-          {/* <HStack spacing={10} direction="row">
+        {/* <HStack spacing={10} direction="row">
             <Checkbox
               size="lg"
               colorScheme="blue"
@@ -171,9 +176,9 @@ const ServiceBasicInfo = ({basicInfoData, dataS={serviceName:""} , isEdit ,/* na
               Organisation (External)
             </Checkbox>
           </HStack> */}
-        </FormControl>
+      </FormControl>
     </ModalBody>
   );
 };
 
-export { ServiceBasicInfo };
+export {ServiceBasicInfo};
