@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,27 +10,28 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { FcGoogle } from "react-icons/fc";
-//import imgLogo from "../../assets/images/Logo.png";
+
 import {
   signInWithGoogle,
   isLoggedIn,
 } from "../../service/AuthenticationService";
-import { useTranslation } from "react-i18next";
 import UserRightTopBar from "./UserRightTopBar";
 
-export default function NavBar(props) {
+const headerStyle = {
+  fontFamily: "Ubuntu",
+  fontSize: "20px",
+  textShadow: "2px 2px 8px #afaebc",
+};
+
+const NavigationBar = () => {
   const { t } = useTranslation();
-  const SigninwithFirebase = () => {
+
+  const handleSignInWithFirebase = () => {
     signInWithGoogle((flag) => {
       console.log(flag);
-      //props.notifyParent();
     });
-  };
-  const headerStyle = {
-    fontFamily: "Ubuntu",
-    fontSize: "20px",
-    textShadow: "2px 2px 8px #afaebc",
   };
 
   return (
@@ -40,31 +42,26 @@ export default function NavBar(props) {
             <BreadcrumbItem ml="0">
               <Text style={headerStyle}>Ecosystem Mapping</Text>
             </BreadcrumbItem>
-
             <BreadcrumbItem>
               <BreadcrumbLink mt="5px" href="#">
                 {t("startup.landing.page.header.about")}
               </BreadcrumbLink>
             </BreadcrumbItem>
-
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
                 {t("startup.landing.page.header.learn")}
               </BreadcrumbLink>
             </BreadcrumbItem>
-
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
                 {t("startup.landing.page.header.connect")}
               </BreadcrumbLink>
             </BreadcrumbItem>
-
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
                 {t("startup.landing.page.header.scale")}
               </BreadcrumbLink>
             </BreadcrumbItem>
-
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
                 {t("startup.landing.page.header.contact")}
@@ -72,15 +69,14 @@ export default function NavBar(props) {
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>
-
         {isLoggedIn() ? (
           <Box w="20%" mt="30px" float="left">
-            <UserRightTopBar /* user={user}*/ />{" "}
+            <UserRightTopBar />{" "}
           </Box>
         ) : (
           <Box w="20%">
             <Button
-              onClick={SigninwithFirebase}
+              onClick={handleSignInWithFirebase}
               variant={"outline"}
               mt="30px"
               float="right"
@@ -95,4 +91,6 @@ export default function NavBar(props) {
       </Flex>
     </Box>
   );
-}
+};
+
+export default NavigationBar;

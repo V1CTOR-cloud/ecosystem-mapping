@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Box,
@@ -12,14 +12,14 @@ import {
   Text,
   WrapItem,
 } from "@chakra-ui/react";
-import {useTranslation} from "react-i18next";
-import {useHistory} from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 import {
   AddMapModal,
   DeleteModal,
 } from "../components/miscellaneousComponents";
-import NavBar from "../components/miscellaneousComponents/NavBar";
+import NavigationBar from "../components/miscellaneousComponents/NavigationBar";
 import Service from "../service/RegionServices";
 import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
 import dotsImg from "../../src/assets/images/3dots.png";
@@ -76,7 +76,7 @@ const LogMenuList = chakra(MenuList, {
 
 const ListMapPage = () => {
   const history = useHistory();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
 
   const handleMapChange = () => {
@@ -84,7 +84,7 @@ const ListMapPage = () => {
   };
 
   const handleServiceClick = (id) => {
-    history.push({pathname: "/services/" + id});
+    history.push({ pathname: "/services/" + id });
   };
 
   const getAllEcoMaps = () => {
@@ -104,71 +104,71 @@ const ListMapPage = () => {
   });
 
   return (
-      <>
-        <Box className="wrapper">
-          <Grid className="topNav">
-            <NavBar/>
-          </Grid>
-          <Text textAlign="center" mt="20px">
-            {t("startup.list.map.page.header")}
-          </Text>
-          <Grid templateColumns="repeat(5, 1fr)" gap={5} mt="20px">
-            {data.map((data) => (
-                <Card w="80%" h="170" cursor="pointer">
-                  <WrapItem float="right" display="flex">
-                    <Menu>
-                      <MenuButton as={CreateButton}>
-                        <ImgDots src={dotsImg}/>
-                      </MenuButton>
-                      <LogMenuList>
-                        <Box>
-                          <AddMapModal
-                              data={data}
-                              isEdit={true}
-                              notifyParent={() => handleMapChange()}
-                          />
-                          <DeleteModal
-                              notifyParent={() => handleMapChange()}
-                              id={data.id}
-                          />
-                        </Box>
-                      </LogMenuList>
-                    </Menu>
-                  </WrapItem>
-                  <Box
-                      marginTop="15px"
-                      padding="20px"
-                      onClick={() => handleServiceClick(data.id)}
-                      textOverflow="ellipsis"
-                  >
-                    <Box fontWeight="bold"> {data.name}</Box>
+    <>
+      <Box className="wrapper">
+        <Grid className="topNav">
+          <NavigationBar />
+        </Grid>
+        <Text textAlign="center" mt="20px">
+          {t("startup.list.map.page.header")}
+        </Text>
+        <Grid templateColumns="repeat(5, 1fr)" gap={5} mt="20px">
+          {data.map((data) => (
+            <Card w="80%" h="170" cursor="pointer">
+              <WrapItem float="right" display="flex">
+                <Menu>
+                  <MenuButton as={CreateButton}>
+                    <ImgDots src={dotsImg} />
+                  </MenuButton>
+                  <LogMenuList>
                     <Box>
-                      <span>{data.region}</span>
-                      <br/>
-                      <span>{data.country}</span>
-                      <br/>
-                      <span>{data.state}</span>
+                      <AddMapModal
+                        data={data}
+                        isEdit={true}
+                        notifyParent={() => handleMapChange()}
+                      />
+                      <DeleteModal
+                        notifyParent={() => handleMapChange()}
+                        id={data.id}
+                      />
                     </Box>
-                  </Box>
-                </Card>
-            ))}
-            <Card w="80%" h="170">
-              <Box>
-                <AkarIcon/>
-                <AddMapModal isAdd={true}/>
-              </Box>
-              <Text
-                  fontWeight="bold"
-                  padding="15px"
-                  textAlign="center"
-                  marginTop="15px"
+                  </LogMenuList>
+                </Menu>
+              </WrapItem>
+              <Box
+                marginTop="15px"
+                padding="20px"
+                onClick={() => handleServiceClick(data.id)}
+                textOverflow="ellipsis"
               >
-                {t("startup.list.map.page.add.map.card")}
-              </Text>
+                <Box fontWeight="bold"> {data.name}</Box>
+                <Box>
+                  <span>{data.region}</span>
+                  <br />
+                  <span>{data.country}</span>
+                  <br />
+                  <span>{data.state}</span>
+                </Box>
+              </Box>
             </Card>
-          </Grid>
-        </Box>
-      </>
+          ))}
+          <Card w="80%" h="170">
+            <Box>
+              <AkarIcon />
+              <AddMapModal isAdd={true} />
+            </Box>
+            <Text
+              fontWeight="bold"
+              padding="15px"
+              textAlign="center"
+              marginTop="15px"
+            >
+              {t("startup.list.map.page.add.map.card")}
+            </Text>
+          </Card>
+        </Grid>
+      </Box>
+    </>
   );
 };
 
