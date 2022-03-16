@@ -5,7 +5,8 @@ import { getCurrentUser } from "./AuthenticationService";
 let allRegions = [];
 let allIndustry = [];
 
-const { REACT_APP_GRAPH_CMS_CONTENT_API_KEY } = process.env;
+const { REACT_APP_GRAPH_CMS_CONTENT_API_KEY, REACT_APP_GRAPH_CMS_TOKEN_KEY } =
+  process.env;
 
 class Service {
   async listAllRegions() {
@@ -106,7 +107,7 @@ class Service {
   async getAllEcoMap() {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImdjbXMtbWFpbi1wcm9kdWN0aW9uIn0.eyJ3ZWJhcHAiOnRydWUsInZlcnNpb24iOjQsImlhdCI6MTYyODA2MzMxMSwiZXhwIjoxNjI4MTA2NTExLCJhdWQiOlsiaHR0cHM6Ly9hcGktZXUtY2VudHJhbC0xLmdyYXBoY21zLmNvbS92Mi9ja29qeDQ0aXIwamxtMDF4czgyZThhdmpiL21hc3RlciJdLCJpc3MiOiJodHRwczovL21hbmFnZW1lbnQuZ3JhcGhjbXMuY29tLyIsInN1YiI6ImY1YTQ4ZDJhLWJlN2EtNDhjZC05ODVhLTAwZTg5NzhmMGJkNyIsImp0aSI6ImNrbHU1MTBwdnJvYnAwMXoxaGtwODFnc2MifQ.oacU9ey4lQgOG1lXR0G4Z7exqcDWMdiVEiGhlwNHb-M3BaNC2edVcaFufUm4ayPrhk-yG1BZ1225JLUBRskf8Yk5xnSH-pszMWl2jy9Ne0uHU2fHTkibBxQ3woOIuiG44MHN4cWfKn5hQRCAVPTzqI82kr5EyJjYDae_lZWP_nyVgcXOhUljkxb9f7BzBbqSKf-_aV0LrpL7RnjlfIpXl4gkEdZ2GmN2BqIn0GUC1dSajS-N-NbF6xBijR48mgeg6Sp1lgu68G7qKeohjaEtYYKKoAit8wHJ9sxosIppK6oqXVMY078EVS2lQ9o-jd_t3TmpJKaBY9_Zv0-xlQsz3fwHIHZm4PBmROrLz_UA9ZHJ08rXhQsOY96amBwFlTIStDpnrBYVQEMRTgfEE2CzSqTaarfaDWHrqFGgGjI0bBEQ1OhpygXOjNZCeBpLWipQINF3VOmovznVBXhonQX7ScrFqW0CW5uiJbWRw-kYjnm3MIceB9hkYlTlb88ONGi1pDoM57FTJ0VVhHZvj_rr-Wpbc-MPJZXi7toC-r5LayBXVE_XpURWnVshsgXkM0bfCDigkxZ8DoqaFdoN8KrqVQmW4U0YoB1V-55mN1tZJL2XnzLYAdNFJa2QZvC-R1mnCoe4VINoVAGdj6D5N9RaXr5OYgdFtwiyV364gQhKyHE`,
+        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
       },
     });
     const { ecosystemMaps } = await graphcms.request(
@@ -133,7 +134,7 @@ class Service {
   async addEcoMap(data) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImdjbXMtbWFpbi1wcm9kdWN0aW9uIn0.eyJ3ZWJhcHAiOnRydWUsInZlcnNpb24iOjQsImlhdCI6MTYyODA2MzMxMSwiZXhwIjoxNjI4MTA2NTExLCJhdWQiOlsiaHR0cHM6Ly9hcGktZXUtY2VudHJhbC0xLmdyYXBoY21zLmNvbS92Mi9ja29qeDQ0aXIwamxtMDF4czgyZThhdmpiL21hc3RlciJdLCJpc3MiOiJodHRwczovL21hbmFnZW1lbnQuZ3JhcGhjbXMuY29tLyIsInN1YiI6ImY1YTQ4ZDJhLWJlN2EtNDhjZC05ODVhLTAwZTg5NzhmMGJkNyIsImp0aSI6ImNrbHU1MTBwdnJvYnAwMXoxaGtwODFnc2MifQ.oacU9ey4lQgOG1lXR0G4Z7exqcDWMdiVEiGhlwNHb-M3BaNC2edVcaFufUm4ayPrhk-yG1BZ1225JLUBRskf8Yk5xnSH-pszMWl2jy9Ne0uHU2fHTkibBxQ3woOIuiG44MHN4cWfKn5hQRCAVPTzqI82kr5EyJjYDae_lZWP_nyVgcXOhUljkxb9f7BzBbqSKf-_aV0LrpL7RnjlfIpXl4gkEdZ2GmN2BqIn0GUC1dSajS-N-NbF6xBijR48mgeg6Sp1lgu68G7qKeohjaEtYYKKoAit8wHJ9sxosIppK6oqXVMY078EVS2lQ9o-jd_t3TmpJKaBY9_Zv0-xlQsz3fwHIHZm4PBmROrLz_UA9ZHJ08rXhQsOY96amBwFlTIStDpnrBYVQEMRTgfEE2CzSqTaarfaDWHrqFGgGjI0bBEQ1OhpygXOjNZCeBpLWipQINF3VOmovznVBXhonQX7ScrFqW0CW5uiJbWRw-kYjnm3MIceB9hkYlTlb88ONGi1pDoM57FTJ0VVhHZvj_rr-Wpbc-MPJZXi7toC-r5LayBXVE_XpURWnVshsgXkM0bfCDigkxZ8DoqaFdoN8KrqVQmW4U0YoB1V-55mN1tZJL2XnzLYAdNFJa2QZvC-R1mnCoe4VINoVAGdj6D5N9RaXr5OYgdFtwiyV364gQhKyHE`,
+        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
       },
     });
     const { createEcosystemMap } = await graphcms.request(
@@ -171,7 +172,7 @@ class Service {
   async DeleteEcoMap(id) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImdjbXMtbWFpbi1wcm9kdWN0aW9uIn0.eyJ3ZWJhcHAiOnRydWUsInZlcnNpb24iOjQsImlhdCI6MTYyODA2MzMxMSwiZXhwIjoxNjI4MTA2NTExLCJhdWQiOlsiaHR0cHM6Ly9hcGktZXUtY2VudHJhbC0xLmdyYXBoY21zLmNvbS92Mi9ja29qeDQ0aXIwamxtMDF4czgyZThhdmpiL21hc3RlciJdLCJpc3MiOiJodHRwczovL21hbmFnZW1lbnQuZ3JhcGhjbXMuY29tLyIsInN1YiI6ImY1YTQ4ZDJhLWJlN2EtNDhjZC05ODVhLTAwZTg5NzhmMGJkNyIsImp0aSI6ImNrbHU1MTBwdnJvYnAwMXoxaGtwODFnc2MifQ.oacU9ey4lQgOG1lXR0G4Z7exqcDWMdiVEiGhlwNHb-M3BaNC2edVcaFufUm4ayPrhk-yG1BZ1225JLUBRskf8Yk5xnSH-pszMWl2jy9Ne0uHU2fHTkibBxQ3woOIuiG44MHN4cWfKn5hQRCAVPTzqI82kr5EyJjYDae_lZWP_nyVgcXOhUljkxb9f7BzBbqSKf-_aV0LrpL7RnjlfIpXl4gkEdZ2GmN2BqIn0GUC1dSajS-N-NbF6xBijR48mgeg6Sp1lgu68G7qKeohjaEtYYKKoAit8wHJ9sxosIppK6oqXVMY078EVS2lQ9o-jd_t3TmpJKaBY9_Zv0-xlQsz3fwHIHZm4PBmROrLz_UA9ZHJ08rXhQsOY96amBwFlTIStDpnrBYVQEMRTgfEE2CzSqTaarfaDWHrqFGgGjI0bBEQ1OhpygXOjNZCeBpLWipQINF3VOmovznVBXhonQX7ScrFqW0CW5uiJbWRw-kYjnm3MIceB9hkYlTlb88ONGi1pDoM57FTJ0VVhHZvj_rr-Wpbc-MPJZXi7toC-r5LayBXVE_XpURWnVshsgXkM0bfCDigkxZ8DoqaFdoN8KrqVQmW4U0YoB1V-55mN1tZJL2XnzLYAdNFJa2QZvC-R1mnCoe4VINoVAGdj6D5N9RaXr5OYgdFtwiyV364gQhKyHE`,
+        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
       },
     });
     await graphcms.request(
@@ -187,7 +188,7 @@ class Service {
   async editEcoMap(data) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImdjbXMtbWFpbi1wcm9kdWN0aW9uIn0.eyJ3ZWJhcHAiOnRydWUsInZlcnNpb24iOjQsImlhdCI6MTYyODA2MzMxMSwiZXhwIjoxNjI4MTA2NTExLCJhdWQiOlsiaHR0cHM6Ly9hcGktZXUtY2VudHJhbC0xLmdyYXBoY21zLmNvbS92Mi9ja29qeDQ0aXIwamxtMDF4czgyZThhdmpiL21hc3RlciJdLCJpc3MiOiJodHRwczovL21hbmFnZW1lbnQuZ3JhcGhjbXMuY29tLyIsInN1YiI6ImY1YTQ4ZDJhLWJlN2EtNDhjZC05ODVhLTAwZTg5NzhmMGJkNyIsImp0aSI6ImNrbHU1MTBwdnJvYnAwMXoxaGtwODFnc2MifQ.oacU9ey4lQgOG1lXR0G4Z7exqcDWMdiVEiGhlwNHb-M3BaNC2edVcaFufUm4ayPrhk-yG1BZ1225JLUBRskf8Yk5xnSH-pszMWl2jy9Ne0uHU2fHTkibBxQ3woOIuiG44MHN4cWfKn5hQRCAVPTzqI82kr5EyJjYDae_lZWP_nyVgcXOhUljkxb9f7BzBbqSKf-_aV0LrpL7RnjlfIpXl4gkEdZ2GmN2BqIn0GUC1dSajS-N-NbF6xBijR48mgeg6Sp1lgu68G7qKeohjaEtYYKKoAit8wHJ9sxosIppK6oqXVMY078EVS2lQ9o-jd_t3TmpJKaBY9_Zv0-xlQsz3fwHIHZm4PBmROrLz_UA9ZHJ08rXhQsOY96amBwFlTIStDpnrBYVQEMRTgfEE2CzSqTaarfaDWHrqFGgGjI0bBEQ1OhpygXOjNZCeBpLWipQINF3VOmovznVBXhonQX7ScrFqW0CW5uiJbWRw-kYjnm3MIceB9hkYlTlb88ONGi1pDoM57FTJ0VVhHZvj_rr-Wpbc-MPJZXi7toC-r5LayBXVE_XpURWnVshsgXkM0bfCDigkxZ8DoqaFdoN8KrqVQmW4U0YoB1V-55mN1tZJL2XnzLYAdNFJa2QZvC-R1mnCoe4VINoVAGdj6D5N9RaXr5OYgdFtwiyV364gQhKyHE`,
+        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
       },
     });
     const { updateEcosystemMap } = await graphcms.request(
