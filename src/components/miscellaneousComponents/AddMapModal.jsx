@@ -1,34 +1,34 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
-  chakra,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Button,
-  useDisclosure,
+  chakra,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
-  Flex,
-  MenuItem,
-  useToast,
   IconButton,
+  Input,
   Link,
+  MenuItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import "../../assets/fonts/fonts.css";
-import { withRouter } from "react-router";
+import { useHistory, withRouter } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 import { RegionComponent } from "components/regionComponents/RegionComponent";
 import SelectIndustry from "components/industryComponant/SelectIndustry";
 import Service from "../../service/RegionServices";
-import { useHistory } from "react-router-dom";
 import { isLoggedIn } from "../../service/AuthenticationService";
-import { useTranslation } from "react-i18next";
+import "../../assets/fonts/fonts.css";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -82,9 +82,56 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   const [states, setStates] = useState([]);
   const [cities, setCites] = useState([]);
   const [industries, setIndustries] = useState([]);
-  const [subindustries, setSubindustries] = useState([]);
+  const [subIndustries, setSubIndustries] = useState([]);
 
-  const createMapCallback = (key, value) => {
+  const setInitialLocation = (locData) => {
+    const allRegions = Service.getregions();
+    const allCountries = Service.getCountriesByRegion(locData.region);
+    const getStatesByCountry = Service.getStatesByCountry(
+      locData.region,
+      locData.country
+    );
+
+    const getCities = Service.getCitiesByState(
+      locData.region,
+      locData.country,
+      locData.state
+    );
+
+    const allIndustries = Service.getIndustries();
+    const getSubIndustriesByIndustry = Service.getSubIndustriesByIndustry(
+      locData.industry
+    );
+
+    setRegions(allRegions);
+    setCountries(allCountries);
+    setStates(getStatesByCountry);
+    setCites(getCities);
+    setIndustries(allIndustries);
+    setSubIndustries(getSubIndustriesByIndustry);
+  };
+
+  const handleLocationDataValidate = () => {
+    const requiredLocationKeys = ["name", "region"];
+    const locationKeys = Object.keys(locationData);
+    locationData.inValidFields = requiredLocationKeys.filter(
+      (key) => !locationKeys.includes(key) || locationData[key] === ""
+    );
+    setLocationData(locationData);
+  };
+
+  const handleIndustryChange = (key, value) => {
+    locationData[key] = value;
+    setLocationData(locationData);
+    handleLocationDataChange(locationData);
+  };
+
+  const handleLocationDataChange = (locData) => {
+    setInitialLocation(locData);
+    handleLocationDataValidate();
+  };
+
+  const handleLocationChange = (key, value) => {
     let locData = locationData;
     locData[key] = value;
     if (key === "region") {
@@ -100,57 +147,13 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
       locData.city = "";
     }
     setLocationData(locData);
-    locationDataHandleChange(locData);
-  };
-  useEffect(() => {
-    Service.listAllRegions();
-    Service.listAllIndustries();
-    setInitialLocationState(locationData);
-  }, [locationData, isEdit, isAdd, data, isHome]);
-
-  const setInitialLocationState = (locData) => {
-    const allRegions = Service.getregions();
-    const allCountries = Service.getCountriesByRegion(locData.region);
-    const getStatesByCountry = Service.getStatesByCountry(
-      locData.region,
-      locData.country
-    );
-    const getCities = Service.getCitiesByState(
-      locData.region,
-      locData.country,
-      locData.state
-    );
-    const allIndustries = Service.getIndustries();
-    const getSubIndustriesByIndustry = Service.getSubIndustriesByIndustry(
-      locData.industry
-    );
-    setRegions(allRegions);
-    setCountries(allCountries);
-    setStates(getStatesByCountry);
-    setCites(getCities);
-    setIndustries(allIndustries);
-    setSubindustries(getSubIndustriesByIndustry);
+    handleLocationDataChange(locData);
   };
 
-  const locationDataHandleChange = (locData) => {
-    setInitialLocationState(locData);
-    validateLocationData();
-  };
-
-  const validateLocationData = () => {
-    const requiredLocationKeys = ["name", "region"];
-    const locationKeys = Object.keys(locationData);
-    const inValidFields = requiredLocationKeys.filter(
-      (key) => !locationKeys.includes(key) || locationData[key] === ""
-    );
-    locationData.inValidFields = inValidFields;
-    setLocationData(locationData);
-  };
-
-  const AddMap = () => {
+  const handleAddMap = () => {
     let location = locationData;
     location.name = mapName;
-    validateLocationData();
+    handleLocationDataValidate();
     if (
       locationData.inValidFields.length === 0 ||
       locationData.region === "Global"
@@ -183,14 +186,15 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
     }
   };
 
-  const onEdit = () => {
+  const handleEdit = () => {
     onOpen();
-    locationDataHandleChange(data);
+    handleLocationDataChange(data);
     setMapName(data.name);
     setLocationData(data);
   };
+
   const EditMap = () => {
-    validateLocationData();
+    handleLocationDataValidate();
     if (
       locationData.inValidFields.length === 0 ||
       locationData.region === "Global"
@@ -219,14 +223,15 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
       });
     }
   };
-  const SubmitDetails = (e) => {
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     setMapName({ mapName: mapName });
   };
 
-  const onOpenModal = () => {
+  const handleOpenModal = () => {
     if (isLoggedIn()) {
-      setInitialLocationState(locationData);
+      setInitialLocation(locationData);
       onOpen();
     } else {
       toast({
@@ -239,27 +244,30 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await Service.listAllRegions();
+      await Service.listAllIndustries();
+      setInitialLocation(locationData);
+    };
+
+    fetchData().catch(console.error);
+  }, [locationData, isEdit, isAdd, data, isHome]);
+
   return (
     <React.Fragment>
       {isHome ? (
-        <Link onClick={onOpenModal}>
+        <Link onClick={handleOpenModal}>
           <Text color="blue" m="7px" fontSize="17px">
             {t("startup.home.page.header.add.map.link")}
           </Text>
         </Link>
-      ) : //   <IconButton
-      //   colorScheme="blue"
-      //   aria-label="Search database"
-      //   borderRadius="50%"
-      //   marginLeft="15px"
-      //   icon={<AddIcon />}
-      // />
-      isEdit ? (
-        <MenuItem onClick={onEdit}>
+      ) : isEdit ? (
+        <MenuItem onClick={handleEdit}>
           {t("startup.list.map.page.map.card.edit")}
         </MenuItem>
       ) : isAdd ? (
-        <CreateButton onClick={onOpenModal} />
+        <CreateButton onClick={handleOpenModal} />
       ) : (
         <React.Fragment>
           <h1 style={headerStyle}>
@@ -269,7 +277,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
             {t("startup.landing.page.content.welcome.tagline.text")}
           </h1>
           <Flex alignItems="flex-start">
-            <Button mt="30px" onClick={onOpenModal} className="btn-ad-mp">
+            <Button mt="30px" onClick={handleOpenModal} className="btn-ad-mp">
               {t("startup.landing.page.create.map.button")}
             </Button>
           </Flex>
@@ -295,7 +303,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
           )}
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <FormControl onSubmit={(e) => SubmitDetails(e)}>
+            <FormControl onSubmit={(e) => handleSubmit(e)}>
               <FormLabel className="md-ip-lbl">
                 {t("startup.popup.ecosystem.map.title")}
               </FormLabel>
@@ -308,7 +316,6 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
                       ...locationData,
                       name: e.target.value,
                     });
-                    //validateLocationData();
                   }}
                 />
               ) : (
@@ -323,7 +330,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
               </FormLabel>
               <RegionComponent
                 locationData={locationData}
-                createMapCallback={createMapCallback}
+                onLocationChange={handleLocationChange}
                 regions={regions}
                 states={states}
                 countries={countries}
@@ -334,9 +341,9 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
               </FormLabel>
               <SelectIndustry
                 locationData={locationData}
-                createMapCallback={createMapCallback}
+                onIndustryChange={handleIndustryChange}
                 industries={industries}
-                subIndustries={subindustries}
+                subIndustries={subIndustries}
               />
             </FormControl>
           </ModalBody>
@@ -362,8 +369,8 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
                 colorScheme="blue"
                 mr={3}
                 m="0"
-                disabled={!mapName ? true : false}
-                onClick={() => AddMap()}
+                disabled={!mapName}
+                onClick={handleAddMap}
               >
                 {t("startup.popup.map.button.create")}
               </Button>
@@ -374,4 +381,5 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
     </React.Fragment>
   );
 };
+
 export default withRouter(AddMapModal);
