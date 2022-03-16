@@ -8,7 +8,7 @@ class Service {
   async getServicesList(mapID) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     const { services } = await graphcms.request(
@@ -62,7 +62,7 @@ class Service {
     let user = getCurrentUser();
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     return await graphcms
@@ -130,7 +130,7 @@ class Service {
   async UpdatePhaseRangeonResize(data) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     return await graphcms.request(
@@ -154,7 +154,7 @@ class Service {
   async UpdateApplicationTypeonDrop(data) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     return await graphcms.request(
@@ -177,7 +177,7 @@ class Service {
   async getAllOrg() {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     const { organisations } = await graphcms.request(
@@ -194,7 +194,7 @@ class Service {
   async getAllTags() {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     const { services } = await graphcms.request(
@@ -211,7 +211,7 @@ class Service {
   async addOrg(data) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     const { createOrganisation } = await graphcms.request(
@@ -235,7 +235,7 @@ class Service {
     let user = getCurrentUser();
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
 
@@ -317,7 +317,7 @@ class Service {
   async addUser(data) {
     const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
       headers: {
-        authorization: REACT_APP_GRAPH_CMS_TOKEN_KEY,
+        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
       },
     });
     const { cPTUserAccounts } = await graphcms.request(
