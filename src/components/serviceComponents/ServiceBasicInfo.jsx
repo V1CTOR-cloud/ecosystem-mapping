@@ -9,7 +9,7 @@ import {
   useToast,
   ModalBody,
 } from "@chakra-ui/react";
-import Organiser from "components/organiserComponent/organiserComponenet";
+import OrganisationChoice from "components/organiserComponent/OrganisationChoice";
 import Service from "service/EcosystemMapServices";
 import AddOrganisation from "components/organiserComponent/AddOrganisation";
 import { DebounceInput } from "react-debounce-input";
@@ -114,7 +114,7 @@ const ServiceBasicInfo = ({
             {t("startup.popup.service.content.service.owner.organisation")}
           </FormLabel>
           <Box display="inline-flex">
-            <Organiser
+            <OrganisationChoice
               valueData={dataS}
               data={data}
               getOrgData={(data) => {
@@ -181,4 +181,4 @@ const ServiceBasicInfo = ({
   );
 };
 
-export {ServiceBasicInfo};
+export { ServiceBasicInfo };
