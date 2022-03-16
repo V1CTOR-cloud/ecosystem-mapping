@@ -17,7 +17,7 @@ import {
   signInWithGoogle,
   isLoggedIn,
 } from "../../service/AuthenticationService";
-import UserRightTopBar from "./UserRightTopBar";
+import UserAccountMenu from "./UserAccountMenu";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -71,7 +71,7 @@ const NavigationBar = () => {
         </Box>
         {isLoggedIn() ? (
           <Box w="20%" mt="30px" float="left">
-            <UserRightTopBar />{" "}
+            <UserAccountMenu />{" "}
           </Box>
         ) : (
           <Box w="20%">

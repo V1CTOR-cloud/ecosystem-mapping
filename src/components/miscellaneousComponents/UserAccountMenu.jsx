@@ -1,24 +1,26 @@
 import React from "react";
+
 import {
+  Box,
+  Button,
+  chakra,
+  Flex,
   Image,
-  Text,
-  WrapItem,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Button,
-  chakra,
-  Flex,
-  Box,
+  Text,
+  WrapItem,
 } from "@chakra-ui/react";
-import imgArrow from "../../assets/images/arrow down.png";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+
+import imgArrow from "../../assets/images/arrow down.png";
 import {
   getCurrentUser,
   userLogOut,
 } from "../../service/AuthenticationService";
-import { useTranslation } from "react-i18next";
 
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
@@ -30,18 +32,21 @@ const LogMenuList = chakra(MenuList, {
     letterSpacing: "0.02em",
   },
 });
-const UserRightTopBar = () => {
+
+const UserAccountMenu = () => {
   const { t } = useTranslation();
   let history = useHistory();
-  //let user = JSON.parse(sessionStorage.getItem("user"))
   let user = getCurrentUser();
-  const onEcosystemMaps = () => {
+
+  const handleMyMapsClick = () => {
     history.push("/ecosystemmap");
   };
-  const onLogout = () => {
+
+  const handleLogout = () => {
     userLogOut();
     history.push("/");
   };
+
   return (
     <WrapItem float={"right"} display="flex">
       <Image
@@ -76,13 +81,13 @@ const UserRightTopBar = () => {
             </Text>
           </Flex>
           <Box p="15px">
-            <MenuItem onClick={onEcosystemMaps}>
+            <MenuItem onClick={handleMyMapsClick}>
               {" "}
               {t(
                 "startup.landing.page.header.user.profile.menu.list.map.text"
               )}{" "}
             </MenuItem>
-            <MenuItem onClick={onLogout}>
+            <MenuItem onClick={handleLogout}>
               {" "}
               {t("startup.landing.page.header.user.profile.logout.text")}{" "}
             </MenuItem>
@@ -92,4 +97,5 @@ const UserRightTopBar = () => {
     </WrapItem>
   );
 };
-export default UserRightTopBar;
+
+export default UserAccountMenu;

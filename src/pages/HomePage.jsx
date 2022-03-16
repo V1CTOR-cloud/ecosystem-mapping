@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import SideBar from "components/miscellaneousComponents/SideBar";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import UserRightTopBar from "components/miscellaneousComponents/UserRightTopBar";
+import UserAccountMenu from "components/miscellaneousComponents/UserAccountMenu";
 import AddServiceModal from "components/serviceComponents/AddServiceModal";
 import ServiceFilter from "components/serviceComponents/ServiceFilter";
 import { ServiceMap } from "components/serviceMapComponents/serviceMap";
@@ -252,7 +252,7 @@ const HomePage = () => {
                 </WrapItem>
               </GridItem>
               <GridItem colStart={14} colEnd={15}>
-                <UserRightTopBar />
+                <UserAccountMenu />
               </GridItem>
             </Grid>
           </Box>
