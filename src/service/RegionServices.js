@@ -8,6 +8,9 @@ let allIndustry = [];
 const { REACT_APP_GRAPH_CMS_CONTENT_API_KEY, REACT_APP_GRAPH_CMS_TOKEN_KEY } =
   process.env;
 
+const authorizationKey = `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`;
+const graphCMSKey = REACT_APP_GRAPH_CMS_CONTENT_API_KEY;
+
 class Service {
   async listAllRegions() {
     return await axios({
@@ -105,9 +108,9 @@ class Service {
   }
 
   async getAllEcoMap() {
-    const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
+    const graphcms = new GraphQLClient(graphCMSKey, {
       headers: {
-        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
+        authorization: authorizationKey,
       },
     });
     const { ecosystemMaps } = await graphcms.request(
@@ -132,9 +135,9 @@ class Service {
   }
 
   async addEcoMap(data) {
-    const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
+    const graphcms = new GraphQLClient(graphCMSKey, {
       headers: {
-        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
+        authorization: authorizationKey,
       },
     });
     const { createEcosystemMap } = await graphcms.request(
@@ -170,9 +173,9 @@ class Service {
   }
 
   async DeleteEcoMap(id) {
-    const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
+    const graphcms = new GraphQLClient(graphCMSKey, {
       headers: {
-        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
+        authorization: authorizationKey,
       },
     });
     await graphcms.request(
@@ -186,9 +189,9 @@ class Service {
   }
 
   async editEcoMap(data) {
-    const graphcms = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
+    const graphcms = new GraphQLClient(graphCMSKey, {
       headers: {
-        authorization: `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`,
+        authorization: authorizationKey,
       },
     });
     const { updateEcosystemMap } = await graphcms.request(
