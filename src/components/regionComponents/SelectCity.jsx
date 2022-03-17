@@ -1,12 +1,13 @@
 import React from "react";
+
 import { Select, Box } from "@chakra-ui/react";
 
-const CitySelectComponent = (props) => {
+const SelectCity = (props) => {
   return (
     <Box>
       <Select
         size="sm"
-        disabled={props.data.length > 0 ? false : true}
+        disabled={props.data.length <= 0}
         placeholder="Select City"
         value={props.city}
         onChange={(e) => props.selectedCity(e.target.value)}
@@ -21,7 +22,7 @@ const CitySelectComponent = (props) => {
           })}
       </Select>
     </Box>
-   
   );
 };
-export { CitySelectComponent };
+
+export default SelectCity;
