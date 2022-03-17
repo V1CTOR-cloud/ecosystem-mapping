@@ -1,37 +1,32 @@
 import React from "react";
-import {
-  RegionSelectComponent,
-  CountrySelectComponent,
-  StateSelectComponent,
-  CitySelectComponent,
-} from "components/regionComponents";
+
 import { SimpleGrid } from "@chakra-ui/react";
 
-const RegionComponent = (props) => {
+import SelectCity from "./SelectCity";
+import SelectCountry from "./SelectCountry";
+import SelectRegion from "./SelectRegion";
+import SelectState from "./SelectState";
+
+const SelectLocationComponent = (props) => {
   return (
     <>
       <SimpleGrid columns={4} spacing={4}>
-        <RegionSelectComponent
+        <SelectRegion
           data={props.regions}
           region={props.locationData.region}
           selectedRegion={(s) => props.onLocationChange("region", s)}
-          //invalid = {props.locationData.inValidFields}
         />
-        <CountrySelectComponent
+        <SelectCountry
           data={props.countries}
           country={props.locationData.country}
           selectedCountry={(s) => props.onLocationChange("country", s)}
-          //invalid = {props.locationData.inValidFields}
         />
-
-        <StateSelectComponent
+        <SelectState
           data={props.states}
           state={props.locationData.state}
           selectedState={(s) => props.onLocationChange("state", s)}
-          //invalid = {props.locationData.inValidFields}
         />
-
-        <CitySelectComponent
+        <SelectCity
           data={props.cities}
           city={props.locationData.city}
           selectedCity={(s) => props.onLocationChange("city", s)}
@@ -40,4 +35,5 @@ const RegionComponent = (props) => {
     </>
   );
 };
-export { RegionComponent };
+
+export default SelectLocationComponent;
