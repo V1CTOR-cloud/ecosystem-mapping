@@ -5,7 +5,8 @@ import { Tooltip } from "@chakra-ui/react";
 import { QuestionIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
-import { PhaseRange } from "components/phaseRangeBar/PhaseRange";
+import PhaseRange from "components/phaseRangeBar/PhaseRange";
+
 const ServicePhase = ({ phaseData, data, type = "" }) => {
   const { t } = useTranslation();
   const chkSubLblStyle = {
@@ -23,7 +24,7 @@ const ServicePhase = ({ phaseData, data, type = "" }) => {
       <FormControl>
         {type !== "show" ? (
           <FormLabel className="frm-lbl">
-            {t('startup.popup.service.content.service.phase')}
+            {t("startup.popup.service.content.service.phase")}
           </FormLabel>
         ) : (
           <Box mt="20px"></Box>
@@ -32,17 +33,17 @@ const ServicePhase = ({ phaseData, data, type = "" }) => {
         <Flex>
           <Box flex="1">
             <FormLabel mr="-60px" className="txt-cn" style={chkSubLblStyle}>
-              {t('startup.popup.service.content.service.formulation')}
+              {t("startup.popup.service.content.service.formulation")}
             </FormLabel>
           </Box>
           <Box flex="1">
             <FormLabel mr="-140px" className="txt-cn" style={chkSubLblStyle}>
-              {t('startup.popup.service.content.service.validation')}
+              {t("startup.popup.service.content.service.validation")}
             </FormLabel>
           </Box>
           <Box flex="1">
             <FormLabel mr="-100px" className="txt-cn" style={chkSubLblStyle}>
-              {t('startup.popup.service.content.service.growth')}
+              {t("startup.popup.service.content.service.growth")}
             </FormLabel>
           </Box>
         </Flex>
@@ -58,7 +59,7 @@ const ServicePhase = ({ phaseData, data, type = "" }) => {
         </Box>
         <Box mt="20px">
           <p className="tooltipsdk">
-            {t('startup.popup.service.content.service.phase.range')}
+            {t("startup.popup.service.content.service.phase.range")}
             <Box ml="10px" display="inline">
               <Tooltip
                 label="
@@ -93,4 +94,4 @@ const ServicePhase = ({ phaseData, data, type = "" }) => {
   );
 };
 
-export { ServicePhase };
+export {ServicePhase};
