@@ -24,7 +24,7 @@ import {
 import { useHistory, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { RegionComponent } from "components/regionComponents/RegionComponent";
+import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
 import SelectIndustry from "components/industryComponant/SelectIndustry";
 import Service from "../../service/RegionServices";
 import { isLoggedIn } from "../../service/AuthenticationService";
@@ -328,7 +328,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
               <FormLabel className="md-ip-lbl" mt={4}>
                 {t("startup.popup.ecosystem.map.location")}
               </FormLabel>
-              <RegionComponent
+              <SelectLocationComponent
                 locationData={locationData}
                 onLocationChange={handleLocationChange}
                 regions={regions}
