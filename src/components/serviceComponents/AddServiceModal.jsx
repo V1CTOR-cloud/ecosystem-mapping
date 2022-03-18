@@ -25,7 +25,7 @@ import { useTranslation } from "react-i18next";
 
 import PublishServiceConfirm from "../serviceComponents/PublishServiceConfirm";
 import SaveAsDraftConfirm from "../serviceComponents/SaveAsDraftConfirm";
-import { ServiceBasicInfo } from "./ServiceBasicInfo";
+import ServiceBasicInfo from "./ServiceBasicInfo";
 import ServiceAvailability from "./ServiceAvailability";
 import { ServiceInfo } from "./ServiceInfo";
 import { TagComment } from "./TagComment";
