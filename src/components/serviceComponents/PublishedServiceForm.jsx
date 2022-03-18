@@ -1,38 +1,41 @@
 import React from "react";
+
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Text,
   Box,
   Flex,
-  Image,
-  Tag,
-  HStack,
-  TagLabel,
   Grid,
+  HStack,
+  Image,
   Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Tag,
+  TagLabel,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+import { Icon } from "@chakra-ui/icons";
+
 import { ServicePhase } from "./ServicePhase";
-import imgProgressBar from "../../assets/images/Group 194.png";
 import ServiceChangesLog from "./ServiceChangesLog";
 import EditServiceModal from "./EditServiceModal";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import Checkboxes from "assets/checkbox.json";
-import { Icon } from "@chakra-ui/icons";
 import PhaseRange from "components/phaseRangeBar/PhaseRange";
 import { getCurrentUser } from "service/AuthenticationService";
 import Services from "../../service/EcosystemMapServices";
-import { useTranslation } from "react-i18next";
+import Checkboxes from "assets/checkbox.json";
+import imgProgressBar from "../../assets/images/Group 194.png";
 
 export default function PublishedServiceForm({ name, orgName }) {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   let user = getCurrentUser();
+
   const CircleIcon = (props) => (
     <Icon viewBox="0 0 200 200" {...props}>
       <path
@@ -42,18 +45,20 @@ export default function PublishedServiceForm({ name, orgName }) {
     </Icon>
   );
 
-  const succesClose = () => {
-    onOpen(false);
-    onClose(true);
-  };
-  const dateformater = (date) => {
+  const dateFormatter = (date) => {
     try {
       return new Date(date).toUTCString();
     } catch (error) {
       console.log(error);
     }
   };
-  const updateRange = (data) => {
+
+  const handleSuccessClose = () => {
+    onOpen(false);
+    onClose(true);
+  };
+
+  const handleRangeChange = (data) => {
     Services.UpdatePhaseRangeonResize({
       id: orgName.id,
       toPhase: ConverterSDP.getPoint(data.high),
@@ -65,16 +70,14 @@ export default function PublishedServiceForm({ name, orgName }) {
       })
       .catch((error) => console.log(error));
   };
+
   return (
     <>
       <PhaseRange
         type=""
         low={ConverterSDP.getPoint(orgName.fromPhase)}
         high={ConverterSDP.getPoint(orgName.toPhase)}
-        // returnData={(data) => {
-        //   updateRange(data,orgName)
-        // }}
-        returnData={updateRange}
+        returnData={handleRangeChange}
         serviceStatus={orgName.serviceStatus}
         hideRailTicks={true}
         bg={
@@ -85,18 +88,6 @@ export default function PublishedServiceForm({ name, orgName }) {
         name={name}
         onClick={onOpen}
       />
-      {/* <Button
-        className="btnHover"
-        bg={
-          Checkboxes.checkbox.filter((result) => {
-            return result.name === orgName.serviceFocus;
-          })[0].color
-        }
-        style={style}
-        onClick={onOpen}
-      >
-        {name}
-      </Button> */}
       <Box m="0px" className="full-screen">
         <Modal onClose={onClose} size="full" isOpen={isOpen}>
           <ModalOverlay />
@@ -105,7 +96,7 @@ export default function PublishedServiceForm({ name, orgName }) {
               {name} &nbsp;
               <EditServiceModal
                 successClose={() => {
-                  succesClose();
+                  handleSuccessClose();
                 }}
                 data={orgName}
               />
@@ -171,7 +162,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                           />
                         </Box>
                       </Grid>
-                      {/* <Tag fontWeight="bold"> {orgName.serviceFocus} </Tag> */}
                     </Text>
                   </Box>
                   <Box className="pf-gry-crd" mb="5">
@@ -212,18 +202,17 @@ export default function PublishedServiceForm({ name, orgName }) {
                         {t(
                           "startup.popup.service.details.content.service.starts"
                         )}{" "}
-                        - {dateformater(orgName.serviceStartTime)}{" "}
+                        - {dateFormatter(orgName.serviceStartTime)}{" "}
                       </Tag>
                       <Tag fontSize="smaller" fontWeight="semibold">
                         {" "}
                         {t(
                           "startup.popup.service.details.content.service.ends"
                         )}{" "}
-                        - {dateformater(orgName.serviceEndTime)}{" "}
+                        - {dateFormatter(orgName.serviceEndTime)}{" "}
                       </Tag>
                     </Text>
                   </Box>
-
                   <Box mb="5">
                     <Text fontSize="ml">
                       {t("startup.popup.service.details.content.belongs.to")}:{" "}
@@ -240,14 +229,7 @@ export default function PublishedServiceForm({ name, orgName }) {
                       type={"show"}
                       phaseData={() => {}}
                     />
-                    {/* <Grid templateColumns="repeat(1, 1fr)">
-                    <Box>
-                      <Image src={imgRect1} alt="image" mt="2" width="80%" />
-                    </Box>
-                
-                  </Grid> */}
                   </Box>
-
                   <Box className="pf-gry-crd" mb="5">
                     <Text fontSize="ml">
                       {t("startup.popup.service.details.content.service.is")}
@@ -283,7 +265,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                     </Text>
                   </Box>
                 </Box>
-
                 <Box
                   width={[
                     "100%", // 0-30em
@@ -301,7 +282,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                     </Text>
                     <Tag fontWeight="bold">{orgName.previousService}</Tag>
                   </Box>
-
                   <Box ml="28px" className="pf-gry-crd" mb="5">
                     <Text fontSize="ml">
                       {t(
@@ -311,7 +291,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                     </Text>
                     <Tag fontWeight="bold">{orgName.followingService}</Tag>
                   </Box>
-
                   <Box ml="28px" className="pf-gry-crd" mb="5">
                     <Text fontSize="ml">
                       {t(
@@ -321,7 +300,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                     </Text>
                     <Tag fontWeight="bold">{orgName.serviceBreif}</Tag>
                   </Box>
-
                   <Box ml="28px" className="pf-gry-crd" mb="5">
                     <Text fontSize="ml">
                       {t("startup.popup.service.details.content.service.is")}:
@@ -345,7 +323,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                     &nbsp; <span className="lbl-progress-txt">100%</span>
                   </Box>
                 </Box>
-
                 <Box
                   width={[
                     "100%", // 0-30em
@@ -360,7 +337,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                     </Text>
                     <Tag fontWeight="bold">{orgName.serviceOutcomes}</Tag>
                   </Box>
-
                   <HStack
                     className="tag-labels"
                     spacing={0}
@@ -374,17 +350,10 @@ export default function PublishedServiceForm({ name, orgName }) {
                       </Tag>
                     ))}
                   </HStack>
-                  {/* 
-                <Box ml="28px" className="pf-gry-crd" mb="5">
-                  <Text fontSize="ml">
-                    Service that proceeds this service:
-                    <Tag fontWeight="bold">Lorem ipsum</Tag>
-                  </Text>
-                </Box> */}
                   <Box ml="28px" className="pf-gry-crd" mb="5">
                     <Text fontSize="ml">
                       {orgName.serviceComments[0] &&
-                        dateformater(
+                        dateFormatter(
                           orgName.serviceComments[
                             orgName.serviceComments.length - 1
                           ].updatedDataAt
@@ -405,7 +374,6 @@ export default function PublishedServiceForm({ name, orgName }) {
                       />
                     </Text>
                   </Box>
-
                   <Box ml="28px" className="pf-gry-crd" mb="5">
                     <Text fontSize="ml">
                       {t("startup.popup.service.details.content.timezone")}:{" "}
