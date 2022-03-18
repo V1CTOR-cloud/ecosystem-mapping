@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import {
   Modal,
   ModalOverlay,
@@ -12,9 +13,10 @@ import {
   Grid,
   Container,
 } from "@chakra-ui/react";
+
 import imgSource from "../../assets/images/service published graphic (1).png";
 
-export default function PublishServiceConfirm({ publish, publishStatus, res }) {
+const PublishServiceConfirm = ({ publish, publishStatus, res }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const publishConfirmImg = {
@@ -72,4 +74,6 @@ export default function PublishServiceConfirm({ publish, publishStatus, res }) {
       </Modal>
     </>
   );
-}
+};
+
+export default PublishServiceConfirm;
