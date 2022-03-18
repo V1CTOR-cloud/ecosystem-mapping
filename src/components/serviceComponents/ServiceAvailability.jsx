@@ -1,21 +1,24 @@
-import React from "react";
-import { Flex, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import React, { useEffect, useMemo, useState } from "react";
+
 import {
-  ModalBody,
-  HStack,
-  Grid,
   Box,
-  RadioGroup,
+  Flex,
+  FormControl,
+  FormLabel,
+  Grid,
+  HStack,
+  Input,
+  ModalBody,
   Radio,
+  RadioGroup,
+  Stack,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+
 import SelectDate from "components/microComponents/SelectDate";
 import SelectTime from "components/microComponents/SelectTime";
 import LocationMap from "./LocationMap";
-import { Stack } from "@chakra-ui/react";
 import TimezoneComponent from "components/microComponents/TimeZoneComponenet";
-import { useState, useEffect, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-//import { MultiInput } from "components/microComponents/MultiStackInput";
 
 const ServiceAvailability = ({
   ServiceAvailabilityData,
@@ -33,30 +36,12 @@ const ServiceAvailability = ({
   const [serviceEndTime, setServiceEndTime] = useState(
     new Date().getHours().toString() + ":" + new Date().getMinutes()
   );
-  //const [multiInput, setMultiInput] = useState([]);
   const [timeZone, setTimeZone] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
   const [serviceLocation, setServiceLocation] = useState("");
   const [val, setVal] = useState("");
 
-  // console.log(
-  //   serviceStartDate +
-  //     "-" +
-  //     serviceEndDate +
-  //     "-" +
-  //     serviceStartTime +
-  //     "-" +
-  //     serviceEndTime +
-  //     "-" +
-  //     timeZone +
-  //     "-" +
-  //     online +
-  //     "-" +
-  //     venue +
-  //     "-" +
-  //     JSON.stringify(multiInput)
-  // );
   useEffect(() => {
     if (isEdit) {
       setServiceStartDate(dataS.serviceStartTime);
@@ -69,9 +54,9 @@ const ServiceAvailability = ({
       setServiceLocation(dataS.serviceLocation);
       if (dataS.onlineService) setVal("Online");
       if (dataS.offlineSerivce) setVal("Venue");
-      //setMultiInput(dataS.multi);
     }
   }, [dataS, isEdit]);
+
   useMemo(() => {
     ServiceAvailabilityData({
       startDate: serviceStartDate,
@@ -82,7 +67,6 @@ const ServiceAvailability = ({
       online: online,
       venue: venue,
       serviceLocation: serviceLocation,
-      //multiInput: multiInput,
     });
   }, [
     serviceStartDate,
@@ -93,9 +77,9 @@ const ServiceAvailability = ({
     online,
     venue,
     serviceLocation,
-    //multiInput,
     ServiceAvailabilityData,
   ]);
+
   const handleChange = (e) => {
     setVal(e);
     if (e === "Online") {
@@ -107,6 +91,7 @@ const ServiceAvailability = ({
       setOnline(false);
     }
   };
+
   return (
     <ModalBody pb={6}>
       <Grid
@@ -126,22 +111,11 @@ const ServiceAvailability = ({
               date={serviceStartDate}
               getDate={(e) => {
                 setServiceStartDate(e);
-                // ServiceAvailabilityData({
-                //   startDate: e,
-                //   endDate: serviceEndDate,
-                //   startTime: serviceStartTime,
-                //   endTime: serviceEndTime,
-                //   timezone: timeZone,
-                //   online: online,
-                //   venue: venue,
-                //   multiInput: multiInput,
-                // });
               }}
               className="fm-ip-flds"
             />
           </FormControl>
         </Box>
-
         <Box>
           <FormControl>
             <FormLabel className="frm-lbl">
@@ -150,16 +124,6 @@ const ServiceAvailability = ({
             <SelectTime
               getTime={(e) => {
                 setServiceStartTime(e);
-                // ServiceAvailabilityData({
-                //   startDate: serviceStartDate,
-                //   endDate: serviceEndDate,
-                //   startTime: e,
-                //   endTime: serviceEndTime,
-                //   timezone: timeZone,
-                //   online: online,
-                //   venue: venue,
-                //   multiInput: multiInput,
-                // });
               }}
               className="fm-ip-flds"
             />
@@ -170,48 +134,17 @@ const ServiceAvailability = ({
             <FormLabel className="frm-lbl">
               {t("startup.popup.service.details.content.service.ends")}
             </FormLabel>
-            {/* <SelectDate
-              IsEdit={isEdit}
-              enddateval={serviceEndDate}
-              getDate={(e) => {
-                setServiceEndDate(e);
-                // ServiceAvailabilityData({
-                //   startDate: serviceStartDate,
-                //   endDate: e,
-                //   startTime: serviceStartTime,
-                //   endTime: serviceEndTime,
-                //   timezone: timeZone,
-                //   online: online,
-                //   venue: venue,
-                //   multiInput: multiInput,
-                // });
-              }}
-              validationdate={serviceStartDate}
-              className="fm-ip-flds"
-            /> */}
-
             <SelectDate
               IsEdit={isEdit}
               date={serviceEndDate}
               getDate={(e) => {
                 setServiceEndDate(e);
-                // ServiceAvailabilityData({
-                //   startDate: serviceStartDate,
-                //   endDate: e,
-                //   startTime: serviceStartTime,
-                //   endTime: serviceEndTime,
-                //   timezone: timeZone,
-                //   online: online,
-                //   venue: venue,
-                //   multiInput: multiInput,
-                // });
               }}
               validationDate={serviceStartDate}
               className="fm-ip-flds"
             />
           </FormControl>
         </Box>
-
         <Box>
           <FormControl>
             <FormLabel className="frm-lbl">
@@ -220,16 +153,6 @@ const ServiceAvailability = ({
             <SelectTime
               getTime={(e) => {
                 setServiceEndTime(e);
-                // ServiceAvailabilityData({
-                //   startDate: serviceStartDate,
-                //   endDate: serviceEndDate,
-                //   startTime: serviceStartTime,
-                //   endTime: e,
-                //   timezone: timeZone,
-                //   online: online,
-                //   venue: venue,
-                //   multiInput: multiInput,
-                // });
               }}
               validationtime={serviceStartTime}
               className="fm-ip-flds"
@@ -237,31 +160,18 @@ const ServiceAvailability = ({
           </FormControl>
         </Box>
       </Grid>
-
       <FormControl>
         <FormLabel className="frm-lbl">
           {t("startup.popup.service.details.content.timezone")}
         </FormLabel>
-        {/* <LocationDropdown className="fm-ip-flds" /> */}
         <TimezoneComponent
           data={dataS && dataS.timezone ? dataS.timezone : timeZone}
           getTimeZone={(e) => {
             setTimeZone(e);
-            // ServiceAvailabilityData({
-            //   startDate: serviceStartDate,
-            //   endDate: serviceEndDate,
-            //   startTime: serviceStartTime,
-            //   endTime: serviceEndTime,
-            //   timezone: e,
-            //   online: online,
-            //   venue: venue,
-            //   multiInput: multiInput,
-            // });
           }}
           className="fm-ip-flds"
         />
       </FormControl>
-
       <FormControl mt={4}>
         <FormLabel className="frm-lbl">
           {t("startup.popup.filter.location")}
@@ -319,78 +229,6 @@ const ServiceAvailability = ({
                   </Flex>
                 </Box>
               </RadioGroup>
-
-              {/* <Checkbox
-                onChange={() => {
-                  setOnline(!online);
-                  // ServiceAvailabilityData({
-                  //   startDate: serviceStartDate,
-                  //   endDate: serviceEndDate,
-                  //   startTime: serviceStartTime,
-                  //   endTime: serviceEndTime,
-                  //   timezone: timeZone,
-                  //   online: !online,
-                  //   venue: venue,
-                  //   multiInput: multiInput,
-                  // });
-                }}
-                value="1"
-              >
-                Online
-              </Checkbox>
-              <Box ml="10px" w="40%">
-                {online && (
-                  <Input
-                    placeholder="Enter URL"
-                    className="fm-ip-flds"
-                    size="sm"
-                    type='url'
-                    onChange={(data) => setServiceLocation( data.target.value )}
-                  />
-                )}
-              </Box>
-            </Box>
-            <Box display="inline-flex">
-              <Box>
-                <Checkbox
-                  onChange={() => {
-                    setVenue(!venue);
-                    // ServiceAvailabilityData({
-                    //   startDate: serviceStartDate,
-                    //   endDate: serviceEndDate,
-                    //   startTime: serviceStartTime,
-                    //   endTime: serviceEndTime,
-                    //   timezone: timeZone,
-                    //   online: online,
-                    //   venue: !venue,
-                    //   multiInput: multiInput,
-                    // });
-                  }}
-                  value="2"
-                >
-                  Venue
-                </Checkbox>
-              </Box>
-              <Box ml="12px" w="50%">
-                {venue && (
-                  <Input
-                    placeholder="Enter Venue"
-                    className="fm-ip-flds"
-                    size="sm"
-                    onChange={(data) => setServiceLocation( data.target.value )}
-                      // ServiceAvailabilityData({
-                      //   startDate: serviceStartDate,
-                      //   endDate: serviceEndDate,
-                      //   startTime: serviceStartTime,
-                      //   endTime: serviceEndTime,
-                      //   timezone: timeZone,
-                      //   online: online,
-                      //   venue: venue,
-                      //   multiInput: e,
-                      // });
-                  />
-                )}
-              </Box> */}
             </Box>
           </Stack>
         </HStack>
@@ -400,4 +238,4 @@ const ServiceAvailability = ({
   );
 };
 
-export { ServiceAvailability };
+export default ServiceAvailability;
