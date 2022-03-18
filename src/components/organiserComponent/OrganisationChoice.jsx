@@ -1,7 +1,9 @@
-import "./styles.css";
+import {useRef, useState} from "react";
+
+import {useTranslation} from "react-i18next";
 import SelectSearch from "react-select-search";
-import { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+
+import "./styles.css";
 
 const OrganisationChoice = ({ data, getOrgData, valueData }) => {
   const { t } = useTranslation();
