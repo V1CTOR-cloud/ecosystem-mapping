@@ -5,6 +5,7 @@ import { Box, Image } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 import { SliderButton } from "helper/constant";
+import "react-pro-sidebar/dist/css/styles.css";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(true);
