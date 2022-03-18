@@ -1,10 +1,11 @@
 import React from "react";
-import Checkboxes from "assets/checkbox.json";
-import { Box, Grid } from "@chakra-ui/react";
-import { Icon } from "@chakra-ui/icons";
-import { Radio, RadioGroup } from "@chakra-ui/react";
 
-const CheckboxComponent = ({radioValue,val}) => {
+import { Box, Grid, Radio, RadioGroup } from "@chakra-ui/react";
+import { Icon } from "@chakra-ui/icons";
+
+import checkboxes from "assets/checkbox.json";
+
+const RadioButtonsServiceType = ({ radioValue, val }) => {
   const CircleIcon = (props) => (
     <Icon viewBox="0 0 200 200" {...props}>
       <path
@@ -13,11 +14,12 @@ const CheckboxComponent = ({radioValue,val}) => {
       />
     </Icon>
   );
+
   return (
     <RadioGroup
-    value={val}
+      value={val}
       onChange={(e) => {
-        radioValue(e)
+        radioValue(e);
       }}
     >
       <Grid
@@ -25,7 +27,7 @@ const CheckboxComponent = ({radioValue,val}) => {
         gap={3}
         className="mod-checklbl service-type"
       >
-        {Checkboxes.checkbox.map((result) => (
+        {checkboxes.checkbox.map((result) => (
           <Box pos="relative">
             <Radio value={result.name}>{result.name}</Radio>
             <CircleIcon
@@ -40,4 +42,5 @@ const CheckboxComponent = ({radioValue,val}) => {
     </RadioGroup>
   );
 };
-export default CheckboxComponent;
+
+export default RadioButtonsServiceType;
