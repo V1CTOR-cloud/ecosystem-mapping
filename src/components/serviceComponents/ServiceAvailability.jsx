@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import SelectDate from "components/microComponents/SelectDate";
 import SelectTime from "components/microComponents/SelectTime";
-import { LocationMap } from "./LocationMap";
+import LocationMap from "./LocationMap";
 import { Stack } from "@chakra-ui/react";
 import TimezoneComponent from "components/microComponents/TimeZoneComponenet";
 import { useState, useEffect, useMemo } from "react";
