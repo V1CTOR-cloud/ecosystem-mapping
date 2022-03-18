@@ -104,7 +104,7 @@ export default function PublishedServiceForm({ name, orgName }) {
             <ModalHeader className="pf-hdr" mb="15px" mr="3">
               {name} &nbsp;
               <EditServiceModal
-                succesClose={() => {
+                successClose={() => {
                   succesClose();
                 }}
                 data={orgName}

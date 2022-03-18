@@ -1,3 +1,5 @@
+import React, { useCallback, useState, useEffect } from "react";
+
 import {
   Accordion,
   AccordionItem,
@@ -13,24 +15,25 @@ import {
   ModalHeader,
   ModalFooter,
   ModalCloseButton,
-  useDisclosure,
   Box,
   Text,
+  Flex,
+  Image,
+  useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { Flex, Image } from "@chakra-ui/react";
-import React, { useCallback, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+
 import SaveAsDraftConfirm from "./SaveAsDraftConfirm";
-import imgSource from "../../assets/images/Vector.png";
+import PublishServiceConfirm from "./PublishServiceConfirm";
 import { ServiceBasicInfo } from "./ServiceBasicInfo";
 import { ServiceAvailability } from "./ServiceAvailability";
 import { ServiceInfo } from "./ServiceInfo";
 import { TagComment } from "./TagComment";
-import { useToast } from "@chakra-ui/react";
 import Service from "service/EcosystemMapServices";
-import PublishServiceConfirm from "./PublishServiceConfirm";
-import { useTranslation } from "react-i18next";
+import imgSource from "../../assets/images/Vector.png";
 
-const EditServiceModal = ({ data, succesClose }) => {
+const EditServiceModal = ({ data, successClose }) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -40,6 +43,68 @@ const EditServiceModal = ({ data, succesClose }) => {
   const [tags, setTags] = useState([]);
   const [comments, setComments] = useState("");
   const [serviceState, setServiceState] = useState({});
+
+  const handleTagDataCallback = (data) => {
+    setTags(data.tags);
+  };
+
+  const handleCommentDataCallback = (data) => {
+    setComments(data.comment);
+  };
+
+  const handleBasicInfoChange = (a, b, c, d) => {
+    setBasicInfo([a, b, c, d]);
+  };
+
+  const handleServiceInfoChange = (data) => {
+    setServiceInfo(data);
+  };
+
+  const handleErrorToastCall = () => {
+    toast({
+      title: t("startup.toast.service.name.error"),
+      description: t("startup.toast.service.name.message"),
+      status: "error",
+      position: "top-right",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  const handleSuccessToastCall = () => {
+    toast({
+      title: t("startup.toast.update"),
+      description: t("startup.toast.service.update.message"),
+      status: "success",
+      position: "top-right",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
+  const editServiceFunc = (serviceStatus) => {
+    Service.editService({
+      basicService: basicInfo,
+      serviceInfo: serviceInfo,
+      serviceAvailibility: serviceAvailability,
+      tags: tags,
+      comments: comments,
+      serviceStatus: serviceStatus,
+      id: data.id,
+    })
+      .then((res) => {
+        if (res.message !== undefined) {
+          handleErrorToastCall();
+        } else {
+          successClose();
+          handleSuccessToastCall();
+          onOpen(false);
+          onClose(true);
+        }
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     setBasicInfo([
@@ -71,67 +136,6 @@ const EditServiceModal = ({ data, succesClose }) => {
     setServiceAvailability(a, b, c, d, e, f, g, h);
   };
 
-  const tagDataCallback = (data) => {
-    setTags(data.tags);
-  };
-  const commentDataCallback = (data) => {
-    setComments(data.comment);
-  };
-  const basicInfoData = (a, b, c, d) => {
-    setBasicInfo([a, b, c, d]);
-  };
-  const ServiceInfoDataBack = (data) => {
-    setServiceInfo(data);
-  };
-  const callToast = () => {
-    toast({
-      title: t("startup.toast.service.name.error"),
-      description: t("startup.toast.service.name.message"),
-      status: "error",
-      position: "top-right",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
-  const callToast2 = () => {
-    toast({
-      title: t("startup.toast.update"),
-      description: t("startup.toast.service.update.message"),
-      status: "success",
-      position: "top-right",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
-  const editServiceFunc = (serviceStatus) => {
-    Service.editService({
-      basicService: basicInfo,
-      serviceInfo: serviceInfo,
-      serviceAvailibility: serviceAvailability,
-      tags: tags,
-      comments: comments,
-      serviceStatus: serviceStatus,
-      id: data.id,
-    })
-      .then((res) => {
-        if (res.message !== undefined) {
-          callToast();
-        } else {
-          succesClose();
-          callToast2();
-          onOpen(false);
-          onClose(true);
-        }
-        window.location.reload();
-      })
-      .catch((err) => console.log(err));
-  };
-  // const handleEditServiceCallback=(event)=>{
-  //   const { name,value } = event.target
-  //   let service=serviceState
-  //   service[name]=value
-  //   setServiceState(service)
-  //   }
   return (
     <Box zIndex="100">
       <Grid>
@@ -161,21 +165,13 @@ const EditServiceModal = ({ data, succesClose }) => {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4} className="acc-panel">
-                  {/* <ServiceBasicInfo
-                  dataS={data}
-                  basicInfoData={useCallback((a, b, c, d) => {
-                    basicInfoData(a, b, c, d);
-                  }, [])}
-                  isEdit={true}
-                /> */}
                   <ServiceBasicInfo
                     dataS={data}
                     basicInfoData={useCallback((a, b, c, d) => {
-                      basicInfoData(a, b, c, d);
+                      handleBasicInfoChange(a, b, c, d);
                     }, [])}
                     isEdit={true}
                     name={serviceState.serviceName}
-                    //onChangeBasicInfo={(evt)=>handleEditServiceCallback(evt)}
                   />
                 </AccordionPanel>
               </AccordionItem>
@@ -218,7 +214,7 @@ const EditServiceModal = ({ data, succesClose }) => {
                   <ServiceInfo
                     dataS={data}
                     ServiceInfoData={useCallback((data) => {
-                      ServiceInfoDataBack(data);
+                      handleServiceInfoChange(data);
                     }, [])}
                     isEdit={true}
                   />
@@ -228,28 +224,12 @@ const EditServiceModal = ({ data, succesClose }) => {
             <TagComment
               dataS={data}
               tagData={useCallback((data) => {
-                commentDataCallback(data);
+                handleCommentDataCallback(data);
               }, [])}
-              // commentdata={useCallback((data) => {
-              //   tagDataCallback(data);
-              // }, [])}
-              commentData={(data) => tagDataCallback(data)}
+              commentData={(data) => handleTagDataCallback(data)}
               isEdit={true}
             />
-            {/* <ModalFooter p="0" mt="80px">
-            <SaveAsDraftConfirm saveDraft={"Save as a draft"} />
-            <Button
-              onClick={() => {
-                setserviceStatus("Published");
-                editServiceFunc();
-              }}
-              className="btn-pbh"
-            >
-              Publish
-            </Button>
-          </ModalFooter> */}
             <ModalFooter p="0" mt="80px">
-              {/* <ServiceFilter btnFilter={'Filter'}/> */}
               <SaveAsDraftConfirm
                 draftStatus={(serviceStatus) => {
                   serviceStatus && editServiceFunc(serviceStatus);
@@ -258,9 +238,6 @@ const EditServiceModal = ({ data, succesClose }) => {
                   "startup.popup.service.content.service.button.draft"
                 )}
               />
-              {/* {basicInfo[0].trim().length > 0 &&
-              basicInfo[1].trim().length > 0 &&
-              basicInfo[2].trim().length > 0 && ( */}
               <PublishServiceConfirm
                 publishStatus={(serviceStatus) => {
                   serviceStatus && editServiceFunc(serviceStatus);
@@ -269,7 +246,6 @@ const EditServiceModal = ({ data, succesClose }) => {
                   "startup.popup.service.content.service.button.publish"
                 )}
               />
-              {/* )} */}
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -277,4 +253,5 @@ const EditServiceModal = ({ data, succesClose }) => {
     </Box>
   );
 };
+
 export default EditServiceModal;
