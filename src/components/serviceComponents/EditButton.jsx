@@ -1,9 +1,12 @@
-import { Flex, Image, Text, useDisclosure } from '@chakra-ui/react';
-import React from 'react';
-import imgSource from '../assets/images/Vector.png';
+import React from "react";
 
-export default function EditButton() {
-    const { onOpen } = useDisclosure();
+import { Flex, Image, Text, useDisclosure } from "@chakra-ui/react";
+
+import imgSource from "../assets/images/Vector.png";
+
+const EditButton = () => {
+  const { onOpen } = useDisclosure();
+
   return (
     <Flex align="center">
       <Image onClick={onOpen} src={imgSource} alt="image" mr="1" />
@@ -12,4 +15,6 @@ export default function EditButton() {
       </Text>
     </Flex>
   );
-}
+};
+
+export default EditButton;
