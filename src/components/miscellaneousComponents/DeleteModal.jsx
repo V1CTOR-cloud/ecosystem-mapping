@@ -14,6 +14,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import Service from "../../service/RegionServices";
+import "../../assets/fonts/fonts.css";
 
 const DeleteModal = (props) => {
   const { t } = useTranslation();

@@ -5,6 +5,7 @@ import { Box, Flex, HStack, Tag, TagLabel, Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import Services from "service/EcosystemMapServices";
+import "react-tagsinput/react-tagsinput.css";
 
 const TagElement = ({ commentData, dataS, isEdit }) => {
   const { t } = useTranslation();
