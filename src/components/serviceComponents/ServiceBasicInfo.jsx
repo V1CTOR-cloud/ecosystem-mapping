@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ServiceType } from "./ServiceType";
-import { ApplicationType } from "./ApplicationType";
+import ApplicationType from "./ApplicationType";
 import { useTranslation } from "react-i18next";
 import {
   FormControl,
