@@ -1,40 +1,36 @@
+import React, { useCallback, useState } from "react";
+
 import {
   Accordion,
-  AccordionItem,
   AccordionButton,
   AccordionIcon,
+  AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/accordion";
 import {
+  Box,
+  Button,
   Grid,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalCloseButton,
-  useDisclosure,
-  Box,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+
 import PublishServiceConfirm from "../serviceComponents/PublishServiceConfirm";
 import SaveAsDraftConfirm from "../serviceComponents/SaveAsDraftConfirm";
-// import PublishedServiceForm from "../serviceComponents/PublishedServiceForm";
-import { ServiceBasicInfo } from "../serviceComponents/ServiceBasicInfo";
-import { ServiceAvailability } from "../serviceComponents/ServiceAvailability";
-import { ServiceInfo } from "../serviceComponents/ServiceInfo";
-import { TagComment } from "../serviceComponents/TagComment";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useToast } from "@chakra-ui/react";
+import { ServiceBasicInfo } from "./ServiceBasicInfo";
+import { ServiceAvailability } from "./ServiceAvailability";
+import { ServiceInfo } from "./ServiceInfo";
+import { TagComment } from "./TagComment";
 
-export default function AddServiceModal({
-  sendData,
-  mapId,
-  createNewServiceCallback,
-}) {
+const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
   const { t } = useTranslation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,9 +43,7 @@ export default function AddServiceModal({
   const [res, setRes] = useState(false);
   const [tags, setTags] = useState([]);
 
-  // const [arr, setarr] = useState([])
-
-  const callToast = () => {
+  const handleToastCall = () => {
     toast({
       title: t("startup.toast.service.name.error"),
       description: t("startup.toast.service.name.message"),
@@ -59,47 +53,29 @@ export default function AddServiceModal({
       isClosable: true,
     });
   };
-  const basicInfoData = (a, b, c, d) => {
+
+  const handleBasicInfoChange = (a, b, c, d) => {
     setRes(false);
     setBasicInfo([a, b, c, d]);
   };
-  const ServiceAvailabilityData = (data) => {
+
+  const handleServiceAvailabilityChange = (data) => {
     setServiceAvailability(data);
   };
-  const ServiceInfoDataBack = (data) => {
+
+  const handleServiceInfoChange = (data) => {
     setServiceInfo(data);
   };
-  const commentDataCallback = (data) => {
+
+  const handleCommentCallback = (data) => {
     setComments(data.comment);
   };
-  const tagDataCallback = (data) => {
+
+  const handleTagCallback = (data) => {
     setTags(data.tags);
   };
-  const SendFinalData = (serviceStatus) => {
-    // let TagServices = [];
-    // arr.forEach( element => {
-    //   TagServices.push({id : element})
-    // })
-    // Service.pushService({
-    //   basicService: basicInfo,
-    //   serviceAvailibility: serviceAvailability,
-    //   serviceInfo: serviceInfo,
-    //   tags: tags,
-    //   comments: comments,
-    //   mapID:mapId
-    // }).then((res) => {
-    //   setBasicInfo(["", "", "", ""]);
-    //   setRes(true);
-    //   sendData(true)
-    //   setTimeout(() => {
-    //     onOpen(false);
-    //     onClose(true);
-    //   }, 1000);
-    //   if (res.message !== undefined) {
-    //     callToast();
-    //   }
-    // });
 
+  const SendFinalData = (serviceStatus) => {
     if (createNewServiceCallback) {
       let finalData = {
         basicService: basicInfo,
@@ -120,9 +96,10 @@ export default function AddServiceModal({
       }, 1000);
     }
     if (res.message !== undefined) {
-      callToast();
+      handleToastCall();
     }
   };
+
   return (
     <Grid>
       <div>
@@ -134,7 +111,6 @@ export default function AddServiceModal({
           {t("startup.home.page.header.add.service.button")}
         </Button>
       </div>
-
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -142,12 +118,7 @@ export default function AddServiceModal({
         onClose={onClose}
       >
         <ModalOverlay />
-        <ModalContent
-          className="mod-service-add-edit"
-          maxW="920px"
-          //ml="224px"
-          mt="80px"
-        >
+        <ModalContent className="mod-service-add-edit" maxW="920px" mt="80px">
           <ModalHeader className="mod-header" b="0">
             {t("startup.popup.service.content.heading.create")}
           </ModalHeader>
@@ -170,7 +141,7 @@ export default function AddServiceModal({
               <AccordionPanel pb={4} className="acc-panel">
                 <ServiceBasicInfo
                   basicInfoData={(a, b, c, d) => {
-                    basicInfoData(a, b, c, d);
+                    handleBasicInfoChange(a, b, c, d);
                   }}
                 />
               </AccordionPanel>
@@ -190,7 +161,7 @@ export default function AddServiceModal({
                 <ServiceAvailability
                   isAdd={true}
                   ServiceAvailabilityData={useCallback((data) => {
-                    ServiceAvailabilityData(data);
+                    handleServiceAvailabilityChange(data);
                   }, [])}
                 />
               </AccordionPanel>
@@ -209,7 +180,7 @@ export default function AddServiceModal({
               <AccordionPanel pb={4} className="acc-panel">
                 <ServiceInfo
                   ServiceInfoData={useCallback((data) => {
-                    ServiceInfoDataBack(data);
+                    handleServiceInfoChange(data);
                   }, [])}
                 />
               </AccordionPanel>
@@ -217,17 +188,13 @@ export default function AddServiceModal({
           </Accordion>
           <TagComment
             tagData={useCallback((data) => {
-              commentDataCallback(data);
+              handleCommentCallback(data);
             }, [])}
             commentData={useCallback((data) => {
-              tagDataCallback(data);
+              handleTagCallback(data);
             }, [])}
-            // tagArray={useCallback((data) => {
-            //   setarr(data);
-            // }, [])}
           />
           <ModalFooter p="0" mt="80px">
-            {/* <ServiceFilter btnFilter={'Filter'}/> */}
             <SaveAsDraftConfirm
               res={res}
               draftStatus={(serviceStatus) => {
@@ -237,9 +204,6 @@ export default function AddServiceModal({
                 "startup.popup.service.content.service.button.draft"
               )}
             />
-            {/* {basicInfo[0].trim().length > 0 &&
-              basicInfo[1].trim().length > 0 &&
-              basicInfo[2].trim().length > 0 && ( */}
             <PublishServiceConfirm
               res={res}
               publishStatus={(serviceStatus) => {
@@ -249,10 +213,11 @@ export default function AddServiceModal({
                 "startup.popup.service.content.service.button.publish"
               )}
             />
-            {/* )} */}
           </ModalFooter>
         </ModalContent>
       </Modal>
     </Grid>
   );
-}
+};
+
+export default AddServiceModal;
