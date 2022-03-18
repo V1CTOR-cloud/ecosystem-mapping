@@ -1,6 +1,6 @@
 import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
-import AppCheckboxComponent from "./AppCheckboxComponent";
+import RadioButtonsApplicationType from "./RadioButtonsApplicationType";
 import { useTranslation } from "react-i18next";
 
 const ApplicationType = ({radioValue,val}) => {
@@ -10,7 +10,7 @@ const ApplicationType = ({radioValue,val}) => {
       <FormLabel className="frm-lbl" mt="24px" mb="17px">
       {t('startup.popup.service.content.application.type')}
       </FormLabel>
-      <AppCheckboxComponent radioValue={(e)=>radioValue(e)} val={val} />
+      <RadioButtonsApplicationType radioValue={(e)=>radioValue(e)} val={val} />
     </FormControl>
   );
 };
