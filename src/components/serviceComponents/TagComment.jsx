@@ -1,22 +1,20 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Grid } from "@chakra-ui/react";
-import { FormControl, FormLabel, Textarea } from "@chakra-ui/react";
-import TagElement from "components/microComponents/TagElement";
+import React, { useState, useMemo } from "react";
+
+import { FormControl, FormLabel, Textarea, Grid } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+
+import TagElement from "components/microComponents/TagElement";
 
 const TagComment = ({ tagData, dataS, isEdit, commentData }) => {
   const { t } = useTranslation();
   const [comment, setComment] = useState("");
-  useEffect(() => {
-    if (isEdit) {
-      // setComment(dataS.serviceComments)
-    }
-  }, [dataS, isEdit]);
+
   useMemo(() => {
     tagData({
       comment: comment,
     });
   }, [comment, tagData]);
+
   return (
     <Grid templateColumns="repeat(2, 1fr)" gridRow="1" gap={10} mt="48px">
       <FormControl>
@@ -25,7 +23,7 @@ const TagComment = ({ tagData, dataS, isEdit, commentData }) => {
         </FormLabel>
         <TagElement
           dataS={dataS}
-          isEdit={isEdit} /*tagArray={(data) => {tagArray &&  tagArray(data)}}*/
+          isEdit={isEdit}
           commentData={(data) => commentData(data)}
         />
       </FormControl>
@@ -47,4 +45,4 @@ const TagComment = ({ tagData, dataS, isEdit, commentData }) => {
   );
 };
 
-export {TagComment};
+export default TagComment;
