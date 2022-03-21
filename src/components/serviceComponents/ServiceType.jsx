@@ -1,10 +1,13 @@
 import React from "react";
+
 import { FormControl, FormLabel } from "@chakra-ui/react";
-import RadioButtonsServiceType from "./RadioButtonsServiceType";
 import { useTranslation } from 'react-i18next';
+
+import RadioButtonsServiceType from "./RadioButtonsServiceType";
 
 const ServiceType = ({radioValue,val}) => {
   const { t } = useTranslation();
+
   return (
     <FormControl mt={4}>
       <FormLabel className="frm-lbl" mt="24px" mb="17px">
@@ -15,4 +18,4 @@ const ServiceType = ({radioValue,val}) => {
   );
 };
 
-export { ServiceType };
+export default ServiceType;

@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import OrganisationChoice from "components/organiserComponent/OrganisationChoice";
 import Service from "service/EcosystemMapServices";
 import AddOrganisation from "components/organiserComponent/AddOrganisation";
-import { ServiceType } from "./ServiceType";
+import ServiceType from "./ServiceType";
 import ApplicationType from "./ApplicationType";
 
 const ServiceBasicInfo = ({
