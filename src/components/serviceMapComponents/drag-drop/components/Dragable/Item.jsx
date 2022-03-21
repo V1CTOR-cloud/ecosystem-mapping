@@ -14,8 +14,8 @@ export default class Item extends Component {
     handleDragStart=(e)=>{
        
         const node = this.myRef.current;
-        var x = e.pageX - node.offsetTop;
-        var y = e.pageY - node.offsetLeft;
+        const x = e.pageX - node.offsetTop;
+        const y = e.pageY - node.offsetLeft;
         this.setState({
             top:y,
             left:x
