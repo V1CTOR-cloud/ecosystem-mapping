@@ -7,7 +7,7 @@ import Services from "service/EcosystemMapServices";
 import { withRouter } from "react-router";
 import { Tooltip } from "@chakra-ui/react";
 
-class App extends Component {
+class DragDrop extends Component {
 
   constructor(props) {
     super(props);
@@ -532,7 +532,7 @@ class App extends Component {
 }
 
 class Draggable extends Component {
-  obj = new App();
+  obj = new DragDrop();
   onMouseDown(e) {
     console.log("Draggable.onMouseDown");
     var elm = document.elementFromPoint(e.clientX, e.clientY);
@@ -654,4 +654,4 @@ class Draggable extends Component {
 //   }
 // }
 
-export default withRouter(App);
+export default withRouter(DragDrop);
