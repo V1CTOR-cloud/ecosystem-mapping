@@ -31,7 +31,6 @@ import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
 
 const ServiceFilter = ({
   onServiceCategoryValCallback,
-  ServiceCategorySDPVal: onServiceCategorySDPValCallback,
   onClearFilter,
   onFilterValuesCallback,
   filterCriteria,
@@ -124,7 +123,6 @@ const ServiceFilter = ({
 
   const handleChangeServiceFilter = () => {
     onServiceCategoryValCallback(val);
-    onServiceCategorySDPValCallback(phase);
 
     onOpen(false);
     onClose(true);
