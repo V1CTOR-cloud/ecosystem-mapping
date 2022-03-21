@@ -26,7 +26,7 @@ import {useTranslation} from "react-i18next";
 
 import Checkboxes from "assets/checkbox.json";
 import AppType from "assets/applicationType.json";
-import {ServicePhase} from "./ServicePhase";
+import ServicePhase from "./ServicePhase";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
 
 const ServiceFilter = ({

@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Multiselect } from "multiselect-react-dropdown";
 
-import { ServicePhase } from "./ServicePhase";
+import ServicePhase from "./ServicePhase";
 import Service from "../../service/EcosystemMapServices";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
 

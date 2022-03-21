@@ -21,7 +21,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Icon } from "@chakra-ui/icons";
 
-import { ServicePhase } from "./ServicePhase";
+import ServicePhase from "./ServicePhase";
 import ServiceChangesLog from "./ServiceChangesLog";
 import EditServiceModal from "./EditServiceModal";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
