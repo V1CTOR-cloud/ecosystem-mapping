@@ -1,40 +1,41 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
+
 import {
-  Grid,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalCloseButton,
-  ModalBody,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  useDisclosure,
   Box,
-  HStack,
-  Text,
+  Button,
   Checkbox,
   CheckboxGroup,
+  FormControl,
+  FormLabel,
+  Grid,
+  HStack,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-// import SelectDate from "components/microComponents/SelectDate";
-// import Checkboxes from "assets/checkbox.json";
+import {Icon} from "@chakra-ui/icons";
+import {useTranslation} from "react-i18next";
+
+
 import Checkboxes from "assets/checkbox.json";
 import AppType from "assets/applicationType.json";
-import { ServicePhase } from "./ServicePhase";
+import {ServicePhase} from "./ServicePhase";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import { Icon } from "@chakra-ui/icons";
-import { useTranslation } from "react-i18next";
 
-export default function ServiceFilter({
+const ServiceFilter = ({
   onServiceCategoryValCallback,
   ServiceCategorySDPVal: onServiceCategorySDPValCallback,
   onClearFilter,
   onFilterValuesCallback,
   filterCriteria,
-}) {
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -175,7 +176,7 @@ export default function ServiceFilter({
               gridRow="1"
               gap={10}
               mt="2"
-            ></Grid>
+            />
 
             <FormControl mt={4}>
               <FormLabel style={labelStyle}>
@@ -201,9 +202,9 @@ export default function ServiceFilter({
                   onChange={(e) =>
                     handleFilter("location", {
                       onlineService: e.target.checked,
-                      offlineSerivce:
+                      offlineService:
                         filterCriteria && filterCriteria.location
-                          ? filterCriteria.location.offlineSerivce
+                          ? filterCriteria.location.offlineService
                           : false,
                     })
                   }
@@ -221,10 +222,10 @@ export default function ServiceFilter({
                   size="lg"
                   colorScheme="blue"
                   className="cstmcheckbx"
-                  value="offlineSerivce"
+                  value="offlineService"
                   onChange={(e) =>
                     handleFilter("location", {
-                      offlineSerivce: e.target.checked,
+                      offlineService: e.target.checked,
                       onlineService:
                         filterCriteria && filterCriteria.location
                           ? filterCriteria.location.onlineService
@@ -234,7 +235,7 @@ export default function ServiceFilter({
                   defaultChecked={
                     filterCriteria &&
                     filterCriteria.location &&
-                    filterCriteria.location.offlineSerivce
+                    filterCriteria.location.offlineService
                   }
                 >
                   <Text style={chkHeaderStyle}>
@@ -396,4 +397,6 @@ export default function ServiceFilter({
       </Modal>
     </Grid>
   );
-}
+};
+
+export default ServiceFilter;

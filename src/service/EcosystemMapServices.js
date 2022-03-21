@@ -51,7 +51,7 @@ class Service {
           applicationType
           serviceLocation
           onlineService
-          offlineSerivce
+          offlineService
           serviceStatus
           updatedTypeAt
         }
@@ -87,7 +87,7 @@ class Service {
             serviceEndTime: data.serviceAvailability.endDate,
             timezone: data.serviceAvailability.timezone,
             onlineService: data.serviceAvailability.online,
-            offlineSerivce: data.serviceAvailability.venue,
+            offlineService: data.serviceAvailability.venue,
             serviceBreif: data.serviceInfo.descService,
             serviceDescription: data.serviceInfo.descServiceDettail,
             serviceAudience: data.serviceInfo.audience,
@@ -272,7 +272,7 @@ class Service {
         serviceStartTime: data.serviceAvailability.startDate,
         serviceEndTime: data.serviceAvailability.endDate,
         onlineService: data.serviceAvailability.online,
-        offlineSerivce: data.serviceAvailability.venue,
+        offlineService: data.serviceAvailability.venue,
         serviceAudience: data.serviceInfo.audience,
         budget: data.serviceInfo.budget,
         tagTitle: data.tags,
