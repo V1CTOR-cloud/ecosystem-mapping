@@ -82,28 +82,30 @@ const EditServiceModal = ({ data, successClose }) => {
     });
   };
 
-  const editServiceFunc = (serviceStatus) => {
-    Service.editService({
+  const editServiceFunc = async (serviceStatus) => {
+    const res = await Service.editService({
       basicService: basicInfo,
       serviceInfo: serviceInfo,
-      serviceAvailibility: serviceAvailability,
+      serviceAvailability: serviceAvailability,
       tags: tags,
       comments: comments,
       serviceStatus: serviceStatus,
       id: data.id,
-    })
-      .then((res) => {
-        if (res.message !== undefined) {
-          handleErrorToastCall();
-        } else {
-          successClose();
-          handleSuccessToastCall();
-          onOpen(false);
-          onClose(true);
-        }
-        window.location.reload();
-      })
-      .catch((err) => console.log(err));
+    });
+
+    if (res !== undefined) {
+      handleErrorToastCall();
+    } else {
+      successClose();
+      handleSuccessToastCall();
+      onOpen(false);
+      onClose(true);
+      window.location.reload();
+      //TODO This function of reloading the page should be when the user click to close the dialog
+      //onCloseComplete: (() => {
+      //         window.location.reload();
+      //       }),
+    }
   };
 
   useEffect(() => {

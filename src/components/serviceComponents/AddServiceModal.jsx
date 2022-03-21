@@ -79,7 +79,7 @@ const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
     if (createNewServiceCallback) {
       let finalData = {
         basicService: basicInfo,
-        serviceAvailibility: serviceAvailability,
+        serviceAvailability: serviceAvailability,
         serviceInfo: serviceInfo,
         tags: tags,
         comments: comments,
