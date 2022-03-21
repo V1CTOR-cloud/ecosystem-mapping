@@ -19,7 +19,7 @@ import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
 import UserAccountMenu from "components/miscellaneousComponents/UserAccountMenu";
 import AddServiceModal from "components/serviceComponents/AddServiceModal";
 import ServiceFilter from "components/serviceComponents/ServiceFilter";
-import { ServiceMap } from "components/serviceMapComponents/serviceMap";
+import ServiceMap from "components/serviceMapComponents/serviceMap";
 import Service from "service/EcosystemMapServices";
 import ServiceRegion from "service/RegionServices";
 import imgLocation from "../assets/images/location 2.png";

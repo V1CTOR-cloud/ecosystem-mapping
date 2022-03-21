@@ -29,7 +29,7 @@ import PublishServiceConfirm from "./PublishServiceConfirm";
 import ServiceBasicInfo from "./ServiceBasicInfo";
 import ServiceAvailability from "./ServiceAvailability";
 import ServiceInfo from "./ServiceInfo";
-import { TagComment } from "./TagComment";
+import TagComment from "./TagComment";
 import Service from "service/EcosystemMapServices";
 import imgSource from "../../assets/images/Vector.png";
 

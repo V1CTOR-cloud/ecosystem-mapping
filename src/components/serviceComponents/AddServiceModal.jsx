@@ -28,7 +28,7 @@ import SaveAsDraftConfirm from "../serviceComponents/SaveAsDraftConfirm";
 import ServiceBasicInfo from "./ServiceBasicInfo";
 import ServiceAvailability from "./ServiceAvailability";
 import ServiceInfo from "./ServiceInfo";
-import { TagComment } from "./TagComment";
+import TagComment from "./TagComment";
 
 const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
   const { t } = useTranslation();
