@@ -65,13 +65,12 @@ const HomePage = () => {
     }
   };
 
-  const handleCreateNewService = (data) => {
-    Service.pushService(data).then((res) => {
-      getService(mapName.id);
-      if (res.message !== undefined) {
-        getToast();
-      }
-    });
+  const handleCreateNewService = async (data) => {
+    const res = await Service.pushService(data);
+    getService(mapName.id);
+    if (res !== undefined) {
+      getToast();
+    }
   };
 
   const handleFilterByMultipleColumns = (items, filterCriteria) => {
