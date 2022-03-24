@@ -1,40 +1,40 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
+
 import {
-  Grid,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalCloseButton,
-  ModalBody,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  useDisclosure,
   Box,
-  HStack,
-  Text,
+  Button,
   Checkbox,
   CheckboxGroup,
+  FormControl,
+  FormLabel,
+  Grid,
+  HStack,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-// import SelectDate from "components/microComponents/SelectDate";
-// import Checkboxes from "assets/checkbox.json";
+import {Icon} from "@chakra-ui/icons";
+import {useTranslation} from "react-i18next";
+
+
 import Checkboxes from "assets/checkbox.json";
 import AppType from "assets/applicationType.json";
-import { ServicePhase } from "./ServicePhase";
+import ServicePhase from "./ServicePhase";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import { Icon } from "@chakra-ui/icons";
-import { useTranslation } from 'react-i18next';
 
-export default function ServiceFilter({
-  ServiceCategoryVal,
-  ServiceCategorySDPVal,
-  clearFilter,
-  filterValuesCallback,
-  filterCriteria
-}) {
+const ServiceFilter = ({
+  onServiceCategoryValCallback,
+  onClearFilter,
+  onFilterValuesCallback,
+  filterCriteria,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -121,15 +121,14 @@ export default function ServiceFilter({
     </Icon>
   );
 
-  const ApplyButton = () => {
-    ServiceCategoryVal(val);
-    ServiceCategorySDPVal(phase);
+  const handleChangeServiceFilter = () => {
+    onServiceCategoryValCallback(val);
 
     onOpen(false);
     onClose(true);
   };
   const clearFilter_Btn = () => {
-    clearFilter();
+    onClearFilter();
     onOpen(false);
     onClose(true);
     setVal("");
@@ -139,16 +138,19 @@ export default function ServiceFilter({
       low: ConverterSDP.getPoint(data.low),
       high: ConverterSDP.getPoint(data.high),
     });
-    handleFilter('phase',{fromPhase:ConverterSDP.getPoint(data.low),toPhase:ConverterSDP.getPoint(data.high)})
+    handleFilter("phase", {
+      fromPhase: ConverterSDP.getPoint(data.low),
+      toPhase: ConverterSDP.getPoint(data.high),
+    });
   };
   const handleFilter = (key, value) => {
-    filterValuesCallback(key, value);
+    onFilterValuesCallback(key, value);
   };
   return (
     <Grid>
       <div>
         <Button className="btn-2" onClick={onOpen} mt="5px">
-          {t('startup.home.page.header.filter.button')}
+          {t("startup.home.page.header.filter.button")}
         </Button>
       </div>
 
@@ -161,7 +163,7 @@ export default function ServiceFilter({
         <ModalOverlay />
         <ModalContent style={modalWidth}>
           <ModalHeader style={headerStyle} b="0">
-            {t('startup.home.page.header.filter.button')}
+            {t("startup.home.page.header.filter.button")}
           </ModalHeader>
           <ModalCloseButton />
 
@@ -172,10 +174,12 @@ export default function ServiceFilter({
               gridRow="1"
               gap={10}
               mt="2"
-            ></Grid>
+            />
 
             <FormControl mt={4}>
-              <FormLabel style={labelStyle}>{t('startup.popup.service.content.service.name')}</FormLabel>
+              <FormLabel style={labelStyle}>
+                {t("startup.popup.service.content.service.name")}
+              </FormLabel>
               <Input
                 style={inputStyle}
                 onChange={(e) => handleFilter("serviceName", e.target.value)}
@@ -184,7 +188,9 @@ export default function ServiceFilter({
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel style={labelStyle}>{t('startup.popup.filter.location')}</FormLabel>
+              <FormLabel style={labelStyle}>
+                {t("startup.popup.filter.location")}
+              </FormLabel>
               <HStack spacing={10} direction="row">
                 <Checkbox
                   size="lg"
@@ -192,45 +198,85 @@ export default function ServiceFilter({
                   className="cstmcheckbx"
                   value="onlineService"
                   onChange={(e) =>
-                  handleFilter("location",{onlineService:e.target.checked, offlineSerivce: filterCriteria && filterCriteria.location ? filterCriteria.location.offlineSerivce : false  })                  
-                   }
-                   defaultChecked={ filterCriteria && filterCriteria.location && filterCriteria.location.onlineService}
-                  
+                    handleFilter("location", {
+                      onlineService: e.target.checked,
+                      offlineService:
+                        filterCriteria && filterCriteria.location
+                          ? filterCriteria.location.offlineService
+                          : false,
+                    })
+                  }
+                  defaultChecked={
+                    filterCriteria &&
+                    filterCriteria.location &&
+                    filterCriteria.location.onlineService
+                  }
                 >
-                  <Text style={chkHeaderStyle}>{t('startup.popup.service.details.content.online')}</Text>
+                  <Text style={chkHeaderStyle}>
+                    {t("startup.popup.service.details.content.online")}
+                  </Text>
                 </Checkbox>
                 <Checkbox
                   size="lg"
                   colorScheme="blue"
                   className="cstmcheckbx"
-                  value="offlineSerivce"
-                   onChange={(e) =>
-                  handleFilter("location",{offlineSerivce:e.target.checked,onlineService: filterCriteria && filterCriteria.location ? filterCriteria.location.onlineService : false  })
-                   }
-                   defaultChecked={ filterCriteria && filterCriteria.location && filterCriteria.location.offlineSerivce}
+                  value="offlineService"
+                  onChange={(e) =>
+                    handleFilter("location", {
+                      offlineService: e.target.checked,
+                      onlineService:
+                        filterCriteria && filterCriteria.location
+                          ? filterCriteria.location.onlineService
+                          : false,
+                    })
+                  }
+                  defaultChecked={
+                    filterCriteria &&
+                    filterCriteria.location &&
+                    filterCriteria.location.offlineService
+                  }
                 >
-                  <Text style={chkHeaderStyle}>{t('startup.popup.service.details.content.venue')}</Text>
+                  <Text style={chkHeaderStyle}>
+                    {t("startup.popup.service.details.content.venue")}
+                  </Text>
                 </Checkbox>
               </HStack>
             </FormControl>
             <Box>
               <FormControl mt={4}>
-                <FormLabel style={labelStyle}>{t('startup.popup.filter.phase')}</FormLabel>
+                <FormLabel style={labelStyle}>
+                  {t("startup.popup.filter.phase")}
+                </FormLabel>
                 <ServicePhase
                   phaseData={(data) => {
                     setPhaseConv(data);
                   }}
                   data={{
-                    low:  filterCriteria && filterCriteria.phase && filterCriteria.phase.fromPhase ? ConverterSDP.getPoint(filterCriteria.phase.fromPhase) : 0,
-                    high: filterCriteria && filterCriteria.phase && filterCriteria.phase.toPhase ? ConverterSDP.getPoint(filterCriteria.phase.toPhase) : 1,
+                    low:
+                      filterCriteria &&
+                      filterCriteria.phase &&
+                      filterCriteria.phase.fromPhase
+                        ? ConverterSDP.getPoint(filterCriteria.phase.fromPhase)
+                        : 0,
+                    high:
+                      filterCriteria &&
+                      filterCriteria.phase &&
+                      filterCriteria.phase.toPhase
+                        ? ConverterSDP.getPoint(filterCriteria.phase.toPhase)
+                        : 1,
                   }}
                 />
               </FormControl>
             </Box>
             {/* </Grid> */}
             <FormControl mt={4}>
-              <FormLabel style={labelStyle}>{t('startup.popup.filter.service.category')}</FormLabel>
-              <CheckboxGroup onChange={(e) => handleFilter("serviceFocus", e)} defaultValue={filterCriteria.serviceFocus}>
+              <FormLabel style={labelStyle}>
+                {t("startup.popup.filter.service.category")}
+              </FormLabel>
+              <CheckboxGroup
+                onChange={(e) => handleFilter("serviceFocus", e)}
+                defaultValue={filterCriteria.serviceFocus}
+              >
                 <Grid
                   templateColumns="repeat(3, 1fr)"
                   gap={3}
@@ -259,8 +305,13 @@ export default function ServiceFilter({
               mt="2"
             >
               <FormControl mt={4}>
-                <FormLabel style={labelStyle}>{t('startup.popup.filter.status')}</FormLabel>
-                <CheckboxGroup onChange={(e) => handleFilter("serviceStatus", e)} defaultValue={filterCriteria.serviceStatus}>
+                <FormLabel style={labelStyle}>
+                  {t("startup.popup.filter.status")}
+                </FormLabel>
+                <CheckboxGroup
+                  onChange={(e) => handleFilter("serviceStatus", e)}
+                  defaultValue={filterCriteria.serviceStatus}
+                >
                   <HStack spacing={10} direction="row">
                     <Checkbox
                       size="lg"
@@ -268,7 +319,9 @@ export default function ServiceFilter({
                       className="cstmcheckbx"
                       value="Published"
                     >
-                      {t('startup.popup.service.content.service.button.publish')}
+                      {t(
+                        "startup.popup.service.content.service.button.publish"
+                      )}
                     </Checkbox>
                     <Checkbox
                       size="lg"
@@ -276,7 +329,7 @@ export default function ServiceFilter({
                       className="cstmcheckbx"
                       value="Draft"
                     >
-                      {t('startup.popup.service.content.service.button.draft')}
+                      {t("startup.popup.service.content.service.button.draft")}
                     </Checkbox>
                   </HStack>
                 </CheckboxGroup>
@@ -292,7 +345,9 @@ export default function ServiceFilter({
             >
               <Box>
                 <FormControl mt={4}>
-                  <FormLabel style={labelStyle}>{t('startup.popup.filter.application')}</FormLabel>
+                  <FormLabel style={labelStyle}>
+                    {t("startup.popup.filter.application")}
+                  </FormLabel>
                   <CheckboxGroup
                     gap="10"
                     onChange={(e) => handleFilter("applicationType", e)}
@@ -323,21 +378,23 @@ export default function ServiceFilter({
                 clearFilter_Btn();
               }}
             >
-              {t('startup.home.page.header.clear.filter.button')}
+              {t("startup.home.page.header.clear.filter.button")}
             </Button>
             <Button
               onClick={() => {
-                ApplyButton();
+                handleChangeServiceFilter();
               }}
               style={primaryBtn}
               colorScheme="blue"
               mr={3}
             >
-              {t('startup.popup.service.content.service.button.apply')}
+              {t("startup.popup.service.content.service.button.apply")}
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </Grid>
   );
-}
+};
+
+export default ServiceFilter;

@@ -51,7 +51,7 @@ class Service {
           applicationType
           serviceLocation
           onlineService
-          offlineSerivce
+          offlineService
           serviceStatus
           updatedTypeAt
         }
@@ -83,11 +83,11 @@ class Service {
             previousService: data.serviceInfo.service2,
             serviceFocus: data.basicService[2],
             applicationType: data.basicService[3],
-            serviceStartTime: data.serviceAvailibility.startDate,
-            serviceEndTime: data.serviceAvailibility.endDate,
-            timezone: data.serviceAvailibility.timezone,
-            onlineService: data.serviceAvailibility.online,
-            offlineSerivce: data.serviceAvailibility.venue,
+            serviceStartTime: data.serviceAvailability.startDate,
+            serviceEndTime: data.serviceAvailability.endDate,
+            timezone: data.serviceAvailability.timezone,
+            onlineService: data.serviceAvailability.online,
+            offlineService: data.serviceAvailability.venue,
             serviceBreif: data.serviceInfo.descService,
             serviceDescription: data.serviceInfo.descServiceDettail,
             serviceAudience: data.serviceInfo.audience,
@@ -110,7 +110,7 @@ class Service {
               ],
             },
             serviceStatus: data.serviceStatus,
-            serviceLocation: data.serviceAvailibility.serviceLocation,
+            serviceLocation: data.serviceAvailability.serviceLocation,
             ecosystemMap: { connect: { id: data.mapID } },
             updatedTypeAt: new Date(),
           },
@@ -261,7 +261,7 @@ class Service {
         },
         serviceFocus: data.basicService[2],
         applicationType: data.basicService[3],
-        timezone: data.serviceAvailibility.timezone,
+        timezone: data.serviceAvailability.timezone,
         serviceBreif: data.serviceInfo.descService,
         serviceDescription: data.serviceInfo.descServiceDettail,
         //verifiedService: data.serviceInfo.isVerified === "1" ? true : false,
@@ -269,15 +269,15 @@ class Service {
         toPhase: data.serviceInfo.phase.high,
         followingService: data.serviceInfo.service1,
         previousService: data.serviceInfo.service2,
-        serviceStartTime: data.serviceAvailibility.startDate,
-        serviceEndTime: data.serviceAvailibility.endDate,
-        onlineService: data.serviceAvailibility.online,
-        offlineSerivce: data.serviceAvailibility.venue,
+        serviceStartTime: data.serviceAvailability.startDate,
+        serviceEndTime: data.serviceAvailability.endDate,
+        onlineService: data.serviceAvailability.online,
+        offlineService: data.serviceAvailability.venue,
         serviceAudience: data.serviceInfo.audience,
         budget: data.serviceInfo.budget,
         tagTitle: data.tags,
         serviceOutcomes: data.serviceInfo.expectations,
-        serviceLocation: data.serviceAvailibility.serviceLocation,
+        serviceLocation: data.serviceAvailability.serviceLocation,
         serviceStatus: data.serviceStatus,
       },
     };

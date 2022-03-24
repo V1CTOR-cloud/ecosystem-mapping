@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
+
 import {
   Modal,
   ModalOverlay,
@@ -11,19 +12,20 @@ import {
   Image,
   Grid,
   Container,
-} from '@chakra-ui/react';
-import imgSource from '../../assets/images/Save time and effort 1 (1).png';
+} from "@chakra-ui/react";
+
+import imgSource from "../../assets/images/Save time and effort 1 (1).png";
 
 const saveDraftImg = {
-  height: 'auto',
-  width: '399.4375915527344px',
-  margin: '0 auto',
-  top: '55.108154296875px',
-  borderRadius: '0px',
-  align: 'center',
+  height: "auto",
+  width: "399.4375915527344px",
+  margin: "0 auto",
+  top: "55.108154296875px",
+  borderRadius: "0px",
+  align: "center",
 };
 
-export default function SaveAsDraftConfirm({draftStatus, res, saveDraft}) {
+const SaveAsDraftConfirm = ({ draftStatus, res, saveDraft }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -34,23 +36,19 @@ export default function SaveAsDraftConfirm({draftStatus, res, saveDraft}) {
 
   return (
     <>
-      <Button mr="32px" className="btn-save" onClick={() => {
+      <Button
+        mr="32px"
+        className="btn-save"
+        onClick={() => {
           onOpen(true);
           draftStatus("Draft");
-        }}>
+        }}
+      >
         {saveDraft}
       </Button>
-      <Modal
-        // initialFocusRef={initialRef}
-        // finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-        //size="md"
-        isCentered
-      >
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent className="md-ntf">
-          {/* <ModalHeader>Create your account</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Grid>
@@ -58,7 +56,9 @@ export default function SaveAsDraftConfirm({draftStatus, res, saveDraft}) {
                 <Image style={saveDraftImg} src={imgSource} alt="image" />
               </Box>
               <Box mt="60px">
-                <h1 className="md-msg">Your Service has been saved in Draft!</h1>
+                <h1 className="md-msg">
+                  Your Service has been saved in Draft!
+                </h1>
               </Box>
               <Container
                 width="507px"
@@ -72,12 +72,12 @@ export default function SaveAsDraftConfirm({draftStatus, res, saveDraft}) {
                   and click publish.
                 </h1>
               </Container>
-              {/* <Box width="507px" height="44px" alignItems="center"> */}
-              {/* </Box> */}
             </Grid>
           </ModalBody>
         </ModalContent>
       </Modal>
     </>
   );
-}
+};
+
+export default SaveAsDraftConfirm;

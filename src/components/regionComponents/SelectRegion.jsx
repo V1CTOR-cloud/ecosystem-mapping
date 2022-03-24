@@ -1,13 +1,13 @@
 import React from "react";
-import { Select, Box } from "@chakra-ui/react";
 
-const RegionSelectComponent = (props) => {
-  
+import { Box, Select } from "@chakra-ui/react";
+
+const SelectRegion = (props) => {
   return (
     <Box>
       <Select
         size="sm"
-        disabled={props.data.length > 0 ? false : true}
+        disabled={props.data.length <= 0}
         placeholder={"Select Region"}
         value={props.region}
         onChange={(e) => {
@@ -23,11 +23,8 @@ const RegionSelectComponent = (props) => {
             );
           })}
       </Select>
-    {/* { props.invalid && props.invalid.includes("region") &&<span style={{color:'red'}}>
-       * required
-      </span> } */}
     </Box>
   );
 };
 
-export { RegionSelectComponent };
+export default SelectRegion;
