@@ -54,8 +54,8 @@ export default function PublishedServiceForm({ name, orgName }) {
   };
 
   const handleSuccessClose = () => {
-    onOpen(false);
-    onClose(true);
+    //TODO Find solution to avoid this reload of the page
+    window.location.reload();
   };
 
   const handleRangeChange = (data) => {
