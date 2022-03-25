@@ -28,7 +28,6 @@ const ServiceBasicInfo = ({
   const [serviceFocus, setServiceFocus] = useState("");
   const [applicationType, setApplicationType] = useState("");
   const [isInv, setIsInv] = useState(false);
-  const [value] = React.useState("1");
   const toast = useToast();
   const [orgCreated, setOrgCreated] = useState(false);
 
