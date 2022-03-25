@@ -4,6 +4,8 @@ import { useDisclosure, Button, Box, Image, Container } from "@chakra-ui/react";
 
 import ModalComponent from "../../basic/ModalComponent";
 
+// Component that display a button, if clicked, it will show a modal with a title, content and image.
+// Used mainly for: publishing a service; saving in draft a service.
 const ServiceConfirmation = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
