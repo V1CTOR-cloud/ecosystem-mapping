@@ -8,6 +8,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 
+//Component that display a Chakra UI modal with a close button and a content that is the children passed as arguments.
 const ModalComponent = (props) => {
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
