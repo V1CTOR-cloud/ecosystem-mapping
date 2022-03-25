@@ -35,7 +35,7 @@ import {
   constantDraftImage,
   constantDraftImageStyle,
   constantPublishImage,
-  constantPublishImageStyle
+  constantPublishImageStyle,
 } from "../../helper/constant";
 
 const EditServiceModal = ({ data, successClose }) => {
@@ -49,12 +49,12 @@ const EditServiceModal = ({ data, successClose }) => {
   const [comments, setComments] = useState("");
   const [serviceState, setServiceState] = useState({});
 
-  const handlePublish = () => {
-    editServiceFunc("Published");
+  const handlePublish = async () => {
+    await editServiceFunc("Published");
   };
 
-  const handleDraft = () => {
-    editServiceFunc("Published");
+  const handleDraft = async () => {
+    await editServiceFunc("Published");
   };
 
   const handleTagDataCallback = (data) => {
@@ -106,13 +106,14 @@ const EditServiceModal = ({ data, successClose }) => {
       id: data.id,
     });
 
+    // We have an error : value is not unique for the field "serviceName
     if (res !== undefined) {
       handleErrorToastCall();
     } else {
       successClose();
       handleSuccessToastCall();
-      onOpen(false);
-      onClose(true);
+      onOpen();
+      onClose();
       window.location.reload();
       //TODO This function of reloading the page should be when the user click to close the dialog
       //onCloseComplete: (() => {
@@ -247,31 +248,31 @@ const EditServiceModal = ({ data, successClose }) => {
             <ModalFooter p="0" mt="80px">
               {/*Draft Button that open a modal when clicked*/}
               <ServiceConfirmation
-                  buttonText={t(
-                      "startup.popup.service.content.service.button.draft"
-                  )}
-                  titleText={"Your Service has been saved in Draft!"}
-                  contentText={
-                    "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
-                  }
-                  buttonClassName={"btn-save"}
-                  style={constantDraftImageStyle}
-                  image={constantDraftImage}
-                  onClick={handleDraft}
+                buttonText={t(
+                  "startup.popup.service.content.service.button.draft"
+                )}
+                titleText={"Your Service has been saved in Draft!"}
+                contentText={
+                  "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
+                }
+                buttonClassName={"btn-save"}
+                style={constantDraftImageStyle}
+                image={constantDraftImage}
+                onClick={handleDraft}
               />
               {/*Publish Button that open a modal when clicked*/}
               <ServiceConfirmation
-                  buttonText={t(
-                      "startup.popup.service.content.service.button.publish"
-                  )}
-                  titleText={"Your Service has been published!"}
-                  contentText={
-                    "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
-                  }
-                  buttonClassName={"btn-pbh"}
-                  style={constantPublishImageStyle}
-                  image={constantPublishImage}
-                  onClick={handlePublish}
+                buttonText={t(
+                  "startup.popup.service.content.service.button.publish"
+                )}
+                titleText={"Your Service has been published!"}
+                contentText={
+                  "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
+                }
+                buttonClassName={"btn-pbh"}
+                style={constantPublishImageStyle}
+                image={constantPublishImage}
+                onClick={handlePublish}
               />
             </ModalFooter>
           </ModalContent>
