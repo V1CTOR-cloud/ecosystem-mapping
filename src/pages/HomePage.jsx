@@ -6,7 +6,6 @@ import {
   GridItem,
   Image,
   Select,
-  useToast,
   VStack,
   WrapItem,
 } from "@chakra-ui/react";
@@ -27,7 +26,6 @@ import imgLocation from "../assets/images/location 2.png";
 const HomePage = () => {
   const { t } = useTranslation();
   const { serviceId } = useParams();
-  const toast = useToast();
   const history = useHistory();
 
   const [item, setItem] = useState([]);
@@ -39,6 +37,11 @@ const HomePage = () => {
   const handleServiceCategoryValCallback = () => {
     const filteredData = handleFilterByMultipleColumns(item, filter);
     setItem(filteredData);
+  };
+
+  const handleSuccessClose = () => {
+    //TODO Find solution to avoid this reload of the page
+    window.location.reload();
   };
 
   const handleFilterValuesCallback = (key, value) => {
@@ -62,14 +65,6 @@ const HomePage = () => {
       value === t("startup.landing.page.header.user.profile.menu.list.map.text")
     ) {
       history.push("/ecosystemmap");
-    }
-  };
-
-  const handleCreateNewService = async (data) => {
-    const res = await Service.pushService(data);
-    getService(mapName.id);
-    if (res !== undefined) {
-      getToast();
     }
   };
 
@@ -148,17 +143,6 @@ const HomePage = () => {
     });
   };
 
-  const getToast = () => {
-    toast({
-      title: t("startup.toast.service.name.error"),
-      description: t("startup.toast.service.name.message"),
-      status: "error",
-      position: "top-right",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
-
   useEffect(() => {
     ServiceRegion.getAllEcoMap().then((res) => {
       setMapList(res);
@@ -224,15 +208,8 @@ const HomePage = () => {
               </GridItem>
               <GridItem colStart={9} colEnd={11}>
                 <AddServiceModal
-                  sendData={(data) => {
-                    if (data === true) {
-                      Service.getServicesList().then((res) => {
-                        setItem(res);
-                      });
-                    }
-                  }}
                   mapId={mapName.id}
-                  createNewServiceCallback={handleCreateNewService}
+                  successClose={handleSuccessClose}
                 />
               </GridItem>
               <GridItem colStart={11} colEnd={13}>
