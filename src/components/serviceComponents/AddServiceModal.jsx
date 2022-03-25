@@ -28,10 +28,16 @@ import ServiceAvailability from "./ServiceAvailability";
 import ServiceInfo from "./ServiceInfo";
 import TagComment from "./TagComment";
 import ServiceConfirmation from "../service/ServiceConfirmation/ServiceConfirmation";
-import 'helper/constant';
-import {constantDraftImage, constantPublishImage, constantPublishImageStyle, constantDraftImageStyle} from "../../helper/constant";
+import "helper/constant";
+import {
+  constantDraftImage,
+  constantDraftImageStyle,
+  constantPublishImage,
+  constantPublishImageStyle,
+} from "../../helper/constant";
+import Service from "../../service/EcosystemMapServices";
 
-const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
+const AddServiceModal = ({ mapId, successClose }) => {
   const { t } = useTranslation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -41,18 +47,17 @@ const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
   const [serviceAvailability, setServiceAvailability] = useState([]);
   const [serviceInfo, setServiceInfo] = useState([]);
   const [comments, setComments] = useState("");
-  const [res, setRes] = useState(false);
   const [tags, setTags] = useState([]);
 
-  const handlePublish = () => {
-    SendFinalData("Published");
+  const handlePublish = async () => {
+    return await handleAddService("Published");
   };
 
-  const handleDraft = () => {
-    SendFinalData("Draft");
+  const handleDraft = async () => {
+    return await handleAddService("Draft");
   };
 
-  const handleToastCall = () => {
+  const handleErrorToastCall = () => {
     toast({
       title: t("startup.toast.service.name.error"),
       description: t("startup.toast.service.name.message"),
@@ -63,8 +68,18 @@ const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
     });
   };
 
+  const handleSuccessToastCall = () => {
+    toast({
+      title: t("Success"),
+      description: t("The service was successfully created."),
+      status: "success",
+      position: "top-right",
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
   const handleBasicInfoChange = (a, b, c, d) => {
-    setRes(false);
     setBasicInfo([a, b, c, d]);
   };
 
@@ -84,28 +99,27 @@ const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
     setTags(data.tags);
   };
 
-  const SendFinalData = (serviceStatus) => {
-    if (createNewServiceCallback) {
-      let finalData = {
-        basicService: basicInfo,
-        serviceAvailability: serviceAvailability,
-        serviceInfo: serviceInfo,
-        tags: tags,
-        comments: comments,
-        mapID: mapId,
-        serviceStatus: serviceStatus,
-      };
-      createNewServiceCallback(finalData);
-      setBasicInfo(["", "", "", ""]);
-      setRes(true);
-      sendData(true);
-      setTimeout(() => {
-        onOpen(false);
-        onClose(true);
-      }, 1000);
-    }
-    if (res.message !== undefined) {
-      handleToastCall();
+  const handleAddService = async (serviceStatus) => {
+    let finalData = {
+      basicService: basicInfo,
+      serviceAvailability: serviceAvailability,
+      serviceInfo: serviceInfo,
+      tags: tags,
+      comments: comments,
+      mapID: mapId,
+      serviceStatus: serviceStatus,
+    };
+
+    const res = await Service.addService(finalData);
+
+    // We have an error : value is not unique for the field "serviceName"
+    if (res === "Service With the same name Exist.") {
+      handleErrorToastCall();
+      return false;
+    } else {
+      successClose();
+      handleSuccessToastCall();
+      return true;
     }
   };
 
@@ -206,17 +220,17 @@ const AddServiceModal = ({ sendData, mapId, createNewServiceCallback }) => {
           <ModalFooter p="0" mt="80px">
             {/*Draft Button that open a modal when clicked*/}
             <ServiceConfirmation
-                buttonText={t(
-                    "startup.popup.service.content.service.button.draft"
-                )}
-                titleText={"Your Service has been saved in Draft!"}
-                contentText={
-                  "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
-                }
-                buttonClassName={"btn-save"}
-                style={constantDraftImageStyle}
-                image={constantDraftImage}
-                onClick={handleDraft}
+              buttonText={t(
+                "startup.popup.service.content.service.button.draft"
+              )}
+              titleText={"Your Service has been saved in Draft!"}
+              contentText={
+                "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
+              }
+              buttonClassName={"btn-save"}
+              style={constantDraftImageStyle}
+              image={constantDraftImage}
+              onClick={handleDraft}
             />
             {/*Publish Button that open a modal when clicked*/}
             <ServiceConfirmation
