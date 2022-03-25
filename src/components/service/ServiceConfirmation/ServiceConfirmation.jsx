@@ -2,7 +2,7 @@ import React from "react";
 
 import { useDisclosure, Button, Box, Image, Container } from "@chakra-ui/react";
 
-import ModalComponent from "../modalComponent/ModalComponent";
+import ModalComponent from "../../basic/ModalComponent";
 
 const ServiceConfirmation = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
