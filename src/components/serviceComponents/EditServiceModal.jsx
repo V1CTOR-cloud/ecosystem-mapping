@@ -53,8 +53,8 @@ const EditServiceModal = ({ data, successClose }) => {
     return await handleEditService("Published");
   };
 
-  const handleDraft = () => {
-    return handleEditService("Draft");
+  const handleDraft = async () => {
+    return await handleEditService("Draft");
   };
 
   const handleTagDataCallback = (data) => {
