@@ -7,9 +7,11 @@ import ModalComponent from "../../basic/ModalComponent";
 const ServiceConfirmation = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleOnClick = () => {
-    onOpen();
-    props.onClick();
+  const handleOnClick = async () => {
+    const hasNoError = await props.onClick();
+    if (hasNoError) {
+      onOpen();
+    }
   };
 
   return (

@@ -50,11 +50,11 @@ const EditServiceModal = ({ data, successClose }) => {
   const [serviceState, setServiceState] = useState({});
 
   const handlePublish = async () => {
-    await editServiceFunc("Published");
+    return await handleEditService("Published");
   };
 
-  const handleDraft = async () => {
-    await editServiceFunc("Published");
+  const handleDraft = () => {
+    return handleEditService("Draft");
   };
 
   const handleTagDataCallback = (data) => {
@@ -95,7 +95,8 @@ const EditServiceModal = ({ data, successClose }) => {
     });
   };
 
-  const editServiceFunc = async (serviceStatus) => {
+  // Function that will return true if the modification was complete without error, false otherwise
+  const handleEditService = async (serviceStatus) => {
     const res = await Service.editService({
       basicService: basicInfo,
       serviceInfo: serviceInfo,
@@ -106,19 +107,14 @@ const EditServiceModal = ({ data, successClose }) => {
       id: data.id,
     });
 
-    // We have an error : value is not unique for the field "serviceName
-    if (res !== undefined) {
+    // We have an error : value is not unique for the field "serviceName"
+    if (res === "Service With the same name Exist.") {
       handleErrorToastCall();
+      return false;
     } else {
       successClose();
       handleSuccessToastCall();
-      onOpen();
-      onClose();
-      window.location.reload();
-      //TODO This function of reloading the page should be when the user click to close the dialog
-      //onCloseComplete: (() => {
-      //         window.location.reload();
-      //       }),
+      return true;
     }
   };
 

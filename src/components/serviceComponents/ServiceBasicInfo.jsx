@@ -70,11 +70,11 @@ const ServiceBasicInfo = ({
   useEffect(() => {
     Service.getAllOrg().then((res) => {
       const newArrayOfObj = res.map(
-          ({ organisationName: name, id: value, ...rest }) => ({
-            name,
-            value,
-            ...rest,
-          })
+        ({ organisationName: name, id: value, ...rest }) => ({
+          name,
+          value,
+          ...rest,
+        })
       );
       setData(newArrayOfObj);
     });
@@ -104,7 +104,6 @@ const ServiceBasicInfo = ({
                 e.target.value,
                 serviceOwner,
                 serviceFocus,
-                value,
                 applicationType
               );
             }}
