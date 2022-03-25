@@ -24,14 +24,19 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
-import SaveAsDraftConfirm from "./SaveAsDraftConfirm";
-import PublishServiceConfirm from "./PublishServiceConfirm";
 import ServiceBasicInfo from "./ServiceBasicInfo";
 import ServiceAvailability from "./ServiceAvailability";
 import ServiceInfo from "./ServiceInfo";
 import TagComment from "./TagComment";
 import Service from "service/EcosystemMapServices";
 import imgSource from "../../assets/images/Vector.png";
+import ServiceConfirmation from "../service/ServiceConfirmation/ServiceConfirmation";
+import {
+  constantDraftImage,
+  constantDraftImageStyle,
+  constantPublishImage,
+  constantPublishImageStyle
+} from "../../helper/constant";
 
 const EditServiceModal = ({ data, successClose }) => {
   const { t } = useTranslation();
@@ -43,6 +48,14 @@ const EditServiceModal = ({ data, successClose }) => {
   const [tags, setTags] = useState([]);
   const [comments, setComments] = useState("");
   const [serviceState, setServiceState] = useState({});
+
+  const handlePublish = () => {
+    editServiceFunc("Published");
+  };
+
+  const handleDraft = () => {
+    editServiceFunc("Published");
+  };
 
   const handleTagDataCallback = (data) => {
     setTags(data.tags);
@@ -232,21 +245,33 @@ const EditServiceModal = ({ data, successClose }) => {
               isEdit={true}
             />
             <ModalFooter p="0" mt="80px">
-              <SaveAsDraftConfirm
-                draftStatus={(serviceStatus) => {
-                  serviceStatus && editServiceFunc(serviceStatus);
-                }}
-                saveDraft={t(
-                  "startup.popup.service.content.service.button.draft"
-                )}
+              {/*Draft Button that open a modal when clicked*/}
+              <ServiceConfirmation
+                  buttonText={t(
+                      "startup.popup.service.content.service.button.draft"
+                  )}
+                  titleText={"Your Service has been saved in Draft!"}
+                  contentText={
+                    "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
+                  }
+                  buttonClassName={"btn-save"}
+                  style={constantDraftImageStyle}
+                  image={constantDraftImage}
+                  onClick={handleDraft}
               />
-              <PublishServiceConfirm
-                publishStatus={(serviceStatus) => {
-                  serviceStatus && editServiceFunc(serviceStatus);
-                }}
-                publish={t(
-                  "startup.popup.service.content.service.button.publish"
-                )}
+              {/*Publish Button that open a modal when clicked*/}
+              <ServiceConfirmation
+                  buttonText={t(
+                      "startup.popup.service.content.service.button.publish"
+                  )}
+                  titleText={"Your Service has been published!"}
+                  contentText={
+                    "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
+                  }
+                  buttonClassName={"btn-pbh"}
+                  style={constantPublishImageStyle}
+                  image={constantPublishImage}
+                  onClick={handlePublish}
               />
             </ModalFooter>
           </ModalContent>
