@@ -247,10 +247,10 @@ const EditServiceModal = ({ data, successClose }) => {
                 buttonText={t(
                   "startup.popup.service.content.service.button.draft"
                 )}
-                titleText={"Your Service has been saved in Draft!"}
-                contentText={
-                  "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
-                }
+                titleText={t("startup.popup.service.confirmation.draft.title")}
+                contentText={t(
+                  "startup.popup.service.confirmation.draft.content"
+                )}
                 buttonClassName={"btn-save"}
                 style={constantDraftImageStyle}
                 image={constantDraftImage}
@@ -261,9 +261,9 @@ const EditServiceModal = ({ data, successClose }) => {
                 buttonText={t(
                   "startup.popup.service.content.service.button.publish"
                 )}
-                titleText={"Your Service has been published!"}
+                titleText={"startup.popup.service.confirmation.published.title"}
                 contentText={
-                  "You will be able to see the service icon on the map. When you're ready to publish, just click on the icon, scroll down and click publish."
+                  "startup.popup.service.confirmation.published.content"
                 }
                 buttonClassName={"btn-pbh"}
                 style={constantPublishImageStyle}
