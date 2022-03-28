@@ -237,10 +237,12 @@ const AddServiceModal = ({ mapId, successClose }) => {
               buttonText={t(
                 "startup.popup.service.content.service.button.publish"
               )}
-              titleText={"startup.popup.service.confirmation.published.title"}
-              contentText={
+              titleText={t(
+                "startup.popup.service.confirmation.published.title"
+              )}
+              contentText={t(
                 "startup.popup.service.confirmation.published.content"
-              }
+              )}
               buttonClassName={"btn-pbh"}
               style={constantPublishImageStyle}
               image={constantPublishImage}
