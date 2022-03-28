@@ -1,26 +1,26 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   Accordion,
-  AccordionItem,
   AccordionButton,
   AccordionIcon,
+  AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/accordion";
 import {
-  Grid,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalCloseButton,
   Box,
-  Text,
   Flex,
+  Grid,
   Image,
-  useToast,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
@@ -261,10 +261,12 @@ const EditServiceModal = ({ data, successClose }) => {
                 buttonText={t(
                   "startup.popup.service.content.service.button.publish"
                 )}
-                titleText={"startup.popup.service.confirmation.published.title"}
-                contentText={
+                titleText={t(
+                  "startup.popup.service.confirmation.published.title"
+                )}
+                contentText={t(
                   "startup.popup.service.confirmation.published.content"
-                }
+                )}
                 buttonClassName={"btn-pbh"}
                 style={constantPublishImageStyle}
                 image={constantPublishImage}
