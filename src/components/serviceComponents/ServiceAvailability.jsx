@@ -50,10 +50,10 @@ const ServiceAvailability = ({
       setServiceEndTime(dataS.serviceEndTime);
       setTimeZone(dataS.timezone);
       setOnline(dataS.onlineService);
-      setVenue(dataS.offlineSerivce);
+      setVenue(dataS.offlineService);
       setServiceLocation(dataS.serviceLocation);
       if (dataS.onlineService) setVal("Online");
-      if (dataS.offlineSerivce) setVal("Venue");
+      if (dataS.offlineService) setVal("Venue");
     }
   }, [dataS, isEdit]);
 

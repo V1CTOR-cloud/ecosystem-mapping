@@ -89,8 +89,8 @@ const HomePage = () => {
                 (item) =>
                   (filterCriteria.location.onlineService ===
                     item.onlineService ||
-                    filterCriteria.location.offlineSerivce ===
-                      item.offlineSerivce) &&
+                    filterCriteria.location.offlineService ===
+                      item.offlineService) &&
                   item.serviceLocation !== ""
               )
             : result;

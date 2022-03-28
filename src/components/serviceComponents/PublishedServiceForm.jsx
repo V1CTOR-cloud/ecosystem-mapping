@@ -185,7 +185,7 @@ export default function PublishedServiceForm({ name, orgName }) {
                             </Text>{" "}
                           </Box>
                         )}
-                        {orgName.offlineSerivce && (
+                        {orgName.offlineService && (
                           <Box>
                             <Tag fontWeight="bold">
                               {t("startup.popup.service.details.content.venue")}{" "}
