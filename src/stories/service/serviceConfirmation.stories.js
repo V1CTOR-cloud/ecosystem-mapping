@@ -13,7 +13,8 @@ export default {
 const ServiceConfirmationTemplate = (args) => {
   return (
     <ServiceConfirmation
-      buttonText={args.buttonText}
+      textButton={args.textButton}
+      isPrimaryButton={args.isPrimaryButton}
       titleText={args.titleText}
       contentText={args.contentText}
       style={constantDraftImageStyle}
@@ -28,12 +29,13 @@ export const Draft = ServiceConfirmationTemplate.bind({});
 Draft.args = {
   titleText: "This is the title of the draft modal",
   contentText: "This is the content of the draft modal",
-  buttonText: "Save in draft",
+  textButton: "Save in draft",
 };
 
 export const Published = ServiceConfirmationTemplate.bind({});
 Published.args = {
   titleText: "This is the title of the published modal",
   contentText: "This is the content of the draft modal",
-  buttonText: "Publish",
+  textButton: "Publish",
+  isPrimaryButton: true,
 };
