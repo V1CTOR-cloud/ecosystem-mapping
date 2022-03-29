@@ -43,7 +43,7 @@ export function Handle({
   handle: { id, value, percent },
   disabled,
   getHandleProps,
-  hideRailticks
+  hideRailticks,
 }) {
   return (
     <Fragment>
@@ -58,7 +58,7 @@ export function Handle({
           height: 42,
           cursor: "pointer",
           //border: "1px solid white",
-          backgroundColor: "none"
+          backgroundColor: "none",
         }}
         {...getHandleProps(id)}
       />
@@ -78,7 +78,7 @@ export function Handle({
           boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.3)",
           border: "2px solid #0E5E81",
           backgroundColor: disabled ? "#666" : "#ffffff",
-          opacity: hideRailticks ? 0 : null
+          opacity: hideRailticks ? 0 : null,
         }}
       />
     </Fragment>
@@ -90,14 +90,14 @@ Handle.propTypes = {
   handle: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired
+    percent: PropTypes.number.isRequired,
   }).isRequired,
   getHandleProps: PropTypes.func.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 Handle.defaultProps = {
-  disabled: false
+  disabled: false,
 };
 
 // *******************************************************
@@ -108,7 +108,7 @@ export function KeyboardHandle({
   domain: [min, max],
   handle: { id, value, percent },
   disabled,
-  getHandleProps
+  getHandleProps,
 }) {
   return (
     <button
@@ -125,7 +125,7 @@ export function KeyboardHandle({
         height: 24,
         borderRadius: "50%",
         boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.3)",
-        backgroundColor: disabled ? "#666" : "#ffc400"
+        backgroundColor: disabled ? "#666" : "#ffc400",
       }}
       {...getHandleProps(id)}
     />
@@ -137,17 +137,28 @@ KeyboardHandle.propTypes = {
   handle: PropTypes.shape({
     id: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-    percent: PropTypes.number.isRequired
+    percent: PropTypes.number.isRequired,
   }).isRequired,
   getHandleProps: PropTypes.func.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 KeyboardHandle.defaultProps = {
-  disabled: false
+  disabled: false,
 };
 
-export function Track({ source, target, getTrackProps, disabled, hideRailticks, bg, name,availResize,serviceStatus,onClick }) {
+export function Track({
+  source,
+  target,
+  getTrackProps,
+  disabled,
+  hideRailticks,
+  bg,
+  name,
+  availResize,
+  serviceStatus,
+  onClick,
+}) {
   return (
     <div
       style={{
@@ -155,22 +166,42 @@ export function Track({ source, target, getTrackProps, disabled, hideRailticks, 
         transform: "translate(0%, -50%)",
         height: hideRailticks ? 35 : 10,
         zIndex: 1,
-        //backgroundColor: disabled ? "#999" : "#0E5E81",
         backgroundColor: bg ? bg : "#0E5E81",
         borderRadius: 7,
         cursor: "pointer",
         left: `${source.percent}%`,
         width: `${target.percent - source.percent}%`,
       }}
-       {...getTrackProps()}
-       onClick={onClick}
+      {...getTrackProps()}
+      onClick={onClick}
     >
-        <div style={{width:"100%", margin: "0 40%",}}>  
-        <div style={{textAlign:"center", float:"left", marginRight:"10px"}}>  <span style={{color:'#fff',fontSize:'16px',fontWeight:'bold'}}>{name}</span> </div>
-         <div style={{textAlign:"center", float:"left", marginTop:"3px"}}> { serviceStatus==="Draft" ? <img style={{width:"30px"}} alt="draft" src={imgDraft} /> : null } </div>
-          
-        </div>
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+        }}
+      >
+        <span
+          style={{
+            color: "#fff",
+            fontSize: "16px",
+            fontWeight: "bold",
+          }}
+        >
+          {name}
+        </span>
+        {serviceStatus === "Draft" ? (
+          <img
+            style={{
+              width: "30px",
+              marginLeft: "5px",
+            }}
+            alt="draft"
+            src={imgDraft}
+          />
+        ) : null}
       </div>
+    </div>
   );
 }
 
@@ -203,7 +234,7 @@ export function Tick({ tick, count, format }) {
             marginTop: 14,
             width: 1,
             backgroundColor: "rgb(200,200,200)",
-            left: `${tick.percent-0.2}%`,
+            left: `${tick.percent - 0.2}%`,
             borderLeft: "3px solid #0E5E81",
             height: "34px",
             top: "-31px",
@@ -219,7 +250,7 @@ export function Tick({ tick, count, format }) {
               marginTop: 14,
               width: 1,
               backgroundColor: "rgb(200,200,200)",
-              left: `${tick.percent +6.5}%`,
+              left: `${tick.percent + 6.5}%`,
               borderLeft: "2px solid #0E5E81",
               height: "24px",
               top: "-25.9px",
