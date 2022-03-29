@@ -25,9 +25,9 @@ const ButtonComponent = (props) => {
   );
 };
 
-Button.defaultProps = {
+ButtonComponent.defaultProps = {
   isPrimary: false,
-  margin: "0",
+  margin: undefined,
 };
 
 export default ButtonComponent;
