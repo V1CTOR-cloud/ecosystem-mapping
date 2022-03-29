@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Box, Container, Image } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import {
   constantDraftImage,
   constantPublishImage,
@@ -9,13 +9,35 @@ import {
 import { useArgs } from "@storybook/client-api";
 
 import ModalComponent from "../../components/basic/ModalComponent";
+import styled from "styled-components";
+
+const TitleModal = styled.h1`
+  font-family: Ubuntu, sans-serif;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 45px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: #222c2f;
+`;
+
+const ContentModal = styled.h1`
+  font-family: Ubuntu, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  color: #222c2f;
+`;
 
 export default {
   title: "Modal Component",
   component: ModalComponent,
 };
 
-const Modal = (args) => {
+const ModalComponentTemplate = (args) => {
   const [{ isOpen }, updateArgs] = useArgs();
 
   return (
@@ -27,17 +49,14 @@ const Modal = (args) => {
         <Image style={args.style} src={args.image} alt="image" />
       </Box>
       <Box mt="60px">
-        <h1 className="md-msg">{args.titleText}</h1>
+        <TitleModal>{args.titleText}</TitleModal>
       </Box>
-      <Container mt="24px" width="507px" height="44px" alignItems="center">
-        <h1 className="md-txt">{args.contentText}</h1>
-      </Container>
+      <ContentModal>{args.contentText}</ContentModal>
     </ModalComponent>
   );
 };
 
-//👇 Each story then reuses that template
-export const Draft = Modal.bind({});
+export const Draft = ModalComponentTemplate.bind({});
 
 Draft.args = {
   style: constantPublishImageStyle,
@@ -47,7 +66,7 @@ Draft.args = {
   isOpen: true,
 };
 
-export const Published = Modal.bind({});
+export const Published = ModalComponentTemplate.bind({});
 Published.args = {
   ...Draft.args,
   image: constantDraftImage,
