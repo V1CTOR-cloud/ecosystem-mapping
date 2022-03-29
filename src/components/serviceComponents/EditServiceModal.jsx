@@ -244,30 +244,30 @@ const EditServiceModal = ({ data, successClose }) => {
             <ModalFooter p="0" mt="80px">
               {/*Draft Button that open a modal when clicked*/}
               <ServiceConfirmation
-                buttonText={t(
+                textButton={t(
                   "startup.popup.service.content.service.button.draft"
                 )}
+                marginButton={"0px 15px 0px 0px"}
                 titleText={t("startup.popup.service.confirmation.draft.title")}
                 contentText={t(
                   "startup.popup.service.confirmation.draft.content"
                 )}
-                buttonClassName={"btn-save"}
                 style={constantDraftImageStyle}
                 image={constantDraftImage}
                 onClick={handleDraft}
               />
               {/*Publish Button that open a modal when clicked*/}
               <ServiceConfirmation
-                buttonText={t(
+                textButton={t(
                   "startup.popup.service.content.service.button.publish"
                 )}
+                isPrimaryButton={true}
                 titleText={t(
                   "startup.popup.service.confirmation.published.title"
                 )}
                 contentText={t(
                   "startup.popup.service.confirmation.published.content"
                 )}
-                buttonClassName={"btn-pbh"}
                 style={constantPublishImageStyle}
                 image={constantPublishImage}
                 onClick={handlePublish}
