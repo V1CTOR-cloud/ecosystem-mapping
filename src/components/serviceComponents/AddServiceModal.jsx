@@ -11,6 +11,7 @@ import {
   Box,
   Button,
   Grid,
+  Image,
   Modal,
   ModalCloseButton,
   ModalContent,
@@ -34,6 +35,8 @@ import {
   constantDraftImageStyle,
   constantPublishImage,
   constantPublishImageStyle,
+  ContentModal,
+  TitleModal,
 } from "../../helper/constant";
 import Service from "../../service/EcosystemMapServices";
 
@@ -224,30 +227,48 @@ const AddServiceModal = ({ mapId, successClose }) => {
                 "startup.popup.service.content.service.button.draft"
               )}
               marginButton={"0px 15px 0px 0px"}
-              titleText={t("startup.popup.service.confirmation.draft.title")}
-              contentText={t(
-                "startup.popup.service.confirmation.draft.content"
-              )}
-              style={constantDraftImageStyle}
-              image={constantDraftImage}
               onClick={handleDraft}
-            />
+            >
+              <Box mt="90px">
+                <Image
+                  style={constantDraftImageStyle}
+                  src={constantDraftImage}
+                  alt="image"
+                />
+              </Box>
+              <Box mt="60px">
+                <TitleModal>
+                  {t("startup.popup.service.confirmation.draft.title")}
+                </TitleModal>
+              </Box>
+              <ContentModal>
+                {t("startup.popup.service.confirmation.draft.content")}
+              </ContentModal>
+            </ButtonOpenModal>
             {/*Publish Button that open a modal when clicked*/}
             <ButtonOpenModal
               textButton={t(
                 "startup.popup.service.content.service.button.publish"
               )}
               isPrimaryButton={true}
-              titleText={t(
-                "startup.popup.service.confirmation.published.title"
-              )}
-              contentText={t(
-                "startup.popup.service.confirmation.published.content"
-              )}
-              style={constantPublishImageStyle}
-              image={constantPublishImage}
               onClick={handlePublish}
-            />
+            >
+              <Box mt="90px">
+                <Image
+                  style={constantPublishImageStyle}
+                  src={constantPublishImage}
+                  alt="image"
+                />
+              </Box>
+              <Box mt="60px">
+                <TitleModal>
+                  {t("startup.popup.service.confirmation.published.title")}
+                </TitleModal>
+              </Box>
+              <ContentModal>
+                {t("startup.popup.service.confirmation.published.content")}
+              </ContentModal>
+            </ButtonOpenModal>
           </ModalFooter>
         </ModalContent>
       </Modal>
