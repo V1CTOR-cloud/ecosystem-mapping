@@ -30,7 +30,7 @@ import ServiceInfo from "./ServiceInfo";
 import TagComment from "./TagComment";
 import Service from "service/EcosystemMapServices";
 import imgSource from "../../assets/images/Vector.png";
-import ServiceConfirmation from "../service/ServiceConfirmation/ServiceConfirmation";
+import ButtonOpenModal from "../service/ServiceConfirmation/ButtonOpenModal";
 import {
   constantDraftImage,
   constantDraftImageStyle,
@@ -112,7 +112,7 @@ const EditServiceModal = ({ data, successClose }) => {
       handleErrorToastCall();
       return false;
     } else {
-      successClose();
+      //successClose();
       handleSuccessToastCall();
       return true;
     }
@@ -243,7 +243,7 @@ const EditServiceModal = ({ data, successClose }) => {
             />
             <ModalFooter p="0" mt="80px">
               {/*Draft Button that open a modal when clicked*/}
-              <ServiceConfirmation
+              <ButtonOpenModal
                 textButton={t(
                   "startup.popup.service.content.service.button.draft"
                 )}
@@ -257,7 +257,7 @@ const EditServiceModal = ({ data, successClose }) => {
                 onClick={handleDraft}
               />
               {/*Publish Button that open a modal when clicked*/}
-              <ServiceConfirmation
+              <ButtonOpenModal
                 textButton={t(
                   "startup.popup.service.content.service.button.publish"
                 )}

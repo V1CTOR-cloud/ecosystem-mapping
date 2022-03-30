@@ -3,16 +3,16 @@ import {
   constantDraftImage,
   constantDraftImageStyle,
 } from "../../helper/constant";
-import ServiceConfirmation from "../../components/service/ServiceConfirmation/ServiceConfirmation";
+import ButtonOpenModal from "../../components/service/ServiceConfirmation/ButtonOpenModal";
 
 export default {
-  title: "Service Confirmation",
-  component: ServiceConfirmation,
+  title: "Button that open modal",
+  component: ButtonOpenModal,
 };
 
-const ServiceConfirmationTemplate = (args) => {
+const ButtonOpenModalTemplate = (args) => {
   return (
-    <ServiceConfirmation
+    <ButtonOpenModal
       textButton={args.textButton}
       isPrimaryButton={args.isPrimaryButton}
       titleText={args.titleText}
@@ -24,7 +24,7 @@ const ServiceConfirmationTemplate = (args) => {
   );
 };
 
-export const Draft = ServiceConfirmationTemplate.bind({});
+export const Draft = ButtonOpenModalTemplate.bind({});
 
 Draft.args = {
   titleText: "This is the title of the draft modal",
@@ -32,7 +32,7 @@ Draft.args = {
   textButton: "Save in draft",
 };
 
-export const Published = ServiceConfirmationTemplate.bind({});
+export const Published = ButtonOpenModalTemplate.bind({});
 Published.args = {
   titleText: "This is the title of the published modal",
   contentText: "This is the content of the draft modal",

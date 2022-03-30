@@ -27,7 +27,7 @@ import ServiceBasicInfo from "./ServiceBasicInfo";
 import ServiceAvailability from "./ServiceAvailability";
 import ServiceInfo from "./ServiceInfo";
 import TagComment from "./TagComment";
-import ServiceConfirmation from "../service/ServiceConfirmation/ServiceConfirmation";
+import ButtonOpenModal from "../service/ServiceConfirmation/ButtonOpenModal";
 import "helper/constant";
 import {
   constantDraftImage,
@@ -219,7 +219,7 @@ const AddServiceModal = ({ mapId, successClose }) => {
           />
           <ModalFooter p="0" mt="80px">
             {/*Draft Button that open a modal when clicked*/}
-            <ServiceConfirmation
+            <ButtonOpenModal
               textButton={t(
                 "startup.popup.service.content.service.button.draft"
               )}
@@ -233,7 +233,7 @@ const AddServiceModal = ({ mapId, successClose }) => {
               onClick={handleDraft}
             />
             {/*Publish Button that open a modal when clicked*/}
-            <ServiceConfirmation
+            <ButtonOpenModal
               textButton={t(
                 "startup.popup.service.content.service.button.publish"
               )}

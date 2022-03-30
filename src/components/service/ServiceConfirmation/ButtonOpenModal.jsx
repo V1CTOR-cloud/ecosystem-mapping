@@ -29,7 +29,7 @@ const ContentModal = styled.h1`
 
 // Component that display a button, if clicked, it will show a modal with a title, content and image.
 // Used mainly for: publishing a service; saving in draft a service.
-const ServiceConfirmation = (props) => {
+const ButtonOpenModal = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleOnClick = async () => {
@@ -60,4 +60,4 @@ const ServiceConfirmation = (props) => {
   );
 };
 
-export default ServiceConfirmation;
+export default ButtonOpenModal;
