@@ -77,19 +77,18 @@
   /* height: 100% */
 }
 .ball {
-  position: relative;
   width: 120px;
   height: 120px;
   box-sizing: border-box;
   border-radius: 70px;
   background: #edf2f7;
-  display: flex;
   justify-content: center;
   align-items: center;
   left: -55%;
+  display: flex;
 }
 .ball-text {
-  font-family: Ubuntu;
+  font-family: Ubuntu, sans-serif;
   font-weight: 600;
   font-size: 40px;
   color: #a0aec0;
