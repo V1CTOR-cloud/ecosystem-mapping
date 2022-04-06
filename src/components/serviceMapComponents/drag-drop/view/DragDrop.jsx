@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import "../components/style.css";
-import { Box, Grid } from "@chakra-ui/layout";
+import { Box, Grid, HStack } from "@chakra-ui/layout";
 import SDPConverter from "components/miscellaneousComponents/ConverterSDP";
 import PublishedServiceForm from "components/serviceComponents/PublishedServiceForm";
 import Services from "service/EcosystemMapServices";
 import { withRouter } from "react-router-dom";
-import { HStack } from "@chakra-ui/react";
 
 class DragDrop extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ class DragDrop extends Component {
     let Organisation = [];
     let MarketAndOrganisation = [];
     let mergedServices = [];
-    this.props.data.forEach((i, j) => {
+    this.props.data.forEach((i) => {
       if (i.applicationType === "Market") {
         Market.push(i);
       }
@@ -90,14 +89,14 @@ class DragDrop extends Component {
 
   onDrop(e) {
     this.setState({ dropArea: "" });
-    var obj = JSON.parse(e.dataTransfer.getData("application/json"));
+    let obj = JSON.parse(e.dataTransfer.getData("application/json"));
     let list = this.state.list;
     let index = this.state.list.findIndex((item) => item.id === obj.id);
     if (list[index].orgName.applicationType !== this.state.dropArea) {
       Services.UpdateApplicationTypeonDrop({
         id: list[index].orgName.id,
         applicationType: this.state.dropArea,
-      }).then((res) => {
+      }).then(() => {
         this.props.reloadServices(this.props.match.params.serviceId);
       });
     }
@@ -170,7 +169,6 @@ class DragDrop extends Component {
             id={item.id}
             name={item.name}
             orgName={item.orgName}
-            //top={item.top+50}
             top={
               x > 3 && y === 0
                 ? item.top + 165
