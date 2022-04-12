@@ -358,7 +358,7 @@ export default function PublishedServiceForm({ name, orgName }) {
                             orgName.serviceComments.length - 1
                           ].updatedDataAt
                         )}{" "}
-                      {user.user.displayName}{" "}
+                      {user.firstName + " " + user.lastName}{" "}
                       {t("startup.popup.service.details.content.says")}:
                     </Text>
                     <Tag fontWeight="bold">
