@@ -12,10 +12,10 @@ import {
 import { useHistory, useParams, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import Authentication from "../components/authentication/Authentication";
 import SideBar from "components/miscellaneousComponents/SideBar";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
 import ConverterSDP from "components/miscellaneousComponents/ConverterSDP";
-import UserAccountMenu from "components/miscellaneousComponents/UserAccountMenu";
 import AddServiceModal from "components/serviceComponents/AddServiceModal";
 import ServiceFilter from "components/serviceComponents/ServiceFilter";
 import ServiceMap from "components/serviceMapComponents/serviceMap";
@@ -227,8 +227,8 @@ const HomePage = () => {
                   <div className="divider" />
                 </WrapItem>
               </GridItem>
-              <GridItem colStart={14} colEnd={15}>
-                <UserAccountMenu />
+              <GridItem colStart={14} colEnd={15} w="140px">
+                <Authentication />
               </GridItem>
             </Grid>
           </Box>
