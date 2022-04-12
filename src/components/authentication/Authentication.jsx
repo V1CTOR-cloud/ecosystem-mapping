@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import { Box, Button, Center, Text, useDisclosure } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import Service from "../../service/EcosystemMapServices";
 import { Amplify, Auth } from "aws-amplify";
 import { Authenticator } from "@aws-amplify/ui-react";
+import { useHistory } from "react-router-dom";
 import "@aws-amplify/ui-react/styles.css";
 
+import Service from "../../service/EcosystemMapServices";
 import awsExports from "../../aws-exports";
 import { UserAccountMenu } from "../miscellaneousComponents";
-import { useHistory } from "react-router-dom";
 import { getCurrentUser } from "../../service/AuthenticationService";
 import Logo from "../../assets/images/Logo.png";
 
