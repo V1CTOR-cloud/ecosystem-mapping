@@ -1,23 +1,15 @@
 import React from "react";
 
 import {
+  Box,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Box,
-  Button,
-  Center,
-  Text,
   Flex,
+  Text,
 } from "@chakra-ui/react";
+import Authentication from "../authentication/Authentication";
 import { useTranslation } from "react-i18next";
-import { FcGoogle } from "react-icons/fc";
-
-import {
-  signInWithGoogle,
-  isLoggedIn,
-} from "../../service/AuthenticationService";
-import UserAccountMenu from "./UserAccountMenu";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -27,12 +19,6 @@ const headerStyle = {
 
 const NavigationBar = () => {
   const { t } = useTranslation();
-
-  const handleSignInWithFirebase = () => {
-    signInWithGoogle((flag) => {
-      console.log(flag);
-    });
-  };
 
   return (
     <Box>
@@ -69,25 +55,9 @@ const NavigationBar = () => {
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>
-        {isLoggedIn() ? (
-          <Box w="20%" mt="30px" float="left">
-            <UserAccountMenu />{" "}
-          </Box>
-        ) : (
-          <Box w="20%">
-            <Button
-              onClick={handleSignInWithFirebase}
-              variant={"outline"}
-              mt="30px"
-              float="right"
-              leftIcon={<FcGoogle />}
-            >
-              <Center>
-                <Text>{t("startup.landing.page.login.google.button")}</Text>
-              </Center>
-            </Button>
-          </Box>
-        )}
+        <Box w="20%" mt="30px">
+          <Authentication />
+        </Box>
       </Flex>
     </Box>
   );
