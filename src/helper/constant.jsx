@@ -8,6 +8,30 @@ export const SliderButton = require("assets/images/Ellipse.png");
 export const constantPublishImage = publishImage;
 export const constantDraftImage = draftImage;
 
+// COLORS
+export const blueColor = "#074EE8";
+export const blueHoverColor = "#4D84F9";
+export const whiteColor = "#FFFFFF";
+export const whiteHoverColor = "#EBF1FE";
+export const greyColor = "#AAAAAA";
+export const accentColor = "#BC31EA";
+export const blackColor = "#000000";
+
+// FONTS
+export const defaultFontSize = "14px";
+export const titleFontSize = "20px";
+export const defaultFontFamily = "Ubuntu, sans-serif";
+
+// PADDINGS
+export const defaultPadding = "40px";
+export const mediumPadding = "24px";
+export const smallPadding = "12px";
+export const verySmallPadding = "8px";
+
+// BORDERS
+export const borderRadius = "4px";
+export const borderThickness = "2px";
+
 export const constantPublishImageStyle = {
   height: "auto",
   width: "383.09px",
