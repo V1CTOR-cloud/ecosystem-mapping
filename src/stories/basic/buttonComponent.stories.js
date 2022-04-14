@@ -1,6 +1,6 @@
 import React from "react";
 
-import ButtonComponent from "../../components/basic/Button";
+import ButtonComponent from "../../components/basic/ButtonComponent";
 
 export default {
   title: "Button",
@@ -12,7 +12,7 @@ const ButtonComponentTemplate = (args) => {
     <ButtonComponent
       isPrimary={args.isPrimary}
       onClick={args.onClick}
-      text={args.text}
+      buttonText={args.buttonText}
       margin={args.margin}
     />
   );
@@ -22,13 +22,13 @@ export const Primary = ButtonComponentTemplate.bind({});
 
 Primary.args = {
   isPrimary: true,
-  text: "Primary button",
+  buttonText: "Primary button",
   onClick: () => {},
 };
 
 export const Secondary = ButtonComponentTemplate.bind({});
 
 Secondary.args = {
-  text: "Secondary button",
+  buttonText: "Secondary button",
   onClick: () => {},
 };

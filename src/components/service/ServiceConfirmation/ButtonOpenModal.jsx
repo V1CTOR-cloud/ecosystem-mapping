@@ -3,7 +3,7 @@ import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
 
 import ModalComponent from "../../basic/ModalComponent";
-import ButtonComponent from "../../basic/Button";
+import ButtonComponent from "../../basic/ButtonComponent";
 
 // Component that display a button, if clicked, it will show a modal with a title, content and image.
 // Used mainly for: publishing a service; saving in draft a service.
@@ -22,7 +22,7 @@ const ButtonOpenModal = (props) => {
       <ButtonComponent
         isPrimary={props.isPrimaryButton}
         onClick={handleOnClick}
-        text={props.textButton}
+        buttonText={props.textButton}
         margin={props.marginButton}
       />
       <ModalComponent isOpen={isOpen} onClose={onClose}>

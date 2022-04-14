@@ -41,7 +41,8 @@ const ButtonComponent = (props) => {
 
 Button.defaultProps = {
   fontSize: defaultFontSize,
-  defaultFontFamily,
+  fontFamily: defaultFontFamily,
+  fontWeight: "normal",
 };
 
 ButtonComponent.defaultProps = {
