@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { Box, Flex, Grid, SimpleGrid, VStack } from "@chakra-ui/react";
 
-import NavigationBar from "../components/miscellaneousComponents/NavigationBar";
+import NavigationBarLandingPage from "../components/navigationBar/NavigationBarLandingPage";
 import DashboardImages from "../components/miscellaneousComponents/DashboardImages";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
 import Service from "../service/RegionServices";
@@ -21,7 +21,7 @@ const LandingPage = () => {
     <Box className="wrapper">
       <VStack spacing={8} align="start">
         <Grid className="topNav">
-          <NavigationBar />
+          <NavigationBarLandingPage />
         </Grid>
         <Flex justifyContent="start" alignItems="start" width="100%" mt="90px">
           <Box

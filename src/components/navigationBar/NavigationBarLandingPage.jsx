@@ -17,7 +17,7 @@ const headerStyle = {
   textShadow: "2px 2px 8px #afaebc",
 };
 
-const NavigationBar = () => {
+const NavigationBarLandingPage = () => {
   const { t } = useTranslation();
 
   return (
@@ -63,4 +63,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default NavigationBarLandingPage;
