@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
@@ -40,11 +39,16 @@ const UserAccountMenu = (props) => {
     <Menu>
       <MenuButton
         as={Button}
-        rightIcon={<ChevronDownIcon />}
-        backgroundColor="transparent !important"
-        border="none !important"
-        boxShadow="none !important"
-        marginLeft="-15px"
+        padding="0px"
+        backgroundColor="transparent"
+        border="none"
+        boxShadow="none"
+        _hover={{ bg: "none" }}
+        _active={{ bg: "none" }}
+        _focus={{
+          boxShadow: "none",
+          border: "none",
+        }}
       >
         <HStack>
           <Image
@@ -53,9 +57,6 @@ const UserAccountMenu = (props) => {
             src={props.user.profileImage.url}
             alt="image"
           />
-          <Text mt="15px" className="un-lbl">
-            {props.user.firstName}
-          </Text>
         </HStack>
       </MenuButton>
       <LogMenuList>
