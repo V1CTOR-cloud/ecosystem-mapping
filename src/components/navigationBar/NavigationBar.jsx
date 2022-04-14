@@ -104,7 +104,7 @@ const NavigationBar = (props) => {
             />
             {/*Button sort*/}
             <ButtonComponent
-              padding={`0 ${defaultPadding} 0 ${defaultPadding}`}
+              padding={`0 ${mediumPadding} 0 ${mediumPadding}`}
               isWithoutBorder={true}
               buttonText={t("mapping.navigation.bar.sort.button")}
               icon={
