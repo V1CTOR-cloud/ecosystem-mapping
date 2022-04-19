@@ -60,7 +60,7 @@ const BlueHome = styled(HomeAlt)`
   color: ${blueColor};
 `;
 
-const NavigationBar = (props) => {
+function NavigationBar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useTranslation();
 
@@ -77,7 +77,12 @@ const NavigationBar = (props) => {
   };
 
   return (
-    <HStack height="75px" justify="space-between" marginX={defaultPadding}>
+    <HStack
+      height="75px"
+      justify="space-between"
+      paddingX={defaultPadding}
+      shadow="base"
+    >
       <HStack>
         <Circle border={borderThickness} borderColor={blueColor} padding="4px">
           <BlueHome size="22.5" title="Home" />
@@ -188,7 +193,7 @@ const NavigationBar = (props) => {
       </HStack>
     </HStack>
   );
-};
+}
 
 export default NavigationBar;
 
