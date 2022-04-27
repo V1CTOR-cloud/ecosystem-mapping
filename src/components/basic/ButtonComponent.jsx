@@ -1,5 +1,7 @@
 import React from "react";
+
 import { Box, Button } from "@chakra-ui/react";
+
 import {
   blueColor,
   blueHoverColor,
@@ -17,9 +19,10 @@ const ButtonComponent = (props) => {
       <Button
         as={props.as}
         bg={props.isPrimary ? blueColor : whiteColor}
+        width={props.width}
         height="40px"
         paddingX={smallPadding}
-        borderRadius={borderRadius}
+        borderRadius={props.borderRadius ? props.borderRadius : borderRadius}
         border={
           props.isPrimary || props.isWithoutBorder
             ? 0
@@ -48,8 +51,10 @@ Button.defaultProps = {
 ButtonComponent.defaultProps = {
   isPrimary: false,
   isWithoutBorder: false,
+  borderRadius: undefined,
   margin: undefined,
   as: undefined,
+  width: undefined,
 };
 
 export default ButtonComponent;
