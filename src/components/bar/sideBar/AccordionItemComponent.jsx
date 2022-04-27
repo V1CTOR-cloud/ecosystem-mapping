@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/accordion";
 import { HStack, Text } from "@chakra-ui/react";
 
-import MyIconButton from "../../basic/MyIconButton";
+import IconButtonComponent from "../../basic/IconButtonComponent";
 import {
   blackColor,
   blueColor,
@@ -36,7 +36,7 @@ function AccordionItemComponent(props) {
               _focus={{ bg: whiteHoverColor }}
             >
               {props.isCollapsed && (
-                <MyIconButton
+                <IconButtonComponent
                   icon={
                     isSelected ? props.button.icon[0] : props.button.icon[1]
                   }
@@ -47,7 +47,7 @@ function AccordionItemComponent(props) {
               )}
               {!props.isCollapsed && (
                 <HStack>
-                  <MyIconButton
+                  <IconButtonComponent
                     icon={
                       isSelected ? props.button.icon[0] : props.button.icon[1]
                     }
