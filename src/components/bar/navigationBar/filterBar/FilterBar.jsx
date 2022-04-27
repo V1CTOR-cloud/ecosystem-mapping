@@ -8,7 +8,7 @@ import {
   greyColor,
   smallPadding,
 } from "../../../../helper/constant";
-import MyIconButton from "../../../basic/MyIconButton";
+import IconButtonComponent from "../../../basic/IconButtonComponent";
 import FilterMenuButton from "./FilterMenuButton";
 
 function FilterBar(props) {
@@ -28,7 +28,7 @@ function FilterBar(props) {
         />
       ))}
       <Spacer />
-      <MyIconButton
+      <IconButtonComponent
         icon={<Save color={greyColor} w="15px" h="15px" />}
         onClick={props.handleSave}
       />
