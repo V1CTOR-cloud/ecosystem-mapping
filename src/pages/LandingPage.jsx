@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { Box, Flex, Grid, SimpleGrid, VStack } from "@chakra-ui/react";
 
-import NavigationBarLandingPage from "../components/navigationBar/NavigationBarLandingPage";
+import NavigationBarLandingPage from "../components/bar/navigationBar/NavigationBarLandingPage";
 import DashboardImages from "../components/miscellaneousComponents/DashboardImages";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
 import Service from "../service/RegionServices";
