@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -20,9 +20,8 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import {Icon} from "@chakra-ui/icons";
-import {useTranslation} from "react-i18next";
-
+import { Icon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 import Checkboxes from "assets/checkbox.json";
 import AppType from "assets/applicationType.json";
@@ -282,7 +281,7 @@ const ServiceFilter = ({
                   gap={3}
                   className="mod-checklbl service-type"
                 >
-                  {Checkboxes.checkbox.map((result) => (
+                  {Checkboxes.serviceFocus.map((result) => (
                     <Box pos="relative">
                       <Checkbox value={result.name}>{result.name}</Checkbox>
                       <CircleIcon
