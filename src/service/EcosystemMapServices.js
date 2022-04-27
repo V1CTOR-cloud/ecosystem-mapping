@@ -9,14 +9,9 @@ const authorizationKey = `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`;
 const graphCMSKey = REACT_APP_GRAPH_CMS_CONTENT_API_KEY;
 
 class Service {
-  async getServicesList(mapID) {
-    const graphcms = new GraphQLClient(graphCMSKey, {
-      headers: {
-        authorization: authorizationKey,
-      },
-    });
-    const { services } = await graphcms.request(
-      ` 
+  // Get all the services for a specific map
+  async getMapServices(mapID) {
+    const query = ` 
       query MyQuery {
         services (where: {ecosystemMap: {id:"${mapID}"}}){
           id
@@ -55,11 +50,48 @@ class Service {
           offlineService
           serviceStatus
           updatedTypeAt
+          order
         }
       }
-      `
-    );
-    return services;
+  `;
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
+      headers: {
+        authorization: authorizationKey,
+      },
+    });
+
+    return await graphCMS.request(query);
+  }
+
+  // Update the order of all the services that change during a reorder.
+  async updateServiceOrderAndApplicationType(serviceId, data) {
+    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!){
+      updateService(
+        where: {id: $id}
+        data: $data
+      ) {
+        serviceName
+        order
+        applicationType
+      }
+    }`;
+
+    const variables = {
+      id: serviceId,
+      data: {
+        order: data.order,
+        applicationType: data.applicationType,
+      },
+    };
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
+      headers: {
+        authorization: authorizationKey,
+      },
+    });
+
+    return await graphCMS.request(query, variables);
   }
 
   async addService(data) {
@@ -94,7 +126,7 @@ class Service {
             serviceAudience: data.serviceInfo.audience,
             budget: data.serviceInfo.budget,
             tagTitle: data.tags,
-            verifiedService: data.serviceInfo.isVerified === "1" ? true : false,
+            verifiedService: data.serviceInfo.isVerified === "1",
             serviceOutcomes: data.serviceInfo.expectations,
             fromPhase: data.serviceInfo.phase.low,
             toPhase: data.serviceInfo.phase.high,
@@ -127,51 +159,55 @@ class Service {
       });
   }
 
-  async UpdatePhaseRangeonResize(data) {
-    const graphcms = new GraphQLClient(graphCMSKey, {
-      headers: {
-        authorization: authorizationKey,
-      },
-    });
-    return await graphcms.request(
-      `mutation ($data: ServiceUpdateInput!, $id: ID!) {
+  async updateRangesPhase(data) {
+    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
           serviceName
           fromPhase
           toPhase
         }
-    }`,
-      {
-        id: data.id,
-        data: {
-          toPhase: data.toPhase,
-          fromPhase: data.fromPhase,
-        },
-      }
-    );
-  }
+    }`;
 
-  async UpdateApplicationTypeonDrop(data) {
-    const graphcms = new GraphQLClient(graphCMSKey, {
+    const variables = {
+      id: data.id,
+      data: {
+        fromPhase: data.fromPhase,
+        toPhase: data.toPhase,
+      },
+    };
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
       headers: {
         authorization: authorizationKey,
       },
     });
-    return await graphcms.request(
-      `mutation ($data: ServiceUpdateInput!, $id: ID!) {
+
+    return await graphCMS.request(query, variables);
+  }
+
+  async updateApplicationType(data) {
+    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
           id
           applicationType
         }
-    }`,
-      {
-        id: data.id,
-        data: {
-          applicationType: data.applicationType,
-          updatedTypeAt: new Date(),
-        },
-      }
-    );
+    }`;
+
+    const variables = {
+      id: data.id,
+      data: {
+        applicationType: data.applicationType,
+        updatedTypeAt: new Date(),
+      },
+    };
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
+      headers: {
+        authorization: authorizationKey,
+      },
+    });
+
+    return await graphCMS.request(query, variables);
   }
 
   async getAllOrg() {
