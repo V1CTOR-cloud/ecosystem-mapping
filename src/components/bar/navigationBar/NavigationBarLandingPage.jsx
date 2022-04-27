@@ -8,7 +8,7 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react";
-import Authentication from "../authentication/Authentication";
+import Authentication from "../../authentication/Authentication";
 import { useTranslation } from "react-i18next";
 
 const headerStyle = {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import NavigationBar from "../../components/navigationBar/NavigationBar";
+import NavigationBar from "../../components/bar/navigationBar/NavigationBar";
 
 export default {
   title: "Navigation Bar",
