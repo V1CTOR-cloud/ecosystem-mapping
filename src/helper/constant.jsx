@@ -13,7 +13,9 @@ export const blueColor = "#074EE8";
 export const blueHoverColor = "#4D84F9";
 export const whiteColor = "#FFFFFF";
 export const whiteHoverColor = "#EBF1FE";
+export const whiteActiveColor = "#E0EAFF";
 export const greyColor = "#AAAAAA";
+export const greyHoverColor = "rgb(170, 170, 170, 0.75)";
 export const accentColor = "#BC31EA";
 export const blackColor = "#000000";
 
