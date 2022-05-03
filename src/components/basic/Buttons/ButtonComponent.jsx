@@ -8,17 +8,25 @@ import {
   borderRadius,
   defaultFontFamily,
   defaultFontSize,
+  greyColor,
   smallPadding,
+  whiteActiveColor,
   whiteColor,
   whiteHoverColor,
-} from "../../helper/constant";
+} from "../../../helper/constant";
 
 const ButtonComponent = (props) => {
   return (
     <Box padding={props.padding}>
       <Button
         as={props.as}
-        bg={props.isPrimary ? blueColor : whiteColor}
+        bg={
+          props.isPrimary
+            ? blueColor
+            : props.isSelected
+            ? whiteActiveColor
+            : whiteColor
+        }
         width={props.width}
         height="40px"
         paddingX={smallPadding}
@@ -46,10 +54,24 @@ Button.defaultProps = {
   fontSize: defaultFontSize,
   fontFamily: defaultFontFamily,
   fontWeight: "normal",
+  _focus: {
+    boxShadow: "none",
+  },
+  bg: whiteColor,
+  border: `2px solid ${greyColor}`,
+  _active: {
+    borderColor: blueColor,
+  },
+  _hover: {
+    bg: whiteHoverColor,
+  },
+  overflow: "hidden",
+  whiteSpace: "nonwrap",
 };
 
 ButtonComponent.defaultProps = {
   isPrimary: false,
+  isSelected: false,
   isWithoutBorder: false,
   borderRadius: undefined,
   margin: undefined,
