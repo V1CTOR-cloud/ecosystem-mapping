@@ -16,10 +16,12 @@ export const whiteHoverColor = "#EBF1FE";
 export const whiteActiveColor = "#E0EAFF";
 export const greyColor = "#AAAAAA";
 export const greyHoverColor = "rgb(170, 170, 170, 0.75)";
+export const greyTextColor = "#767676";
 export const accentColor = "#BC31EA";
 export const blackColor = "#000000";
 
 // FONTS
+export const smallFontSize = "10px";
 export const defaultFontSize = "14px";
 export const titleFontSize = "20px";
 export const defaultFontFamily = "Ubuntu, sans-serif";
@@ -71,3 +73,7 @@ export const ContentModal = styled.h1`
   text-align: center;
   color: #222c2f;
 `;
+
+export const market_and_organization = "Market_and_Organization";
+export const market = "Market";
+export const organization = "Organization";
