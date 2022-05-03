@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/accordion";
 import { HStack, Text } from "@chakra-ui/react";
 
-import IconButtonComponent from "../../basic/IconButtonComponent";
+import IconButtonComponent from "../../basic/Buttons/IconButtonComponent";
 import {
   blackColor,
   blueColor,
