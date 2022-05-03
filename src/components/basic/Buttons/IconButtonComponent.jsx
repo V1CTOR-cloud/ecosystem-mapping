@@ -20,4 +20,4 @@ IconButtonComponent.defaultProps = {
   width: "35px",
 };
 
-export default IconButtonComponent;
+export default React.memo(IconButtonComponent);
