@@ -6,7 +6,7 @@ import { Draft } from "@styled-icons/remix-line/Draft";
 import { Archive } from "@styled-icons/boxicons-regular";
 import { Accordion } from "@chakra-ui/accordion";
 
-import ButtonComponent from "../../basic/ButtonComponent";
+import ButtonComponent from "../../basic/Buttons/ButtonComponent";
 import AccordionItemComponent from "./AccordionItemComponent";
 import {
   blackColor,
