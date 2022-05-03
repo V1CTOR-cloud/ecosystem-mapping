@@ -7,8 +7,8 @@ import {
   smallPadding,
   titleFontSize,
 } from "../../../../helper/constant";
-import Checkboxes from "../../../../assets/checkbox.json";
-import { Text } from "@chakra-ui/react";
+import Service from "../../../../assets/servicesFocus.json";
+import { Box, Text } from "@chakra-ui/react";
 
 const Container = styled.div`
   background-color: ${(props) => props.backgroundColor};
@@ -19,32 +19,41 @@ const Container = styled.div`
   padding-right: ${smallPadding};
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: fade;
   border-radius: ${borderRadius};
   left: ${(props) => props.source.percent}%;
-  width: ${(props) => props.target.percent - props.source.percent}%;
+  width: calc(${(props) => props.target.percent - props.source.percent}%);
 `;
 
 function ServiceName(props) {
-  const backgroundColor = Checkboxes.serviceFocus.find((result) => {
-    return result.name === props.service.serviceFocus;
-  }).color;
+  const serviceFocus = Service.servicesFocus.find((result) => {
+    return result.name.split(" ").join("") === props.service.serviceFocus;
+  });
 
-  const textColor = Checkboxes.serviceFocus.find((result) => {
-    return result.name === props.service.serviceFocus;
-  }).textColor;
+  const textColor = serviceFocus.textColor;
+  const backgroundColor = serviceFocus.color;
 
   return (
-    <Container
-      {...props.provided.dragHandleProps}
-      source={props.source}
-      target={props.target}
-      backgroundColor={backgroundColor}
-    >
-      <Text h="100%" fontSize={titleFontSize} color={textColor}>
-        {props.service.serviceName}
-      </Text>
-    </Container>
+    <Box position="relative">
+      <Container
+        {...props.provided.dragHandleProps}
+        source={props.source}
+        target={props.target}
+        backgroundColor={backgroundColor}
+        onClick={props.handleServiceClick}
+      >
+        <Text
+          h="100%"
+          fontSize={titleFontSize}
+          color={textColor}
+          textOverflow="ellipsis"
+          overflow="hidden"
+          whiteSpace="nonwrap"
+        >
+          {props.service.serviceName}
+        </Text>
+      </Container>
+    </Box>
   );
 }
 
