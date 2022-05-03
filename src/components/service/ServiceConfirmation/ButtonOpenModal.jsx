@@ -3,7 +3,7 @@ import React from "react";
 import { useDisclosure } from "@chakra-ui/react";
 
 import ModalComponent from "../../basic/ModalComponent";
-import ButtonComponent from "../../basic/ButtonComponent";
+import ButtonComponent from "../../basic/Buttons/ButtonComponent";
 
 // Component that display a button, if clicked, it will show a modal with a title, content and image.
 // Used mainly for: publishing a service; saving in draft a service.
