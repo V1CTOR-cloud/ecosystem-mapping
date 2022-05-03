@@ -69,7 +69,7 @@ function ServiceContainer(props) {
         >
           <Slider
             rootStyle={sliderStyle}
-            domain={[-3, 3]}
+            domain={[-2, 4]}
             step={1 / 3}
             values={
               // Convert all the string to numeric value
@@ -110,6 +110,7 @@ function ServiceContainer(props) {
                         target={target}
                         provided={provided}
                         service={props.service}
+                        handleServiceClick={props.handleServiceClick}
                       />
                     );
                   })}
