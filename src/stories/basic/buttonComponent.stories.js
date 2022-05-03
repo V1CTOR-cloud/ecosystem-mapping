@@ -1,6 +1,6 @@
 import React from "react";
 
-import ButtonComponent from "../../components/basic/ButtonComponent";
+import ButtonComponent from "../../components/basic/Buttons/ButtonComponent";
 
 export default {
   title: "Button",
