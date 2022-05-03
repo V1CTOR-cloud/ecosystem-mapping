@@ -12,14 +12,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
+import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import styled from "styled-components";
 import { FilterAlt, HomeAlt } from "@styled-icons/boxicons-regular";
 import { Grid, SortDownAlt } from "@styled-icons/bootstrap";
 
-import ButtonComponent from "../../basic/ButtonComponent";
+import ButtonComponent from "../../basic/Buttons/ButtonComponent";
 import Authentication from "../../authentication/Authentication";
-import IconButtonComponent from "../../basic/IconButtonComponent";
+import IconButtonComponent from "../../basic/Buttons/IconButtonComponent";
 import {
   accentColor,
   blackColor,
@@ -32,8 +32,6 @@ import {
   mediumPadding,
   smallPadding,
   titleFontSize,
-  verySmallPadding,
-  whiteColor,
 } from "../../../helper/constant";
 
 const DividerLine = styled.div`
@@ -167,19 +165,8 @@ function NavigationBar(props) {
             </HStack>
           )}
           {/* Primary button */}
-          <ButtonComponent
-            isPrimary={true}
-            padding={`0 0 0 ${mediumPadding}`}
-            buttonText={props.buttonText}
-            icon={
-              <AddIcon
-                marginRight={verySmallPadding}
-                color={whiteColor}
-                w="15px"
-                h="15px"
-              />
-            }
-          />
+          {props.button}
+
           <MyDivider />
           <Authentication />
         </HStack>

@@ -8,7 +8,7 @@ import {
   greyColor,
   smallPadding,
 } from "../../../../helper/constant";
-import IconButtonComponent from "../../../basic/IconButtonComponent";
+import IconButtonComponent from "../../../basic/Buttons/IconButtonComponent";
 import FilterMenuButton from "./FilterMenuButton";
 
 function FilterBar(props) {
