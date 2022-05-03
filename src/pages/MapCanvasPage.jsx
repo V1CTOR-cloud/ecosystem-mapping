@@ -2,14 +2,35 @@ import React, { useEffect, useState } from "react";
 
 import { Box, Flex, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import { withRouter } from "react-router-dom";
+import styled from "styled-components";
 
 import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import FilterBar from "../components/bar/navigationBar/filterBar/FilterBar";
-import { smallPadding } from "../helper/constant";
+import {
+  greyColor,
+  market,
+  market_and_organization,
+  organization,
+  smallPadding,
+  verySmallPadding,
+} from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import Service from "../service/EcosystemMapServices";
+import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
+
+const ArrowDown = styled.div`
+  border-bottom: 7.5px solid transparent;
+  border-top: 7.5px solid transparent;
+  border-left: 7.5px solid ${greyColor};
+`;
+
+const ArrowUp = styled.div`
+  border-bottom: 7.5px solid transparent;
+  border-top: 7.5px solid transparent;
+  border-right: 7.5px solid ${greyColor};
+`;
 
 const items1 = [
   {
@@ -77,40 +98,64 @@ const data = {
   services: {},
   rows: {
     Market: {
-      id: "Market",
+      id: market,
       serviceIds: [],
     },
-    Market_and_Organisation: {
-      id: "Market_and_Organisation",
+    Market_and_Organization: {
+      id: market_and_organization,
       serviceIds: [],
     },
-    Organisation: {
-      id: "Organisation",
+    Organization: {
+      id: organization,
       serviceIds: [],
     },
   },
   // Reordering of the columns (the easiest way)
-  rowsOrder: ["Market", "Market_and_Organisation", "Organisation"],
+  rowsOrder: [market, market_and_organization, organization],
 };
 
 function MapCanvasPage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filters, setFilters] = useState(initialFilters);
   const [fetchedData, setFetchedData] = useState(null);
+  const [fetchedOrganization, setFetchedOrganization] = useState(null);
+  const [fetchedAudiences, setFetchedAudiences] = useState(null);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // Get all services before displaying the page.
+  // Fetch all the data required to display the page with all the information.
   useEffect(() => {
     const fetchData = async () => {
-      return await Service.getMapServices(props.mapId);
+      //  Get all services before displaying the page.
+      let res = await Service.getMapServices(props.mapId);
+      const sortedData = sortServices(res);
+      setFetchedData(sortedData);
+
+      // Get all organisations
+      res = await Service.getAllOrganisation();
+      const tempOrganizations = [];
+      // Formatting our organisation to fit for the component LabeledMenu
+      res.organisations.forEach((organisation) =>
+        tempOrganizations.push({
+          id: organisation.id,
+          name: organisation.organisationName,
+        })
+      );
+      setFetchedOrganization(tempOrganizations);
+
+      // Get all audiences
+      res = await Service.getAllAudiences();
+      const tempAudiences = [];
+      // Formatting our organisation to fit for the component LabeledMenu
+      res.audiences.forEach((audience) =>
+        tempAudiences.push({
+          id: audience.id,
+          name: audience.audienceName,
+        })
+      );
+      setFetchedAudiences(tempAudiences);
     };
 
-    fetchData()
-      .then((res) => {
-        // Sort the data
-        const sortedData = sortServices(res);
-        setFetchedData(sortedData);
-      })
-      .catch(console.error);
+    fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
 
   function sortServices(fetchedData) {
@@ -126,14 +171,14 @@ function MapCanvasPage(props) {
       sortedData.services = { ...data.services, [service.id]: service };
 
       switch (service.applicationType) {
-        case "Market_and_Organisation":
-          sortedData.rows.Market_and_Organisation.serviceIds.push(service.id);
+        case market_and_organization:
+          sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
           break;
-        case "Market":
+        case market:
           sortedData.rows.Market.serviceIds.push(service.id);
           break;
         default:
-          sortedData.rows.Organisation.serviceIds.push(service.id);
+          sortedData.rows.Organization.serviceIds.push(service.id);
       }
     });
 
@@ -173,18 +218,28 @@ function MapCanvasPage(props) {
     setFilters(tempFilter);
   }
 
-  return !fetchedData ? (
+  function handleServiceClick() {
+    console.log("clicked service");
+  }
+
+  return !isDataLoaded ? (
     <Text>Loading</Text>
   ) : (
     <Flex align="start" direction="column" h="100%">
       <Box w="100%">
         <NavigationBar
           title={"Ecosystem Map Title"}
-          buttonText={"New service"}
           isMapDashboard={false}
           onFilterClick={onOpen}
           onClearFilterClick={onClose}
-          isOpen={isOpen}
+          button={
+            <NewServiceButton
+              organisations={fetchedOrganization}
+              audiences={fetchedAudiences}
+              fetchedData={fetchedData}
+              mapId={props.mapId}
+            />
+          }
         />
       </Box>
 
@@ -198,17 +253,44 @@ function MapCanvasPage(props) {
           handleSave={handleSave}
         />
       )}
-      <Box w="100%" flex="max-content" bg="#aaaaaa" align="start">
+      <Box w="100%" flex="max-content" bg="#EEEEEE" align="start">
         <SideBar isFilterOpen={isOpen} />
-        <Box
-          h="100%"
-          bg="#1c5a62"
-          zIndex={0}
-          marginLeft="100px"
-          paddingTop={smallPadding}
-        >
+        <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
           <BackgroundCanvas isFilterOpen={isOpen} />
-          <ContentCanvas isFilterOpen={isOpen} data={fetchedData} />
+          <ContentCanvas
+            isFilterOpen={isOpen}
+            data={fetchedData}
+            handleServiceClick={handleServiceClick}
+          />
+          {data.rowsOrder.map((row, index) => {
+            return (
+              <Box
+                key={index}
+                position="absolute"
+                right="-40px"
+                top={164 * (index + 1) + 40 * index + "px"}
+                transform="rotate(90deg)"
+                //TODO change the size dynamically
+                w="180px"
+                h="50px"
+                textAlign="center"
+              >
+                <Text color={greyColor}>
+                  {row.replaceAll("_", " ").replace("and", "&")}
+                </Text>
+                <HStack
+                  marginTop={verySmallPadding}
+                  bg={greyColor}
+                  w="100%"
+                  h="2px"
+                  justify="space-between"
+                >
+                  <ArrowDown />
+                  <ArrowUp />
+                </HStack>
+              </Box>
+            );
+          })}
         </Box>
       </Box>
     </Flex>
