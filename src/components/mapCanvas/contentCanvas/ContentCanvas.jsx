@@ -178,7 +178,15 @@ function ContentCanvas(props) {
             (serviceId) => data.services[serviceId]
           );
 
-          return <Row key={row.id} row={row} services={services} />;
+          return (
+            <Row
+              key={row.id}
+              row={row}
+              services={services}
+              rowsRef={props.rowsRef}
+              handleServiceClick={props.handleServiceClick}
+            />
+          );
         })}
       </DragDropContext>
     </Box>
