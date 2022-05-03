@@ -94,69 +94,64 @@ class Service {
     return await graphCMS.request(query, variables);
   }
 
-  async addService(data) {
-    let user = getCurrentUser();
-    const graphcms = new GraphQLClient(graphCMSKey, {
+  async createService(data) {
+    const query = `mutation ($data: ServiceCreateInput!) {
+        createService(data: $data){id}
+      }`;
+
+    const variables = {
+      data: {
+        serviceName: data.name,
+        serviceFocus: data.serviceFocus,
+        serviceOwner: {
+          connect: [{ Organisation: { id: data.organisationId } }],
+        },
+        applicationType: data.applicationType,
+        serviceStartTime: data.serviceStartTime,
+        serviceEndTime: data.serviceEndTime,
+        link: data.link,
+        serviceLocation: data.location,
+        serviceAudience: data.audience,
+        serviceDescription: data.description,
+        serviceOutcomes: data.outcomes,
+        previousService: data.precededService,
+        followingService: data.followedService,
+        fromPhase: data.fromPhase,
+        toPhase: data.toPhase,
+
+        ecosystemMap: { connect: { id: data.mapId } },
+        serviceStatus: data.serviceStatus,
+      },
+    };
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
       headers: {
         authorization: authorizationKey,
       },
     });
-    return await graphcms
-      .request(
-        `mutation ($data: ServiceCreateInput!) {
-        createService(data: $data){id}
-      }`,
-        {
-          data: {
-            serviceName: data.basicService[0],
-            serviceOwner: {
-              connect: [{ Organisation: { id: data.basicService[1] } }],
-            },
-            followingService: data.serviceInfo.service1,
-            previousService: data.serviceInfo.service2,
-            serviceFocus: data.basicService[2],
-            applicationType: data.basicService[3],
-            serviceStartTime: data.serviceAvailability.startDate,
-            serviceEndTime: data.serviceAvailability.endDate,
-            timezone: data.serviceAvailability.timezone,
-            onlineService: data.serviceAvailability.online,
-            offlineService: data.serviceAvailability.venue,
-            serviceBreif: data.serviceInfo.descService,
-            serviceDescription: data.serviceInfo.descServiceDettail,
-            serviceAudience: data.serviceInfo.audience,
-            budget: data.serviceInfo.budget,
-            tagTitle: data.tags,
-            verifiedService: data.serviceInfo.isVerified === "1",
-            serviceOutcomes: data.serviceInfo.expectations,
-            fromPhase: data.serviceInfo.phase.low,
-            toPhase: data.serviceInfo.phase.high,
-            //serviceComments: {create: {userComments: data.comments}},
 
-            serviceComments: {
-              create: [
-                {
-                  userComments: data.comments,
-                  updatedDataAt: new Date(),
-                  serviceStatus: data.serviceStatus,
-                  currentUser: user.firstName + " " + user.lastName,
-                },
-              ],
-            },
-            serviceStatus: data.serviceStatus,
-            serviceLocation: data.serviceAvailability.serviceLocation,
-            ecosystemMap: { connect: { id: data.mapID } },
-            updatedTypeAt: new Date(),
-          },
+    console.log(data.name);
+    console.log(data.mapId);
+
+    const secondaryQuery = `
+      query MyQuery {
+        services(where: {serviceName: "${data.name}", AND: {ecosystemMap: {id: "${data.mapId}"}}}) {
+          id
+          serviceName
+          ecosystemMap {
+            id
+          }
         }
-      )
-      .catch((res) => {
-        if (
-          res.response.errors[0].message ===
-          'value is not unique for the field "serviceName"'
-        ) {
-          return "Service With the same name Exist.";
-        }
-      });
+      }`;
+
+    const res = await graphCMS.request(secondaryQuery);
+
+    // Check if we have the name of the service already taken.
+    if (res.services.length !== 0) {
+      return "A service with the same name exist. Please change the service name to be unique.";
+    } else {
+      return await graphCMS.request(query, variables);
+    }
   }
 
   async updateRangesPhase(data) {
@@ -210,21 +205,38 @@ class Service {
     return await graphCMS.request(query, variables);
   }
 
-  async getAllOrg() {
-    const graphcms = new GraphQLClient(graphCMSKey, {
-      headers: {
-        authorization: authorizationKey,
-      },
-    });
-    const { organisations } = await graphcms.request(
-      `{
+  async getAllOrganisation() {
+    const query = `{
       organisations {
         id
         organisationName
       }
-    }`
-    );
-    return organisations;
+    }`;
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
+      headers: {
+        authorization: authorizationKey,
+      },
+    });
+
+    return await graphCMS.request(query);
+  }
+
+  async getAllAudiences() {
+    const query = `{
+      audiences {
+        id
+        audienceName
+      }
+    }`;
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
+      headers: {
+        authorization: authorizationKey,
+      },
+    });
+
+    return await graphCMS.request(query);
   }
 
   async getAllTags() {
