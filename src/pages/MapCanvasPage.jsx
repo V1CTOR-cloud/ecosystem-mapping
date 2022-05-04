@@ -19,6 +19,10 @@ import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/Backgroun
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import Service from "../service/EcosystemMapServices";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
+import service from "../assets/servicesFocus.json";
+import { replaceNumberToPhase } from "../service/phaseConverter";
+import toastComponent from "../components/basic/ToastComponent";
+import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 
 const ArrowDown = styled.div`
   border-bottom: 7.5px solid transparent;
@@ -115,12 +119,50 @@ const data = {
 };
 
 function MapCanvasPage(props) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // VARIABLES
+  const applicationTypeButtons = [
+    market,
+    market_and_organization,
+    organization,
+  ];
+  const phase = [-1.0, 1.0];
+
+  // HOOKS
+  const {
+    isOpen: isOpenFilter,
+    onOpen: onOpenFilter,
+    onClose: onCloseFilter,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenForm,
+    onOpen: onOpenForm,
+    onClose: onCloseForm,
+  } = useDisclosure();
+  const [services] = useState([]);
   const [filters, setFilters] = useState(initialFilters);
   const [fetchedData, setFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  const [isError, setIsError] = useState(false);
+  const [name, setName] = useState("");
+  const [serviceFocus, setServiceFocus] = useState(service.servicesFocus[0]);
+  const [ownerOrganisation, setOwnerOrganisation] = useState("");
+  // const [tags, setTags] = useState([]);
+  const [applicationType, setApplicationType] = useState(
+    applicationTypeButtons[0]
+  );
+  const [serviceStartTime, setServiceStartTime] = useState(new Date());
+  const [serviceEndTime, setServiceEndTime] = useState(new Date());
+  const [link, setLink] = useState("");
+  const [location, setLocation] = useState("");
+  const [audience, setAudience] = useState("");
+  const [budgets, setBudgets] = useState([{ name: "", value: "" }]);
+  const [description, setDescription] = useState("");
+  const [outcomes, setOutcomes] = useState("");
+  const [precededService, setPrecededService] = useState("");
+  const [followedService, setFollowedService] = useState("");
 
   // Fetch all the data required to display the page with all the information.
   useEffect(() => {
@@ -141,6 +183,7 @@ function MapCanvasPage(props) {
         })
       );
       setFetchedOrganization(tempOrganizations);
+      setOwnerOrganisation(tempOrganizations[0].name);
 
       // Get all audiences
       res = await Service.getAllAudiences();
@@ -153,10 +196,46 @@ function MapCanvasPage(props) {
         })
       );
       setFetchedAudiences(tempAudiences);
+      setAudience(tempAudiences[0].name);
+
+      const tempServices = Object.values(sortedData.services);
+      tempServices.forEach((thisService) => {
+        services.push({
+          id: thisService.id,
+          name: thisService.serviceName,
+        });
+      });
+      if (services.length >= 2) {
+        setPrecededService(tempServices[0].name);
+        setFollowedService(tempServices[1].name);
+      }
     };
 
     fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
+
+  // Each time we are opening the form, we reset the data.
+  useEffect(() => {
+    if (isDataLoaded) {
+      setIsError(false);
+      setName("");
+      setServiceFocus(service.servicesFocus[0]);
+      setOwnerOrganisation(fetchedOrganization[0].name);
+      setApplicationType(applicationTypeButtons[0]);
+      setServiceStartTime(new Date());
+      setServiceEndTime(new Date());
+      setLink("");
+      setLocation("");
+      setAudience(fetchedAudiences[0].name);
+      //setBudgets([{ name: "", value: "" }]);
+      setDescription("");
+      setOutcomes("");
+      if (services.length >= 2) {
+        setPrecededService(services[0].name);
+        setFollowedService(services[1].name);
+      }
+    }
+  }, [isOpenForm]);
 
   function sortServices(fetchedData) {
     let sortedData = data;
@@ -218,8 +297,132 @@ function MapCanvasPage(props) {
     setFilters(tempFilter);
   }
 
-  function handleServiceClick() {
-    console.log("clicked service");
+  function handleServiceClick(service) {
+    onOpenForm();
+  }
+
+  function handleValueChange(value, setValue) {
+    setValue(value);
+  }
+
+  function handleNameChange(name) {
+    setIsError(name === "");
+    setName(name);
+  }
+
+  function handleBudgetValueChange(value, index) {
+    // Create temporary variables to modify the value
+    const tempBudgets = Array.from(budgets);
+    const values = Object.values(tempBudgets[index]);
+
+    values[1] = value;
+    // Create the new object
+    const tempBudget = { name: values[0], value: values[1] };
+    tempBudgets.splice(index, 1, tempBudget);
+
+    setBudgets(tempBudgets);
+  }
+
+  function handleBudgetNameChange(name, index) {
+    // Create temporary variables to modify the value
+    const tempBudgets = Array.from(budgets);
+    const values = Object.values(tempBudgets[index]);
+
+    values[0] = name;
+    // Create the new object
+    const tempBudget = { name: values[0], value: values[1] };
+    tempBudgets.splice(index, 1, tempBudget);
+
+    setBudgets(tempBudgets);
+  }
+
+  function handleAddBudget() {
+    const tempBudgets = Array.from(budgets);
+    tempBudgets.push({ name: "", value: "" });
+    setBudgets(tempBudgets);
+  }
+
+  function handleRemoveBudget(index) {
+    const tempBudgets = Array.from(budgets);
+    tempBudgets.splice(index, 1);
+    setBudgets(tempBudgets);
+  }
+
+  // function handleTagsChange(tag) {
+  //   setTags(tag);
+  // }
+
+  async function handleDraftOrPublishClick(serviceStatus) {
+    const organisationId = fetchedOrganization.find(
+      (organisation) => ownerOrganisation === organisation.name
+    ).id;
+
+    const fromPhase = replaceNumberToPhase(phase[0]);
+    const toPhase = replaceNumberToPhase(phase[1]);
+
+    const order = fetchedData.rows[applicationType].serviceIds.length;
+
+    const data = {
+      serviceName: name,
+      serviceFocus: serviceFocus.name.replaceAll(" ", ""),
+      organisationId: organisationId,
+      applicationType: applicationType.replaceAll(" ", "_").replace("&", "and"),
+      serviceStartTime: serviceStartTime,
+      serviceEndTime: serviceEndTime,
+      link: link,
+      location: location,
+      audience: audience.split(" ").join("_"),
+      description: description,
+      outcomes: outcomes,
+      precededService: precededService,
+      followedService: followedService,
+      fromPhase: fromPhase,
+      toPhase: toPhase,
+
+      mapId: props.mapId,
+      serviceStatus: serviceStatus,
+      order: order,
+    };
+
+    if (name === "") {
+      setIsError(true);
+    } else {
+      const res = await Service.createService(data);
+      // Check if we created the service
+      if (res.createService) {
+        onCloseForm();
+
+        // Create the new service object with the id
+
+        // Format the list of services to correspond to the model of fetchedData
+        const tempServices = Object.assign(fetchedData.services, {
+          [res.createService.id]: {
+            ...res.createService,
+          },
+        });
+
+        const tempRows = fetchedData.rows;
+
+        tempRows[res.createService.applicationType].serviceIds.push(
+          res.createService.id
+        );
+
+        const newData = {
+          rowsOrder: fetchedData.rowsOrder,
+          services: tempServices,
+          rows: tempRows,
+        };
+
+        services.push({
+          id: res.createService.id,
+          name: data.serviceName,
+        });
+
+        setFetchedData(newData);
+      } else {
+        toastComponent(res, "error", 5000);
+      }
+    }
   }
 
   return !isDataLoaded ? (
@@ -230,20 +433,86 @@ function MapCanvasPage(props) {
         <NavigationBar
           title={"Ecosystem Map Title"}
           isMapDashboard={false}
-          onFilterClick={onOpen}
-          onClearFilterClick={onClose}
+          onFilterClick={onOpenFilter}
+          onClearFilterClick={onCloseFilter}
           button={
             <NewServiceButton
+              isOpen={isOpenForm}
+              onClose={onCloseForm}
+              onOpen={onOpenForm}
               organisations={fetchedOrganization}
               audiences={fetchedAudiences}
               fetchedData={fetchedData}
-              mapId={props.mapId}
+              isError={isError}
+              name={name}
+              handleNameChange={(event) => handleNameChange(event.target.value)}
+              serviceFocus={serviceFocus}
+              handleServiceFocusChange={(thisServiceFocus) =>
+                handleValueChange(thisServiceFocus, setServiceFocus)
+              }
+              ownerOrganisation={ownerOrganisation}
+              handleOwnerOrganisationChange={(ownerOrganisation) =>
+                handleValueChange(ownerOrganisation, setOwnerOrganisation)
+              }
+              applicationTypeButtons={applicationTypeButtons}
+              applicationType={applicationType}
+              handleApplicationTypeChange={(applicationType) =>
+                handleValueChange(applicationType, setApplicationType)
+              }
+              phase={phase}
+              serviceStartTime={serviceStartTime}
+              handleServiceStartTimeChange={(date) =>
+                handleValueChange(date, setServiceStartTime)
+              }
+              serviceEndTime={serviceEndTime}
+              handleServiceEndTime={(date) =>
+                handleValueChange(date, setServiceEndTime)
+              }
+              link={link}
+              handleLinkChange={(event) =>
+                handleValueChange(event.target.value, setLink)
+              }
+              location={location}
+              handleLocationChange={(event) =>
+                handleValueChange(event.target.value, setLocation)
+              }
+              audience={audience}
+              handleAudienceChange={(audience) =>
+                handleValueChange(audience, setAudience)
+              }
+              budgets={budgets}
+              handleBudgetValueChange={(event, index) =>
+                handleBudgetValueChange(event.target.value, index)
+              }
+              handleBudgetNameChange={(event, index) =>
+                handleBudgetNameChange(event.target.value, index)
+              }
+              handleAddBudget={handleAddBudget}
+              handleRemoveBudget={(budget) => handleRemoveBudget(budget)}
+              description={description}
+              handleDescriptionChange={(event) =>
+                handleValueChange(event.target.value, setDescription)
+              }
+              outcomes={outcomes}
+              handleOutcomesChange={(event) =>
+                handleValueChange(event.target.value, setOutcomes)
+              }
+              precededService={precededService}
+              services={services}
+              handlePrecededServiceChange={(precededService) =>
+                handleValueChange(precededService, setPrecededService)
+              }
+              followedService={followedService}
+              handleFollowedServiceChange={(followedService) =>
+                handleValueChange(followedService, setFollowedService)
+              }
+              handleDraftOrPublishClick={handleDraftOrPublishClick}
             />
           }
         />
       </Box>
 
-      {isOpen && (
+      {isOpenFilter && (
         <FilterBar
           filters={filters}
           isButtonActive={false}
@@ -254,13 +523,13 @@ function MapCanvasPage(props) {
         />
       )}
       <Box w="100%" flex="max-content" bg="#EEEEEE" align="start">
-        <SideBar isFilterOpen={isOpen} />
+        <SideBar isFilterOpen={isOpenFilter} />
         <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
-          <BackgroundCanvas isFilterOpen={isOpen} />
+          <BackgroundCanvas isFilterOpen={isOpenFilter} />
           <ContentCanvas
-            isFilterOpen={isOpen}
+            isFilterOpen={isOpenFilter}
             data={fetchedData}
-            handleServiceClick={handleServiceClick}
+            handleServiceClick={(service) => handleServiceClick(service)}
           />
           {data.rowsOrder.map((row, index) => {
             return (
@@ -293,6 +562,80 @@ function MapCanvasPage(props) {
           })}
         </Box>
       </Box>
+      {isOpenForm && (
+        <ServiceForm
+          isOpen={isOpenForm}
+          onClose={onCloseForm}
+          onOpen={onOpenForm}
+          organisations={fetchedOrganization}
+          audiences={fetchedAudiences}
+          fetchedData={fetchedData}
+          isError={isError}
+          name={name}
+          handleNameChange={(event) => handleNameChange(event.target.value)}
+          serviceFocus={serviceFocus}
+          handleServiceFocusChange={(thisServiceFocus) =>
+            handleValueChange(thisServiceFocus, setServiceFocus)
+          }
+          ownerOrganisation={ownerOrganisation}
+          handleOwnerOrganisationChange={(ownerOrganisation) =>
+            handleValueChange(ownerOrganisation, setOwnerOrganisation)
+          }
+          applicationTypeButtons={applicationTypeButtons}
+          applicationType={applicationType}
+          handleApplicationTypeChange={(applicationType) =>
+            handleValueChange(applicationType, setApplicationType)
+          }
+          phase={phase}
+          serviceStartTime={serviceStartTime}
+          handleServiceStartTimeChange={(date) =>
+            handleValueChange(date, setServiceStartTime)
+          }
+          serviceEndTime={serviceEndTime}
+          handleServiceEndTime={(date) =>
+            handleValueChange(date, setServiceEndTime)
+          }
+          link={link}
+          handleLinkChange={(event) =>
+            handleValueChange(event.target.value, setLink)
+          }
+          location={location}
+          handleLocationChange={(event) =>
+            handleValueChange(event.target.value, setLocation)
+          }
+          audience={audience}
+          handleAudienceChange={(audience) =>
+            handleValueChange(audience, setAudience)
+          }
+          budgets={budgets}
+          handleBudgetValueChange={(event, index) =>
+            handleBudgetValueChange(event.target.value, index)
+          }
+          handleBudgetNameChange={(event, index) =>
+            handleBudgetNameChange(event.target.value, index)
+          }
+          handleAddBudget={handleAddBudget}
+          handleRemoveBudget={(budget) => handleRemoveBudget(budget)}
+          description={description}
+          handleDescriptionChange={(event) =>
+            handleValueChange(event.target.value, setDescription)
+          }
+          outcomes={outcomes}
+          handleOutcomesChange={(event) =>
+            handleValueChange(event.target.value, setOutcomes)
+          }
+          precededService={precededService}
+          services={services}
+          handlePrecededServiceChange={(precededService) =>
+            handleValueChange(precededService, setPrecededService)
+          }
+          followedService={followedService}
+          handleFollowedServiceChange={(followedService) =>
+            handleValueChange(followedService, setFollowedService)
+          }
+          handleDraftOrPublishClick={handleDraftOrPublishClick}
+        />
+      )}
     </Flex>
   );
 }
