@@ -96,12 +96,32 @@ class Service {
 
   async createService(data) {
     const query = `mutation ($data: ServiceCreateInput!) {
-        createService(data: $data){id}
+        createService(data: $data){
+        id
+        serviceName
+          serviceFocus
+          serviceOwner {
+            ... on Organisation {
+            organisationName
+            }
+          }
+          applicationType
+          serviceStartTime
+          serviceEndTime
+          serviceLocation
+          serviceAudience
+          serviceDescription
+          serviceOutcomes
+          previousService
+          followingService
+          fromPhase
+          toPhase
+          order}
       }`;
 
     const variables = {
       data: {
-        serviceName: data.name,
+        serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
         serviceOwner: {
           connect: [{ Organisation: { id: data.organisationId } }],
@@ -118,6 +138,7 @@ class Service {
         followingService: data.followedService,
         fromPhase: data.fromPhase,
         toPhase: data.toPhase,
+        order: data.order,
 
         ecosystemMap: { connect: { id: data.mapId } },
         serviceStatus: data.serviceStatus,
@@ -129,15 +150,10 @@ class Service {
         authorization: authorizationKey,
       },
     });
-
-    console.log(data.name);
-    console.log(data.mapId);
-
     const secondaryQuery = `
       query MyQuery {
-        services(where: {serviceName: "${data.name}", AND: {ecosystemMap: {id: "${data.mapId}"}}}) {
+        services(where: {serviceName: "${data.serviceName}", AND: {ecosystemMap: {id: "${data.mapId}"}}}) {
           id
-          serviceName
           ecosystemMap {
             id
           }
