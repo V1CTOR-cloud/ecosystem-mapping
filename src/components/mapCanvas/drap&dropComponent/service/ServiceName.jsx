@@ -40,7 +40,7 @@ function ServiceName(props) {
         source={props.source}
         target={props.target}
         backgroundColor={backgroundColor}
-        onClick={props.handleServiceClick}
+        onClick={() => props.handleServiceClick(props.service)}
       >
         <Text
           h="100%"
