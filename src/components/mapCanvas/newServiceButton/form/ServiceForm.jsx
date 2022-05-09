@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   AlertDialog,
@@ -12,16 +12,21 @@ import {
   HStack,
   Spacer,
 } from "@chakra-ui/react";
+import { Archive } from "@styled-icons/bootstrap";
+import { useTranslation } from "react-i18next";
 
 import { greyTextColor, mediumPadding } from "../../../../helper/constant";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
-import ApplicationTypeComponent from "./applicationTypeComponent/ApplicationTypeComponent";
+import ServiceFocusComponent from "./applicationTypeComponent/ServiceFocusComponent";
 import ServiceTabs from "./tabs/ServiceTabs";
 import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
-import { useTranslation } from "react-i18next";
+import { MapContext } from "../../../../pages/MapCanvasPage";
 
 function ServiceForm(props) {
   const { t } = useTranslation();
+  const [formValues, setFormValues] = useContext(MapContext);
+
+  //TODO render 4 time, check why (one is because we useEffect to clear)
 
   return (
     <AlertDialog
@@ -29,86 +34,115 @@ function ServiceForm(props) {
       isOpen={props.isOpen}
       leastDestructiveRef={props.cancelRef}
       onClose={props.onClose}
+      closeOnOverlayClick={false}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogBody paddingY={mediumPadding}>
-            <HStack alignItems="flex-start">
+            <HStack alignItems="flex-start" zIndex={11}>
               <FormControl isInvalid={props.isError}>
                 <InputComponent
                   isRequired={true}
-                  value={props.name}
-                  placeholder="Service Name ..."
-                  handleOnChange={props.handleNameChange}
+                  value={formValues["serviceName"]}
+                  placeholder={t("mapping.canvas.form.service.name")}
+                  handleOnChange={(event) =>
+                    setFormValues(
+                      event.target.value,
+                      "serviceName",
+                      "serviceNameChange"
+                    )
+                  }
                 />
                 {props.isError ? (
                   <FormErrorMessage>
-                    Enter the name of your service.
+                    {t("mapping.canvas.form.service.name.error")}
                   </FormErrorMessage>
                 ) : (
                   <Box />
                 )}
               </FormControl>
-              <ApplicationTypeComponent
-                handleServiceFocusChange={props.handleServiceFocusChange}
-                serviceFocus={props.serviceFocus}
-              />
+              <ServiceFocusComponent />
             </HStack>
-            <ServiceTabs
-              ownerOrganisation={props.ownerOrganisation}
-              organisations={props.organisations}
-              handleOwnerOrganisationChange={
-                props.handleOwnerOrganisationChange
-              }
-              applicationTypeButtons={props.applicationTypeButtons}
-              applicationType={props.applicationType}
-              handleApplicationTypeChange={props.handleApplicationTypeChange}
-              phase={props.phase}
-              serviceStartTime={props.serviceStartTime}
-              handleServiceStartTimeChange={props.handleServiceStartTimeChange}
-              serviceEndTime={props.serviceEndTime}
-              handleServiceEndTimeChange={props.serviceEndTime}
-              link={props.link}
-              handleLinkChange={props.handleLinkChange}
-              location={props.location}
-              handleLocationChange={props.handleLocationChange}
-              audience={props.audience}
-              audiences={props.audiences}
-              handleAudienceChange={props.handleAudienceChange}
-              budgets={props.budgets}
-              handleBudgetValueChange={props.handleBudgetValueChange}
-              handleBudgetNameChange={props.handleBudgetNameChange}
-              handleAddBudget={props.handleAddBudget}
-              handleRemoveBudget={props.handleRemoveBudget}
-              description={props.description}
-              handleDescriptionChange={props.handleDescriptionChange}
-              outcomes={props.outcomes}
-              handleOutcomesChange={props.handleOutcomesChange}
-              precededService={props.precededService}
-              services={props.services}
-              handlePrecededServiceChange={props.handlePrecededServiceChange}
-              followedService={props.followedService}
-              handleFollowedServiceChange={props.handleFollowedServiceChange}
-            />
+            <Box zIndex={10}>
+              <ServiceTabs
+                organisations={props.organisations}
+                applicationTypeButtons={props.applicationTypeButtons}
+                audiences={props.audiences}
+                services={props.services}
+              />
+            </Box>
             <Flex paddingTop={mediumPadding}>
-              <ButtonComponent
-                buttonText={t("common.cancel")}
-                isWithoutBorder={true}
-                color={greyTextColor}
-                onClick={props.onClose}
-              />
+              {props.isEditing ? (
+                <ButtonComponent
+                  buttonText={t("mapping.canvas.form.archive.button")}
+                  isWithoutBorder={true}
+                  color={greyTextColor}
+                  icon={<Archive color={greyTextColor} size="20px" />}
+                  //TODO archived function
+                  onClick={() => {
+                    props.handleIsEditingChange(false);
+                    console.log("Archived Clicked");
+                  }}
+                />
+              ) : (
+                <ButtonComponent
+                  buttonText={t("common.cancel")}
+                  isWithoutBorder={true}
+                  color={greyTextColor}
+                  onClick={props.onClose}
+                />
+              )}
               <Spacer />
-              <ButtonComponent
-                padding={`0 ${mediumPadding} 0 0`}
-                buttonText={t("mapping.button.draft")}
-                isWithoutBorder={true}
-                onClick={() => props.handleDraftOrPublishClick("Draft")}
-              />
-              <ButtonComponent
-                buttonText={t("mapping.button.publish")}
-                isPrimary={true}
-                onClick={() => props.handleDraftOrPublishClick("Published")}
-              />
+              {props.isEditing ? (
+                <ButtonComponent
+                  padding={`0 ${mediumPadding} 0 0`}
+                  buttonText={t("common.cancel")}
+                  isWithoutBorder={true}
+                  color={greyTextColor}
+                  onClick={() => {
+                    props.handleIsEditingChange(false);
+                    props.onClose();
+                  }}
+                />
+              ) : (
+                <Box />
+              )}
+              {props.isEditing ? (
+                <ButtonComponent
+                  padding={`0 ${mediumPadding} 0 0`}
+                  buttonText={t("mapping.canvas.form.unpublished.button")}
+                  isWithoutBorder={false}
+                  //TODO function to unpublished the service
+                  onClick={() => {
+                    props.handleIsEditingChange(false);
+                    console.log("Unpublished clicked");
+                  }}
+                />
+              ) : (
+                <ButtonComponent
+                  padding={`0 ${mediumPadding} 0 0`}
+                  buttonText={t("mapping.button.draft")}
+                  isWithoutBorder={true}
+                  onClick={() => props.handleDraftOrPublishClick("Draft")}
+                />
+              )}
+              {props.isEditing ? (
+                <ButtonComponent
+                  buttonText={"Save"}
+                  isPrimary={true}
+                  //TODO function to update the service
+                  onClick={() => {
+                    props.handleIsEditingChange(false);
+                    props.handleUpdateClick("Published");
+                  }}
+                />
+              ) : (
+                <ButtonComponent
+                  buttonText={t("mapping.button.publish")}
+                  isPrimary={true}
+                  onClick={() => props.handleDraftOrPublishClick("Published")}
+                />
+              )}
             </Flex>
           </AlertDialogBody>
         </AlertDialogContent>
