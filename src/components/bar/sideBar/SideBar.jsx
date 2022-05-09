@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Draft } from "@styled-icons/remix-line/Draft";
 import { Archive } from "@styled-icons/boxicons-regular";
 import { Accordion } from "@chakra-ui/accordion";
+import { useTranslation } from "react-i18next";
 
 import ButtonComponent from "../../basic/Buttons/ButtonComponent";
 import AccordionItemComponent from "./AccordionItemComponent";
@@ -23,6 +24,7 @@ const SideBarContainer = styled.div`
   // Height depending of the filter bar: 75px for the navbar and 60px for the filter bar when open
   height: ${(props) =>
     props.isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
+
   &:hover {
     width: 250px
   }
@@ -30,10 +32,11 @@ const SideBarContainer = styled.div`
 
 function SideBar(props) {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const { t } = useTranslation();
 
   const buttons = [
     {
-      title: "Service Templates",
+      title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: [
         <TableChart color={blueColor} />,
         <TableChart color={blackColor} />,
@@ -60,12 +63,12 @@ function SideBar(props) {
       ],
     },
     {
-      title: "Draft Services",
+      title: t("mapping.canvas.side.bar.toggle.draft.services"),
       icon: [<Draft color={blueColor} />, <Draft color={blackColor} />],
       children: [],
     },
     {
-      title: "Archived Services",
+      title: t("mapping.canvas.side.bar.toggle.archived.services"),
       icon: [<Archive color={blueColor} />, <Archive color={blackColor} />],
       children: [],
     },
