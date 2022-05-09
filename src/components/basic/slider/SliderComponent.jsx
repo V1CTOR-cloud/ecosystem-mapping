@@ -59,7 +59,7 @@ function SliderComponent(props) {
         domain={[-2, 4]}
         step={1 / 3}
         mode={2}
-        values={[-1, 1]}
+        values={props.phase}
       >
         <Rail>
           {({ getRailProps }) => <div style={railStyle} {...getRailProps()} />}
