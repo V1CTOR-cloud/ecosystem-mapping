@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   Box,
@@ -14,8 +14,11 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import { smallPadding, verySmallPadding } from "../../../../../helper/constant";
 import service from "../../../../../assets/servicesFocus.json";
+import { MapContext } from "../../../../../pages/MapCanvasPage";
 
-function ApplicationTypeComponent(props) {
+function ServiceFocusComponent() {
+  const [formValues, setFormValues] = useContext(MapContext);
+
   return (
     <Box paddingLeft={verySmallPadding}>
       <Menu>
@@ -23,16 +26,19 @@ function ApplicationTypeComponent(props) {
           <Box
             w="15px"
             h="15px"
-            bg={props.serviceFocus.color}
+            bg={formValues["serviceFocus"].color}
             borderRadius="50%"
           />
         </MenuButton>
-        <MenuList>
+        {/* Keep Zindex >= 4 to not have the slider above the menu that have an index of 3*/}
+        <MenuList zIndex={4}>
           {service.servicesFocus.map((serviceFocus) => {
             return (
               <MenuItem
                 key={serviceFocus.name}
-                onClick={() => props.handleServiceFocusChange(serviceFocus)}
+                onClick={() =>
+                  setFormValues(serviceFocus, "serviceFocus", "classicOnChange")
+                }
               >
                 <HStack>
                   <Box
@@ -53,4 +59,4 @@ function ApplicationTypeComponent(props) {
   );
 }
 
-export default ApplicationTypeComponent;
+export default ServiceFocusComponent;
