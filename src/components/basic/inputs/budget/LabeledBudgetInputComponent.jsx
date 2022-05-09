@@ -2,6 +2,7 @@ import React from "react";
 
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 import InputComponent from "../input/inputComponent/InputComponent";
 import IconButtonComponent from "../../Buttons/IconButtonComponent";
@@ -14,6 +15,8 @@ import {
 } from "../../../../helper/constant";
 
 function LabeledBudgetInputComponent(props) {
+  const { t } = useTranslation();
+
   function handleAddOrRemoveBudget(index) {
     if (index === props.budgets.length - 1) {
       props.handleAddBudget();
@@ -54,7 +57,7 @@ function LabeledBudgetInputComponent(props) {
             <Box>
               <InputComponent
                 value={budget.name}
-                placeholder="Title ..."
+                placeholder={t("mapping.canvas.form.budget.title.placeholder")}
                 handleOnChange={(event) =>
                   props.handleBudgetNameChange(event, index)
                 }
@@ -64,7 +67,7 @@ function LabeledBudgetInputComponent(props) {
             <Box w="100%" paddingX={smallPadding}>
               <InputComponent
                 value={budget.value}
-                placeholder="0.00€ - 10.00€"
+                placeholder={t("mapping.canvas.form.budget.value.placeholder")}
                 handleOnChange={(event) =>
                   props.handleBudgetValueChange(event, index)
                 }
