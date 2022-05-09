@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 
 import { AddIcon } from "@chakra-ui/icons";
+import { useTranslation } from "react-i18next";
 
 import ButtonComponent from "../../basic/Buttons/ButtonComponent";
 import {
@@ -12,13 +13,14 @@ import ServiceForm from "./form/ServiceForm";
 
 function NewServiceButton(props) {
   const cancelRef = useRef();
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
       <ButtonComponent
         isPrimary={true}
         padding={`0 0 0 ${mediumPadding}`}
-        buttonText={"New service"}
+        buttonText={t("mapping.navigation.bar.new.service.button")}
         icon={
           <AddIcon
             marginRight={verySmallPadding}
@@ -30,46 +32,16 @@ function NewServiceButton(props) {
         onClick={props.onOpen}
       />
       <ServiceForm
+        isEditing={false}
+        handleIsEditingChange={props.handleIsEditingChange}
         isOpen={props.isOpen}
         onClose={props.onClose}
         cancelRef={cancelRef}
         isError={props.isError}
-        name={props.name}
-        handleNameChange={props.handleNameChange}
-        serviceFocus={props.serviceFocus}
-        handleServiceFocusChange={props.handleServiceFocusChange}
         organisations={props.organisations}
-        ownerOrganisation={props.ownerOrganisation}
-        handleOwnerOrganisationChange={props.handleOwnerOrganisationChange}
         applicationTypeButtons={props.applicationTypeButtons}
-        applicationType={props.applicationType}
-        handleApplicationTypeChange={props.handleApplicationTypeChange}
-        phase={props.phase}
-        serviceStartTime={props.serviceStartTime}
-        handleServiceStartTimeChange={props.handleServiceStartTimeChange}
-        serviceEndTime={props.serviceEndTime}
-        handleServiceEndTimeChange={props.serviceEndTime}
-        link={props.link}
-        handleLinkChange={props.handleLinkChange}
-        location={props.location}
-        handleLocationChange={props.handleLocationChange}
-        audience={props.audience}
         audiences={props.audiences}
-        handleAudienceChange={props.handleAudienceChange}
-        budgets={props.budgets}
-        handleBudgetValueChange={props.handleBudgetValueChange}
-        handleBudgetNameChange={props.handleBudgetNameChange}
-        handleAddBudget={props.handleAddBudget}
-        handleRemoveBudget={props.handleRemoveBudget}
-        description={props.description}
-        handleDescriptionChange={props.handleDescriptionChange}
-        outcomes={props.outcomes}
-        handleOutcomesChange={props.handleOutcomesChange}
-        precededService={props.precededService}
         services={props.services}
-        handlePrecededServiceChange={props.handlePrecededServiceChange}
-        followedService={props.followedService}
-        handleFollowedServiceChange={props.handleFollowedServiceChange}
         handleDraftOrPublishClick={props.handleDraftOrPublishClick}
       />
     </React.Fragment>
