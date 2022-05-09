@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
 
 import { Box, Flex, HStack, Text, useDisclosure } from "@chakra-ui/react";
 import { withRouter } from "react-router-dom";
@@ -20,9 +20,14 @@ import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import Service from "../service/EcosystemMapServices";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
-import { replaceNumberToPhase } from "../service/phaseConverter";
+import {
+  replaceNumberToPhase,
+  replacePhaseToNumber,
+} from "../service/phaseConverter";
 import toastComponent from "../components/basic/ToastComponent";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
+import Services from "../service/EcosystemMapServices";
+import { useTranslation } from "react-i18next";
 
 const ArrowDown = styled.div`
   border-bottom: 7.5px solid transparent;
@@ -118,16 +123,33 @@ const data = {
   rowsOrder: [market, market_and_organization, organization],
 };
 
+// Creation of a context to be able to pass argument through the context not the props.
+export const MapContext = createContext(null);
+
 function MapCanvasPage(props) {
-  // VARIABLES
   const applicationTypeButtons = [
     market,
     market_and_organization,
     organization,
   ];
-  const phase = [-1.0, 1.0];
-
-  // HOOKS
+  const { t } = useTranslation();
+  const initialsValues = {
+    serviceName: "",
+    description: "",
+    outcomes: "",
+    serviceFocus: service.servicesFocus[0],
+    ownerOrganisation: "",
+    applicationType: applicationTypeButtons[0],
+    serviceStartTime: new Date(),
+    serviceEndTime: new Date(),
+    link: "",
+    audience: "",
+    precededService: t("mapping.canvas.form.service.select.service"),
+    followedService: t("mapping.canvas.form.service.select.service"),
+    location: "",
+    budgets: [{ name: "", value: "" }],
+    phase: [-1.0, 1.0],
+  };
   const {
     isOpen: isOpenFilter,
     onOpen: onOpenFilter,
@@ -138,37 +160,28 @@ function MapCanvasPage(props) {
     onOpen: onOpenForm,
     onClose: onCloseForm,
   } = useDisclosure();
+  const [isError, setIsError] = useState(false);
+  const [formValues, setFormValues] = useReducer(formReducer, initialsValues);
+  const [serviceWithoutModification, setServiceWithoutModification] =
+    useState(null);
   const [services] = useState([]);
   const [filters, setFilters] = useState(initialFilters);
+  const [mapTitle, setMapTitle] = useState("");
   const [fetchedData, setFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const [isError, setIsError] = useState(false);
-  const [name, setName] = useState("");
-  const [serviceFocus, setServiceFocus] = useState(service.servicesFocus[0]);
-  const [ownerOrganisation, setOwnerOrganisation] = useState("");
-  // const [tags, setTags] = useState([]);
-  const [applicationType, setApplicationType] = useState(
-    applicationTypeButtons[0]
-  );
-  const [serviceStartTime, setServiceStartTime] = useState(new Date());
-  const [serviceEndTime, setServiceEndTime] = useState(new Date());
-  const [link, setLink] = useState("");
-  const [location, setLocation] = useState("");
-  const [audience, setAudience] = useState("");
-  const [budgets, setBudgets] = useState([{ name: "", value: "" }]);
-  const [description, setDescription] = useState("");
-  const [outcomes, setOutcomes] = useState("");
-  const [precededService, setPrecededService] = useState("");
-  const [followedService, setFollowedService] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   // Fetch all the data required to display the page with all the information.
   useEffect(() => {
     const fetchData = async () => {
-      //  Get all services before displaying the page.
-      let res = await Service.getMapServices(props.mapId);
+      // Get the name of the
+
+      // Get all services before displaying the page.
+      let res = await Service.getMapServicesAndMapName(props.mapId);
+      setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
 
@@ -183,7 +196,11 @@ function MapCanvasPage(props) {
         })
       );
       setFetchedOrganization(tempOrganizations);
-      setOwnerOrganisation(tempOrganizations[0].name);
+      handleFormChange(
+        tempOrganizations[0].name,
+        "serviceFocus",
+        "classicOnChange"
+      );
 
       // Get all audiences
       res = await Service.getAllAudiences();
@@ -196,7 +213,7 @@ function MapCanvasPage(props) {
         })
       );
       setFetchedAudiences(tempAudiences);
-      setAudience(tempAudiences[0].name);
+      handleFormChange(tempAudiences[0].name, "audience", "classicOnChange");
 
       const tempServices = Object.values(sortedData.services);
       tempServices.forEach((thisService) => {
@@ -206,8 +223,16 @@ function MapCanvasPage(props) {
         });
       });
       if (services.length >= 2) {
-        setPrecededService(tempServices[0].name);
-        setFollowedService(tempServices[1].name);
+        handleFormChange(
+          tempServices[0].name,
+          "precededService",
+          "classicOnChange"
+        );
+        handleFormChange(
+          tempServices[1].name,
+          "followedService",
+          "classicOnChange"
+        );
       }
     };
 
@@ -215,27 +240,141 @@ function MapCanvasPage(props) {
   }, [props.mapId]);
 
   // Each time we are opening the form, we reset the data.
-  useEffect(() => {
-    if (isDataLoaded) {
-      setIsError(false);
-      setName("");
-      setServiceFocus(service.servicesFocus[0]);
-      setOwnerOrganisation(fetchedOrganization[0].name);
-      setApplicationType(applicationTypeButtons[0]);
-      setServiceStartTime(new Date());
-      setServiceEndTime(new Date());
-      setLink("");
-      setLocation("");
-      setAudience(fetchedAudiences[0].name);
-      //setBudgets([{ name: "", value: "" }]);
-      setDescription("");
-      setOutcomes("");
-      if (services.length >= 2) {
-        setPrecededService(services[0].name);
-        setFollowedService(services[1].name);
+  function setFields(thisService) {
+    setIsError(false);
+    handleFormChange(
+      thisService ? thisService.serviceName : "",
+      "serviceName",
+      "serviceNameChange"
+    );
+    handleFormChange(
+      thisService
+        ? service.servicesFocus.find((result) => {
+            return result.name.split(" ").join("") === thisService.serviceFocus;
+          })
+        : service.servicesFocus[0],
+      "serviceFocus",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService
+        ? thisService.serviceOwner[0].organisationName
+        : fetchedOrganization[0].name,
+      "ownerOrganisation",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.applicationType : applicationTypeButtons[0],
+      "applicationType",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.serviceStartTime : new Date(),
+      "serviceStartTime",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.serviceEndTime : new Date(),
+      "serviceEndTime",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.link : "",
+      "link",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.location : "",
+      "location",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.description : "",
+      "description",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService ? thisService.outcomes : "",
+      "outcomes",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService
+        ? thisService.budgets
+          ? thisService.budgets
+          : [{ name: "", value: "" }]
+        : [{ name: "", value: "" }],
+      "budgets",
+      "classicOnChange"
+    );
+    handleFormChange(
+      thisService
+        ? thisService.serviceAudience.split("_").join(" ")
+        : fetchedAudiences[0].name
+    );
+    handleFormChange(
+      thisService
+        ? [
+            replacePhaseToNumber(thisService.fromPhase),
+            replacePhaseToNumber(thisService.toPhase),
+          ]
+        : [-1, 1],
+      "phase",
+      "classicOnChange"
+    );
+    if (services.length >= 2) {
+      if (thisService) {
+        if (thisService.previousService !== "") {
+          const serviceFound = services.find(
+            (service) => service.name === thisService.previousService
+          );
+          handleFormChange(
+            serviceFound !== undefined
+              ? serviceFound.name
+              : t("mapping.canvas.form.service.select.service"),
+            "precededService",
+            "classicOnChange"
+          );
+        } else {
+          handleFormChange(
+            t("mapping.canvas.form.service.select.service"),
+            "precededService",
+            "classicOnChange"
+          );
+        }
+
+        if (thisService.followingService !== "") {
+          const serviceFound = services.find(
+            (service) => service.name === thisService.followingService
+          );
+          handleFormChange(
+            serviceFound !== undefined
+              ? serviceFound.name
+              : t("mapping.canvas.form.service.select.service"),
+            "followedService",
+            "classicOnChange"
+          );
+        } else {
+          handleFormChange(
+            t("mapping.canvas.form.service.select.service"),
+            "followedService",
+            "classicOnChange"
+          );
+        }
+      } else {
+        handleFormChange(
+          t("mapping.canvas.form.service.select.service"),
+          "precededService",
+          "classicOnChange"
+        );
+        handleFormChange(
+          t("mapping.canvas.form.service.select.service"),
+          "followedService",
+          "classicOnChange"
+        );
       }
     }
-  }, [isOpenForm]);
+  }
 
   function sortServices(fetchedData) {
     let sortedData = data;
@@ -298,84 +437,49 @@ function MapCanvasPage(props) {
   }
 
   function handleServiceClick(service) {
+    setServiceWithoutModification(service);
+    setIsEditing(true);
+    setFields(service);
     onOpenForm();
   }
 
-  function handleValueChange(value, setValue) {
+  function handleIsEditingChange(value, setValue) {
     setValue(value);
   }
 
-  function handleNameChange(name) {
-    setIsError(name === "");
-    setName(name);
-  }
-
-  function handleBudgetValueChange(value, index) {
-    // Create temporary variables to modify the value
-    const tempBudgets = Array.from(budgets);
-    const values = Object.values(tempBudgets[index]);
-
-    values[1] = value;
-    // Create the new object
-    const tempBudget = { name: values[0], value: values[1] };
-    tempBudgets.splice(index, 1, tempBudget);
-
-    setBudgets(tempBudgets);
-  }
-
-  function handleBudgetNameChange(name, index) {
-    // Create temporary variables to modify the value
-    const tempBudgets = Array.from(budgets);
-    const values = Object.values(tempBudgets[index]);
-
-    values[0] = name;
-    // Create the new object
-    const tempBudget = { name: values[0], value: values[1] };
-    tempBudgets.splice(index, 1, tempBudget);
-
-    setBudgets(tempBudgets);
-  }
-
-  function handleAddBudget() {
-    const tempBudgets = Array.from(budgets);
-    tempBudgets.push({ name: "", value: "" });
-    setBudgets(tempBudgets);
-  }
-
-  function handleRemoveBudget(index) {
-    const tempBudgets = Array.from(budgets);
-    tempBudgets.splice(index, 1);
-    setBudgets(tempBudgets);
-  }
-
-  // function handleTagsChange(tag) {
-  //   setTags(tag);
-  // }
-
   async function handleDraftOrPublishClick(serviceStatus) {
     const organisationId = fetchedOrganization.find(
-      (organisation) => ownerOrganisation === organisation.name
+      (organisation) => formValues["ownerOrganisation"] === organisation.name
     ).id;
 
-    const fromPhase = replaceNumberToPhase(phase[0]);
-    const toPhase = replaceNumberToPhase(phase[1]);
+    const fromPhase = replaceNumberToPhase(formValues["phase"][0]);
+    const toPhase = replaceNumberToPhase(formValues["phase"][1]);
 
-    const order = fetchedData.rows[applicationType].serviceIds.length;
+    const order =
+      fetchedData.rows[formValues["applicationType"]].serviceIds.length;
 
     const data = {
-      serviceName: name,
-      serviceFocus: serviceFocus.name.replaceAll(" ", ""),
+      serviceName: formValues["serviceName"],
+      serviceFocus: formValues["serviceFocus"].name.replaceAll(" ", ""),
       organisationId: organisationId,
-      applicationType: applicationType.replaceAll(" ", "_").replace("&", "and"),
-      serviceStartTime: serviceStartTime,
-      serviceEndTime: serviceEndTime,
-      link: link,
-      location: location,
-      audience: audience.split(" ").join("_"),
-      description: description,
-      outcomes: outcomes,
-      precededService: precededService,
-      followedService: followedService,
+      applicationType: formValues["applicationType"]
+        .replaceAll(" ", "_")
+        .replace("&", "and"),
+      serviceStartTime: formValues["serviceStartTime"],
+      serviceEndTime: formValues["serviceEndTime"],
+      link: formValues["link"],
+      location: formValues["location"],
+      audience: formValues["audience"].split(" ").join("_"),
+      description: formValues["description"],
+      outcomes: formValues["outcomes"],
+      precededService:
+        formValues["precededService"] === "Select a service"
+          ? ""
+          : formValues["precededService"],
+      followedService:
+        formValues["followedService"] === "Select a service"
+          ? ""
+          : formValues["followedService"],
       fromPhase: fromPhase,
       toPhase: toPhase,
 
@@ -384,7 +488,73 @@ function MapCanvasPage(props) {
       order: order,
     };
 
-    if (name === "") {
+    await createNewService(data);
+  }
+
+  async function handleUpdateClick(serviceStatus) {
+    const organisationId = fetchedOrganization.find(
+      (organisation) => formValues["ownerOrganisation"] === organisation.name
+    ).id;
+
+    const fromPhase = replaceNumberToPhase(formValues["phase"][0]);
+    const toPhase = replaceNumberToPhase(formValues["phase"][1]);
+
+    let order;
+
+    // Check if we change of application type (row) if that is the case push the service at the last index, otherwise we are keeping the same.
+    if (
+      serviceWithoutModification.applicationType ===
+      formValues["applicationType"].replaceAll(" ", "_").replace("&", "and")
+    ) {
+      order = serviceWithoutModification.order;
+    } else {
+      order = fetchedData.rows[formValues["applicatonType"]].serviceIds.length;
+    }
+
+    const data = {
+      id: serviceWithoutModification.id,
+      serviceWithoutModification: serviceWithoutModification,
+      serviceName: formValues["serviceName"],
+      serviceFocus: formValues["serviceFocus"].name.replaceAll(" ", ""),
+      organisationId: organisationId,
+      applicationType: formValues["applicationType"]
+        .replaceAll(" ", "_")
+        .replace("&", "and"),
+      serviceStartTime: formValues["serviceStartTime"],
+      serviceEndTime: formValues["serviceEndTime"],
+      link: formValues["link"],
+      location: formValues["location"],
+      audience: formValues["audience"].split(" ").join("_"),
+      description: formValues["description"],
+      outcomes: formValues["outcomes"],
+      precededService:
+        formValues["precededService"] ===
+        t("mapping.canvas.form.service.select.service")
+          ? ""
+          : formValues["precededService"],
+      followedService:
+        formValues["followedService"] ===
+        t("mapping.canvas.form.service.select.service")
+          ? ""
+          : formValues["followedService"],
+      fromPhase: fromPhase,
+      toPhase: toPhase,
+
+      mapId: props.mapId,
+      serviceStatus: serviceStatus,
+      order: order,
+    };
+
+    await updateService(data);
+  }
+
+  function handleOpenForm() {
+    setFields();
+    onOpenForm();
+  }
+
+  async function createNewService(data) {
+    if (formValues["serviceName"] === "") {
       setIsError(true);
     } else {
       const res = await Service.createService(data);
@@ -392,31 +562,7 @@ function MapCanvasPage(props) {
       if (res.createService) {
         onCloseForm();
 
-        // Create the new service object with the id
-
-        // Format the list of services to correspond to the model of fetchedData
-        const tempServices = Object.assign(fetchedData.services, {
-          [res.createService.id]: {
-            ...res.createService,
-          },
-        });
-
-        const tempRows = fetchedData.rows;
-
-        tempRows[res.createService.applicationType].serviceIds.push(
-          res.createService.id
-        );
-
-        const newData = {
-          rowsOrder: fetchedData.rowsOrder,
-          services: tempServices,
-          rows: tempRows,
-        };
-
-        services.push({
-          id: res.createService.id,
-          name: data.serviceName,
-        });
+        const newData = addServiceToData(res);
 
         setFetchedData(newData);
       } else {
@@ -425,218 +571,296 @@ function MapCanvasPage(props) {
     }
   }
 
+  async function updateService(data) {
+    if (formValues["serviceName"] === "") {
+      setIsError(true);
+    } else {
+      const res = await Service.updateService(data);
+      // Check if we update the service
+      if (res.updateService) {
+        const newData = await updateServiceToData(res.updateService);
+        setFetchedData(newData);
+
+        onCloseForm();
+      } else {
+        toastComponent(res, "error", 5000);
+      }
+    }
+  }
+
+  function addServiceToData(res) {
+    // Format the list of services to correspond to the model of fetchedData
+    const tempServices = Object.assign(fetchedData.services, {
+      [res.createService.id]: {
+        ...res.createService,
+      },
+    });
+
+    // Add the service id to the corresponding row
+    const tempRows = fetchedData.rows;
+    tempRows[res.createService.applicationType].serviceIds.push(
+      res.createService.id
+    );
+
+    services.push({
+      id: res.createService.id,
+      name: res.serviceName,
+    });
+
+    // Create new object to setState the fetchedData
+    return {
+      rowsOrder: fetchedData.rowsOrder,
+      services: tempServices,
+      rows: tempRows,
+    };
+  }
+
+  async function updateServiceToData(updateService) {
+    // Format the list of services to correspond to the model of fetchedData
+    const tempServices = Object.assign(fetchedData.services, {
+      [updateService.id]: {
+        ...updateService,
+      },
+    });
+
+    // Add the service id to the corresponding row
+    const tempRows = fetchedData.rows;
+    if (
+      serviceWithoutModification.applicationType ===
+      updateService.applicationType
+    ) {
+      // Remove the element in the same row to put it the updated version.
+      tempRows[updateService.applicationType].serviceIds.splice(
+        serviceWithoutModification.order,
+        1,
+        updateService.id
+      );
+    } else {
+      // Remove the element in the original row.
+      tempRows[serviceWithoutModification.applicationType].serviceIds.splice(
+        serviceWithoutModification.order,
+        1
+      );
+      // Add it at the last index of the new row.
+      tempRows[updateService.applicationType].serviceIds.push(updateService.id);
+
+      // TODO check here for the update
+      // Update all the others services because their order have changed
+      const values = Object.values(tempServices);
+      let error;
+      for (const service of values) {
+        if (
+          service.applicationType ===
+            serviceWithoutModification.applicationType &&
+          service.order > serviceWithoutModification.order
+        ) {
+          service.order -= 1;
+          const data = {
+            order: service.order,
+            applicationType: service.applicationType,
+          };
+
+          Services.updateServiceOrderAndApplicationType(
+            service.id,
+            data
+            // eslint-disable-next-line no-loop-func
+          ).catch((e) => (error = e));
+
+          //Stop the loop if we have an error
+          if (error) {
+            toastComponent(
+              t("mapping.canvas.error.service.order.modification"),
+              "error"
+            );
+            break;
+          }
+        }
+      }
+    }
+
+    services.splice(services.indexOf(serviceWithoutModification), 1, {
+      id: updateService.id,
+      name: updateService.serviceName,
+    });
+
+    // Create new object to setState the fetchedData
+    return {
+      rowsOrder: fetchedData.rowsOrder,
+      services: tempServices,
+      rows: tempRows,
+    };
+  }
+
+  function formReducer(state, action) {
+    switch (action.type) {
+      case "classicOnChange":
+        return {
+          ...state,
+          [action.field]: action.value,
+        };
+      case "serviceNameChange":
+        setIsError(action.value === "");
+        return {
+          ...state,
+          [action.field]: action.value,
+        };
+      case "budgetValueChange":
+        // Create temporary variables to modify the value
+        const tempBudgets = Array.from(state.budgets);
+        const values = Object.values(tempBudgets[action.index]);
+
+        values[1] = action.value;
+        // Create the new object
+        const tempBudget = { name: values[0], value: values[1] };
+        tempBudgets.splice(action.index, 1, tempBudget);
+        return {
+          ...state,
+          [action.field]: tempBudgets,
+        };
+      case "budgetNameChange":
+        // Create temporary variables to modify the value
+        const thisTempBudgets = Array.from(state.budgets);
+        const thisValues = Object.values(thisTempBudgets[action.index]);
+
+        thisValues[0] = action.value;
+        // Create the new object
+        const thisTempBudget = { name: thisValues[0], value: thisValues[1] };
+        thisTempBudgets.splice(action.index, 1, thisTempBudget);
+
+        return {
+          ...state,
+          [action.field]: thisTempBudgets,
+        };
+      case "addBudget":
+        const tempAddBudget = Array.from(state.budgets);
+        tempAddBudget.push({ name: "", value: "" });
+        return {
+          ...state,
+          [action.field]: tempAddBudget,
+        };
+      case "removeBudget":
+        const tempRemoveBudgets = Array.from(state.budgets);
+        tempRemoveBudgets.splice(action.index, 1);
+        return {
+          ...state,
+          [action.field]: tempRemoveBudgets,
+        };
+      default:
+        return state;
+    }
+  }
+
+  function handleFormChange(value, name, type, index) {
+    setFormValues({
+      field: name,
+      value: value,
+      type: type,
+      index: index,
+    });
+  }
+
   return !isDataLoaded ? (
     <Text>Loading</Text>
   ) : (
-    <Flex align="start" direction="column" h="100%">
-      <Box w="100%">
-        <NavigationBar
-          title={"Ecosystem Map Title"}
-          isMapDashboard={false}
-          onFilterClick={onOpenFilter}
-          onClearFilterClick={onCloseFilter}
-          button={
-            <NewServiceButton
-              isOpen={isOpenForm}
-              onClose={onCloseForm}
-              onOpen={onOpenForm}
-              organisations={fetchedOrganization}
-              audiences={fetchedAudiences}
-              fetchedData={fetchedData}
-              isError={isError}
-              name={name}
-              handleNameChange={(event) => handleNameChange(event.target.value)}
-              serviceFocus={serviceFocus}
-              handleServiceFocusChange={(thisServiceFocus) =>
-                handleValueChange(thisServiceFocus, setServiceFocus)
-              }
-              ownerOrganisation={ownerOrganisation}
-              handleOwnerOrganisationChange={(ownerOrganisation) =>
-                handleValueChange(ownerOrganisation, setOwnerOrganisation)
-              }
-              applicationTypeButtons={applicationTypeButtons}
-              applicationType={applicationType}
-              handleApplicationTypeChange={(applicationType) =>
-                handleValueChange(applicationType, setApplicationType)
-              }
-              phase={phase}
-              serviceStartTime={serviceStartTime}
-              handleServiceStartTimeChange={(date) =>
-                handleValueChange(date, setServiceStartTime)
-              }
-              serviceEndTime={serviceEndTime}
-              handleServiceEndTime={(date) =>
-                handleValueChange(date, setServiceEndTime)
-              }
-              link={link}
-              handleLinkChange={(event) =>
-                handleValueChange(event.target.value, setLink)
-              }
-              location={location}
-              handleLocationChange={(event) =>
-                handleValueChange(event.target.value, setLocation)
-              }
-              audience={audience}
-              handleAudienceChange={(audience) =>
-                handleValueChange(audience, setAudience)
-              }
-              budgets={budgets}
-              handleBudgetValueChange={(event, index) =>
-                handleBudgetValueChange(event.target.value, index)
-              }
-              handleBudgetNameChange={(event, index) =>
-                handleBudgetNameChange(event.target.value, index)
-              }
-              handleAddBudget={handleAddBudget}
-              handleRemoveBudget={(budget) => handleRemoveBudget(budget)}
-              description={description}
-              handleDescriptionChange={(event) =>
-                handleValueChange(event.target.value, setDescription)
-              }
-              outcomes={outcomes}
-              handleOutcomesChange={(event) =>
-                handleValueChange(event.target.value, setOutcomes)
-              }
-              precededService={precededService}
-              services={services}
-              handlePrecededServiceChange={(precededService) =>
-                handleValueChange(precededService, setPrecededService)
-              }
-              followedService={followedService}
-              handleFollowedServiceChange={(followedService) =>
-                handleValueChange(followedService, setFollowedService)
-              }
-              handleDraftOrPublishClick={handleDraftOrPublishClick}
-            />
-          }
-        />
-      </Box>
-
-      {isOpenFilter && (
-        <FilterBar
-          filters={filters}
-          isButtonActive={false}
-          handleAllClick={handleAllClick}
-          handleNoneClick={handleNoneClick}
-          handleItemClick={handleItemClick}
-          handleSave={handleSave}
-        />
-      )}
-      <Box w="100%" flex="max-content" bg="#EEEEEE" align="start">
-        <SideBar isFilterOpen={isOpenFilter} />
-        <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
-          <BackgroundCanvas isFilterOpen={isOpenFilter} />
-          <ContentCanvas
-            isFilterOpen={isOpenFilter}
-            data={fetchedData}
-            handleServiceClick={(service) => handleServiceClick(service)}
+    <MapContext.Provider value={[formValues, handleFormChange]}>
+      <Flex align="start" direction="column" h="100%">
+        <Box w="100%" zIndex={2}>
+          <NavigationBar
+            title={mapTitle}
+            isMapDashboard={false}
+            onFilterClick={onOpenFilter}
+            onClearFilterClick={onCloseFilter}
+            button={
+              <NewServiceButton
+                handleIsEditingChange={(value) =>
+                  handleIsEditingChange(value, setIsEditing)
+                }
+                isOpen={isOpenForm}
+                onClose={onCloseForm}
+                onOpen={handleOpenForm}
+                organisations={fetchedOrganization}
+                audiences={fetchedAudiences}
+                fetchedData={fetchedData}
+                isError={isError}
+                applicationTypeButtons={applicationTypeButtons}
+                services={services}
+                handleDraftOrPublishClick={handleDraftOrPublishClick}
+              />
+            }
           />
-          {data.rowsOrder.map((row, index) => {
-            return (
-              <Box
-                key={index}
-                position="absolute"
-                right="-40px"
-                top={164 * (index + 1) + 40 * index + "px"}
-                transform="rotate(90deg)"
-                //TODO change the size dynamically
-                w="180px"
-                h="50px"
-                textAlign="center"
-              >
-                <Text color={greyColor}>
-                  {row.replaceAll("_", " ").replace("and", "&")}
-                </Text>
-                <HStack
-                  marginTop={verySmallPadding}
-                  bg={greyColor}
-                  w="100%"
-                  h="2px"
-                  justify="space-between"
-                >
-                  <ArrowDown />
-                  <ArrowUp />
-                </HStack>
-              </Box>
-            );
-          })}
         </Box>
-      </Box>
-      {isOpenForm && (
-        <ServiceForm
-          isOpen={isOpenForm}
-          onClose={onCloseForm}
-          onOpen={onOpenForm}
-          organisations={fetchedOrganization}
-          audiences={fetchedAudiences}
-          fetchedData={fetchedData}
-          isError={isError}
-          name={name}
-          handleNameChange={(event) => handleNameChange(event.target.value)}
-          serviceFocus={serviceFocus}
-          handleServiceFocusChange={(thisServiceFocus) =>
-            handleValueChange(thisServiceFocus, setServiceFocus)
-          }
-          ownerOrganisation={ownerOrganisation}
-          handleOwnerOrganisationChange={(ownerOrganisation) =>
-            handleValueChange(ownerOrganisation, setOwnerOrganisation)
-          }
-          applicationTypeButtons={applicationTypeButtons}
-          applicationType={applicationType}
-          handleApplicationTypeChange={(applicationType) =>
-            handleValueChange(applicationType, setApplicationType)
-          }
-          phase={phase}
-          serviceStartTime={serviceStartTime}
-          handleServiceStartTimeChange={(date) =>
-            handleValueChange(date, setServiceStartTime)
-          }
-          serviceEndTime={serviceEndTime}
-          handleServiceEndTime={(date) =>
-            handleValueChange(date, setServiceEndTime)
-          }
-          link={link}
-          handleLinkChange={(event) =>
-            handleValueChange(event.target.value, setLink)
-          }
-          location={location}
-          handleLocationChange={(event) =>
-            handleValueChange(event.target.value, setLocation)
-          }
-          audience={audience}
-          handleAudienceChange={(audience) =>
-            handleValueChange(audience, setAudience)
-          }
-          budgets={budgets}
-          handleBudgetValueChange={(event, index) =>
-            handleBudgetValueChange(event.target.value, index)
-          }
-          handleBudgetNameChange={(event, index) =>
-            handleBudgetNameChange(event.target.value, index)
-          }
-          handleAddBudget={handleAddBudget}
-          handleRemoveBudget={(budget) => handleRemoveBudget(budget)}
-          description={description}
-          handleDescriptionChange={(event) =>
-            handleValueChange(event.target.value, setDescription)
-          }
-          outcomes={outcomes}
-          handleOutcomesChange={(event) =>
-            handleValueChange(event.target.value, setOutcomes)
-          }
-          precededService={precededService}
-          services={services}
-          handlePrecededServiceChange={(precededService) =>
-            handleValueChange(precededService, setPrecededService)
-          }
-          followedService={followedService}
-          handleFollowedServiceChange={(followedService) =>
-            handleValueChange(followedService, setFollowedService)
-          }
-          handleDraftOrPublishClick={handleDraftOrPublishClick}
-        />
-      )}
-    </Flex>
+
+        {isOpenFilter && (
+          <FilterBar
+            filters={filters}
+            isButtonActive={false}
+            handleAllClick={handleAllClick}
+            handleNoneClick={handleNoneClick}
+            handleItemClick={handleItemClick}
+            handleSave={handleSave}
+          />
+        )}
+        <Box w="100%" flex="max-content" bg="#EEEEEE" align="start" zIndex={1}>
+          <SideBar isFilterOpen={isOpenFilter} />
+          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
+            <BackgroundCanvas isFilterOpen={isOpenFilter} />
+            <ContentCanvas
+              isFilterOpen={isOpenFilter}
+              data={fetchedData}
+              handleServiceClick={(service) => handleServiceClick(service)}
+            />
+            {data.rowsOrder.map((row, index) => {
+              return (
+                <Box
+                  key={index}
+                  position="absolute"
+                  right="-40px"
+                  top={164 * (index + 1) + 40 * index + "px"}
+                  transform="rotate(90deg)"
+                  //TODO change the size dynamically
+                  w="180px"
+                  h="50px"
+                  textAlign="center"
+                >
+                  <Text color={greyColor}>
+                    {row.replaceAll("_", " ").replace("and", "&")}
+                  </Text>
+                  <HStack
+                    marginTop={verySmallPadding}
+                    bg={greyColor}
+                    w="100%"
+                    h="2px"
+                    justify="space-between"
+                  >
+                    <ArrowDown />
+                    <ArrowUp />
+                  </HStack>
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+        {isOpenForm && (
+          <ServiceForm
+            isEditing={isEditing}
+            handleIsEditingChange={(value) =>
+              handleIsEditingChange(value, setIsEditing)
+            }
+            isOpen={isOpenForm}
+            onClose={onCloseForm}
+            onOpen={onOpenForm}
+            organisations={fetchedOrganization}
+            audiences={fetchedAudiences}
+            fetchedData={fetchedData}
+            isError={isError}
+            applicationTypeButtons={applicationTypeButtons}
+            services={services}
+            handleDraftOrPublishClick={handleDraftOrPublishClick}
+            handleUpdateClick={handleUpdateClick}
+          />
+        )}
+      </Flex>
+    </MapContext.Provider>
   );
 }
 
