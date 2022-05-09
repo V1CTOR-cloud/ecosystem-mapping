@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { Textarea } from "@chakra-ui/react";
 
@@ -19,4 +19,4 @@ function MultilineInputComponent(props) {
   );
 }
 
-export default React.memo(MultilineInputComponent);
+export default memo(MultilineInputComponent);
