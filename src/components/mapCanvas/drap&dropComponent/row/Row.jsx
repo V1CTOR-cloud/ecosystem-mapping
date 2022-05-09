@@ -46,17 +46,18 @@ function Row(props) {
             id={props.row.id}
           >
             {props.services.map((service, index) => (
-              <ServiceContainer
-                key={service.id}
-                service={service}
-                index={index}
-                handleServiceClick={props.handleServiceClick}
-              />
+              <Box zIndex={2} position="relative" key={service.id}>
+                <ServiceContainer
+                  service={service}
+                  index={index}
+                  handleServiceClick={props.handleServiceClick}
+                />
+              </Box>
             ))}
             {provided.placeholder}
             {props.row.id === market_and_organization && (
               <Box
-                zIndex="0"
+                zIndex={1}
                 w="100%"
                 position="absolute"
                 display="flex"
