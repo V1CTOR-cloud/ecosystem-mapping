@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Box } from "@chakra-ui/react";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -9,7 +9,7 @@ import Services from "../../../service/EcosystemMapServices";
 import toastComponent from "../../basic/ToastComponent";
 
 function ContentCanvas(props) {
-  const [data, setData] = useState(props.data);
+  const [data, setData] = props.data;
   const { t } = useTranslation();
 
   const height = (props.isFilterOpen ? 135 : 75) + 12;
@@ -45,6 +45,7 @@ function ContentCanvas(props) {
         }
       }
     }
+
     return error;
   }
 
@@ -155,6 +156,7 @@ function ContentCanvas(props) {
       },
     };
 
+    console.log(newData);
     setData(newData);
 
     const listIds = startServiceIds.concat(finishServiceIds);
