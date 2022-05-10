@@ -2,6 +2,7 @@ import React from "react";
 
 import { HStack, Spacer, Text } from "@chakra-ui/react";
 import { Save } from "@styled-icons/boxicons-regular";
+import { useTranslation } from "react-i18next";
 
 import {
   defaultPadding,
@@ -12,9 +13,11 @@ import IconButtonComponent from "../../../basic/Buttons/IconButtonComponent";
 import FilterMenuButton from "./FilterMenuButton";
 
 function FilterBar(props) {
+  const { t } = useTranslation();
+
   return (
     <HStack paddingY={smallPadding} paddingX={defaultPadding} w="100%" h="60px">
-      <Text>Filter by:</Text>
+      <Text>{t("mapping.navigation.filter.bar.filter.by")}</Text>
       {props.filters.map((filter) => (
         <FilterMenuButton
           key={filter.name}
