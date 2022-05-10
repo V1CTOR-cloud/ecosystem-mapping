@@ -214,16 +214,14 @@ class Service {
       }`;
 
     let serviceOwner;
-    if (
-      data.serviceWithoutModification.serviceOwner[0].id === data.organisationId
-    ) {
+    if (data.organisationIdWithoutModification === data.organisationId) {
       serviceOwner = {};
     } else {
       serviceOwner = {
         disconnect: [
           {
             Organisation: {
-              id: data.serviceWithoutModification.serviceOwner[0].id,
+              id: data.organisationIdWithoutModification,
             },
           },
         ],
@@ -271,7 +269,10 @@ class Service {
     if (res.services.length !== 0) {
       return "A service with the same name exist. Please change the service name to be unique.";
     } else {
-      return await graphCMS.request(query, variables);
+      return await graphCMS.request(query, variables).catch((e) => {
+        console.error(e);
+        return "Something went wrong, please try again.";
+      });
     }
   }
 
