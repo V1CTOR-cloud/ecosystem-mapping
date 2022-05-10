@@ -80,7 +80,6 @@ function ServiceForm(props) {
                   icon={<Archive color={greyTextColor} size="20px" />}
                   //TODO archived function
                   onClick={() => {
-                    props.handleIsEditingChange(false);
                     console.log("Archived Clicked");
                   }}
                 />
@@ -114,14 +113,13 @@ function ServiceForm(props) {
                   isWithoutBorder={false}
                   //TODO function to unpublished the service
                   onClick={() => {
-                    props.handleIsEditingChange(false);
                     console.log("Unpublished clicked");
                   }}
                 />
               ) : (
                 <ButtonComponent
                   padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("mapping.button.draft")}
+                  buttonText={t("mapping.canvas.form.draft.button")}
                   isWithoutBorder={true}
                   onClick={() => props.handleDraftOrPublishClick("Draft")}
                 />
@@ -132,13 +130,12 @@ function ServiceForm(props) {
                   isPrimary={true}
                   //TODO function to update the service
                   onClick={() => {
-                    props.handleIsEditingChange(false);
                     props.handleUpdateClick("Published");
                   }}
                 />
               ) : (
                 <ButtonComponent
-                  buttonText={t("mapping.button.publish")}
+                  buttonText={t("mapping.canvas.form.publish.button")}
                   isPrimary={true}
                   onClick={() => props.handleDraftOrPublishClick("Published")}
                 />
