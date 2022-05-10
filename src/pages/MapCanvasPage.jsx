@@ -171,7 +171,6 @@ function MapCanvasPage(props) {
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-
   const [isEditing, setIsEditing] = useState(false);
 
   // Fetch all the data required to display the page with all the information.
@@ -238,6 +237,33 @@ function MapCanvasPage(props) {
 
     fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
+
+  function sortServices(fetchedData) {
+    let sortedData = data;
+
+    // Sort by order
+    fetchedData.services.sort((a, b) => {
+      return a.order - b.order;
+    });
+
+    // Add each service to the data.services
+    fetchedData.services.forEach((service) => {
+      sortedData.services = { ...data.services, [service.id]: service };
+
+      switch (service.applicationType) {
+        case market_and_organization:
+          sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
+          break;
+        case market:
+          sortedData.rows.Market.serviceIds.push(service.id);
+          break;
+        default:
+          sortedData.rows.Organization.serviceIds.push(service.id);
+      }
+    });
+
+    return sortedData;
+  }
 
   // Each time we are opening the form, we reset the data.
   function setFields(thisService) {
@@ -376,33 +402,6 @@ function MapCanvasPage(props) {
     }
   }
 
-  function sortServices(fetchedData) {
-    let sortedData = data;
-
-    // Sort by order
-    fetchedData.services.sort((a, b) => {
-      return a.order - b.order;
-    });
-
-    // Add each service to the data.services
-    fetchedData.services.forEach((service) => {
-      sortedData.services = { ...data.services, [service.id]: service };
-
-      switch (service.applicationType) {
-        case market_and_organization:
-          sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
-          break;
-        case market:
-          sortedData.rows.Market.serviceIds.push(service.id);
-          break;
-        default:
-          sortedData.rows.Organization.serviceIds.push(service.id);
-      }
-    });
-
-    return sortedData;
-  }
-
   function handleAllClick(thisFilter) {
     //TODO
     const indexFilter = filters.indexOf(thisFilter);
@@ -496,6 +495,12 @@ function MapCanvasPage(props) {
       (organisation) => formValues["ownerOrganisation"] === organisation.name
     ).id;
 
+    const organisationIdWithoutModification = fetchedOrganization.find(
+      (organisation) =>
+        serviceWithoutModification.serviceOwner[0].organisationName ===
+        organisation.name
+    ).id;
+
     const fromPhase = replaceNumberToPhase(formValues["phase"][0]);
     const toPhase = replaceNumberToPhase(formValues["phase"][1]);
 
@@ -508,12 +513,13 @@ function MapCanvasPage(props) {
     ) {
       order = serviceWithoutModification.order;
     } else {
-      order = fetchedData.rows[formValues["applicatonType"]].serviceIds.length;
+      order = fetchedData.rows[formValues["applicationType"]].serviceIds.length;
     }
 
     const data = {
       id: serviceWithoutModification.id,
       serviceWithoutModification: serviceWithoutModification,
+      organisationIdWithoutModification: organisationIdWithoutModification,
       serviceName: formValues["serviceName"],
       serviceFocus: formValues["serviceFocus"].name.replaceAll(" ", ""),
       organisationId: organisationId,
@@ -576,11 +582,12 @@ function MapCanvasPage(props) {
       setIsError(true);
     } else {
       const res = await Service.updateService(data);
+      console.log(res);
       // Check if we update the service
       if (res.updateService) {
         const newData = await updateServiceToData(res.updateService);
         setFetchedData(newData);
-
+        setIsEditing(false);
         onCloseForm();
       } else {
         toastComponent(res, "error", 5000);
@@ -644,7 +651,6 @@ function MapCanvasPage(props) {
       // Add it at the last index of the new row.
       tempRows[updateService.applicationType].serviceIds.push(updateService.id);
 
-      // TODO check here for the update
       // Update all the others services because their order have changed
       const values = Object.values(tempServices);
       let error;
@@ -678,10 +684,7 @@ function MapCanvasPage(props) {
       }
     }
 
-    services.splice(services.indexOf(serviceWithoutModification), 1, {
-      id: updateService.id,
-      name: updateService.serviceName,
-    });
+    console.log(tempRows);
 
     // Create new object to setState the fetchedData
     return {
@@ -806,7 +809,7 @@ function MapCanvasPage(props) {
             <BackgroundCanvas isFilterOpen={isOpenFilter} />
             <ContentCanvas
               isFilterOpen={isOpenFilter}
-              data={fetchedData}
+              data={[fetchedData, setFetchedData]}
               handleServiceClick={(service) => handleServiceClick(service)}
             />
             {data.rowsOrder.map((row, index) => {
