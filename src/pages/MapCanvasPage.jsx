@@ -1,6 +1,13 @@
 import React, { createContext, useEffect, useReducer, useState } from "react";
 
-import { Box, Flex, HStack, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  HStack,
+  Text,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 
@@ -13,7 +20,6 @@ import {
   market_and_organization,
   organization,
   smallPadding,
-  verySmallPadding,
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
@@ -30,15 +36,15 @@ import Services from "../service/EcosystemMapServices";
 import { useTranslation } from "react-i18next";
 
 const ArrowDown = styled.div`
-  border-bottom: 7.5px solid transparent;
-  border-top: 7.5px solid transparent;
-  border-left: 7.5px solid ${greyColor};
+  border-left: 7.5px solid transparent;
+  border-right: 7.5px solid transparent;
+  border-top: 7.5px solid ${greyColor};
 `;
 
 const ArrowUp = styled.div`
-  border-bottom: 7.5px solid transparent;
-  border-top: 7.5px solid transparent;
-  border-right: 7.5px solid ${greyColor};
+  border-right: 7.5px solid transparent;
+  border-left: 7.5px solid transparent;
+  border-bottom: 7.5px solid ${greyColor};
 `;
 
 const items1 = [
@@ -172,6 +178,19 @@ function MapCanvasPage(props) {
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [heights, setHeights] = useState([180, 180, 180]);
+  const [containerHeight, setContainerHeight] = useState("0px");
+
+  useEffect(() => {
+    let fullHeight =
+      (isOpenFilter ? 135 : 75) +
+      12 * 7 +
+      heights[0] +
+      heights[1] +
+      heights[2] +
+      4;
+    setContainerHeight(fullHeight);
+  }, [isOpenFilter, heights]);
 
   // Fetch all the data required to display the page with all the information.
   useEffect(() => {
@@ -582,7 +601,6 @@ function MapCanvasPage(props) {
       setIsError(true);
     } else {
       const res = await Service.updateService(data);
-      console.log(res);
       // Check if we update the service
       if (res.updateService) {
         const newData = await updateServiceToData(res.updateService);
@@ -684,8 +702,6 @@ function MapCanvasPage(props) {
       }
     }
 
-    console.log(tempRows);
-
     // Create new object to setState the fetchedData
     return {
       rowsOrder: fetchedData.rowsOrder,
@@ -766,7 +782,7 @@ function MapCanvasPage(props) {
     <Text>Loading</Text>
   ) : (
     <MapContext.Provider value={[formValues, handleFormChange]}>
-      <Flex align="start" direction="column" h="100%">
+      <Flex align="start" direction="column" h={containerHeight}>
         <Box w="100%" zIndex={2}>
           <NavigationBar
             title={mapTitle}
@@ -803,40 +819,54 @@ function MapCanvasPage(props) {
             handleSave={handleSave}
           />
         )}
-        <Box w="100%" flex="max-content" bg="#EEEEEE" align="start" zIndex={1}>
+        <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
           <SideBar isFilterOpen={isOpenFilter} />
           <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
-            <BackgroundCanvas isFilterOpen={isOpenFilter} />
+            <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               data={[fetchedData, setFetchedData]}
               handleServiceClick={(service) => handleServiceClick(service)}
+              heights={[heights, setHeights]}
             />
             {data.rowsOrder.map((row, index) => {
               return (
                 <Box
                   key={index}
                   position="absolute"
-                  right="-40px"
-                  top={164 * (index + 1) + 40 * index + "px"}
-                  transform="rotate(90deg)"
-                  //TODO change the size dynamically
-                  w="180px"
-                  h="50px"
+                  right="20px"
+                  top={
+                    (isOpenFilter ? 135 : 75) +
+                    12 * 2 +
+                    (index === 0
+                      ? 0
+                      : index === 1
+                      ? heights[0]
+                      : heights[0] + heights[1]) +
+                    +index * 24 +
+                    "px"
+                  }
+                  w="50px"
+                  h={heights[index]}
                   textAlign="center"
                 >
-                  <Text color={greyColor}>
-                    {row.replaceAll("_", " ").replace("and", "&")}
-                  </Text>
-                  <HStack
-                    marginTop={verySmallPadding}
-                    bg={greyColor}
-                    w="100%"
-                    h="2px"
-                    justify="space-between"
-                  >
-                    <ArrowDown />
-                    <ArrowUp />
+                  <HStack position="relative" w="100%" h="100%">
+                    <VStack
+                      bg={greyColor}
+                      w="2px"
+                      h="100%"
+                      justify="space-between"
+                    >
+                      <ArrowDown />
+                      <ArrowUp />
+                    </VStack>
+                    <Text
+                      marginLeft={smallPadding}
+                      color={greyColor}
+                      style={{ writingMode: "vertical-lr" }}
+                    >
+                      {row.replaceAll("_", " ").replace("and", "&")}
+                    </Text>
                   </HStack>
                 </Box>
               );
