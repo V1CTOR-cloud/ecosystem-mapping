@@ -156,7 +156,6 @@ function ContentCanvas(props) {
       },
     };
 
-    console.log(newData);
     setData(newData);
 
     const listIds = startServiceIds.concat(finishServiceIds);
@@ -187,6 +186,7 @@ function ContentCanvas(props) {
               services={services}
               rowsRef={props.rowsRef}
               handleServiceClick={props.handleServiceClick}
+              heights={props.heights}
             />
           );
         })}
