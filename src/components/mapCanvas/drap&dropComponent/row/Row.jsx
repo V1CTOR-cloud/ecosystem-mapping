@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
@@ -31,6 +31,23 @@ const NumberContainer = styled.div`
 
 function Row(props) {
   const numbers = [-2, -1, 0, 1, 2, 3];
+  const rowRef = useRef();
+
+  useEffect(() => {
+    const height = rowRef.current.clientHeight;
+    const tempHeights = props.heights[0];
+
+    if (props.row.id === market) {
+      tempHeights[0] = height;
+      props.heights[1](tempHeights);
+    } else if (props.row.id === market_and_organization) {
+      tempHeights[1] = height;
+      props.heights[1](tempHeights);
+    } else {
+      tempHeights[2] = height;
+      props.heights[1](tempHeights);
+    }
+  });
 
   return (
     <Droppable droppableId={props.row.id}>
@@ -45,47 +62,49 @@ function Row(props) {
             isDraggingOver={snapshot.isDraggingOver}
             id={props.row.id}
           >
-            {props.services.map((service, index) => (
-              <Box zIndex={2} position="relative" key={service.id}>
-                <ServiceContainer
-                  service={service}
-                  index={index}
-                  handleServiceClick={props.handleServiceClick}
-                />
-              </Box>
-            ))}
-            {provided.placeholder}
-            {props.row.id === market_and_organization && (
-              <Box
-                zIndex={1}
-                w="100%"
-                position="absolute"
-                display="flex"
-                justifyContent="space-between"
-                align="center"
-                //TODO change for the dynamically size
-                top="50px"
-              >
-                {numbers.map((number) => {
-                  return (
-                    <NumberContainer key={number}>
-                      <Box
-                        borderRadius="50%"
-                        border={`2px solid ${greyHoverColor}`}
-                        w="70px"
-                        h="70px"
-                      >
-                        <Center h="100%" w="100%">
-                          <Text fontSize="30px" textColor={greyHoverColor}>
-                            {number}
-                          </Text>
-                        </Center>
-                      </Box>
-                    </NumberContainer>
-                  );
-                })}
-              </Box>
-            )}
+            <Box ref={rowRef} h="100%" minH="180px">
+              {props.services.map((service, index) => (
+                <Box zIndex={2} position="relative" key={service.id}>
+                  <ServiceContainer
+                    service={service}
+                    index={index}
+                    handleServiceClick={props.handleServiceClick}
+                  />
+                </Box>
+              ))}
+              {provided.placeholder}
+              {props.row.id === market_and_organization && (
+                <Box
+                  zIndex={1}
+                  w="100%"
+                  position="absolute"
+                  display="flex"
+                  justifyContent="space-between"
+                  align="center"
+                  // Set the phases number in the middle of the row
+                  top={rowRef.current.clientHeight / 2 - 35 + "px"}
+                >
+                  {numbers.map((number) => {
+                    return (
+                      <NumberContainer key={number}>
+                        <Box
+                          borderRadius="50%"
+                          border={`2px solid ${greyHoverColor}`}
+                          w="70px"
+                          h="70px"
+                        >
+                          <Center h="100%" w="100%">
+                            <Text fontSize="30px" textColor={greyHoverColor}>
+                              {number}
+                            </Text>
+                          </Center>
+                        </Box>
+                      </NumberContainer>
+                    );
+                  })}
+                </Box>
+              )}
+            </Box>
           </RowContainer>
         );
       }}
