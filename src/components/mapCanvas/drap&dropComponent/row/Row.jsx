@@ -82,7 +82,7 @@ function Row(props) {
                   justifyContent="space-between"
                   align="center"
                   // Set the phases number in the middle of the row
-                  top={rowRef.current.clientHeight / 2 - 35 + "px"}
+                  top={props.heights[0][1] / 2 - 35 + "px"}
                 >
                   {numbers.map((number) => {
                     return (
