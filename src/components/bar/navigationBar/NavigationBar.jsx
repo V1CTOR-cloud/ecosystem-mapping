@@ -21,7 +21,6 @@ import ButtonComponent from "../../basic/Buttons/ButtonComponent";
 import Authentication from "../../authentication/Authentication";
 import IconButtonComponent from "../../basic/Buttons/IconButtonComponent";
 import {
-  accentColor,
   blackColor,
   blueColor,
   borderThickness,
@@ -141,32 +140,18 @@ function NavigationBar(props) {
               )}
             </HStack>
           )}
-          {/* Display for the ecosystem map (button filter and clear filter) */}
+          {/* Display for the ecosystem map (button filter)*/}
           {!props.isMapDashboard && (
-            <HStack>
-              {props.isOpen && (
-                //  Button clear filter
-                <ButtonComponent
-                  as="u"
-                  isWithoutBorder={true}
-                  color={accentColor}
-                  buttonText={t("mapping.navigation.bar.clear.filter.button")}
-                  onClick={props.onClearFilterClick}
-                />
-              )}
-              {/* Button filter */}
-              <ButtonComponent
-                padding={`0 0 0 ${mediumPadding}`}
-                isWithoutBorder={!isOpen}
-                buttonText={t("mapping.navigation.bar.filter.button")}
-                icon={<FilterAlt size="20" title="Filter" />}
-                onClick={props.onFilterClick}
-              />
-            </HStack>
+            <ButtonComponent
+              padding={`0 0 0 ${mediumPadding}`}
+              isWithoutBorder={!props.isFilterOpen}
+              buttonText={t("mapping.navigation.bar.filter.button")}
+              icon={<FilterAlt size="20" title="Filter" />}
+              onClick={props.onFilterClick}
+            />
           )}
           {/* Primary button */}
           {props.button}
-
           <MyDivider />
           <Authentication />
         </HStack>
