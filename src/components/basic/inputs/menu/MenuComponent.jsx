@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, MenuButton, MenuItem, MenuList, Menu } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 function MenuComponent(props) {
-  function handleOnClick(event) {
-    props.onClick(event.target.lastChild.data);
+  const [value, setValue] = useState(props.item);
+
+  function handleOnChange(event) {
+    setValue(event.target.lastChild.data);
+    props.onChange(event.target.lastChild.data);
   }
 
   return (
@@ -15,12 +18,12 @@ function MenuComponent(props) {
         as={Button}
         rightIcon={<ChevronDownIcon />}
       >
-        {props.item}
+        {value}
       </MenuButton>
       <MenuList>
         {props.items.map((item) => {
           return (
-            <MenuItem key={item.id} onClick={(event) => handleOnClick(event)}>
+            <MenuItem key={item.id} onClick={(event) => handleOnChange(event)}>
               {item.name}
             </MenuItem>
           );
