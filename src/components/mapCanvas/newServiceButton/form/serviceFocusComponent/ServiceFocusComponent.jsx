@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -14,21 +14,20 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import { smallPadding, verySmallPadding } from "../../../../../helper/constant";
 import service from "../../../../../assets/servicesFocus.json";
-import { MapContext } from "../../../../../pages/MapCanvasPage";
 
-function ServiceFocusComponent() {
-  const [formValues, setFormValues] = useContext(MapContext);
+function ServiceFocusComponent(props) {
+  const [value, setValue] = useState(props.serviceFocus);
+
+  function handleOnChange(serviceFocus) {
+    setValue(serviceFocus);
+    props.onChange(serviceFocus);
+  }
 
   return (
     <Box paddingLeft={verySmallPadding}>
       <Menu>
         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          <Box
-            w="15px"
-            h="15px"
-            bg={formValues["serviceFocus"].color}
-            borderRadius="50%"
-          />
+          <Box w="15px" h="15px" bg={value.color} borderRadius="50%" />
         </MenuButton>
         {/* Keep Zindex >= 4 to not have the slider above the menu that have an index of 3*/}
         <MenuList zIndex={4}>
@@ -36,9 +35,7 @@ function ServiceFocusComponent() {
             return (
               <MenuItem
                 key={serviceFocus.name}
-                onClick={() =>
-                  setFormValues(serviceFocus, "serviceFocus", "classicOnChange")
-                }
+                onClick={() => handleOnChange(serviceFocus)}
               >
                 <HStack>
                   <Box
