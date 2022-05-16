@@ -17,6 +17,7 @@ function LabeledInputComponent(props) {
         value={props.value}
         placeholder={props.placeholder}
         handleOnChange={props.handleOnChange}
+        onChange={props.onChange}
       />
     </Box>
   );
