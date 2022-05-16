@@ -42,7 +42,7 @@ function NewServiceButton(props) {
         applicationTypeButtons={props.applicationTypeButtons}
         audiences={props.audiences}
         services={props.services}
-        handleDraftOrPublishClick={props.handleDraftOrPublishClick}
+        mapId={props.mapId}
       />
     </React.Fragment>
   );
