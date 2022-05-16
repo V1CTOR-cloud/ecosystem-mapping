@@ -16,7 +16,7 @@ function LabeledMenu(props) {
       <MenuComponent
         item={props.item}
         items={props.items}
-        onClick={props.onClick}
+        onChange={props.onChange}
       />
     </Box>
   );
