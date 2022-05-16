@@ -32,7 +32,6 @@ function ServiceName(props) {
 
   const textColor = serviceFocus.textColor;
   const backgroundColor = serviceFocus.color;
-
   return (
     <Box position="relative">
       <Container
