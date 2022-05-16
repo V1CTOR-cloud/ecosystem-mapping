@@ -18,13 +18,13 @@ function LabeledDatePickerComponent(props) {
         <HStack justifyContent="space-between">
           <DatePickerComponent
             date={props.serviceStartTime}
-            handleDateChange={props.handleServiceStartTimeChange}
+            handleDateChange={props.onChangeStartTime}
           />
           <Box w="5px" h="1px" bg={greyColor} />
           <Box paddingLeft="70px">
             <DatePickerComponent
               date={props.serviceEndTime}
-              handleDateChange={props.handleServiceEndTimeChange}
+              handleDateChange={props.onChangeEndTime}
             />
           </Box>
         </HStack>
