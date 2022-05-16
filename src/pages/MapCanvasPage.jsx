@@ -47,68 +47,6 @@ const ArrowUp = styled.div`
   border-bottom: 7.5px solid ${greyColor};
 `;
 
-const items1 = [
-  {
-    name: "item 1",
-    value: false,
-  },
-  {
-    name: "item 2",
-    value: false,
-  },
-  {
-    name: "item 3",
-    value: false,
-  },
-];
-const items2 = [
-  {
-    name: "item 1",
-    value: false,
-  },
-  {
-    name: "item 2",
-    value: false,
-  },
-];
-
-const initialFilters = [
-  {
-    name: "Saved Filters",
-    items: [],
-  },
-  {
-    name: "Status",
-    items: items1,
-    isAllSelected: false,
-  },
-  {
-    name: "Owner",
-    items: items2,
-    isAllSelected: false,
-  },
-  {
-    name: "Primary Focus",
-    items: [],
-    isAllSelected: false,
-  },
-  {
-    name: "Location",
-    items: [],
-    isAllSelected: false,
-  },
-  {
-    name: "Audience",
-    items: [],
-    isAllSelected: false,
-  },
-  {
-    name: "Budget",
-    items: [],
-    isAllSelected: false,
-  },
-];
-
 const data = {
   services: {},
   rows: {
@@ -133,6 +71,49 @@ const data = {
 export const MapContext = createContext(null);
 
 function MapCanvasPage(props) {
+  const initialFilters = [
+    {
+      name: "Saved Filters",
+      items: [],
+    },
+    {
+      name: "Status",
+      items: [],
+      isAllSelected: false,
+      selectedFilterCount: 0,
+    },
+    {
+      name: "Owner",
+      items: [],
+      isAllSelected: false,
+      selectedFilterCount: 0,
+    },
+    {
+      name: "Primary Focus",
+      items: [],
+      isAllSelected: false,
+      selectedFilterCount: 0,
+    },
+    {
+      name: "Location",
+      items: [],
+      isAllSelected: false,
+      selectedFilterCount: 0,
+    },
+    {
+      name: "Audience",
+      items: [],
+      isAllSelected: false,
+      selectedFilterCount: 0,
+    },
+    {
+      name: "Budget",
+      items: [],
+      isAllSelected: false,
+      selectedFilterCount: 0,
+    },
+  ];
+
   const applicationTypeButtons = [
     market,
     market_and_organization,
@@ -256,6 +237,41 @@ function MapCanvasPage(props) {
 
     fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
+
+  useEffect(() => {
+    //TODO Status,Location,Budget,SavedFilter
+    const tempStatus = [
+      { name: "Draft", value: false },
+      { name: "Published", value: false },
+    ];
+    const tempPrimaryFocus = [];
+    const tempAudience = [];
+    const tempOwner = [];
+    const tempLocation = [];
+    const tempBudget = [];
+
+    if (fetchedAudiences) {
+      fetchedAudiences.forEach((audience) => {
+        tempAudience.push({ name: audience.name, value: false });
+      });
+    }
+    if (fetchedOrganization) {
+      fetchedOrganization.forEach((organization) => {
+        tempOwner.push({ name: organization.name, value: false });
+      });
+    }
+    if (service.servicesFocus) {
+      service.servicesFocus.forEach((serviceFocus) => {
+        tempPrimaryFocus.push({ name: serviceFocus.name, value: false });
+      });
+    }
+
+    initialFilters[1].items = tempStatus;
+    initialFilters[2].items = tempOwner;
+    initialFilters[3].items = tempPrimaryFocus;
+    initialFilters[5].items = tempAudience;
+    setFilters(initialFilters);
+  }, [isDataLoaded]);
 
   function sortServices(fetchedData) {
     let sortedData = data;
@@ -421,35 +437,53 @@ function MapCanvasPage(props) {
     }
   }
 
-  function handleAllClick(thisFilter) {
-    //TODO
+  function handleAllClick(thisFilter, event) {
     const indexFilter = filters.indexOf(thisFilter);
-    let tempFilter = filters;
+    let tempFilter = [...filters];
 
-    tempFilter[indexFilter].isAllSelected =
-      !tempFilter[indexFilter].isAllSelected;
-    if (tempFilter[indexFilter].isAllSelected) {
-      tempFilter[indexFilter].items.forEach((item) => (item.value = true));
-    }
+    tempFilter[indexFilter].isAllSelected = event.target.checked;
+    tempFilter[indexFilter].items.forEach(
+      (item) => (item.value = tempFilter[indexFilter].isAllSelected)
+    );
+
+    tempFilter[indexFilter].selectedFilterCount =
+      tempFilter[indexFilter].items.length;
 
     setFilters(tempFilter);
   }
 
-  function handleNoneClick() {
-    //TODO
+  function handleNoneClick(thisFilter) {
+    const indexFilter = filters.indexOf(thisFilter);
+    let tempFilter = [...filters];
+
+    tempFilter[indexFilter].isAllSelected = false;
+    tempFilter[indexFilter].items.forEach((item) => (item.value = false));
+    tempFilter[indexFilter].selectedFilterCount = 0;
+
+    setFilters(tempFilter);
   }
 
   function handleSave() {
     //TODO
   }
 
-  function handleItemClick(thisFilter, item) {
+  function handleItemClick(thisFilter, item, event) {
     const indexFilter = filters.indexOf(thisFilter);
     const indexItem = filters[indexFilter].items.indexOf(item);
 
-    let tempFilter = filters;
-    tempFilter[indexFilter].items[indexItem].value =
-      !tempFilter[indexFilter].items[indexItem].value;
+    let tempFilter = [...filters];
+    tempFilter[indexFilter].items[indexItem].value = event.target.checked;
+
+    tempFilter[indexFilter].isAllSelected = tempFilter[indexFilter].items.every(
+      (item) => item.value === true
+    );
+
+    tempFilter[indexFilter].selectedFilterCount = 0;
+    tempFilter[indexFilter].items.forEach((item) => {
+      if (item.value) {
+        tempFilter[indexFilter].selectedFilterCount += 1;
+      }
+    });
 
     setFilters(tempFilter);
   }
@@ -787,8 +821,8 @@ function MapCanvasPage(props) {
           <NavigationBar
             title={mapTitle}
             isMapDashboard={false}
-            onFilterClick={onOpenFilter}
-            onClearFilterClick={onCloseFilter}
+            onFilterClick={isOpenFilter ? onCloseFilter : onOpenFilter}
+            isFilterOpen={isOpenFilter}
             button={
               <NewServiceButton
                 handleIsEditingChange={(value) =>
@@ -810,14 +844,17 @@ function MapCanvasPage(props) {
         </Box>
 
         {isOpenFilter && (
-          <FilterBar
-            filters={filters}
-            isButtonActive={false}
-            handleAllClick={handleAllClick}
-            handleNoneClick={handleNoneClick}
-            handleItemClick={handleItemClick}
-            handleSave={handleSave}
-          />
+          <Box zIndex={2} w="100%">
+            <FilterBar
+              filtersState={[filters, setFilters]}
+              handleAllClick={(filter, event) => handleAllClick(filter, event)}
+              handleNoneClick={(filter) => handleNoneClick(filter)}
+              handleItemClick={(filter, item, event) =>
+                handleItemClick(filter, item, event)
+              }
+              handleSave={handleSave}
+            />
+          </Box>
         )}
         <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
           <SideBar isFilterOpen={isOpenFilter} />
