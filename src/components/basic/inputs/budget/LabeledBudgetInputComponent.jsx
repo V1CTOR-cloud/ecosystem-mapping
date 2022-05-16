@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
@@ -15,14 +15,32 @@ import {
 } from "../../../../helper/constant";
 
 function LabeledBudgetInputComponent(props) {
+  const [budgets, setBudgets] = useState(props.budgets);
   const { t } = useTranslation();
 
   function handleAddOrRemoveBudget(index) {
+    const tempBudgets = Array.from(budgets);
     if (index === props.budgets.length - 1) {
-      props.handleAddBudget();
+      tempBudgets.push({ name: "", value: "" });
     } else {
-      props.handleRemoveBudget(index);
+      tempBudgets.splice(index, 1);
     }
+    setBudgets(tempBudgets);
+    props.onChange(tempBudgets);
+  }
+
+  function handleBudgetNameChange(name, index) {
+    const tempBudgets = Array.from(budgets);
+    tempBudgets[index].name = name;
+    setBudgets(tempBudgets);
+    props.onChange(tempBudgets);
+  }
+
+  function handleBudgetValueChange(value, index) {
+    const tempBudgets = Array.from(budgets);
+    tempBudgets[index].value = value;
+    setBudgets(tempBudgets);
+    props.onChange(tempBudgets);
   }
 
   return (
@@ -51,16 +69,15 @@ function LabeledBudgetInputComponent(props) {
           Amount/Range
         </Text>
       </HStack>
-      {props.budgets.map((budget, index) => {
+      {budgets.map((budget, index) => {
         return (
           <HStack key={index} paddingBottom={smallPadding}>
             <Box>
               <InputComponent
                 value={budget.name}
                 placeholder={t("mapping.canvas.form.budget.title.placeholder")}
-                handleOnChange={(event) =>
-                  props.handleBudgetNameChange(event, index)
-                }
+                isBudget={true}
+                onChange={(name) => handleBudgetNameChange(name, index)}
               />
             </Box>
 
@@ -68,9 +85,8 @@ function LabeledBudgetInputComponent(props) {
               <InputComponent
                 value={budget.value}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
-                handleOnChange={(event) =>
-                  props.handleBudgetValueChange(event, index)
-                }
+                isBudget={true}
+                onChange={(value) => handleBudgetValueChange(value, index)}
               />
             </Box>
             <Box w="30px" h="30px" paddingLeft={smallPadding}>
