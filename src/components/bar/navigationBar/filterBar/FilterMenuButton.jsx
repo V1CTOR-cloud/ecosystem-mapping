@@ -2,72 +2,117 @@ import React from "react";
 
 import {
   Box,
-  Button,
-  HStack,
   Menu,
   MenuButton,
-  MenuItemOption,
+  Checkbox,
   MenuList,
-  MenuOptionGroup,
+  VStack,
+  Text,
+  HStack,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import {
-  blackColor,
+  accentColor,
   blueColor,
+  borderRadius,
   defaultFontFamily,
   defaultFontSize,
+  greyTextColor,
+  smallPadding,
+  verySmallPadding,
   whiteActiveColor,
   whiteColor,
   whiteHoverColor,
 } from "../../../../helper/constant";
-import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function FilterMenuButton(props) {
-  //TODO faire avec des checkbox: enlève le none et a la place du all on met la chckbox parent.
-  //TODO quand on filtre on garde ceux actif pour enlever ceux qui ne le sont pas.
   return (
     //  Wrap into a box because we have a warning in the console about margin error.
-    <Box>
+    <Box paddingRight={smallPadding}>
       <Menu closeOnSelect={false} margin="0px">
-        <MenuButton
-          as={Button}
-          bg={props.isButtonActive ? whiteActiveColor : whiteColor}
-          color={props.isButtonActive ? blueColor : blackColor}
-          _hover={{ bg: whiteHoverColor }}
-          _focus={{ boxShadow: "none" }}
-          _active={{ bg: whiteActiveColor, color: blueColor }}
-        >
-          {props.text}
-        </MenuButton>
+        <Box>
+          {props.filter.items.some((item) => item.value === true) && (
+            <Text
+              w="15px"
+              h="15px"
+              bg={accentColor}
+              position="absolute"
+              borderRadius="100%"
+              fontSize="10px"
+              color={whiteColor}
+              align="center"
+              transform="translate(-5px, -5px)"
+            >
+              {props.filter.selectedFilterCount}
+            </Text>
+          )}
+          <Box
+            as={MenuButton}
+            marginRight={verySmallPadding}
+            paddingX={smallPadding}
+            paddingY={verySmallPadding}
+            borderRadius={borderRadius}
+            bg={props.isButtonActive ? whiteActiveColor : whiteColor}
+            _hover={{ bg: whiteHoverColor }}
+            _focus={{ boxShadow: "none" }}
+            _active={{ bg: whiteActiveColor, color: blueColor }}
+          >
+            <HStack h="100%">
+              <Text
+                whiteSpace="nowrap"
+                color={props.isButtonActive ? blueColor : greyTextColor}
+              >
+                {props.text}
+              </Text>
+              {props.filter.items.some((item) => item.value === true) && (
+                <Box paddingLeft={verySmallPadding} h="100%" w={"100%"}>
+                  <CloseButton
+                    w="17.5px"
+                    h="17.5px"
+                    padding="8px"
+                    size="sm"
+                    border="2px solid"
+                    borderColor={blueColor}
+                    borderRadius="100%"
+                    color={blueColor}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                    onClick={() => props.handleNoneClick(props.filter)}
+                  />
+                </Box>
+              )}
+            </HStack>
+          </Box>
+        </Box>
+
         <MenuList>
-          <HStack>
-            <ButtonComponent
-              buttonText="All"
-              isWithoutBorder={true}
-              onClick={() => props.handleAllClick(props.filter)}
-              color={props.filter.isAllSelected ? blueColor : blackColor}
-            />
-            <ButtonComponent
-              buttonText="None"
-              isWithoutBorder={true}
-              color={blackColor}
-              onClick={props.handleNoneClick}
-            />
-          </HStack>
-          <MenuOptionGroup type="checkbox">
+          <Checkbox
+            paddingX={smallPadding}
+            isChecked={props.filter.isAllSelected}
+            onChange={(e) => {
+              props.handleAllClick(props.filter, e);
+            }}
+            fontFamily={defaultFontFamily}
+            fontSize={defaultFontSize}
+          >
+            Select all
+          </Checkbox>
+          <VStack align={"start"} paddingX={smallPadding}>
             {props.items.map((item) => (
-              <MenuItemOption
+              <Checkbox
                 key={item.name}
-                value={item.name}
-                onClick={() => props.handleItemClick(props.filter, item)}
+                isChecked={item.value}
+                onChange={(e) => props.handleItemClick(props.filter, item, e)}
                 fontFamily={defaultFontFamily}
                 fontSize={defaultFontSize}
               >
                 {item.name}
-              </MenuItemOption>
+              </Checkbox>
             ))}
-          </MenuOptionGroup>
+          </VStack>
         </MenuList>
       </Menu>
     </Box>
