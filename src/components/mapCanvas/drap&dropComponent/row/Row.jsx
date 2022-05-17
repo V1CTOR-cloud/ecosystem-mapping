@@ -47,6 +47,16 @@ function Row(props) {
       tempHeights[2] = height;
       props.heights[1](tempHeights);
     }
+
+    // We need to set the height of the container because otherwise it keeps in memory that all rows were 180px height.
+    const fullHeight =
+      (props.isFilterOpen ? 135 : 75) +
+      12 * 7 +
+      tempHeights[0] +
+      tempHeights[1] +
+      tempHeights[2] +
+      4;
+    props.containerHeight[1](fullHeight);
   });
 
   return (
