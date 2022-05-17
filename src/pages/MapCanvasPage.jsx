@@ -132,7 +132,7 @@ function MapCanvasPage(props) {
   const [containerHeight, setContainerHeight] = useState("0px");
 
   useEffect(() => {
-    let fullHeight =
+    const fullHeight =
       (isOpenFilter ? 135 : 75) +
       12 * 7 +
       heights[0] +
@@ -140,7 +140,7 @@ function MapCanvasPage(props) {
       heights[2] +
       4;
     setContainerHeight(fullHeight);
-  }, [isOpenFilter, heights]);
+  }, [heights, isOpenFilter]);
 
   // Fetch all the data required to display the page with all the information.
   useEffect(() => {
@@ -331,7 +331,6 @@ function MapCanvasPage(props) {
           }
         />
       </Box>
-
       {isOpenFilter && (
         <Box zIndex={2} w="100%">
           <FilterBar
@@ -354,6 +353,7 @@ function MapCanvasPage(props) {
             data={[fetchedData, setFetchedData]}
             handleServiceClick={(service) => handleServiceClick(service)}
             heights={[heights, setHeights]}
+            containerHeight={[containerHeight, setContainerHeight]}
           />
           {data.rowsOrder.map((row, index) => {
             return (
