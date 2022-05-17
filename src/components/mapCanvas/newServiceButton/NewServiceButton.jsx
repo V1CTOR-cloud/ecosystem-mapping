@@ -33,13 +33,11 @@ function NewServiceButton(props) {
       />
       <ServiceForm
         isEditing={false}
-        handleIsEditingChange={props.handleIsEditingChange}
         isOpen={props.isOpen}
         onClose={props.onClose}
         cancelRef={cancelRef}
         isError={props.isError}
         organisations={props.organisations}
-        applicationTypeButtons={props.applicationTypeButtons}
         audiences={props.audiences}
         services={props.services}
         mapId={props.mapId}
