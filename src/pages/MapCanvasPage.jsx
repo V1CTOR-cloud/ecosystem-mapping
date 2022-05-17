@@ -114,6 +114,11 @@ function MapCanvasPage(props) {
     onOpen: onOpenForm,
     onClose: onCloseForm,
   } = useDisclosure();
+  const {
+    isOpen: isOpenFormEdition,
+    onOpen: onOpenFormEdition,
+    onClose: onCloseFormEdition,
+  } = useDisclosure();
   const [serviceWithoutModification, setServiceWithoutModification] =
     useState(null);
   const [services] = useState([]);
@@ -297,13 +302,9 @@ function MapCanvasPage(props) {
     setFilters(tempFilter);
   }
 
-  function handleServiceClick(service) {
-    setServiceWithoutModification(service);
-    onOpenForm();
-  }
-
-  function handleOpenForm() {
-    onOpenForm();
+  function handleServiceClick(thisService) {
+    setServiceWithoutModification(thisService);
+    onOpenFormEdition();
   }
 
   return !isDataLoaded ? (
@@ -320,7 +321,7 @@ function MapCanvasPage(props) {
             <NewServiceButton
               isOpen={isOpenForm}
               onClose={onCloseForm}
-              onOpen={handleOpenForm}
+              onOpen={onOpenForm}
               organisations={fetchedOrganization}
               audiences={fetchedAudiences}
               fetchedData={[fetchedData, setFetchedData]}
@@ -398,12 +399,11 @@ function MapCanvasPage(props) {
           })}
         </Box>
       </Box>
-      {isOpenForm && (
+      {isOpenFormEdition && (
         <ServiceForm
           isEditing={true}
-          isOpen={isOpenForm}
-          onClose={onCloseForm}
-          onOpen={onOpenForm}
+          isOpen={isOpenFormEdition}
+          onClose={onCloseFormEdition}
           organisations={fetchedOrganization}
           audiences={fetchedAudiences}
           fetchedData={[fetchedData, setFetchedData]}
