@@ -187,6 +187,8 @@ function ContentCanvas(props) {
               rowsRef={props.rowsRef}
               handleServiceClick={props.handleServiceClick}
               heights={props.heights}
+              containerHeight={props.containerHeight}
+              isFilterOpen={props.isFilterOpen}
             />
           );
         })}
