@@ -37,6 +37,7 @@ function NewServiceButton(props) {
         onClose={props.onClose}
         cancelRef={cancelRef}
         isError={props.isError}
+        fetchedData={props.fetchedData}
         organisations={props.organisations}
         audiences={props.audiences}
         services={props.services}
