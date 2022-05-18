@@ -116,8 +116,10 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.location")}
               tooltipAriaLabel={t("mapping.canvas.form.location")}
               placeholder={t("mapping.canvas.form.location.placeholder")}
-              value={props.formValue["location"]}
-              onChange={(location) => (props.formValue["location"] = location)}
+              value={props.formValue["serviceLocation"]}
+              onChange={(location) =>
+                (props.formValue["serviceLocation"] = location)
+              }
             />
           </Box>
           <Box marginTop={mediumPadding}>
