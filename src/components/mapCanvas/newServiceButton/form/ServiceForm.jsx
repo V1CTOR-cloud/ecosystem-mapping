@@ -54,7 +54,7 @@ function ServiceForm(props) {
     serviceEndTime: new Date(),
     link: "",
     audience: props.audiences[0].name,
-    location: "",
+    serviceLocation: "",
     budgets: [{ name: "", value: "" }],
 
     description: "",
@@ -85,6 +85,10 @@ function ServiceForm(props) {
       props.serviceWithoutModification.serviceStartTime;
     formValue["serviceEndTime"] =
       props.serviceWithoutModification.serviceEndTime;
+    formValue["serviceLocation"] = props.serviceWithoutModification
+      .serviceLocation
+      ? props.serviceWithoutModification.serviceLocation
+      : "";
     formValue["link"] = props.serviceWithoutModification.link
       ? props.serviceWithoutModification.link
       : "";
@@ -144,7 +148,7 @@ function ServiceForm(props) {
       serviceStartTime: formValue["serviceStartTime"],
       serviceEndTime: formValue["serviceEndTime"],
       link: formValue["link"],
-      location: formValue["location"],
+      serviceLocation: formValue["serviceLocation"],
       audience: formValue["audience"].split(" ").join("_"),
       description: formValue["description"],
       outcomes: formValue["outcomes"],
