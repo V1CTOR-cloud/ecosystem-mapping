@@ -180,6 +180,11 @@ function ServiceForm(props) {
         const newData = addServiceToData(res);
 
         props.fetchedData[1](newData);
+        toastComponent(
+          t("mapping.toast.success.create.service"),
+          "success",
+          5000
+        );
       } else {
         toastComponent(res, "error", 5000);
       }
@@ -302,6 +307,8 @@ function ServiceForm(props) {
         const newData = await updateServiceToData(res.updateService);
         props.fetchedData[1](newData);
         props.onClose();
+
+        toastComponent(t("mapping.toast.success.service"), "success", 5000);
       } else {
         toastComponent(res, "error", 5000);
       }
