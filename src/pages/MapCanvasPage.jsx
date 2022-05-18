@@ -18,15 +18,20 @@ import {
   greyColor,
   market,
   market_and_organization,
+  mediumPadding,
   organization,
   smallPadding,
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import Service from "../service/EcosystemMapServices";
+import RegionService from "../service/RegionServices";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
+import { FilterAlt } from "@styled-icons/boxicons-regular";
+import ButtonComponent from "../components/basic/Buttons/ButtonComponent";
+import { useTranslation } from "react-i18next";
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
@@ -103,6 +108,7 @@ function MapCanvasPage(props) {
       selectedFilterCount: 0,
     },
   ];
+  const { t } = useTranslation();
 
   const {
     isOpen: isOpenFilter,
@@ -119,6 +125,7 @@ function MapCanvasPage(props) {
     onOpen: onOpenFormEdition,
     onClose: onCloseFormEdition,
   } = useDisclosure();
+
   const [serviceWithoutModification, setServiceWithoutModification] =
     useState(null);
   const [services] = useState([]);
@@ -127,6 +134,7 @@ function MapCanvasPage(props) {
   const [fetchedData, setFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
+  const [fetchedLocation, setFetchedLocation] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [heights, setHeights] = useState([180, 180, 180]);
   const [containerHeight, setContainerHeight] = useState("0px");
@@ -177,6 +185,18 @@ function MapCanvasPage(props) {
       );
       setFetchedAudiences(tempAudiences);
 
+      // Get all locations
+      res = await RegionService.listAllRegions();
+      const tempLocations = [];
+      res.data.forEach((item) => {
+        tempLocations.push({
+          id: item.id,
+          name: item.name,
+        });
+      });
+      tempLocations.pop();
+      setFetchedLocation(tempLocations);
+
       const tempServices = Object.values(sortedData.services);
       tempServices.forEach((thisService) => {
         services.push({
@@ -189,6 +209,7 @@ function MapCanvasPage(props) {
     fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
 
+  // We populate each filter once the data is fully loaded
   useEffect(() => {
     //TODO Status,Location,Budget,SavedFilter
     const tempStatus = [
@@ -201,25 +222,34 @@ function MapCanvasPage(props) {
     const tempLocation = [];
     const tempBudget = [];
 
-    if (fetchedAudiences) {
-      fetchedAudiences.forEach((audience) => {
-        tempAudience.push({ name: audience.name, value: false });
-      });
-    }
     if (fetchedOrganization) {
       fetchedOrganization.forEach((organization) => {
         tempOwner.push({ name: organization.name, value: false });
       });
     }
+
     if (service.servicesFocus) {
       service.servicesFocus.forEach((serviceFocus) => {
         tempPrimaryFocus.push({ name: serviceFocus.name, value: false });
       });
     }
 
+    if (fetchedLocation) {
+      fetchedLocation.forEach((location) => {
+        tempLocation.push({ name: location.name, value: false });
+      });
+    }
+
+    if (fetchedAudiences) {
+      fetchedAudiences.forEach((audience) => {
+        tempAudience.push({ name: audience.name, value: false });
+      });
+    }
+
     initialFilters[1].items = tempStatus;
     initialFilters[2].items = tempOwner;
     initialFilters[3].items = tempPrimaryFocus;
+    initialFilters[4].items = tempLocation;
     initialFilters[5].items = tempAudience;
     setFilters(initialFilters);
   }, [isDataLoaded]);
@@ -251,61 +281,34 @@ function MapCanvasPage(props) {
     return sortedData;
   }
 
-  function handleAllClick(thisFilter, event) {
-    const indexFilter = filters.indexOf(thisFilter);
-    let tempFilter = [...filters];
-
-    tempFilter[indexFilter].isAllSelected = event.target.checked;
-    tempFilter[indexFilter].items.forEach(
-      (item) => (item.value = tempFilter[indexFilter].isAllSelected)
-    );
-
-    tempFilter[indexFilter].selectedFilterCount =
-      tempFilter[indexFilter].items.length;
-
-    setFilters(tempFilter);
-  }
-
-  function handleNoneClick(thisFilter) {
-    const indexFilter = filters.indexOf(thisFilter);
-    let tempFilter = [...filters];
-
-    tempFilter[indexFilter].isAllSelected = false;
-    tempFilter[indexFilter].items.forEach((item) => (item.value = false));
-    tempFilter[indexFilter].selectedFilterCount = 0;
-
-    setFilters(tempFilter);
-  }
-
-  function handleSave() {
-    //TODO
-  }
-
-  function handleItemClick(thisFilter, item, event) {
-    const indexFilter = filters.indexOf(thisFilter);
-    const indexItem = filters[indexFilter].items.indexOf(item);
-
-    let tempFilter = [...filters];
-    tempFilter[indexFilter].items[indexItem].value = event.target.checked;
-
-    tempFilter[indexFilter].isAllSelected = tempFilter[indexFilter].items.every(
-      (item) => item.value === true
-    );
-
-    tempFilter[indexFilter].selectedFilterCount = 0;
-    tempFilter[indexFilter].items.forEach((item) => {
-      if (item.value) {
-        tempFilter[indexFilter].selectedFilterCount += 1;
-      }
-    });
-
-    setFilters(tempFilter);
-  }
-
+  // When a service is clicked, we open the form with all the field correctly filled.
   function handleServiceClick(thisService) {
     setServiceWithoutModification(thisService);
     onOpenFormEdition();
   }
+
+  const additionalButton = (
+    <ButtonComponent
+      padding={`0 0 0 ${mediumPadding}`}
+      isWithoutBorder={!isOpenFilter}
+      buttonText={t("mapping.navigation.bar.filter.button")}
+      icon={<FilterAlt size="20" title="Filter" />}
+      onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
+    />
+  );
+
+  const primaryButton = (
+    <NewServiceButton
+      isOpen={isOpenForm}
+      onClose={onCloseForm}
+      onOpen={onOpenForm}
+      organisations={fetchedOrganization}
+      audiences={fetchedAudiences}
+      fetchedData={[fetchedData, setFetchedData]}
+      services={services}
+      mapId={props.mapId}
+    />
+  );
 
   return !isDataLoaded ? (
     <Text>Loading</Text>
@@ -314,34 +317,13 @@ function MapCanvasPage(props) {
       <Box w="100%" zIndex={2}>
         <NavigationBar
           title={mapTitle}
-          isMapDashboard={false}
-          onFilterClick={isOpenFilter ? onCloseFilter : onOpenFilter}
-          isFilterOpen={isOpenFilter}
-          button={
-            <NewServiceButton
-              isOpen={isOpenForm}
-              onClose={onCloseForm}
-              onOpen={onOpenForm}
-              organisations={fetchedOrganization}
-              audiences={fetchedAudiences}
-              fetchedData={[fetchedData, setFetchedData]}
-              services={services}
-              mapId={props.mapId}
-            />
-          }
+          button={primaryButton}
+          additionalButtons={additionalButton}
         />
       </Box>
       {isOpenFilter && (
         <Box zIndex={2} w="100%">
-          <FilterBar
-            filtersState={[filters, setFilters]}
-            handleAllClick={(filter, event) => handleAllClick(filter, event)}
-            handleNoneClick={(filter) => handleNoneClick(filter)}
-            handleItemClick={(filter, item, event) =>
-              handleItemClick(filter, item, event)
-            }
-            handleSave={handleSave}
-          />
+          <FilterBar filtersState={[filters, setFilters]} />
         </Box>
       )}
       <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
