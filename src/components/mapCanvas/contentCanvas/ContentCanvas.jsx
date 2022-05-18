@@ -173,8 +173,8 @@ function ContentCanvas(props) {
       position="absolute"
     >
       <DragDropContext onDragEnd={handleDragEnd}>
-        {data.rowsOrder.map((rowId) => {
-          const row = data.rows[rowId];
+        {props.secondaryData.rowsOrder.map((rowId) => {
+          const row = props.secondaryData.rows[rowId];
           const services = row.serviceIds.map(
             (serviceId) => data.services[serviceId]
           );
