@@ -24,13 +24,8 @@ function FilterBar(props) {
       {props.filtersState[0].map((filter) => (
         <FilterMenuButton
           key={filter.name}
-          text={filter.name}
-          items={filter.items}
-          isButtonActive={filter.items.some((item) => item.value === true)}
-          handleAllClick={props.handleAllClick}
-          handleNoneClick={props.handleNoneClick}
-          handleItemClick={props.handleItemClick}
           filter={filter}
+          filtersState={props.filtersState}
         />
       ))}
       <Spacer />
