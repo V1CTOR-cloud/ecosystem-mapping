@@ -72,31 +72,31 @@ function MapCanvasPage(props) {
       items: [],
     },
     {
-      name: "Status",
+      name: "Service Status",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
-      name: "Owner",
+      name: "Service Owner",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
-      name: "Primary Focus",
+      name: "Service Focus",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
-      name: "Location",
+      name: "Service Location",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
-      name: "Audience",
+      name: "Service Audience",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
@@ -132,6 +132,7 @@ function MapCanvasPage(props) {
   const [filters, setFilters] = useState(initialFilters);
   const [mapTitle, setMapTitle] = useState("");
   const [fetchedData, setFetchedData] = useState(null);
+  const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [fetchedLocation, setFetchedLocation] = useState(null);
@@ -160,6 +161,7 @@ function MapCanvasPage(props) {
       setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
+      setSecondaryFetchedData(structuredClone(sortedData));
 
       // Get all organisations
       res = await Service.getAllOrganisation();
@@ -208,6 +210,82 @@ function MapCanvasPage(props) {
 
     fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
+
+  // Update at each new service, update of a service the secondary list to always be in sync for the filter
+  useEffect(() => {
+    setSecondaryFetchedData(structuredClone(fetchedData));
+  }, [fetchedData]);
+
+  // Each modification in the filters, we update our secondaryList to display the right data
+  useEffect(() => {
+    const bool = filters.some(
+      (filter, index) =>
+        filter.selectedFilterCount !== 0 && index !== 0 && !filter.isAllSelected
+    );
+
+    if (isDataLoaded && bool) {
+      // Clone the object
+      const tempSecondaryData = structuredClone(fetchedData);
+
+      // We clear each rows because we want to add instead of removing each element
+      Object.values(tempSecondaryData.rows).forEach((row) => {
+        row.serviceIds = [];
+      });
+
+      Object.values(tempSecondaryData.services).forEach((service) => {
+        const filterBool = [true, false, false, false, false, false, false];
+
+        filters.forEach((filter, index) => {
+          // Convert the name to correspond the service Data type
+          const filterName = (
+            filter.name.substring(0, 1).toLowerCase() + filter.name.substring(1)
+          ).replaceAll(" ", "");
+
+          // Check if we have at least 1 item selected and that isAllSelected is false to avoid going through for nothing
+          if (filter.selectedFilterCount !== 0 && !filter.isAllSelected) {
+            filter.items.forEach((item) => {
+              // The item is selected so, we add all element corresponding to that
+              if (item.value) {
+                if (
+                  filterName === "serviceStatus" ||
+                  filterName === "serviceFocus" ||
+                  filterName === "serviceAudience"
+                ) {
+                  if (
+                    service[filterName].replaceAll("_", "").toLowerCase() ===
+                    item.name.replaceAll(" ", "").toLowerCase()
+                  ) {
+                    filterBool[index] = true;
+                  }
+                } else if (filterName === "serviceOwner") {
+                  if (service[filterName][0].organisationName === item.name) {
+                    filterBool[index] = true;
+                  }
+                } else if (filterName === "serviceLocation") {
+                  if (service[filterName].includes(item.name.toLowerCase())) {
+                    filterBool[index] = true;
+                  }
+                }
+              }
+            });
+          } else {
+            filterBool[index] = true;
+          }
+        });
+
+        // Check if the item required all filter to be added to the canvas
+        if (filterBool.every(Boolean)) {
+          tempSecondaryData.rows[service.applicationType].serviceIds.push(
+            service.id
+          );
+        }
+      });
+
+      setSecondaryFetchedData(tempSecondaryData);
+    } else {
+      setSecondaryFetchedData(fetchedData);
+    }
+  }, [filters]);
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
@@ -333,6 +411,7 @@ function MapCanvasPage(props) {
           <ContentCanvas
             isFilterOpen={isOpenFilter}
             data={[fetchedData, setFetchedData]}
+            secondaryData={secondaryFetchedData}
             handleServiceClick={(service) => handleServiceClick(service)}
             heights={[heights, setHeights]}
             containerHeight={[containerHeight, setContainerHeight]}
