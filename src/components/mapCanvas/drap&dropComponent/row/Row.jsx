@@ -79,6 +79,7 @@ function Row(props) {
                     service={service}
                     index={index}
                     handleServiceClick={props.handleServiceClick}
+                    isFilterActive={props.isFiltersActive}
                   />
                 </Box>
               ))}
