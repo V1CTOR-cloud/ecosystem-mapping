@@ -139,6 +139,7 @@ function MapCanvasPage(props) {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [heights, setHeights] = useState([180, 180, 180]);
   const [containerHeight, setContainerHeight] = useState("0px");
+  const [isFiltersActive, setIsFilterActive] = useState(false);
 
   useEffect(() => {
     const fullHeight =
@@ -222,17 +223,19 @@ function MapCanvasPage(props) {
       (filter, index) =>
         filter.selectedFilterCount !== 0 && index !== 0 && !filter.isAllSelected
     );
+    setIsFilterActive(bool);
 
     if (isDataLoaded && bool) {
+      const services = [];
       // Clone the object
       const tempSecondaryData = structuredClone(fetchedData);
-
+      tempSecondaryData.services = {};
       // We clear each rows because we want to add instead of removing each element
       Object.values(tempSecondaryData.rows).forEach((row) => {
         row.serviceIds = [];
       });
 
-      Object.values(tempSecondaryData.services).forEach((service) => {
+      Object.values(fetchedData.services).forEach((service) => {
         const filterBool = [true, false, false, false, false, false, false];
 
         filters.forEach((filter, index) => {
@@ -251,6 +254,7 @@ function MapCanvasPage(props) {
                   filterName === "serviceFocus" ||
                   filterName === "serviceAudience"
                 ) {
+                  console.log(service);
                   if (
                     service[filterName].replaceAll("_", "").toLowerCase() ===
                     item.name.replaceAll(" ", "").toLowerCase()
@@ -275,9 +279,36 @@ function MapCanvasPage(props) {
 
         // Check if the item required all filter to be added to the canvas
         if (filterBool.every(Boolean)) {
-          tempSecondaryData.rows[service.applicationType].serviceIds.push(
-            service.id
-          );
+          services.push(service);
+        }
+      });
+
+      // Sort by order
+      const sortedServices = services.sort((a, b) => {
+        return a.order - b.order;
+      });
+
+      // Fill the new data to the correct model
+
+      sortedServices.forEach((service) => {
+        // Fill the services
+        tempSecondaryData.services = {
+          ...tempSecondaryData.services,
+          [service.id]: service,
+        };
+
+        // Fill the serviceIds for each row
+        switch (service.applicationType) {
+          case market_and_organization:
+            tempSecondaryData.rows.Market_and_Organization.serviceIds.push(
+              service.id
+            );
+            break;
+          case market:
+            tempSecondaryData.rows.Market.serviceIds.push(service.id);
+            break;
+          default:
+            tempSecondaryData.rows.Organization.serviceIds.push(service.id);
         }
       });
 
@@ -289,7 +320,7 @@ function MapCanvasPage(props) {
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
-    //TODO Status,Location,Budget,SavedFilter
+    //TODO Budget,SavedFilter
     const tempStatus = [
       { name: "Draft", value: false },
       { name: "Published", value: false },
@@ -359,6 +390,18 @@ function MapCanvasPage(props) {
     return sortedData;
   }
 
+  function handleClearAllFilters() {
+    const tempFilters = [...filters];
+
+    tempFilters.forEach((filter) => {
+      filter.isAllSelected = false;
+      filter.selectedFilterCount = 0;
+      filter.items.forEach((item) => (item.value = false));
+    });
+
+    setFilters(tempFilters);
+  }
+
   // When a service is clicked, we open the form with all the field correctly filled.
   function handleServiceClick(thisService) {
     setServiceWithoutModification(thisService);
@@ -401,7 +444,11 @@ function MapCanvasPage(props) {
       </Box>
       {isOpenFilter && (
         <Box zIndex={2} w="100%">
-          <FilterBar filtersState={[filters, setFilters]} />
+          <FilterBar
+            filtersState={[filters, setFilters]}
+            handleClearAllFilters={handleClearAllFilters}
+            mapId={props.mapId}
+          />
         </Box>
       )}
       <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
@@ -410,6 +457,7 @@ function MapCanvasPage(props) {
           <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
           <ContentCanvas
             isFilterOpen={isOpenFilter}
+            isFiltersActive={isFiltersActive}
             data={[fetchedData, setFetchedData]}
             secondaryData={secondaryFetchedData}
             handleServiceClick={(service) => handleServiceClick(service)}
