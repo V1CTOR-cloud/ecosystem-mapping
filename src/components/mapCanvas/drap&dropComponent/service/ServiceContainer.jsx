@@ -61,7 +61,11 @@ function ServiceContainer(props) {
   }
 
   return (
-    <Draggable draggableId={props.service.id} index={props.index}>
+    <Draggable
+      draggableId={props.service.id}
+      index={props.index}
+      isDragDisabled={props.isFilterActive}
+    >
       {(provided) => (
         <ServiceLineContainer
           {...provided.draggableProps}
@@ -81,6 +85,21 @@ function ServiceContainer(props) {
             mode={2}
             onSlideEnd={() => handleSlideEnd(sourceValue, targetValue)}
           >
+            {/*<Rail>*/}
+            {/*  {({ getEventData }) => (*/}
+            {/*    <Box*/}
+            {/*      cursor={"pointer"}*/}
+            {/*      position={"absolute"}*/}
+            {/*      w={"100%"}*/}
+            {/*      h="30px"*/}
+            {/*      bg={"#78a787"}*/}
+            {/*      _hover={{*/}
+            {/*        backgroundColor: "#454554",*/}
+            {/*      }}*/}
+            {/*      onClick={(e) => console.log({ ...getEventData(e) })}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*</Rail>*/}
             <Handles>
               {({ handles, getHandleProps }) => (
                 <Box>
@@ -117,6 +136,25 @@ function ServiceContainer(props) {
                 </Box>
               )}
             </Tracks>
+            {/*TODO check if we can retrieve the postion where we just clicked*/}
+            {/*<Tracks right={false} left={false}>*/}
+            {/*  {({ tracks, getTrackProps }) => (*/}
+            {/*    <Box>*/}
+            {/*      {tracks.map(({ id, source }) => {*/}
+            {/*        return (*/}
+            {/*          <Box*/}
+            {/*            key={id}*/}
+            {/*            bg={"#45a454"}*/}
+            {/*            position="absolute"*/}
+            {/*            height="30px"*/}
+            {/*            w={`calc(${source.percent}%)`}*/}
+            {/*            onClick={(e) => console.log(getTrackProps)}*/}
+            {/*          />*/}
+            {/*        );*/}
+            {/*      })}*/}
+            {/*    </Box>*/}
+            {/*  )}*/}
+            {/*</Tracks>*/}
           </Slider>
         </ServiceLineContainer>
       )}
