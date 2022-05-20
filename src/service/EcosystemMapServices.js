@@ -114,6 +114,7 @@ class Service {
           serviceLocation
           serviceAudience
           serviceDescription
+          serviceStatus
           serviceOutcomes
           previousService
           followingService
@@ -134,7 +135,7 @@ class Service {
         serviceStartTime: data.serviceStartTime,
         serviceEndTime: data.serviceEndTime,
         link: data.link,
-        serviceLocation: data.location,
+        serviceLocation: data.serviceLocation,
         serviceAudience: data.audience,
         serviceDescription: data.description,
         serviceOutcomes: data.outcomes,
@@ -195,6 +196,7 @@ class Service {
             serviceAudience
             serviceDescription
             serviceOutcomes
+            serviceStatus
             previousService
             followingService
             fromPhase
@@ -290,6 +292,31 @@ class Service {
       data: {
         fromPhase: data.fromPhase,
         toPhase: data.toPhase,
+      },
+    };
+
+    const graphCMS = new GraphQLClient(graphCMSKey, {
+      headers: {
+        authorization: authorizationKey,
+      },
+    });
+
+    return await graphCMS.request(query, variables);
+  }
+
+  async createSavedFilter(data) {
+    const query = `mutation ($data: EcosystemMapUpdateInput!, $id: ID!) {
+        updateEcosystemMap(
+          where: {id: $id}, data: $data
+        ) {
+        filters
+        }
+      }`;
+
+    const variables = {
+      id: data.id,
+      data: {
+        filters: data.filters,
       },
     };
 
