@@ -36,12 +36,7 @@ function FilterMenuButton(props) {
   useEffect(() => {
     // Check if the button is active to every change in the component
     setIsButtonActive(filter.items.some((item) => item.value === true));
-
-    // Update in the canvas the display of the service every filter changes
-    const tempFilters = [...props.filtersState[0]];
-    tempFilters[tempFilters.indexOf(props.filter)] = filter;
-    props.filtersState[1](tempFilters);
-  }, [filter]);
+  });
 
   function handleInputChange(input) {
     const tempFilter = { ...filter };
@@ -64,6 +59,7 @@ function FilterMenuButton(props) {
       : 0;
 
     setFilter(tempFilter);
+    props.handleFilterChange(tempFilter);
   }
 
   // Uncheck all items in the filter
@@ -76,6 +72,7 @@ function FilterMenuButton(props) {
     tempFilter.selectedFilterCount = 0;
 
     setFilter(tempFilter);
+    props.handleFilterChange(tempFilter);
   }
 
   // Check the only item that was selected.
@@ -99,11 +96,12 @@ function FilterMenuButton(props) {
     });
 
     setFilter(tempFilter);
+    props.handleFilterChange(tempFilter);
   }
 
   return (
     //  Wrap into a box because we have a warning in the console about margin error.
-    <Box paddingRight={smallPadding}>
+    <Box paddingRight={verySmallPadding}>
       <Menu closeOnSelect={false} margin="0px">
         <Box>
           {filter.items.some((item) => item.value === true) && (
