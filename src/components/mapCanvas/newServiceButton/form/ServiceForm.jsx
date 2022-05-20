@@ -477,9 +477,8 @@ function ServiceForm(props) {
                   padding={`0 ${mediumPadding} 0 0`}
                   buttonText={t("mapping.canvas.form.unpublished.button")}
                   isWithoutBorder={false}
-                  //TODO function to unpublished the service
-                  onClick={() => {
-                    console.log("Unpublished clicked");
+                  onClick={async () => {
+                    await handleUpdateClick("Draft");
                   }}
                 />
               ) : (
@@ -492,7 +491,7 @@ function ServiceForm(props) {
               )}
               {props.isEditing ? (
                 <ButtonComponent
-                  buttonText={"Save"}
+                  buttonText={t("mapping.canvas.form.save.button")}
                   isPrimary={true}
                   onClick={async () => {
                     await handleUpdateClick("Published");
