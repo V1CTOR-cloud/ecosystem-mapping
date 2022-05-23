@@ -5,7 +5,8 @@ import {
   AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/accordion";
-import { HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import IconButtonComponent from "../../basic/Buttons/IconButtonComponent";
 import {
@@ -18,6 +19,8 @@ import {
 } from "../../../helper/constant";
 
 function AccordionItemComponent(props) {
+  const { t } = useTranslation();
+
   return (
     <AccordionItem>
       {({ isExpanded }) => {
@@ -65,7 +68,22 @@ function AccordionItemComponent(props) {
               )}
             </AccordionButton>
             {isExpanded && (
-              <AccordionPanel>{props.button.children}</AccordionPanel>
+              <AccordionPanel>
+                {props.button.children.length !== 0 ? (
+                  props.button.children
+                ) : (
+                  <Box
+                    w="100%"
+                    h="100%"
+                    align="center"
+                    paddingTop={smallPadding}
+                  >
+                    <Text>
+                      {t("mapping.canvas.side.bar.toggle.no.element")}
+                    </Text>
+                  </Box>
+                )}
+              </AccordionPanel>
             )}
           </>
         );
