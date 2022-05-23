@@ -1,14 +1,16 @@
 import React from "react";
 
 import styled from "styled-components";
+import { Box, HStack, Text } from "@chakra-ui/react";
+import { Copy } from "@styled-icons/fa-regular";
 
 import {
   borderRadius,
   smallPadding,
   titleFontSize,
+  verySmallPadding,
 } from "../../../../helper/constant";
 import Service from "../../../../assets/servicesFocus.json";
-import { Box, Text } from "@chakra-ui/react";
 
 const Container = styled.div`
   background-color: ${(props) => props.backgroundColor};
@@ -32,6 +34,7 @@ function ServiceName(props) {
 
   const textColor = serviceFocus.textColor;
   const backgroundColor = serviceFocus.color;
+  console.log(props.service.serviceStatus);
   return (
     <Box position="relative">
       <Container
@@ -41,16 +44,23 @@ function ServiceName(props) {
         backgroundColor={backgroundColor}
         onClick={() => props.handleServiceClick(props.service)}
       >
-        <Text
-          h="100%"
-          fontSize={titleFontSize}
-          color={textColor}
-          textOverflow="ellipsis"
-          overflow="hidden"
-          whiteSpace="nonwrap"
-        >
-          {props.service.serviceName}
-        </Text>
+        <HStack h="30px">
+          {props.service.serviceStatus === "Draft" && (
+            <Box paddingBottom={"5px"} paddingRight={verySmallPadding}>
+              <Copy size="15" color={textColor} />
+            </Box>
+          )}
+          <Text
+            h="100%"
+            fontSize={titleFontSize}
+            color={textColor}
+            textOverflow="ellipsis"
+            overflow="hidden"
+            whiteSpace="nonwrap"
+          >
+            {props.service.serviceName}
+          </Text>
+        </HStack>
       </Container>
     </Box>
   );
