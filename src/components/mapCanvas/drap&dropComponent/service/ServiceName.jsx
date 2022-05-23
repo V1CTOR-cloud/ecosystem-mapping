@@ -34,7 +34,7 @@ function ServiceName(props) {
 
   const textColor = serviceFocus.textColor;
   const backgroundColor = serviceFocus.color;
-  console.log(props.service.serviceStatus);
+
   return (
     <Box position="relative">
       <Container
