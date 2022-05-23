@@ -246,7 +246,12 @@ function ServiceForm(props) {
       props.serviceWithoutModification.applicationType ===
       formValue["applicationType"].replaceAll(" ", "_").replace("&", "and")
     ) {
-      order = props.serviceWithoutModification.order;
+      // Put the order to 999 to avoid conflict when putting again in draft or published
+      if (serviceStatus === "Archived") {
+        order = 999;
+      } else {
+        order = props.serviceWithoutModification.order;
+      }
     } else {
       order =
         props.fetchedData[0].rows[formValue["applicationType"]].serviceIds
@@ -333,51 +338,34 @@ function ServiceForm(props) {
       props.serviceWithoutModification.applicationType ===
       updateService.applicationType
     ) {
-      // Remove the element in the same row to put it the updated version.
-      tempRows[updateService.applicationType].serviceIds.splice(
-        props.serviceWithoutModification.order,
-        1,
-        updateService.id
-      );
+      if (updateService.serviceStatus === "Archived") {
+        // Remove the element in the same row
+        tempRows[updateService.applicationType].serviceIds.splice(
+          props.serviceWithoutModification.order,
+          1
+        );
+
+        await updateAllServices(tempServices);
+      } else {
+        // Remove the element in the same row to put it the updated version.
+        tempRows[updateService.applicationType].serviceIds.splice(
+          props.serviceWithoutModification.order,
+          1,
+          updateService.id
+        );
+      }
     } else {
       // Remove the element in the original row.
       tempRows[
         props.serviceWithoutModification.applicationType
       ].serviceIds.splice(props.serviceWithoutModification.order, 1);
-      // Add it at the last index of the new row.
-      tempRows[updateService.applicationType].serviceIds.push(updateService.id);
-
-      // Update all the others services because their order have changed
-      const values = Object.values(tempServices);
-      let error;
-      for (const service of values) {
-        if (
-          service.applicationType ===
-            props.serviceWithoutModification.applicationType &&
-          service.order > props.serviceWithoutModification.order
-        ) {
-          service.order -= 1;
-          const data = {
-            order: service.order,
-            applicationType: service.applicationType,
-          };
-
-          Services.updateServiceOrderAndApplicationType(
-            service.id,
-            data
-            // eslint-disable-next-line no-loop-func
-          ).catch((e) => (error = e));
-
-          //Stop the loop if we have an error
-          if (error) {
-            toastComponent(
-              t("mapping.canvas.error.service.order.modification"),
-              "error"
-            );
-            break;
-          }
-        }
+      if (updateService.serviceStatus !== "Archived") {
+        // Add it at the last index of the new row.
+        tempRows[updateService.applicationType].serviceIds.push(
+          updateService.id
+        );
       }
+      await updateAllServices(tempServices);
     }
 
     // Create new object to setState the fetchedData
@@ -386,6 +374,40 @@ function ServiceForm(props) {
       services: tempServices,
       rows: tempRows,
     };
+  }
+
+  function updateAllServices(tempServices) {
+    // Update all the others services because their order have changed
+    const values = Object.values(tempServices);
+    let error;
+    for (const service of values) {
+      if (
+        service.applicationType ===
+          props.serviceWithoutModification.applicationType &&
+        service.order > props.serviceWithoutModification.order
+      ) {
+        service.order -= 1;
+        const data = {
+          order: service.order,
+          applicationType: service.applicationType,
+        };
+
+        Services.updateServiceOrderAndApplicationType(
+          service.id,
+          data
+          // eslint-disable-next-line no-loop-func
+        ).catch((e) => (error = e));
+
+        //Stop the loop if we have an error
+        if (error) {
+          toastComponent(
+            t("mapping.canvas.error.service.order.modification"),
+            "error"
+          );
+          break;
+        }
+      }
+    }
   }
 
   return (
@@ -445,9 +467,8 @@ function ServiceForm(props) {
                   isWithoutBorder={true}
                   color={greyTextColor}
                   icon={<Archive color={greyTextColor} size="20px" />}
-                  //TODO archived function
-                  onClick={() => {
-                    console.log("Archived Clicked");
+                  onClick={async () => {
+                    await handleUpdateClick("Archived");
                   }}
                 />
               ) : (
