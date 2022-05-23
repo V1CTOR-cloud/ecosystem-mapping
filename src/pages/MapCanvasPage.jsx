@@ -140,6 +140,8 @@ function MapCanvasPage(props) {
   const [heights, setHeights] = useState([180, 180, 180]);
   const [containerHeight, setContainerHeight] = useState("0px");
   const [isFiltersActive, setIsFilterActive] = useState(false);
+  const [archivedData] = useState([]);
+  const [draftData] = useState([]);
 
   useEffect(() => {
     const fullHeight =
@@ -212,9 +214,24 @@ function MapCanvasPage(props) {
     fetchData().then(() => setIsDataLoaded(true));
   }, [props.mapId]);
 
-  // Update at each new service, update of a service the secondary list to always be in sync for the filter
+  // Update the secondary list at each new service or service update
+  // In addition we update the sidebar
   useEffect(() => {
     setSecondaryFetchedData(structuredClone(fetchedData));
+
+    if (isDataLoaded) {
+      const servicesArray = Object.values(fetchedData.services);
+      // Clear all the sidebar lists
+      draftData.splice(0, draftData.length);
+      archivedData.splice(0, archivedData.length);
+      servicesArray.forEach((service) => {
+        if (service.serviceStatus === "Draft") {
+          draftData.push(service);
+        } else if (service.serviceStatus === "Archived") {
+          archivedData.push(service);
+        }
+      });
+    }
   }, [fetchedData]);
 
   // Each modification in the filters, we update our secondaryList to display the right data
@@ -254,7 +271,6 @@ function MapCanvasPage(props) {
                   filterName === "serviceFocus" ||
                   filterName === "serviceAudience"
                 ) {
-                  console.log(service);
                   if (
                     service[filterName].replaceAll("_", "").toLowerCase() ===
                     item.name.replaceAll(" ", "").toLowerCase()
@@ -320,7 +336,7 @@ function MapCanvasPage(props) {
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
-    //TODO Budget,SavedFilter
+    //TODO SavedFilter
     const tempStatus = [
       { name: "Draft", value: false },
       { name: "Published", value: false },
@@ -329,7 +345,16 @@ function MapCanvasPage(props) {
     const tempAudience = [];
     const tempOwner = [];
     const tempLocation = [];
-    const tempBudget = [];
+    const tempBudget = [
+      { name: "0-9", value: false },
+      { name: "10-99", value: false },
+      {
+        name: "100-999",
+        value: false,
+      },
+      { name: "1000-9999", value: false },
+      { name: "+10000", value: false },
+    ];
 
     if (fetchedOrganization) {
       fetchedOrganization.forEach((organization) => {
@@ -360,6 +385,7 @@ function MapCanvasPage(props) {
     initialFilters[3].items = tempPrimaryFocus;
     initialFilters[4].items = tempLocation;
     initialFilters[5].items = tempAudience;
+    initialFilters[6].items = tempBudget;
     setFilters(initialFilters);
   }, [isDataLoaded]);
 
@@ -373,17 +399,25 @@ function MapCanvasPage(props) {
 
     // Add each service to the data.services
     fetchedData.services.forEach((service) => {
-      sortedData.services = { ...data.services, [service.id]: service };
+      if (service.serviceStatus === "Archived") {
+        archivedData.push(service);
+      } else {
+        sortedData.services = { ...data.services, [service.id]: service };
 
-      switch (service.applicationType) {
-        case market_and_organization:
-          sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
-          break;
-        case market:
-          sortedData.rows.Market.serviceIds.push(service.id);
-          break;
-        default:
-          sortedData.rows.Organization.serviceIds.push(service.id);
+        if (service.serviceStatus === "Draft") {
+          draftData.push(service);
+        }
+
+        switch (service.applicationType) {
+          case market_and_organization:
+            sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
+            break;
+          case market:
+            sortedData.rows.Market.serviceIds.push(service.id);
+            break;
+          default:
+            sortedData.rows.Organization.serviceIds.push(service.id);
+        }
       }
     });
 
@@ -452,7 +486,13 @@ function MapCanvasPage(props) {
         </Box>
       )}
       <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
-        <SideBar isFilterOpen={isOpenFilter} />
+        <SideBar
+          isFilterOpen={isOpenFilter}
+          archivedData={archivedData}
+          draftData={draftData}
+          onOpenFormEdition={onOpenFormEdition}
+          handleServiceClick={(service) => handleServiceClick(service)}
+        />
         <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
           <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
           <ContentCanvas
