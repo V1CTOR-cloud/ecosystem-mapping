@@ -55,7 +55,7 @@ function ServiceForm(props) {
     link: "",
     audience: props.audiences[0].name,
     serviceLocation: "",
-    budgets: [{ name: "", value: "" }],
+    budgets: [{ name: "", value: "", currency: "€" }],
 
     description: "",
     outcomes: "",
