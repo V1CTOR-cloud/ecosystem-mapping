@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
@@ -31,10 +31,9 @@ const SideBarContainer = styled.div`
 }`;
 
 function SideBar(props) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const { t } = useTranslation();
 
-  const buttons = [
+  const initialButtons = [
     {
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: [
@@ -73,6 +72,42 @@ function SideBar(props) {
       children: [],
     },
   ];
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [buttons] = useState(initialButtons);
+
+  // Update the draft buttons and archived buttons at every update or creation of a service
+  useEffect(() => {
+    buttons[2].children = [];
+    buttons[1].children = [];
+
+    props.archivedData.forEach((service) => {
+      buttons[2].children.push(
+        <ButtonComponent
+          key={service.id}
+          buttonText={service.serviceName}
+          isPrimary={true}
+          onClick={() => handleDraftOrArchivedServiceClick(service)}
+          width="100%"
+          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
+          borderRadius="50"
+        />
+      );
+    });
+
+    props.draftData.forEach((service) => {
+      buttons[1].children.push(
+        <ButtonComponent
+          key={service.id}
+          buttonText={service.serviceName}
+          isPrimary={true}
+          onClick={() => handleDraftOrArchivedServiceClick(service)}
+          width="100%"
+          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
+          borderRadius="50"
+        />
+      );
+    });
+  });
 
   function handleClick() {
     //todo
@@ -84,6 +119,11 @@ function SideBar(props) {
 
   function handleOnMouseLeave() {
     setIsCollapsed(true);
+  }
+
+  function handleDraftOrArchivedServiceClick(service) {
+    props.onOpenFormEdition();
+    props.handleServiceClick(service);
   }
 
   return (
