@@ -13,6 +13,13 @@ import {
   smallPadding,
   verySmallPadding,
 } from "../../../../helper/constant";
+import NumberInputComponent from "../input/numberInputComponent/NumberInputComponent";
+import MenuComponent from "../menu/MenuComponent";
+
+const currencies = [
+  { id: 0, name: "€" },
+  { id: 1, name: "$" },
+];
 
 function LabeledBudgetInputComponent(props) {
   const [budgets, setBudgets] = useState(props.budgets);
@@ -21,7 +28,7 @@ function LabeledBudgetInputComponent(props) {
   function handleAddOrRemoveBudget(index) {
     const tempBudgets = Array.from(budgets);
     if (index === props.budgets.length - 1) {
-      tempBudgets.push({ name: "", value: "" });
+      tempBudgets.push({ name: "", value: "", currency: "€" });
     } else {
       tempBudgets.splice(index, 1);
     }
@@ -39,6 +46,13 @@ function LabeledBudgetInputComponent(props) {
   function handleBudgetValueChange(value, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].value = value;
+    setBudgets(tempBudgets);
+    props.onChange(tempBudgets);
+  }
+
+  function handleBudgeCurrencyChange(currency, index) {
+    const tempBudgets = Array.from(budgets);
+    tempBudgets[index].currency = currency;
     setBudgets(tempBudgets);
     props.onChange(tempBudgets);
   }
@@ -66,7 +80,7 @@ function LabeledBudgetInputComponent(props) {
           color={greyColor}
           fontSize={smallFontSize}
         >
-          Amount/Range
+          Amount
         </Text>
       </HStack>
       {budgets.map((budget, index) => {
@@ -82,13 +96,20 @@ function LabeledBudgetInputComponent(props) {
             </Box>
 
             <Box w="100%" paddingX={smallPadding}>
-              <InputComponent
+              <NumberInputComponent
                 value={budget.value}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
                 isBudget={true}
                 onChange={(value) => handleBudgetValueChange(value, index)}
               />
             </Box>
+            <MenuComponent
+              item={budget.currency}
+              items={currencies}
+              onChange={(currency) =>
+                handleBudgeCurrencyChange(currency, index)
+              }
+            />
             <Box w="30px" h="30px" paddingLeft={smallPadding}>
               <IconButtonComponent
                 height="30px"
