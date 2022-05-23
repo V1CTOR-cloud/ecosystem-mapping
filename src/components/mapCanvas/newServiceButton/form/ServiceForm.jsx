@@ -249,6 +249,12 @@ function ServiceForm(props) {
       // Put the order to 999 to avoid conflict when putting again in draft or published
       if (serviceStatus === "Archived") {
         order = 999;
+      } else if (
+        props.serviceWithoutModification.serviceStatus === "Archived"
+      ) {
+        order =
+          props.fetchedData[0].rows[formValue["applicationType"]].serviceIds
+            .length;
       } else {
         order = props.serviceWithoutModification.order;
       }
