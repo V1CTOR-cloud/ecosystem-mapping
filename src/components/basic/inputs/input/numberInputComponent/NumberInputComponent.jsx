@@ -25,7 +25,6 @@ function NumberInputComponent(props) {
       onChange={(value) => handleOnChange(value)}
     >
       <NumberInputField
-        isRequired={props.isRequired}
         placeholder={props.placeholder}
         size="md"
         border={`2px solid`}
