@@ -63,6 +63,13 @@ function FilterBar(props) {
 
     const tempFilters = [...filters];
 
+    // Clear all fields
+    tempFilters.forEach((filter) => {
+      filter.isAllSelected = false;
+      filter.selectedFilterCount = 0;
+      filter.items.forEach((item) => (item.value = false));
+    });
+
     // Go through all the filter saved
     savedFiltersEntries.forEach((thisFilter) => {
       // Get the value of each element in a specific filter
