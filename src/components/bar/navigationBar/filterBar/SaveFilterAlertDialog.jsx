@@ -37,22 +37,35 @@ function SaveFilterAlertDialog(props) {
     if (filterName === "") {
       setIsError(true);
     } else {
-      let savedFilter = {
-        [filterName]: {},
-      };
+      let savedFilter;
+      if (props.filters[0].items !== []) {
+        const tempObject = {
+          [props.savedFilters[0][0]]: props.savedFilters[0][1],
+        };
+
+        savedFilter = {
+          ...tempObject,
+          [filterName]: {},
+        };
+      } else {
+        savedFilter = {
+          [filterName]: {},
+        };
+      }
 
       props.filters.forEach((filter, index) => {
         if (index !== 0 && filter.selectedFilterCount !== 0) {
           savedFilter[filterName] = {
             ...savedFilter[filterName],
-            [filter.name]: {
+            [filter.id]: {
+              name: filter.name,
               items: [],
             },
           };
 
           filter.items.forEach((item) => {
             if (item.value) {
-              savedFilter[filterName][filter.name].items.push(item.name);
+              savedFilter[filterName][filter.id].items.push(item.name);
             }
           });
         }
@@ -67,9 +80,14 @@ function SaveFilterAlertDialog(props) {
 
       if (res.updateEcosystemMap) {
         props.onClose();
+
+        const entries = Object.entries(res.updateEcosystemMap.filters);
+        const index = entries.length - 1;
+
+        // Length -1 to retrieve the last element that we just add.
         const newFilter = {
-          name: Object.entries(res.updateEcosystemMap.filters)[0][0],
-          items: Object.entries(res.updateEcosystemMap.filters)[0][1],
+          name: entries[index][0],
+          items: entries[index][1],
           isSelected: false,
         };
 
