@@ -24,8 +24,8 @@ import {
   whiteActiveColor,
   whiteColor,
   whiteHoverColor,
-} from "../../../../helper/constant";
-import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
+} from "../../../../../helper/constant";
+import InputComponent from "../../../../basic/inputs/input/inputComponent/InputComponent";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function FilterMenuButton(props) {
