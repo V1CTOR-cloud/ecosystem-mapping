@@ -9,7 +9,7 @@ const graphCMSKey = REACT_APP_GRAPH_CMS_CONTENT_API_KEY;
 
 class Service {
   // Get all the services for a specific map
-  async getMapServicesAndMapName(mapID) {
+  async getMapServicesAndMapInformation(mapID) {
     const query = ` 
       query MyQuery {
         services (where: {ecosystemMap: {id:"${mapID}"}}){
@@ -53,6 +53,7 @@ class Service {
         }
         ecosystemMap(where: {id:"${mapID}"}) {
           name
+          filters
         }
       }
   `;
