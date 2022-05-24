@@ -68,40 +68,47 @@ const data = {
 function MapCanvasPage(props) {
   const initialFilters = [
     {
+      id: 0,
       name: "Saved Filters",
       items: [],
     },
     {
+      id: 1,
       name: "Service Status",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
+      id: 2,
       name: "Service Owner",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
+      id: 3,
       name: "Service Focus",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
+      id: 4,
       name: "Service Location",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
+      id: 5,
       name: "Service Audience",
       items: [],
       isAllSelected: false,
       selectedFilterCount: 0,
     },
     {
+      id: 6,
       name: "Budget",
       items: [],
       isAllSelected: false,
@@ -135,6 +142,7 @@ function MapCanvasPage(props) {
   const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedAudiences, setFetchedAudiences] = useState(null);
+  const [fetchedFilters, setFetchedFilters] = useState(null);
   const [fetchedLocation, setFetchedLocation] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [heights, setHeights] = useState([180, 180, 180]);
@@ -160,11 +168,16 @@ function MapCanvasPage(props) {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Service.getMapServicesAndMapName(props.mapId);
+      let res = await Service.getMapServicesAndMapInformation(props.mapId);
       setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
       setSecondaryFetchedData(structuredClone(sortedData));
+
+      // Get all savedFilters by the user
+      if (res.ecosystemMap["filters"] != null) {
+        setFetchedFilters(Object.entries(res.ecosystemMap["filters"]));
+      }
 
       // Get all organisations
       res = await Service.getAllOrganisation();
@@ -266,22 +279,18 @@ function MapCanvasPage(props) {
             filter.items.forEach((item) => {
               // The item is selected so, we add all element corresponding to that
               if (item.value) {
-                if (
-                  filterName === "serviceStatus" ||
-                  filterName === "serviceFocus" ||
-                  filterName === "serviceAudience"
-                ) {
+                if (filter.id === 1 || filter.id === 3 || filter.id === 5) {
                   if (
                     service[filterName].replaceAll("_", "").toLowerCase() ===
                     item.name.replaceAll(" ", "").toLowerCase()
                   ) {
                     filterBool[index] = true;
                   }
-                } else if (filterName === "serviceOwner") {
+                } else if (filter.id === 2) {
                   if (service[filterName][0].organisationName === item.name) {
                     filterBool[index] = true;
                   }
-                } else if (filterName === "serviceLocation") {
+                } else if (filter.id === 4) {
                   if (service[filterName].includes(item.name.toLowerCase())) {
                     filterBool[index] = true;
                   }
@@ -336,7 +345,6 @@ function MapCanvasPage(props) {
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
-    //TODO SavedFilter
     const tempStatus = [
       { name: "Draft", value: false },
       { name: "Published", value: false },
@@ -345,6 +353,7 @@ function MapCanvasPage(props) {
     const tempAudience = [];
     const tempOwner = [];
     const tempLocation = [];
+    const tempFilters = [];
     const tempBudget = [
       { name: "0-9", value: false },
       { name: "10-99", value: false },
@@ -380,6 +389,13 @@ function MapCanvasPage(props) {
       });
     }
 
+    if (fetchedFilters) {
+      fetchedFilters.forEach((filters) => {
+        tempFilters.push({ name: filters[0], value: false });
+      });
+    }
+
+    initialFilters[0].items = tempFilters;
     initialFilters[1].items = tempStatus;
     initialFilters[2].items = tempOwner;
     initialFilters[3].items = tempPrimaryFocus;
@@ -480,6 +496,7 @@ function MapCanvasPage(props) {
         <Box zIndex={2} w="100%">
           <FilterBar
             filtersState={[filters, setFilters]}
+            savedFilters={fetchedFilters}
             handleClearAllFilters={handleClearAllFilters}
             mapId={props.mapId}
           />
