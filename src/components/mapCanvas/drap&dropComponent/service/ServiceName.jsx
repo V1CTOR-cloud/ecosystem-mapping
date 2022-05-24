@@ -22,6 +22,7 @@ const Container = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: fade;
+  cursor: pointer;
   border-radius: ${borderRadius};
   left: ${(props) => props.source.percent}%;
   width: calc(${(props) => props.target.percent - props.source.percent}%);
