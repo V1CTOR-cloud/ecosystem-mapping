@@ -39,9 +39,14 @@ function SaveFilterAlertDialog(props) {
     } else {
       let savedFilter;
       if (props.filters[0].items !== []) {
-        const tempObject = {
-          [props.savedFilters[0][0]]: props.savedFilters[0][1],
-        };
+        let tempObject = {};
+
+        props.savedFilters.forEach((savedFilter) => {
+          tempObject = {
+            ...tempObject,
+            [savedFilter[0]]: savedFilter[1],
+          };
+        });
 
         savedFilter = {
           ...tempObject,
@@ -53,8 +58,8 @@ function SaveFilterAlertDialog(props) {
         };
       }
 
-      props.filters.forEach((filter, index) => {
-        if (index !== 0 && filter.selectedFilterCount !== 0) {
+      props.filters.forEach((filter) => {
+        if (filter.id !== 0 && filter.selectedFilterCount !== 0) {
           savedFilter[filterName] = {
             ...savedFilter[filterName],
             [filter.id]: {
@@ -84,7 +89,7 @@ function SaveFilterAlertDialog(props) {
         const entries = Object.entries(res.updateEcosystemMap.filters);
         const index = entries.length - 1;
 
-        // Length -1 to retrieve the last element that we just add.
+        // Length-1 to retrieve the last element that we just add.
         const newFilter = {
           name: entries[index][0],
           items: entries[index][1],
@@ -93,7 +98,7 @@ function SaveFilterAlertDialog(props) {
 
         const tempFilter = props.filters;
         tempFilter[0].items.push(newFilter);
-        console.log(tempFilter);
+
         props.setFilters(tempFilter);
       }
     }
