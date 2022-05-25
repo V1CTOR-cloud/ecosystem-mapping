@@ -17,10 +17,17 @@ import FilterMenuButton from "./filtersButtons/FilterMenuButton";
 import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
+import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
+import EcosystemMapServices from "../../../../service/EcosystemMapServices";
 
 function FilterBar(props) {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenDeleteDialog,
+    onOpen: onOpenDeleteDialog,
+    onClose: onCloseDeleteDialog,
+  } = useDisclosure();
   const [filters, setFilters] = useState(props.filtersState[0]);
   const [isActive, setIsActive] = useState(
     filters.some((filter) => filter.selectedFilterCount > 0)
@@ -28,6 +35,8 @@ function FilterBar(props) {
   const [isFilterApplied, setIsFilterApplied] = useState(false);
   const [value, setValue] = useState("");
   const [isSavedFilterSelected, setIsSavedFilterSelected] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState();
 
   useEffect(() => {
     setIsSavedFilterSelected(value !== "");
@@ -92,6 +101,59 @@ function FilterBar(props) {
     setValue(filter[0]);
   }
 
+  function handleEditSavedFilter(itemName) {
+    setIsEditing(true);
+    onOpen();
+    setName(itemName);
+  }
+
+  async function handleDeleteSavedFilter() {
+    let savedFilters = {};
+
+    if (props.savedFilters !== null) {
+      props.savedFilters.forEach((savedFilter) => {
+        if (savedFilter[0] !== name) {
+          savedFilters = {
+            ...savedFilters,
+            [savedFilter[0]]: savedFilter[1],
+          };
+        }
+      });
+
+      const data = {
+        id: props.mapId,
+        filters: savedFilters,
+      };
+
+      const res = await EcosystemMapServices.createSavedFilter(data);
+
+      if (res.updateEcosystemMap) {
+        const tempFilter = [...filters];
+
+        const index = tempFilter[0].items.findIndex(
+          (filter) => filter.name === name
+        );
+
+        tempFilter[0].items.splice(index, 1);
+
+        props.filtersState[1](tempFilter);
+        onCloseDeleteDialog();
+      }
+    }
+  }
+
+  function handleOpenDeleteAlertDialog(itemName) {
+    setName(itemName);
+    onOpenDeleteDialog();
+  }
+
+  function handleSaveFilterClick() {
+    setIsEditing(false);
+    onOpen();
+  }
+
+  console.log(filters);
+
   return (
     <HStack paddingY={smallPadding} paddingX={defaultPadding} w="100%" h="60px">
       <Text color={greyTextColor}>
@@ -104,10 +166,12 @@ function FilterBar(props) {
               key={filter.name}
               filter={filter}
               savedFilters={props.savedFilters}
+              value={value}
               handleSavedFilterChange={(filter) =>
                 handleSavedFilterChange(filter)
               }
-              value={value}
+              handleEditSavedFilter={handleEditSavedFilter}
+              handleOpenDeleteAlertDialog={handleOpenDeleteAlertDialog}
             />
           );
         } else {
@@ -158,7 +222,7 @@ function FilterBar(props) {
                 <Save color={whiteColor} size={25} />
               )
             }
-            onClick={isSavedFilterSelected ? () => {} : onOpen}
+            onClick={isSavedFilterSelected ? () => {} : handleSaveFilterClick}
           />
         </Box>
       )}
@@ -169,6 +233,13 @@ function FilterBar(props) {
         filters={filters}
         mapId={props.mapId}
         savedFilters={props.savedFilters}
+        isEditing={isEditing}
+        name={name}
+      />
+      <DeleteFilterAlertDialog
+        isOpen={isOpenDeleteDialog}
+        onClose={onCloseDeleteDialog}
+        handleDeleteSavedFilter={handleDeleteSavedFilter}
       />
     </HStack>
   );
