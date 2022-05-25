@@ -4,10 +4,10 @@ import {
   Box,
   Menu,
   MenuButton,
-  MenuOptionGroup,
-  MenuItemOption,
   MenuList,
   Text,
+  CloseButton,
+  HStack,
 } from "@chakra-ui/react";
 
 import {
@@ -15,18 +15,24 @@ import {
   borderRadius,
   defaultFontFamily,
   defaultFontSize,
+  greyColor,
   greyTextColor,
+  mediumPadding,
   smallPadding,
   verySmallPadding,
+  whiteActiveColor,
+  whiteColor,
   whiteHoverColor,
 } from "../../../../../helper/constant";
 import InputComponent from "../../../../basic/inputs/input/inputComponent/InputComponent";
+import { CheckIcon, EditIcon } from "@chakra-ui/icons";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function SavedFilterButton(props) {
   const [filter] = useState(props.filter);
   const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
   const [isButtonActive, setIsButtonActive] = useState(false);
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     // Check if the button is active to every change in the component
@@ -47,6 +53,8 @@ function SavedFilterButton(props) {
     const selectedSavedFilter = props.savedFilters.find(
       (item) => item[0] === filterName
     );
+
+    setValue(filterName);
 
     props.handleSavedFilterChange(selectedSavedFilter);
   }
@@ -83,25 +91,78 @@ function SavedFilterButton(props) {
           {secondaryFilter.items.length === 0 && (
             <Text textAlign="center">No result</Text>
           )}
-          <MenuOptionGroup
-            type="radio"
-            paddingX={smallPadding}
-            onChange={(e) => handleItemClick(e)}
-            value={props.value}
-          >
-            {secondaryFilter.items.map((item) => (
-              <MenuItemOption
-                key={item.name}
-                // isChecked={item.value}
-                // value={item.value ? item.name : undefined}
-                value={item.name}
-                fontFamily={defaultFontFamily}
-                fontSize={defaultFontSize}
-              >
-                {item.name}
-              </MenuItemOption>
-            ))}
-          </MenuOptionGroup>
+          {secondaryFilter.items.map((item) => (
+            <Box
+              key={item.name}
+              _hover={{
+                bg: whiteHoverColor,
+              }}
+              borderRadius={borderRadius}
+              bg={item.name === value ? whiteActiveColor : whiteColor}
+              paddingX={mediumPadding}
+              paddingY={verySmallPadding}
+              cursor="pointer"
+            >
+              <HStack>
+                <CheckIcon
+                  w="12.5px"
+                  h="12.5px"
+                  visibility={item.name === value ? "visible" : "hidden"}
+                />
+                <Box
+                  w="200px"
+                  paddingLeft={smallPadding}
+                  paddingRight={smallPadding}
+                >
+                  <Text
+                    w="100%"
+                    value={item.name}
+                    fontFamily={defaultFontFamily}
+                    fontSize={defaultFontSize}
+                    onClick={() => {
+                      handleItemClick(item.name);
+                    }}
+                    overflow="hidden"
+                    whiteSpace="nowrap"
+                  >
+                    {item.name}
+                  </Text>
+                </Box>
+                <EditIcon
+                  color={greyColor}
+                  _hover={{
+                    color: blueColor,
+                  }}
+                  onClick={() => {
+                    props.handleEditSavedFilter(item.name);
+                  }}
+                  cursor="pointer"
+                />
+                <Box paddingLeft={verySmallPadding}>
+                  <CloseButton
+                    w="17.5px"
+                    h="17.5px"
+                    padding="8px"
+                    size="sm"
+                    border="2px solid"
+                    borderColor={greyColor}
+                    borderRadius="100%"
+                    color={greyColor}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                    _hover={{
+                      borderColor: "red",
+                      color: "red",
+                    }}
+                    onClick={() => {
+                      props.handleOpenDeleteAlertDialog(item.name);
+                    }}
+                  />
+                </Box>
+              </HStack>
+            </Box>
+          ))}
         </MenuList>
       </Menu>
     </Box>
