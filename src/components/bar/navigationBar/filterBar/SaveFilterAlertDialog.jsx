@@ -44,13 +44,13 @@ function SaveFilterAlertDialog(props) {
       setIsError(true);
     } else {
       let savedFilter;
-      if (props.savedFilters !== null) {
+      if (props.filters[0].items !== []) {
         let tempObject = {};
 
-        props.savedFilters.forEach((savedFilter) => {
+        props.filters[0].items.forEach((savedFilter) => {
           tempObject = {
             ...tempObject,
-            [savedFilter[0]]: savedFilter[1],
+            [savedFilter.name]: savedFilter.selectedFilters,
           };
         });
 
@@ -81,13 +81,15 @@ function SaveFilterAlertDialog(props) {
             ...savedFilter[filterName],
             [filter.id]: {
               name: filter.name,
-              items: [],
+              selectedFilters: [],
             },
           };
 
           filter.items.forEach((item) => {
             if (item.value) {
-              savedFilter[filterName][filter.id].items.push(item.name);
+              savedFilter[filterName][filter.id].selectedFilters.push(
+                item.name
+              );
             }
           });
         }
@@ -112,7 +114,7 @@ function SaveFilterAlertDialog(props) {
           // Length-1 to retrieve the last element that we just add.
           const newFilter = {
             name: entries[index][0],
-            items: entries[index][1],
+            selectedFilters: entries[index][1],
             isSelected: false,
           };
 
