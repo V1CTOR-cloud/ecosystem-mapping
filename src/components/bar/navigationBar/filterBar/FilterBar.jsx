@@ -68,7 +68,7 @@ function FilterBar(props) {
   }
 
   function handleSavedFilterChange(filter) {
-    const savedFiltersEntries = Object.entries(filter[1]);
+    const savedFilterEntries = Object.entries(filter.selectedFilters);
 
     const tempFilters = [...filters];
 
@@ -80,9 +80,9 @@ function FilterBar(props) {
     });
 
     // Go through all the filter saved
-    savedFiltersEntries.forEach((thisFilter) => {
+    savedFilterEntries.forEach((thisFilter) => {
       // Get the value of each element in a specific filter
-      thisFilter[1].items.forEach((item) => {
+      thisFilter[1].selectedFilters.forEach((item) => {
         const index = tempFilters[thisFilter[0]].items.findIndex(
           (thisItem) => thisItem.name === item
         );
@@ -93,7 +93,7 @@ function FilterBar(props) {
 
       // Set the selectedFilterCount
       tempFilters[thisFilter[0]].selectedFilterCount =
-        thisFilter[1].items.length;
+        thisFilter[1].selectedFilters.length;
     });
 
     setFilters(tempFilters);
@@ -101,21 +101,23 @@ function FilterBar(props) {
     setValue(filter[0]);
   }
 
+  // Open the dialog to edit a previous saved filter
   function handleEditSavedFilter(itemName) {
     setIsEditing(true);
     onOpen();
     setName(itemName);
   }
 
+  // Delete the saved filter from the filter list and from the database
   async function handleDeleteSavedFilter() {
     let savedFilters = {};
 
-    if (props.savedFilters !== null) {
-      props.savedFilters.forEach((savedFilter) => {
-        if (savedFilter[0] !== name) {
+    if (filters[0].items !== []) {
+      filters[0].items.forEach((savedFilter) => {
+        if (savedFilter.name !== name) {
           savedFilters = {
             ...savedFilters,
-            [savedFilter[0]]: savedFilter[1],
+            [savedFilter.name]: savedFilter.selectedFilters,
           };
         }
       });
@@ -130,6 +132,7 @@ function FilterBar(props) {
       if (res.updateEcosystemMap) {
         const tempFilter = [...filters];
 
+        // Get the index of the items that we want to delete
         const index = tempFilter[0].items.findIndex(
           (filter) => filter.name === name
         );
@@ -142,17 +145,17 @@ function FilterBar(props) {
     }
   }
 
+  // Open the dialog to delete a previous saved filter
   function handleOpenDeleteAlertDialog(itemName) {
     setName(itemName);
     onOpenDeleteDialog();
   }
 
+  // Open the alert dialog to save a filter
   function handleSaveFilterClick() {
     setIsEditing(false);
     onOpen();
   }
-
-  console.log(filters);
 
   return (
     <HStack paddingY={smallPadding} paddingX={defaultPadding} w="100%" h="60px">
@@ -165,7 +168,6 @@ function FilterBar(props) {
             <SavedFilterButton
               key={filter.name}
               filter={filter}
-              savedFilters={props.savedFilters}
               value={value}
               handleSavedFilterChange={(filter) =>
                 handleSavedFilterChange(filter)
