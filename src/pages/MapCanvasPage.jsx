@@ -391,7 +391,11 @@ function MapCanvasPage(props) {
 
     if (fetchedFilters) {
       fetchedFilters.forEach((filters) => {
-        tempFilters.push({ name: filters[0], value: false });
+        tempFilters.push({
+          name: filters[0],
+          value: false,
+          selectedFilters: filters[1],
+        });
       });
     }
 
@@ -496,7 +500,6 @@ function MapCanvasPage(props) {
         <Box zIndex={2} w="100%">
           <FilterBar
             filtersState={[filters, setFilters]}
-            savedFilters={fetchedFilters}
             handleClearAllFilters={handleClearAllFilters}
             mapId={props.mapId}
           />
