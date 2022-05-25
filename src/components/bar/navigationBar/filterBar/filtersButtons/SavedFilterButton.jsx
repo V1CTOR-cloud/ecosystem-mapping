@@ -31,13 +31,7 @@ import { CheckIcon, EditIcon } from "@chakra-ui/icons";
 function SavedFilterButton(props) {
   const [filter] = useState(props.filter);
   const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
-  const [isButtonActive, setIsButtonActive] = useState(false);
   const [value, setValue] = useState("");
-
-  useEffect(() => {
-    // Check if the button is active to every change in the component
-    setIsButtonActive(filter.items.some((item) => item.value === true));
-  });
 
   function handleInputChange(input) {
     const tempFilter = { ...filter };
@@ -50,8 +44,8 @@ function SavedFilterButton(props) {
   // Check the only item that was selected.
   function handleItemClick(filterName) {
     // Retrieve all the information of the saved filter that we clicked on.
-    const selectedSavedFilter = props.savedFilters.find(
-      (item) => item[0] === filterName
+    const selectedSavedFilter = filter.items.find(
+      (item) => item.name === filterName
     );
 
     setValue(filterName);
@@ -70,10 +64,7 @@ function SavedFilterButton(props) {
           _hover={{ bg: whiteHoverColor }}
           _focus={{ boxShadow: "none" }}
         >
-          <Text
-            whiteSpace="nowrap"
-            color={isButtonActive ? blueColor : greyTextColor}
-          >
+          <Text whiteSpace="nowrap" color={greyTextColor}>
             {filter.name}
           </Text>
         </MenuButton>
