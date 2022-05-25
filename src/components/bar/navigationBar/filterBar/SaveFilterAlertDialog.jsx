@@ -22,13 +22,19 @@ function SaveFilterAlertDialog(props) {
   const [filterName, setFilterName] = useState("");
 
   useEffect(() => {
-    setFilterName("");
-  }, []);
+    if (props.isEditing) {
+      setIsError(false);
+      setFilterName(props.name);
+    } else {
+      setFilterName("");
+    }
+  }, [props.isOpen]);
 
   function handleNameFilterChange(input) {
     if (input === "") {
       setIsError(true);
     } else {
+      setIsError(false);
       setFilterName(input);
     }
   }
@@ -38,7 +44,7 @@ function SaveFilterAlertDialog(props) {
       setIsError(true);
     } else {
       let savedFilter;
-      if (props.filters[0].items !== []) {
+      if (props.savedFilters !== null) {
         let tempObject = {};
 
         props.savedFilters.forEach((savedFilter) => {
@@ -48,10 +54,21 @@ function SaveFilterAlertDialog(props) {
           };
         });
 
-        savedFilter = {
-          ...tempObject,
-          [filterName]: {},
-        };
+        if (props.isEditing) {
+          savedFilter = {
+            ...tempObject,
+          };
+
+          // Rename the key of the object
+          savedFilter[filterName] = savedFilter[props.name];
+          delete savedFilter[props.name];
+        } else {
+          // We create a new object
+          savedFilter = {
+            ...tempObject,
+            [filterName]: {},
+          };
+        }
       } else {
         savedFilter = {
           [filterName]: {},
@@ -85,20 +102,30 @@ function SaveFilterAlertDialog(props) {
 
       if (res.updateEcosystemMap) {
         props.onClose();
+        const tempFilter = [...props.filters];
 
         const entries = Object.entries(res.updateEcosystemMap.filters);
-        const index = entries.length - 1;
 
-        // Length-1 to retrieve the last element that we just add.
-        const newFilter = {
-          name: entries[index][0],
-          items: entries[index][1],
-          isSelected: false,
-        };
+        if (!props.isEditing) {
+          const index = entries.length - 1;
 
-        const tempFilter = props.filters;
-        tempFilter[0].items.push(newFilter);
+          // Length-1 to retrieve the last element that we just add.
+          const newFilter = {
+            name: entries[index][0],
+            items: entries[index][1],
+            isSelected: false,
+          };
 
+          tempFilter[0].items.push(newFilter);
+        } else {
+          const index = entries.findIndex(
+            (element) => element[0] === filterName
+          );
+
+          tempFilter[0].items[index].name = filterName;
+        }
+
+        setFilterName("");
         props.setFilters(tempFilter);
       }
     }
@@ -108,7 +135,7 @@ function SaveFilterAlertDialog(props) {
     <AlertDialog
       isOpen={props.isOpen}
       onClose={props.onClose}
-      leastDestructiveRef={props.cancelRef}
+      leastDestructiveRef={React.useRef()}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -133,6 +160,7 @@ function SaveFilterAlertDialog(props) {
               isWithoutBorder={true}
               color={greyTextColor}
               onClick={() => {
+                setFilterName("");
                 props.onClose();
               }}
             />
