@@ -9,6 +9,8 @@ import {
   AlertDialogOverlay,
   Spacer,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+
 import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
 import {
   greyColor,
@@ -18,6 +20,7 @@ import {
 } from "../../../../helper/constant";
 
 function DeleteFilterAlertDialog(props) {
+  const { t } = useTranslation();
   const cancelRef = useRef();
 
   return (
@@ -29,24 +32,24 @@ function DeleteFilterAlertDialog(props) {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Delete filter view
+            {t("mapping.alert.dialog.delete.saved.filter.title")}
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            Are you sure you want to remove this filter view?
+            {t("mapping.alert.dialog.delete.saved.filter.body")}
           </AlertDialogBody>
 
           <AlertDialogFooter>
             <ButtonComponent
               onClick={props.onClose}
-              buttonText="Cancel"
+              buttonText={t("common.cancel")}
               isWithoutBorder={true}
               color={greyColor}
             />
             <Spacer />
             <ButtonComponent
               onClick={props.handleDeleteSavedFilter}
-              buttonText="Delete"
+              buttonText={t("common.delete")}
               isWithoutBorder={true}
               color={whiteColor}
               bg={redColor}

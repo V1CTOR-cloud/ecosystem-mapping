@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import {
   accentColor,
@@ -29,6 +30,7 @@ import InputComponent from "../../../../basic/inputs/input/inputComponent/InputC
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function FilterMenuButton(props) {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState(props.filter);
   const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
   const [isButtonActive, setIsButtonActive] = useState(false);
@@ -166,7 +168,10 @@ function FilterMenuButton(props) {
           <Box paddingX={smallPadding} paddingBottom={smallPadding}>
             <InputComponent
               value={""}
-              placeholder={"Find a " + filter.name}
+              placeholder={
+                t("mapping.navigation.bar.search.placeholder.text") +
+                filter.name
+              }
               onChange={(input) => handleInputChange(input)}
             />
           </Box>

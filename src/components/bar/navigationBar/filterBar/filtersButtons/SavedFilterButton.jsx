@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   CloseButton,
   HStack,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import {
   blueColor,
@@ -29,6 +30,7 @@ import { CheckIcon, EditIcon } from "@chakra-ui/icons";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function SavedFilterButton(props) {
+  const { t } = useTranslation();
   const [filter] = useState(props.filter);
   const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
   const [value, setValue] = useState("");
@@ -75,7 +77,10 @@ function SavedFilterButton(props) {
           <Box paddingX={smallPadding} paddingBottom={smallPadding}>
             <InputComponent
               value={""}
-              placeholder={"Find a " + filter.name}
+              placeholder={
+                t("mapping.navigation.bar.search.placeholder.text") +
+                filter.name
+              }
               onChange={(input) => handleInputChange(input)}
             />
           </Box>

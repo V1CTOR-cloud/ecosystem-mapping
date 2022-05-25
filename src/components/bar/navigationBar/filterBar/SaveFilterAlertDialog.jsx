@@ -13,7 +13,11 @@ import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
-import { greyTextColor, mediumPadding } from "../../../../helper/constant";
+import {
+  greyTextColor,
+  mediumPadding,
+  verySmallPadding,
+} from "../../../../helper/constant";
 import EcosystemMapServices from "../../../../service/EcosystemMapServices";
 
 function SaveFilterAlertDialog(props) {
@@ -141,17 +145,25 @@ function SaveFilterAlertDialog(props) {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader fontSize="lg">Save a filter</AlertDialogHeader>
+          <AlertDialogHeader fontSize="lg">
+            {props.isEditing
+              ? t("mapping.alert.dialog.edit.filter.title")
+              : t("mapping.alert.dialog.save.filter.title")}
+          </AlertDialogHeader>
 
           <AlertDialogBody>
             <InputComponent
               isRequired={true}
               value={filterName}
-              placeholder="Filter view name"
+              placeholder={t(
+                "mapping.navigation.bar.save.filter.placeholder.text"
+              )}
               onChange={handleNameFilterChange}
             />
             {isError && (
-              <Text color="red">mapping.canvas.form.filter.name.error</Text>
+              <Text color="red" paddingTop={verySmallPadding}>
+                {t("mapping.canvas.form.filter.name.error")}
+              </Text>
             )}
           </AlertDialogBody>
 

@@ -189,7 +189,7 @@ function FilterBar(props) {
       })}
       {isActive && !isFilterApplied && (
         <ButtonComponent
-          buttonText={"Apply Filters"}
+          buttonText={t("mapping.navigation.bar.apply.filter.button")}
           isWithoutBorder={true}
           isSelected={true}
           icon={<Check2Circle color={blueColor} size={25} />}
@@ -213,7 +213,11 @@ function FilterBar(props) {
       {isActive && (
         <Box paddingRight={verySmallPadding}>
           <ButtonComponent
-            buttonText={isSavedFilterSelected ? "Saved Filter" : "Save Filter"}
+            buttonText={
+              isSavedFilterSelected
+                ? t("mapping.navigation.bar.saved.filter.text")
+                : t("mapping.navigation.bar.saved.filter.button")
+            }
             isPrimary={!isSavedFilterSelected}
             isWithoutBorder={isSavedFilterSelected}
             isSelected={isSavedFilterSelected}
