@@ -21,7 +21,9 @@ const ButtonComponent = (props) => {
       <Button
         as={props.as}
         bg={
-          props.isPrimary
+          props.bg
+            ? props.bg
+            : props.isPrimary
             ? blueColor
             : props.isSelected
             ? whiteActiveColor
@@ -40,7 +42,13 @@ const ButtonComponent = (props) => {
           props.color ? props.color : props.isPrimary ? whiteColor : blueColor
         }
         leftIcon={props.icon}
-        _hover={{ bg: props.isPrimary ? blueHoverColor : whiteHoverColor }}
+        _hover={{
+          bg: props.hover
+            ? props.hover
+            : props.isPrimary
+            ? blueHoverColor
+            : whiteHoverColor,
+        }}
         _focus={{ boxShadow: "none" }}
         onClick={props.onClick}
       >
