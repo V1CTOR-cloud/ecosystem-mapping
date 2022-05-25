@@ -9,6 +9,8 @@ export const greyHoverColor = "rgb(170, 170, 170, 0.75)";
 export const greyTextColor = "#767676";
 export const accentColor = "#BC31EA";
 export const blackColor = "#000000";
+export const redColor = "#F51032";
+export const redHoverColor = "#F9768A";
 
 // FONTS
 export const smallFontSize = "10px";
