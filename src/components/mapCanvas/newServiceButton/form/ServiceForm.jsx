@@ -418,7 +418,7 @@ function ServiceForm(props) {
 
   return (
     <AlertDialog
-      size="xl"
+      size="2xl"
       isOpen={props.isOpen}
       leastDestructiveRef={props.cancelRef}
       onClose={props.onClose}
@@ -463,6 +463,7 @@ function ServiceForm(props) {
                 applicationTypeButtons={applicationTypeButtons}
                 audiences={props.audiences}
                 services={props.services}
+                locations={props.locations}
                 formValue={formValue}
               />
             </Box>
