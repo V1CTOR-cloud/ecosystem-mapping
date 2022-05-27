@@ -43,6 +43,7 @@
     "react-timezone-picker": "^1.0.8",
     "react-timezone-select": "^1.1.12",
     "sass": "^1.34.1",
+    "styled-components": "^5.3.5",
     "web-vitals": "^0.2.2",
     "yup": "^0.32.9"
   },
