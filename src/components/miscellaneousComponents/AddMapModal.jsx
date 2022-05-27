@@ -1,35 +1,34 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
-  chakra,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Button,
-  useDisclosure,
+  chakra,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
-  Flex,
-  MenuItem,
-  useToast,
   IconButton,
+  Input,
   Link,
-  Text
+  MenuItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import "../../assets/fonts/fonts.css";
-import { withRouter } from "react-router";
-import { RegionComponent } from "components/regionComponents/RegionComponent";
-import { SelectIndustry } from "components/IndustryComponant/SelectIndustry";
-import Service from "../../service/RegionServices";
-import { useHistory } from "react-router-dom";
-import { isLoggedIn } from "../../service/AuthenticationService";
-import { useTranslation } from 'react-i18next';
+import { useHistory, withRouter } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
+import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
+import Service from "../../service/RegionServices";
+import { isLoggedIn } from "../../service/AuthenticationService";
+import "../../assets/fonts/fonts.css";
+import SelectIndustry from "../industryComponant/SelectIndustry";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -69,7 +68,7 @@ const CreateButton = chakra(IconButton, {
   },
 });
 
-const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
+const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -83,150 +82,102 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
   const [states, setStates] = useState([]);
   const [cities, setCites] = useState([]);
   const [industries, setIndustries] = useState([]);
-  const [subindustries, setSubindustries] = useState([]);
-  
-  const createMapCallback = (key, value) => {
-    let locData = locationData;
-    locData[key] = value;
-    if( key === "region"){
-      locData.country = ""
-      locData.state = ""
-      locData.city = ""
-    }
-    if( key === "country"){
-      locData.state = ""
-      locData.city = ""
-    }
-    if( key === "state"){
-      locData.city = ""
-    }
-    setLocationData(locData);
-   locationDataHandleChange(locData);
-  };
-  useEffect(() => {
-    Service.listAllRegions();
-    Service.listAllIndustries();
-    setInitialLocationState(locationData);
-  }, [locationData, isEdit, isAdd, data, isHome]);
+  const [subIndustries, setSubIndustries] = useState([]);
 
-  const setInitialLocationState=(locData)=>{
+  const setInitialLocation = (locData) => {
     const allRegions = Service.getregions();
     const allCountries = Service.getCountriesByRegion(locData.region);
     const getStatesByCountry = Service.getStatesByCountry(
       locData.region,
       locData.country
     );
+
     const getCities = Service.getCitiesByState(
       locData.region,
       locData.country,
       locData.state
     );
+
     const allIndustries = Service.getIndustries();
     const getSubIndustriesByIndustry = Service.getSubIndustriesByIndustry(
       locData.industry
     );
+
     setRegions(allRegions);
     setCountries(allCountries);
     setStates(getStatesByCountry);
     setCites(getCities);
     setIndustries(allIndustries);
-    setSubindustries(getSubIndustriesByIndustry);
-  }
-
-  const locationDataHandleChange = (locData) => {
-    setInitialLocationState(locData)
-    validateLocationData()
+    setSubIndustries(getSubIndustriesByIndustry);
   };
 
-  const validateLocationData=()=>{
-    const requiredLocationKeys=["name","region"];
-    const locationKeys=Object.keys(locationData)
-    const inValidFields=requiredLocationKeys.filter((key)=>!locationKeys.includes(key)||locationData[key]==="")
-    locationData.inValidFields=inValidFields
-    setLocationData(locationData)
-  }
+  const handleLocationDataValidate = () => {
+    const requiredLocationKeys = ["name", "region"];
+    const locationKeys = Object.keys(locationData);
+    locationData.inValidFields = requiredLocationKeys.filter(
+      (key) => !locationKeys.includes(key) || locationData[key] === ""
+    );
+    setLocationData(locationData);
+  };
 
-  const AddMap = () => {
+  const handleIndustryChange = (key, value) => {
+    locationData[key] = value;
+    setLocationData(locationData);
+    handleLocationDataChange(locationData);
+  };
+
+  const handleLocationDataChange = (locData) => {
+    setInitialLocation(locData);
+    handleLocationDataValidate();
+  };
+
+  const handleLocationChange = (key, value) => {
+    let locData = locationData;
+    locData[key] = value;
+    if (key === "region") {
+      locData.country = "";
+      locData.state = "";
+      locData.city = "";
+    }
+    if (key === "country") {
+      locData.state = "";
+      locData.city = "";
+    }
+    if (key === "state") {
+      locData.city = "";
+    }
+    setLocationData(locData);
+    handleLocationDataChange(locData);
+  };
+
+  const handleAddMap = () => {
     let location = locationData;
     location.name = mapName;
-   validateLocationData()
-   if( locationData.inValidFields.length === 0 || locationData.region === "Global"){
-    Service.addEcoMap(location).then((res) => {
-      if (res.id !== undefined) {
-        toast({
-          title: (t('startup.toast.create')),
-          description: (t('startup.toast.create.map.message')),
-          status: "success",
-          duration: 5000,
-          position: "top-right",
-          isClosable: true,
-        });
-        onClose()
-        history.push({
-          pathname: "/services/"+res.id,
-          state: { mapName :mapName },
-        });
-      }
-    });
-   
- }
-  else{
-    toast({
-      description: (t('startup.toast.create.map.select.location')),
-      status: "warning",
-      duration: 3000,
-      position: "top-right",
-      isClosable: true,
-    });
-  }
-}
-
-  const onEdit = () => {
-    onOpen();
-    locationDataHandleChange(data);
-    setMapName(data.name);
-    setLocationData(data);
-  };
-  const EditMap = () => {
-    validateLocationData()
-    if(locationData.inValidFields.length === 0 || locationData.region === "Global"){
-    Service.editEcoMap(locationData).then((res) => {
-      if (res !== undefined) {
-        toast({
-          title: (t('startup.toast.update')),
-          description: (t('startup.toast.update.map.message')),
-          status: "success",
-          duration: 5000,
-          position: "top-right",
-          isClosable: true,
-        });
-      }
-      notifyParent();
-      onClose();
-    });
-  }else{
-    toast({
-      description: (t('startup.toast.create.map.select.location')),
-      status: "warning",
-      duration: 3000,
-      position: "top-right",
-      isClosable: true,
-    });
-  } 
-  };
-  const SubmitDetails = (e) => {
-    e.preventDefault();
-    setMapName({ mapName: mapName });
-  };
-
-  const onOpenModal = () => {
-    if(isLoggedIn()){
-    setInitialLocationState(locationData);
-    onOpen();
-    }
-    else{
+    handleLocationDataValidate();
+    if (
+      locationData.inValidFields.length === 0 ||
+      locationData.region === "Global"
+    ) {
+      Service.addEcoMap(location).then((res) => {
+        if (res.id !== undefined) {
+          toast({
+            title: t("startup.toast.create"),
+            description: t("startup.toast.create.map.message"),
+            status: "success",
+            duration: 5000,
+            position: "top-right",
+            isClosable: true,
+          });
+          onClose();
+          history.push({
+            pathname: "/services/" + res.id,
+            state: { mapName: mapName },
+          });
+        }
+      });
+    } else {
       toast({
-        description: (t('startup.toast.sign.in')),
+        description: t("startup.toast.create.map.select.location"),
         status: "warning",
         duration: 3000,
         position: "top-right",
@@ -235,32 +186,99 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
     }
   };
 
+  const handleEdit = () => {
+    onOpen();
+    handleLocationDataChange(data);
+    setMapName(data.name);
+    setLocationData(data);
+  };
+
+  const EditMap = () => {
+    handleLocationDataValidate();
+    if (
+      locationData.inValidFields.length === 0 ||
+      locationData.region === "Global"
+    ) {
+      Service.editEcoMap(locationData).then((res) => {
+        if (res !== undefined) {
+          toast({
+            title: t("startup.toast.update"),
+            description: t("startup.toast.update.map.message"),
+            status: "success",
+            duration: 5000,
+            position: "top-right",
+            isClosable: true,
+          });
+        }
+        notifyParent();
+        onClose();
+      });
+    } else {
+      toast({
+        description: t("startup.toast.create.map.select.location"),
+        status: "warning",
+        duration: 3000,
+        position: "top-right",
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setMapName({ mapName: mapName });
+  };
+
+  const handleOpenModal = () => {
+    if (isLoggedIn()) {
+      setInitialLocation(locationData);
+      onOpen();
+    } else {
+      toast({
+        description: t("startup.toast.sign.in"),
+        status: "warning",
+        duration: 3000,
+        position: "top-right",
+        isClosable: true,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await Service.listAllRegions();
+      await Service.listAllIndustries();
+      setInitialLocation(locationData);
+    };
+
+    fetchData().catch(console.error);
+  }, [locationData, isEdit, isAdd, data, isHome]);
+
   return (
     <React.Fragment>
-      {
-        isHome ? 
-         <Link onClick={onOpenModal} ><Text color="blue" m="7px" fontSize="17px">{t('startup.home.page.header.add.map.link')}</Text></Link> 
-          //   <IconButton
-          //   colorScheme="blue"
-          //   aria-label="Search database"
-          //   borderRadius="50%"
-          //   marginLeft="15px"
-          //   icon={<AddIcon />}
-          // />
-        :
-      isEdit ? (
-        <MenuItem onClick={onEdit}>{t('startup.list.map.page.map.card.edit')}</MenuItem>
+      {isHome ? (
+        <Link onClick={handleOpenModal}>
+          <Text color="blue" m="7px" fontSize="17px">
+            {t("startup.home.page.header.add.map.link")}
+          </Text>
+        </Link>
+      ) : isEdit ? (
+        <MenuItem onClick={handleEdit}>
+          {t("startup.list.map.page.map.card.edit")}
+        </MenuItem>
       ) : isAdd ? (
-        <CreateButton onClick={onOpenModal} />
+        <CreateButton onClick={handleOpenModal} />
       ) : (
         <React.Fragment>
-          <h1 style={headerStyle}>{t('startup.landing.page.content.welcome.message')}</h1>
+          <h1 style={headerStyle}>
+            {t("startup.landing.page.content.welcome.message")}
+          </h1>
           <h1 style={htagStyle}>
-          {t('startup.landing.page.content.welcome.tagline.text')}
+            {t("startup.landing.page.content.welcome.tagline.text")}
           </h1>
           <Flex alignItems="flex-start">
-            <Button mt="30px" onClick={onOpenModal} className="btn-ad-mp">
-            {t('startup.landing.page.create.map.button')}
+            <Button mt="30px" onClick={handleOpenModal} className="btn-ad-mp">
+              {t("startup.landing.page.create.map.button")}
             </Button>
           </Flex>
         </React.Fragment>
@@ -274,24 +292,31 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
       >
         <ModalOverlay />
         <ModalContent style={modalWidth}>
-        {isEdit ? <ModalHeader className="md-hdr-fnt">{t('startup.popup.ecosystem.map.heading.edit')}</ModalHeader>
-         : <ModalHeader className="md-hdr-fnt">{t('startup.popup.ecosystem.map.heading.create')}</ModalHeader>}
+          {isEdit ? (
+            <ModalHeader className="md-hdr-fnt">
+              {t("startup.popup.ecosystem.map.heading.edit")}
+            </ModalHeader>
+          ) : (
+            <ModalHeader className="md-hdr-fnt">
+              {t("startup.popup.ecosystem.map.heading.create")}
+            </ModalHeader>
+          )}
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <FormControl onSubmit={(e) => SubmitDetails(e)}>
-              <FormLabel className="md-ip-lbl">{t('startup.popup.ecosystem.map.title')}</FormLabel>
+            <FormControl onSubmit={(e) => handleSubmit(e)}>
+              <FormLabel className="md-ip-lbl">
+                {t("startup.popup.ecosystem.map.title")}
+              </FormLabel>
               {isEdit ? (
                 <Input
                   className="fm-ip-flds"
                   value={locationData["name"]}
-                  onChange={(e) =>{
+                  onChange={(e) => {
                     setLocationData({
                       ...locationData,
                       name: e.target.value,
-                    })
-                    //validateLocationData();
-                  } 
-                }
+                    });
+                  }}
                 />
               ) : (
                 <Input
@@ -301,30 +326,30 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
                 />
               )}
               <FormLabel className="md-ip-lbl" mt={4}>
-                {t('startup.popup.ecosystem.map.location')}
+                {t("startup.popup.ecosystem.map.location")}
               </FormLabel>
-              <RegionComponent
+              <SelectLocationComponent
                 locationData={locationData}
-                createMapCallback={createMapCallback}
+                onLocationChange={handleLocationChange}
                 regions={regions}
                 states={states}
                 countries={countries}
                 cities={cities}
               />
               <FormLabel className="md-ip-lbl" mt={4}>
-                {t('startup.popup.ecosystem.map.industry')}
+                {t("startup.popup.ecosystem.map.industry")}
               </FormLabel>
               <SelectIndustry
                 locationData={locationData}
-                createMapCallback={createMapCallback}
+                onIndustryChange={handleIndustryChange}
                 industries={industries}
-                subindustries={subindustries}
+                subIndustries={subIndustries}
               />
             </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button className="btn-cnl btn-fnt" onClick={onClose}>
-              {t('startup.popup.ecosystem.map.button.cancel')}
+              {t("startup.popup.ecosystem.map.button.cancel")}
             </Button>
             {isEdit ? (
               <Button
@@ -336,7 +361,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
                   EditMap();
                 }}
               >
-                {t('startup.popup.ecosystem.map.button.save')}
+                {t("startup.popup.ecosystem.map.button.save")}
               </Button>
             ) : (
               <Button
@@ -344,10 +369,10 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
                 colorScheme="blue"
                 mr={3}
                 m="0"
-                disabled = { !mapName ? true : false}
-                onClick={() => AddMap()}
+                disabled={!mapName}
+                onClick={handleAddMap}
               >
-                {t('startup.popup.map.button.create')}
+                {t("startup.popup.map.button.create")}
               </Button>
             )}
           </ModalFooter>
@@ -356,4 +381,5 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome}) => {
     </React.Fragment>
   );
 };
+
 export default withRouter(AddMapModal);
