@@ -28,6 +28,7 @@ import LabeledInputComponent from "../../../../basic/inputs/input/inputComponent
 import LabeledBudgetInputComponent from "../../../../basic/inputs/budget/LabeledBudgetInputComponent";
 import LabeledMultilineInputComponent from "../../../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import MenuComponent from "../../../../basic/inputs/menu/MenuComponent";
+import LocationComponent from "../../../../basic/location/LocationComponent";
 
 function ServiceTabs(props) {
   const { t } = useTranslation();
@@ -111,15 +112,9 @@ function ServiceTabs(props) {
             />
           </Box>
           <Box marginTop={mediumPadding}>
-            <LabeledInputComponent
-              tooltipText={t("mapping.canvas.form.location.tooltip")}
-              label={t("mapping.canvas.form.location")}
-              tooltipAriaLabel={t("mapping.canvas.form.location")}
-              placeholder={t("mapping.canvas.form.location.placeholder")}
-              value={props.formValue["serviceLocation"]}
-              onChange={(location) =>
-                (props.formValue["serviceLocation"] = location)
-              }
+            <LocationComponent
+              locations={props.locations}
+              onChange={(location) => (props.formValue["location"] = location)}
             />
           </Box>
           <Box marginTop={mediumPadding}>
