@@ -44,7 +44,13 @@ class Service {
           followingService
           previousService
           applicationType
-          serviceLocation
+          serviceLocation {
+            id
+            city
+            continent
+            country
+            region
+          }
           onlineService
           offlineService
           serviceStatus
@@ -112,7 +118,13 @@ class Service {
           applicationType
           serviceStartTime
           serviceEndTime
-          serviceLocation
+          serviceLocation {
+            id
+            continent
+            country
+            region
+            city
+          }
           serviceAudience
           serviceDescription
           serviceStatus
@@ -136,7 +148,14 @@ class Service {
         serviceStartTime: data.serviceStartTime,
         serviceEndTime: data.serviceEndTime,
         link: data.link,
-        serviceLocation: data.serviceLocation,
+        serviceLocation: {
+          create: {
+            continent: data.serviceLocation.continent,
+            country: data.serviceLocation.country,
+            region: data.serviceLocation.region,
+            city: data.serviceLocation.city,
+          },
+        },
         serviceAudience: data.audience,
         serviceDescription: data.description,
         serviceOutcomes: data.outcomes,
