@@ -14,7 +14,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import styled from "styled-components";
-import { FilterAlt, HomeAlt } from "@styled-icons/boxicons-regular";
+import { HomeAlt } from "@styled-icons/boxicons-regular";
 import { Grid, SortDownAlt } from "@styled-icons/bootstrap";
 
 import ButtonComponent from "../../basic/Buttons/ButtonComponent";
@@ -140,16 +140,8 @@ function NavigationBar(props) {
               )}
             </HStack>
           )}
-          {/* Display for the ecosystem map (button filter)*/}
-          {!props.isMapDashboard && (
-            <ButtonComponent
-              padding={`0 0 0 ${mediumPadding}`}
-              isWithoutBorder={!props.isFilterOpen}
-              buttonText={t("mapping.navigation.bar.filter.button")}
-              icon={<FilterAlt size="20" title="Filter" />}
-              onClick={props.onFilterClick}
-            />
-          )}
+          {/* Button located to the left side of the primary button (filter for the canvas page */}
+          {props.additionalButtons}
           {/* Primary button */}
           {props.button}
           <MyDivider />
