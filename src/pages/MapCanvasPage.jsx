@@ -209,7 +209,9 @@ function MapCanvasPage(props) {
       res.data.forEach((item) => {
         tempLocations.push({
           id: item.id,
-          name: item.name,
+          continent: item.region,
+          country: item.name,
+          regions: item.states,
         });
       });
       tempLocations.pop();
@@ -481,6 +483,7 @@ function MapCanvasPage(props) {
       audiences={fetchedAudiences}
       fetchedData={[fetchedData, setFetchedData]}
       services={services}
+      locations={fetchedLocation}
       mapId={props.mapId}
     />
   );
@@ -577,6 +580,7 @@ function MapCanvasPage(props) {
           audiences={fetchedAudiences}
           fetchedData={[fetchedData, setFetchedData]}
           services={services}
+          location={fetchedLocation}
           mapId={props.mapId}
           serviceWithoutModification={serviceWithoutModification}
         />
