@@ -17,16 +17,16 @@ function LocationComponent(props) {
   const [countryList, setCountryList] = useState(initialCountryList);
   const [regionList, setRegionList] = useState(initialRegionList);
   const [cityList, setCityList] = useState(initialCityList);
-  const [location, setLocation] = useState([
-    continentList[0].name,
-    countryList[0].name,
-    regionList[0].name,
-    cityList[0].name,
-  ]);
+  const [location, setLocation] = useState({
+    continent: continentList[0].name,
+    country: countryList[0].name,
+    region: regionList[0].name,
+    city: cityList[0].name,
+  });
   // Creation of these variables to avoid warning for the useEffect dependencies
-  const continent = location[0];
-  const country = location[1];
-  const region = location[2];
+  const continent = location.continent;
+  const country = location.country;
+  const region = location.region;
 
   useEffect(() => {
     props.onChange(location);
@@ -63,6 +63,7 @@ function LocationComponent(props) {
           (country) => country.name === country.country
         );
 
+        // Create the list of country
         if (!containsCountry) {
           tempCountryList.push({
             id: tempCountryList.length,
@@ -90,6 +91,7 @@ function LocationComponent(props) {
           (country) => country.name === country.country
         );
 
+        // Add to the list of region
         if (!containsRegion) {
           tempRegionList.push({
             id: tempRegionList.length,
@@ -111,6 +113,7 @@ function LocationComponent(props) {
       (thisRegion) => thisRegion.name === region
     );
 
+    // Add to the list of cities
     if (thisRegion.cities) {
       thisRegion.cities.forEach((city) => {
         const containsCity = tempCityList.some(
@@ -130,32 +133,32 @@ function LocationComponent(props) {
   }, [region, props.locations, regionList]);
 
   function handleContinentChange(continent) {
-    const tempLocation = [...location];
-    tempLocation[0] = continent;
-    tempLocation[1] = countryList[0].name;
-    tempLocation[2] = regionList[0].name;
-    tempLocation[3] = cityList[0].name;
+    const tempLocation = { ...location };
+    tempLocation.continent = continent;
+    tempLocation.country = countryList[0].name;
+    tempLocation.region = regionList[0].name;
+    tempLocation.city = cityList[0].name;
     setLocation(tempLocation);
   }
 
   function handleCountryChange(country) {
-    const tempLocation = [...location];
-    tempLocation[1] = country;
-    tempLocation[2] = regionList[0].name;
-    tempLocation[3] = cityList[0].name;
+    const tempLocation = { ...location };
+    tempLocation.country = country;
+    tempLocation.region = regionList[0].name;
+    tempLocation.city = cityList[0].name;
     setLocation(tempLocation);
   }
 
   function handleRegionChange(region) {
-    const tempLocation = [...location];
-    tempLocation[2] = region;
-    tempLocation[3] = cityList[0].name;
+    const tempLocation = { ...location };
+    tempLocation.region = region;
+    tempLocation.city = cityList[0].name;
     setLocation(tempLocation);
   }
 
   function handleCityChange(city) {
-    const tempLocation = [...location];
-    tempLocation[3] = city;
+    const tempLocation = { ...location };
+    tempLocation.city = city;
     setLocation(tempLocation);
   }
 
@@ -168,35 +171,35 @@ function LocationComponent(props) {
       />
       <HStack justifyContent="space-between">
         <SmallLabelLocation
-          label={"Continent"}
+          label={t("common.continent")}
           items={continentList}
-          item={location[0]}
+          item={location.continent}
           onChange={(region) => handleContinentChange(region)}
         />
         <SmallLabelLocation
-          label={"Country"}
+          label={t("common.country")}
           wantScroll={true}
-          isDisabled={location[0] === continentList[0].name}
+          isDisabled={location.continent === continentList[0].name}
           items={countryList}
-          item={location[1]}
+          item={location.country}
           onChange={(country) => handleCountryChange(country)}
         />
         <SmallLabelLocation
-          label={"Region"}
+          label={t("common.region")}
           wantScroll={true}
-          isDisabled={location[1] === countryList[0].name}
+          isDisabled={location.country === countryList[0].name}
           items={regionList}
-          item={location[2]}
+          item={location.region}
           onChange={(region) => handleRegionChange(region)}
         />
         <SmallLabelLocation
-          label={"City"}
+          label={t("common.city")}
           wantScroll={true}
           isDisabled={
-            location[2] === regionList[0].name || cityList.length === 1
+            location.region === regionList[0].name || cityList.length === 1
           }
           items={cityList}
-          item={location[3]}
+          item={location.city}
           onChange={(city) => handleCityChange(city)}
         />
       </HStack>

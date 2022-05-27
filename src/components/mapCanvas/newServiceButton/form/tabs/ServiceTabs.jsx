@@ -113,8 +113,11 @@ function ServiceTabs(props) {
           </Box>
           <Box marginTop={mediumPadding}>
             <LocationComponent
+              value={props.formValue["serviceLocation"]}
               locations={props.locations}
-              onChange={(location) => (props.formValue["location"] = location)}
+              onChange={(location) =>
+                (props.formValue["serviceLocation"] = location)
+              }
             />
           </Box>
           <Box marginTop={mediumPadding}>

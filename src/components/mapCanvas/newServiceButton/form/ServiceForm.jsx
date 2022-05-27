@@ -54,7 +54,12 @@ function ServiceForm(props) {
     serviceEndTime: new Date(),
     link: "",
     audience: props.audiences[0].name,
-    serviceLocation: "",
+    serviceLocation: {
+      continent: "",
+      country: "",
+      region: "",
+      city: "",
+    },
     budgets: [{ name: "", value: "", currency: "€" }],
 
     description: "",
@@ -88,7 +93,12 @@ function ServiceForm(props) {
     formValue["serviceLocation"] = props.serviceWithoutModification
       .serviceLocation
       ? props.serviceWithoutModification.serviceLocation
-      : "";
+      : {
+          continent: "",
+          country: "",
+          region: "",
+          city: "",
+        };
     formValue["link"] = props.serviceWithoutModification.link
       ? props.serviceWithoutModification.link
       : "";
@@ -137,6 +147,19 @@ function ServiceForm(props) {
 
     const order =
       props.fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+
+    if (formValue["serviceLocation"].continent === "Continent") {
+      formValue["serviceLocation"].continent = null;
+    }
+    if (formValue["serviceLocation"].country === "Country") {
+      formValue["serviceLocation"].country = null;
+    }
+    if (formValue["serviceLocation"].region === "Region") {
+      formValue["serviceLocation"].region = null;
+    }
+    if (formValue["serviceLocation"].city === "City") {
+      formValue["serviceLocation"].city = null;
+    }
 
     const data = {
       serviceName: formValue["serviceName"],

@@ -580,7 +580,7 @@ function MapCanvasPage(props) {
           audiences={fetchedAudiences}
           fetchedData={[fetchedData, setFetchedData]}
           services={services}
-          location={fetchedLocation}
+          locations={fetchedLocation}
           mapId={props.mapId}
           serviceWithoutModification={serviceWithoutModification}
         />
