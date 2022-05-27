@@ -41,6 +41,7 @@ function NewServiceButton(props) {
         organisations={props.organisations}
         audiences={props.audiences}
         services={props.services}
+        locations={props.locations}
         mapId={props.mapId}
       />
     </React.Fragment>
