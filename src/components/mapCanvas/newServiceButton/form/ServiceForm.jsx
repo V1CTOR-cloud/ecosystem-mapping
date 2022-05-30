@@ -25,7 +25,7 @@ import {
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
 import ServiceTabs from "./tabs/ServiceTabs";
-import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
 import Service from "../../../../service/EcosystemMapServices";
 import toastComponent from "../../../basic/ToastComponent";

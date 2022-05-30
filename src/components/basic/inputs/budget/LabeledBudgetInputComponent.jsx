@@ -5,7 +5,7 @@ import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
 import InputComponent from "../input/inputComponent/InputComponent";
-import IconButtonComponent from "../../Buttons/IconButtonComponent";
+import IconButtonComponent from "../../buttons/IconButtonComponent";
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import {
   greyColor,

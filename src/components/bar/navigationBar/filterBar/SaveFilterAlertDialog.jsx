@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
-import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import {
   greyTextColor,
   mediumPadding,
