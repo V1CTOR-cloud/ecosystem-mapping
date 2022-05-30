@@ -148,18 +148,7 @@ function ServiceForm(props) {
         const order =
             props.fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
 
-        if (formValue["serviceLocation"].continent === "Continent") {
-            formValue["serviceLocation"].continent = null;
-        }
-        if (formValue["serviceLocation"].country === "Country") {
-            formValue["serviceLocation"].country = null;
-        }
-        if (formValue["serviceLocation"].region === "Region") {
-            formValue["serviceLocation"].region = null;
-        }
-        if (formValue["serviceLocation"].city === "City") {
-            formValue["serviceLocation"].city = null;
-        }
+        formatLocation();
 
         const data = {
             serviceName: formValue["serviceName"],
@@ -286,6 +275,8 @@ function ServiceForm(props) {
                 props.fetchedData[0].rows[formValue["applicationType"]].serviceIds
                     .length;
         }
+
+        formatLocation();
 
         const data = {
             id: props.serviceWithoutModification.id,
@@ -440,6 +431,21 @@ function ServiceForm(props) {
                     break;
                 }
             }
+        }
+    }
+
+    function formatLocation() {
+        if (formValue["serviceLocation"].continent === "Continent") {
+            formValue["serviceLocation"].continent = null;
+        }
+        if (formValue["serviceLocation"].country === "Country") {
+            formValue["serviceLocation"].country = null;
+        }
+        if (formValue["serviceLocation"].region === "Region") {
+            formValue["serviceLocation"].region = null;
+        }
+        if (formValue["serviceLocation"].city === "City") {
+            formValue["serviceLocation"].city = null;
         }
     }
 
