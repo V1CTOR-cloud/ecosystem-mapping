@@ -60,8 +60,7 @@ const data = {
       id: organization,
       serviceIds: [],
     },
-  },
-  // Reordering of the columns (the easiest way)
+  }, // Reordering of the columns (the easiest way)
   rowsOrder: [market, market_and_organization, organization],
 };
 
@@ -293,7 +292,19 @@ function MapCanvasPage(props) {
                     filterBool[index] = true;
                   }
                 } else if (filter.id === 4) {
-                  if (service[filterName].includes(item.name.toLowerCase())) {
+                  const serviceLocation = service[filterName];
+                  const thisLocation =
+                    serviceLocation.continent +
+                    " " +
+                    serviceLocation.country +
+                    " " +
+                    serviceLocation.region +
+                    " " +
+                    serviceLocation.city;
+
+                  if (
+                    thisLocation.toLowerCase().includes(item.name.toLowerCase())
+                  ) {
                     filterBool[index] = true;
                   }
                 }
@@ -379,11 +390,66 @@ function MapCanvasPage(props) {
       });
     }
 
-    if (fetchedLocation) {
-      fetchedLocation.forEach((location) => {
-        tempLocation.push({ name: location.name, value: false });
+    if (fetchedData) {
+      const serviceArray = Object.values(fetchedData.services);
+      serviceArray.forEach((service) => {
+        if (service.serviceLocation.continent !== null) {
+          let locationToAdd = service.serviceLocation.continent;
+
+          // Check if we have already the continent that exist in the list
+          const locationExist = isLocationExistInList(
+            locationToAdd,
+            tempLocation
+          );
+          if (!locationExist) {
+            tempLocation.push({
+              name: service.serviceLocation.continent,
+              value: false,
+            });
+          }
+
+          if (service.serviceLocation.country !== null) {
+            locationToAdd += " " + service.serviceLocation.country;
+
+            // Check if we have already the continent + country that exist in the list
+            const locationExist = isLocationExistInList(
+              locationToAdd,
+              tempLocation
+            );
+            if (!locationExist) {
+              tempLocation.push({ name: locationToAdd, value: false });
+            }
+
+            if (service.serviceLocation.region !== null) {
+              locationToAdd += " " + service.serviceLocation.region;
+
+              // Check if we have already the continent + country + region that exist in the list
+              const locationExist = isLocationExistInList(
+                locationToAdd,
+                tempLocation
+              );
+              if (!locationExist) {
+                tempLocation.push({ name: locationToAdd, value: false });
+              }
+              if (service.serviceLocation.city !== null) {
+                locationToAdd += " " + service.serviceLocation.city;
+
+                // Check if we have already the continent + country + region + city that exist in the list
+                const locationExist = isLocationExistInList(
+                  locationToAdd,
+                  tempLocation
+                );
+                if (!locationExist) {
+                  tempLocation.push({ name: locationToAdd, value: false });
+                }
+              }
+            }
+          }
+        }
       });
     }
+    // Sort alphabetically
+    tempLocation.sort((a, b) => a.name.localeCompare(b.name));
 
     if (fetchedAudiences) {
       fetchedAudiences.forEach((audience) => {
@@ -409,7 +475,14 @@ function MapCanvasPage(props) {
     initialFilters[5].items = tempAudience;
     initialFilters[6].items = tempBudget;
     setFilters(initialFilters);
-  }, [isDataLoaded]);
+  }, [isDataLoaded, fetchedData]);
+
+  function isLocationExistInList(location, list) {
+    const checkLocationExist = list.find(
+      (thisLocation) => thisLocation.name === location
+    );
+    return checkLocationExist !== undefined;
+  }
 
   function sortServices(fetchedData) {
     let sortedData = data;
