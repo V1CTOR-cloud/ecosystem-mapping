@@ -6,6 +6,7 @@ import { blueColor, greyColor } from "../../../../../helper/constant";
 
 function NumberInputComponent(props) {
   const [value, setValue] = useState(props.value);
+  const regex = RegExp("^(0|[1-9]\\d*)(\\.\\d*)?$");
 
   useEffect(() => {
     if (props.isBudget === true) {
@@ -14,17 +15,17 @@ function NumberInputComponent(props) {
   });
 
   function handleOnChange(value) {
-    setValue(value);
-    props.onChange(value);
+    // Use the regex to avoid the scientific number (with an e)
+    if (regex.test(value) || value === "") {
+      setValue(value);
+      props.onChange(value);
+    }
   }
 
   return (
-    <NumberInput
-      value={value}
-      inputMode="numeric"
-      onChange={(value) => handleOnChange(value)}
-    >
+    <NumberInput value={value} onChange={(value) => handleOnChange(value)}>
       <NumberInputField
+        precision={2}
         placeholder={props.placeholder}
         size="md"
         border={`2px solid`}
