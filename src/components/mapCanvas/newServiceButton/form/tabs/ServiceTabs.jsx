@@ -107,8 +107,8 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.link")}
               tooltipAriaLabel={t("mapping.canvas.form.link")}
               placeholder={t("mapping.canvas.form.link.placeholder")}
-              value={props.formValue["link"]}
-              onChange={(link) => (props.formValue["link"] = link)}
+              value={props.formValue["serviceLink"]}
+              onChange={(link) => (props.formValue["serviceLink"] = link)}
             />
           </Box>
           <Box marginTop={mediumPadding}>
@@ -135,8 +135,10 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.budget")}
               tooltipText={t("mapping.canvas.form.budget.tooltip")}
               tooltipAriaLabel={t("mapping.canvas.form.budget")}
-              budgets={props.formValue["budgets"]}
-              onChange={(budgets) => (props.formValue["budgets"] = budgets)}
+              budgets={props.formValue["serviceBudget"]}
+              onChange={(budgets) =>
+                (props.formValue["serviceBudget"] = budgets)
+              }
             />
           </Box>
         </TabPanel>
@@ -146,9 +148,9 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.description")}
             tooltipAriaLabel={t("mapping.canvas.form.description")}
             placeholder={t("mapping.canvas.form.description.placeholder")}
-            value={props.formValue["description"]}
+            value={props.formValue["serviceDescription"]}
             onChange={(description) =>
-              (props.formValue["description"] = description)
+              (props.formValue["serviceDescription"] = description)
             }
           />
           <Box paddingTop={smallPadding}>
@@ -157,8 +159,10 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.outcomes")}
               tooltipAriaLabel={t("mapping.canvas.form.outcomes")}
               placeholder={t("mapping.canvas.form.outcomes.placeholder")}
-              value={props.formValue["outcomes"]}
-              onChange={(outcomes) => (props.formValue["outcomes"] = outcomes)}
+              value={props.formValue["serviceOutcomes"]}
+              onChange={(outcomes) =>
+                (props.formValue["serviceOutcomes"] = outcomes)
+              }
             />
           </Box>
           {props.services.length >= 2 ? (
