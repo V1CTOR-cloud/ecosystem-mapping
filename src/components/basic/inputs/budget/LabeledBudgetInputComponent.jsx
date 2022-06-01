@@ -27,7 +27,7 @@ function LabeledBudgetInputComponent(props) {
 
   function handleAddOrRemoveBudget(index) {
     const tempBudgets = Array.from(budgets);
-    if (index === props.budgets.length - 1) {
+    if (index === budgets.length - 1) {
       tempBudgets.push({
         budgetTitle: "",
         budgetValue: "",
@@ -124,7 +124,7 @@ function LabeledBudgetInputComponent(props) {
                 width="15px"
                 onClick={() => handleAddOrRemoveBudget(index)}
                 icon={
-                  index === props.budgets.length - 1 ? (
+                  index === budgets.length - 1 ? (
                     <AddIcon color={greyColor} />
                   ) : (
                     <CloseIcon color={greyColor} />
