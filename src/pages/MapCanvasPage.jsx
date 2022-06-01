@@ -269,15 +269,19 @@ function MapCanvasPage(props) {
               // The item is selected so, we add all element corresponding to that
               if (item.value) {
                 if (filter.id === 1 || filter.id === 3 || filter.id === 5) {
-                  if (
-                    service[filterName].replaceAll("_", "").toLowerCase() ===
-                    item.name.replaceAll(" ", "").toLowerCase()
-                  ) {
-                    filterBool[index] = true;
+                  if (service[filterName]) {
+                    if (
+                      service[filterName].replaceAll("_", "").toLowerCase() ===
+                      item.name.replaceAll(" ", "").toLowerCase()
+                    ) {
+                      filterBool[index] = true;
+                    }
                   }
                 } else if (filter.id === 2) {
-                  if (service[filterName][0].organisationName === item.name) {
-                    filterBool[index] = true;
+                  if (service[filterName].length !== 0) {
+                    if (service[filterName][0].organisationName === item.name) {
+                      filterBool[index] = true;
+                    }
                   }
                 } else if (filter.id === 4) {
                   const serviceLocation = service[filterName];
@@ -295,6 +299,24 @@ function MapCanvasPage(props) {
                   ) {
                     filterBool[index] = true;
                   }
+                } else if (filter.id === 6) {
+                  service.serviceBudget.forEach((budget) => {
+                    if (item.name !== "+10000") {
+                      const filtersValues = item.name.split("-");
+                      if (
+                        budget.budgetValue >= parseFloat(filtersValues[0]) &&
+                        budget.budgetValue <= parseFloat(filtersValues[1]) &&
+                        budget.budgetValue !== 0
+                      ) {
+                        filterBool[index] = true;
+                      }
+                    } else {
+                      const filterValue = item.name.substring(1);
+                      if (budget.budgetValue >= parseFloat(filterValue)) {
+                        filterBool[index] = true;
+                      }
+                    }
+                  });
                 }
               }
             });
