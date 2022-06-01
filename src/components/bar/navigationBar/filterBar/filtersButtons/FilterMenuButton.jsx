@@ -36,8 +36,12 @@ function FilterMenuButton(props) {
   const [isButtonActive, setIsButtonActive] = useState(false);
 
   useEffect(() => {
-    // Check if the button is active to every change in the component
-    setIsButtonActive(filter.items.some((item) => item.value === true));
+    function setButtonActive() {
+      // Check if the button is active to every change in the component
+      setIsButtonActive(filter.items.some((item) => item.value === true));
+    }
+
+    setButtonActive();
   });
 
   // Update the filters (when we add a new location for instance)

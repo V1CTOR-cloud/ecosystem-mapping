@@ -94,7 +94,6 @@ function LabeledBudgetInputComponent(props) {
               <InputComponent
                 value={budget.budgetTitle}
                 placeholder={t("mapping.canvas.form.budget.title.placeholder")}
-                isBudget={true}
                 onChange={(budgetTitle) =>
                   handleBudgetTitleChange(budgetTitle, index)
                 }
@@ -105,7 +104,6 @@ function LabeledBudgetInputComponent(props) {
               <NumberInputComponent
                 value={budget.budgetValue}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
-                isBudget={true}
                 onChange={(budgetValue) =>
                   handleBudgetValueChange(budgetValue, index)
                 }

@@ -161,7 +161,7 @@ function MapCanvasPage(props) {
     setContainerHeight(fullHeight);
   }, [heights, isOpenFilter]);
 
-  // Fetch all the data required to display the page with all the information.
+  // Fetch all the data required to display the page with all the information need to be trigger only once.
   useEffect(() => {
     const fetchData = async () => {
       // Get the name of the
@@ -214,7 +214,7 @@ function MapCanvasPage(props) {
     };
 
     fetchData().then(() => setIsDataLoaded(true));
-  }, [props.mapId]);
+  }, [props.mapId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the secondary list at each new service or service update
   // In addition we update the sidebar
@@ -234,7 +234,7 @@ function MapCanvasPage(props) {
         }
       });
     }
-  }, [fetchedData]);
+  }, [archivedData, draftData, fetchedData, isDataLoaded]);
 
   // Each modification in the filters, we update our secondaryList to display the right data
   useEffect(() => {
@@ -364,7 +364,7 @@ function MapCanvasPage(props) {
     } else {
       setSecondaryFetchedData(fetchedData);
     }
-  }, [filters]);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
@@ -483,7 +483,7 @@ function MapCanvasPage(props) {
     initialFilters[5].items = tempAudience;
     initialFilters[6].items = tempBudget;
     setFilters(initialFilters);
-  }, [isDataLoaded, fetchedData]);
+  }, [isDataLoaded, fetchedData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function isLocationExistInList(location, list) {
     const checkLocationExist = list.find(
