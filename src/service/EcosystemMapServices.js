@@ -28,8 +28,11 @@ class Service {
           stage
           serviceDescription
           serviceOutcomes
-          fromPhase
-          toPhase
+          servicePhaseRange {
+            id
+            endPhase
+            startPhase
+          }
           serviceLink
           serviceBudget
           serviceAudience
@@ -122,8 +125,11 @@ class Service {
           serviceOutcomes
           previousService
           followingService
-          fromPhase
-          toPhase
+          servicePhaseRange {
+            id
+            endPhase
+            startPhase
+          }
           order
         }
       }`;
@@ -132,9 +138,12 @@ class Service {
       data: {
         serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
-        serviceOwner: {
-          connect: [{ Organisation: { id: data.organisationId } }],
-        },
+        serviceOwner:
+          data.organisationId === null
+            ? null
+            : {
+                connect: [{ Organisation: { id: data.organisationId } }],
+              },
         applicationType: data.applicationType,
         serviceStartTime: data.serviceStartTime,
         serviceEndTime: data.serviceEndTime,
@@ -148,13 +157,17 @@ class Service {
           },
         },
         serviceBudget: data.serviceBudget,
-        serviceAudience: data.audience,
+        serviceAudience: data.serviceAudience,
         serviceDescription: data.serviceDescription,
         serviceOutcomes: data.serviceOutcomes,
         previousService: data.precededService,
         followingService: data.followedService,
-        fromPhase: data.fromPhase,
-        toPhase: data.toPhase,
+        servicePhaseRange: {
+          create: {
+            startPhase: data.servicePhaseRange.startPhase,
+            endPhase: data.servicePhaseRange.endPhase,
+          },
+        },
         order: data.order,
 
         ecosystemMap: { connect: { id: data.mapId } },
@@ -219,8 +232,11 @@ class Service {
             serviceStatus
             previousService
             followingService
-            fromPhase
-            toPhase
+            servicePhaseRange {
+              id
+              endPhase
+              startPhase
+            }
             order
         }
     }`;
@@ -236,7 +252,9 @@ class Service {
       }`;
 
     let serviceOwner;
-    if (data.organisationIdWithoutModification === data.organisationId) {
+    if (data.organisationId === null) {
+      serviceOwner = null;
+    } else if (data.organisationIdWithoutModification === data.organisationId) {
       serviceOwner = {};
     } else {
       serviceOwner = {
@@ -273,21 +291,26 @@ class Service {
           },
         },
         serviceBudget: data.serviceBudget,
-        serviceAudience: data.audience,
+        serviceAudience: data.serviceAudience,
         serviceDescription: data.serviceDescription,
         serviceOutcomes: data.serviceOutcomes,
         previousService: data.precededService,
         followingService: data.followedService,
-        fromPhase: data.fromPhase,
-        toPhase: data.toPhase,
+        servicePhaseRange: {
+          update: {
+            where: { id: data.servicePhaseRange.id },
+            data: {
+              startPhase: data.servicePhaseRange.startPhase,
+              endPhase: data.servicePhaseRange.endPhase,
+            },
+          },
+        },
         order: data.order,
 
         ecosystemMap: { connect: { id: data.mapId } },
         serviceStatus: data.serviceStatus,
       },
     };
-
-    console.log(variables);
 
     const graphCMS = new GraphQLClient(graphCMSKey, {
       headers: {
@@ -316,16 +339,26 @@ class Service {
     const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
           serviceName
-          fromPhase
-          toPhase
+          servicePhaseRange {
+            id
+            endPhase
+            startPhase
+          }
         }
     }`;
 
     const variables = {
       id: data.id,
       data: {
-        fromPhase: data.fromPhase,
-        toPhase: data.toPhase,
+        servicePhaseRange: {
+          update: {
+            where: { id: data.servicePhaseRange.id },
+            data: {
+              startPhase: data.servicePhaseRange.startPhase,
+              endPhase: data.servicePhaseRange.endPhase,
+            },
+          },
+        },
       },
     };
 
@@ -368,23 +401,6 @@ class Service {
       organisations {
         id
         organisationName
-      }
-    }`;
-
-    const graphCMS = new GraphQLClient(graphCMSKey, {
-      headers: {
-        authorization: authorizationKey,
-      },
-    });
-
-    return await graphCMS.request(query);
-  }
-
-  async getAllAudiences() {
-    const query = `{
-      audiences {
-        id
-        audienceName
       }
     }`;
 
