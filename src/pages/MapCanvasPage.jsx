@@ -15,6 +15,7 @@ import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import FilterBar from "../components/bar/navigationBar/filterBar/FilterBar";
 import {
+  audienceList,
   greyColor,
   market,
   market_and_organization,
@@ -140,7 +141,6 @@ function MapCanvasPage(props) {
   const [fetchedData, setFetchedData] = useState(null);
   const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
-  const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [fetchedFilters, setFetchedFilters] = useState(null);
   const [fetchedLocation, setFetchedLocation] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -189,18 +189,6 @@ function MapCanvasPage(props) {
         })
       );
       setFetchedOrganization(tempOrganizations);
-
-      // Get all audiences
-      res = await Service.getAllAudiences();
-      const tempAudiences = [];
-      // Formatting our organisation to fit for the component LabeledMenu
-      res.audiences.forEach((audience) =>
-        tempAudiences.push({
-          id: audience.id,
-          name: audience.audienceName,
-        })
-      );
-      setFetchedAudiences(tempAudiences);
 
       // Get all locations
       res = await RegionService.listAllRegions();
@@ -451,11 +439,9 @@ function MapCanvasPage(props) {
     // Sort alphabetically
     tempLocation.sort((a, b) => a.name.localeCompare(b.name));
 
-    if (fetchedAudiences) {
-      fetchedAudiences.forEach((audience) => {
-        tempAudience.push({ name: audience.name, value: false });
-      });
-    }
+    audienceList.forEach((audience) => {
+      tempAudience.push({ name: audience.name, value: false });
+    });
 
     if (fetchedFilters) {
       fetchedFilters.forEach((filters) => {
@@ -553,7 +539,6 @@ function MapCanvasPage(props) {
       onClose={onCloseForm}
       onOpen={onOpenForm}
       organisations={fetchedOrganization}
-      audiences={fetchedAudiences}
       fetchedData={[fetchedData, setFetchedData]}
       services={services}
       locations={fetchedLocation}
@@ -650,7 +635,6 @@ function MapCanvasPage(props) {
           isOpen={isOpenFormEdition}
           onClose={onCloseFormEdition}
           organisations={fetchedOrganization}
-          audiences={fetchedAudiences}
           fetchedData={[fetchedData, setFetchedData]}
           services={services}
           locations={fetchedLocation}
