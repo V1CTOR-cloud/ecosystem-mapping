@@ -54,6 +54,7 @@ function FilterBar(props) {
     tempFilters[index] = filter;
     setValue("");
     setFilters(tempFilters);
+    setIsFilterApplied(false);
   }
 
   function handleApplyFilter() {
