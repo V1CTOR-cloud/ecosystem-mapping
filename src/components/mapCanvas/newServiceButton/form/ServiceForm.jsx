@@ -16,6 +16,7 @@ import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
 
 import {
+  audienceList,
   greyTextColor,
   market,
   market_and_organization,
@@ -43,17 +44,24 @@ function ServiceForm(props) {
   ];
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
+  const organisations = [
+    { id: 0, name: "Organisation" },
+    ...props.organisations,
+  ];
+  const audiences = [{ id: 0, name: "Audience" }, ...audienceList];
   const formValue = {
     serviceName: "",
     serviceFocus: service.servicesFocus[0],
-    ownerOrganisation: props.organisations[0].name,
+    ownerOrganisation: organisations[0].name,
     applicationType: applicationTypeButtons[0],
-    phases: [-1.0, 1.0],
-
+    servicePhaseRange: {
+      startPhase: -1.0,
+      endPhase: 1.0,
+    },
     serviceStartTime: new Date(),
     serviceEndTime: new Date(),
     serviceLink: "",
-    audience: props.audiences[0].name,
+    serviceAudience: audiences[0].name,
     serviceLocation: {
       continent: null,
       country: null,
@@ -77,14 +85,20 @@ function ServiceForm(props) {
         result.name.split(" ").join("") ===
         props.serviceWithoutModification.serviceFocus
     );
-    formValue["ownerOrganisation"] =
-      props.serviceWithoutModification.serviceOwner[0].organisationName;
+    formValue["ownerOrganisation"] = props.serviceWithoutModification
+      .serviceOwner
+      ? organisations[0].name
+      : props.serviceWithoutModification.serviceOwner[0].organisationName;
     formValue["applicationType"] =
       props.serviceWithoutModification.applicationType;
-    formValue["phases"] = [
-      replacePhaseToNumber(props.serviceWithoutModification.fromPhase),
-      replacePhaseToNumber(props.serviceWithoutModification.toPhase),
-    ];
+    formValue["servicePhaseRange"] = {
+      startPhase: replacePhaseToNumber(
+        props.serviceWithoutModification.servicePhaseRange.startPhase
+      ),
+      endPhase: replacePhaseToNumber(
+        props.serviceWithoutModification.servicePhaseRange.endPhase
+      ),
+    };
 
     // For the time we convert the data to the timeZone of the user because the data retrieve are in GMT+00:00
     formValue["serviceStartTime"] = timeZoneConvertor(
@@ -107,9 +121,10 @@ function ServiceForm(props) {
     formValue["serviceLink"] = props.serviceWithoutModification.serviceLink
       ? props.serviceWithoutModification.serviceLink
       : "";
-    formValue["audience"] = props.serviceWithoutModification.serviceAudience
-      .split("_")
-      .join(" ");
+    formValue["serviceAudience"] = props.serviceWithoutModification
+      .serviceAudience
+      ? props.serviceWithoutModification.serviceAudience
+      : audiences[0].name;
     formValue["serviceBudget"] = props.serviceWithoutModification.serviceBudget
       ? props.serviceWithoutModification.serviceBudget
       : [
@@ -151,17 +166,19 @@ function ServiceForm(props) {
 
   // Function that will send to the database the new service that was created (publish and draft)
   async function handleDraftOrPublishClick(serviceStatus) {
-    const organisationId = props.organisations.find(
-      (organisation) => formValue["ownerOrganisation"] === organisation.name
-    ).id;
+    formatLocation();
+    formatAudience();
+    formatOrganisation();
 
-    const fromPhase = replaceNumberToPhase(formValue["phases"][0]);
-    const toPhase = replaceNumberToPhase(formValue["phases"][1]);
+    let organisationId = null;
+    if (formValue["ownerOrganisation"] !== null) {
+      organisationId = props.organisations.find(
+        (organisation) => formValue["ownerOrganisation"] === organisation.name
+      ).id;
+    }
 
     const order =
       props.fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
-
-    formatLocation();
 
     const data = {
       serviceName: formValue["serviceName"],
@@ -174,7 +191,7 @@ function ServiceForm(props) {
       serviceEndTime: formValue["serviceEndTime"],
       serviceLink: formValue["serviceLink"],
       serviceLocation: formValue["serviceLocation"],
-      audience: formValue["audience"].split(" ").join("_"),
+      serviceAudience: formValue["serviceAudience"],
       serviceBudget: formValue["serviceBudget"],
       serviceDescription: formValue["serviceDescription"],
       serviceOutcomes: formValue["serviceOutcomes"],
@@ -186,15 +203,18 @@ function ServiceForm(props) {
         formValue["followedService"] === "Select a service"
           ? ""
           : formValue["followedService"],
-      fromPhase: fromPhase,
-      toPhase: toPhase,
+
+      servicePhaseRange: {
+        startPhase: replaceNumberToPhase(
+          formValue["servicePhaseRange"].startPhase
+        ),
+        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+      },
 
       mapId: props.mapId,
       serviceStatus: serviceStatus,
       order: order,
     };
-
-    console.log(data);
 
     await createNewService(data);
   }
@@ -252,20 +272,27 @@ function ServiceForm(props) {
   }
 
   async function handleUpdateClick(serviceStatus) {
-    // Retrieve the organisation id that we selected (modified or not)
-    const organisationId = props.organisations.find(
-      (organisation) => formValue["ownerOrganisation"] === organisation.name
-    ).id;
+    formatLocation();
+    formatAudience();
+    formatOrganisation();
 
-    // Retrieve the organisation id that was previously selected to disconnected it.
-    const organisationIdWithoutModification = props.organisations.find(
-      (organisation) =>
-        props.serviceWithoutModification.serviceOwner[0].organisationName ===
-        organisation.name
-    ).id;
+    let organisationId = null;
+    if (formValue["ownerOrganisation"] !== null) {
+      // Retrieve the organisation id that we selected (modified or not)
+      organisationId = props.organisations.find(
+        (organisation) => formValue["ownerOrganisation"] === organisation.name
+      ).id;
+    }
 
-    const fromPhase = replaceNumberToPhase(formValue["phases"][0]);
-    const toPhase = replaceNumberToPhase(formValue["phases"][1]);
+    let organisationIdWithoutModification;
+    if (props.serviceWithoutModification.serviceOwner.length !== 0) {
+      // Retrieve the organisation id that was previously selected to disconnected it.
+      organisationIdWithoutModification = props.organisations.find(
+        (organisation) =>
+          props.serviceWithoutModification.serviceOwner[0].organisationName ===
+          organisation.name
+      ).id;
+    }
 
     let order;
 
@@ -292,8 +319,6 @@ function ServiceForm(props) {
           .length;
     }
 
-    formatLocation();
-
     const data = {
       id: props.serviceWithoutModification.id,
 
@@ -304,8 +329,13 @@ function ServiceForm(props) {
         .replace("&", "and"),
       organisationId: organisationId,
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
-      fromPhase: fromPhase,
-      toPhase: toPhase,
+      servicePhaseRange: {
+        id: props.serviceWithoutModification.servicePhaseRange.id,
+        startPhase: replaceNumberToPhase(
+          formValue["servicePhaseRange"].startPhase
+        ),
+        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+      },
 
       // Second tabs
       serviceStartTime: formValue["serviceStartTime"],
@@ -315,7 +345,7 @@ function ServiceForm(props) {
         ...formValue["serviceLocation"],
         id: props.serviceWithoutModification.serviceLocation.id,
       },
-      audience: formValue["audience"].split(" ").join("_"),
+      serviceAudience: formValue["serviceAudience"],
       serviceBudget: formValue["serviceBudget"],
 
       // Third tabs
@@ -450,6 +480,7 @@ function ServiceForm(props) {
     }
   }
 
+  // Set to null when we have no location selected.
   function formatLocation() {
     if (formValue["serviceLocation"].continent === "Continent") {
       formValue["serviceLocation"].continent = null;
@@ -462,6 +493,20 @@ function ServiceForm(props) {
     }
     if (formValue["serviceLocation"].city === "City") {
       formValue["serviceLocation"].city = null;
+    }
+  }
+
+  // Set to null when we have no audience selected.
+  function formatAudience() {
+    if (formValue["serviceAudience"] === "Audience") {
+      formValue["serviceAudience"] = null;
+    }
+  }
+
+  // Set to null when we have no organisation selected.
+  function formatOrganisation() {
+    if (formValue["ownerOrganisation"] === "Organisation") {
+      formValue["ownerOrganisation"] = null;
     }
   }
 
@@ -517,9 +562,9 @@ function ServiceForm(props) {
             </HStack>
             <Box zIndex={10}>
               <ServiceTabs
-                organisations={props.organisations}
+                organisations={organisations}
                 applicationTypeButtons={applicationTypeButtons}
-                audiences={props.audiences}
+                audiences={audiences}
                 services={props.services}
                 locations={props.locations}
                 formValue={formValue}
