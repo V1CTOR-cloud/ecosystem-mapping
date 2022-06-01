@@ -1,0 +1,93 @@
+{
+  "servicesFocus": [
+    {
+      "id": 1,
+      "name": "Attract And Inspire",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#E85B5B",
+      "type": "serviceType",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 2,
+      "name": "Team Validation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#30663F",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 3,
+      "name": "Product Validation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#3B0CC1",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 4,
+      "name": "Idea Formation",
+      "status": "true",
+      "iscolor": "true",
+        "color": "#AE2977",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 5,
+      "name": "Business Model Creation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#044487",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 6,
+      "name": "Product Growth",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#4F2770",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 7,
+      "name": "Team Formation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#1F958E",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 8,
+      "name": "Product Creation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#992A2A",
+      "textColor": "#FFFFFF"
+    },
+    {
+      "id": 9,
+      "name": "Organisation Growth",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#FF9901",
+      "textColor": "#000000"
+    },
+    {
+      "id": 10,
+      "name": "Idea Validation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#F8CB2D",
+      "textColor": "#000000"
+    },
+    {
+      "id": 11,
+      "name": "Team Commitment Validation",
+      "status": "true",
+      "iscolor": "true",
+      "color": "#0088EA",
+      "textColor": "#FFFFFF"
+    }
+  ]
+}

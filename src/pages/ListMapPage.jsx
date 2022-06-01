@@ -1,27 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   Box,
-  Text,
+  Button,
   chakra,
-  Image,
   Grid,
+  Image,
   Menu,
   MenuButton,
   MenuList,
-  Button,
+  Text,
   WrapItem,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+
+import NavigationBar from "../components/bar/navigationBar/NavigationBar";
+import Service from "../service/RegionServices";
 import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
-import NavBar from "../components/miscellaneousComponents/NavBar";
-import dotsImg from "../../src/assets/images/3dots.png";
 import {
   AddMapModal,
   DeleteModal,
 } from "../components/miscellaneousComponents";
-import Service from "../service/RegionServices";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import dotsImg from "../../src/assets/images/3dots.png";
 
 const Card = chakra(Box, {
   baseStyle: {
@@ -32,6 +33,7 @@ const Card = chakra(Box, {
     rounded: "xl",
   },
 });
+
 const AkarIcon = chakra(Image, {
   baseStyle: {
     width: "65px",
@@ -39,9 +41,11 @@ const AkarIcon = chakra(Image, {
     position: "absolute",
   },
 });
+
 AkarIcon.defaultProps = {
   src: imgAkar,
 };
+
 const ImgDots = chakra(Image, {
   baseStyle: {
     width: "23px",
@@ -49,6 +53,7 @@ const ImgDots = chakra(Image, {
     marginTop: "15px",
   },
 });
+
 const CreateButton = chakra(Button, {
   baseStyle: {
     backgroundColor: "transparent !important",
@@ -59,6 +64,7 @@ const CreateButton = chakra(Button, {
     position: "unset",
   },
 });
+
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
     marginTop: "-10px",
@@ -67,42 +73,50 @@ const LogMenuList = chakra(MenuList, {
     boxShadow: "0px 20px 40px -2px rgba(34, 44, 47, 0.15) !important",
   },
 });
+
 const ListMapPage = () => {
-  const history=useHistory();
+  const history = useHistory();
   const { t } = useTranslation();
   const [data, setData] = useState([]);
-  useEffect(() => {
-    fetchAllEcoMaps();
-    Service.listAllRegions();
-    Service.listAllIndustries();
-  }, []);
-  const notified = () => {
-    fetchAllEcoMaps();
+
+  const handleMapChange = () => {
+    getAllEcoMaps();
   };
-  const fetchAllEcoMaps = () => {
+
+  const handleServiceClick = (id) => {
+    history.push({ pathname: "/services/" + id });
+  };
+
+  const getAllEcoMaps = () => {
     Service.getAllEcoMap().then((res) => {
       setData(res);
     });
   };
-  const handleServiceClick=(id)=>{
-    history.push({pathname:"/services/"+id})
-  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      getAllEcoMaps();
+      await Service.listAllRegions();
+      await Service.listAllIndustries();
+    };
+
+    fetchData().catch(console.error);
+  });
+
   return (
     <>
+      <NavigationBar
+        title={t("mapping.navigation.bar.map.dashboard.title")}
+        buttonText={t("mapping.navigation.bar.new.map.button")}
+        isMapDashboard={true}
+      />
       <Box className="wrapper">
-        <Grid className="topnav">
-          <NavBar/>
-          </Grid>
         <Text textAlign="center" mt="20px">
-        {t('startup.list.map.page.header')}
+          {t("startup.list.map.page.header")}
         </Text>
         <Grid templateColumns="repeat(5, 1fr)" gap={5} mt="20px">
           {data.map((data) => (
-            <Card
-              w="80%"
-              h="170"
-              cursor="pointer"
-            >
+            <Card w="80%" h="170" cursor="pointer">
               <WrapItem float="right" display="flex">
                 <Menu>
                   <MenuButton as={CreateButton}>
@@ -113,24 +127,29 @@ const ListMapPage = () => {
                       <AddMapModal
                         data={data}
                         isEdit={true}
-                        notifyParent={() => notified()}
+                        notifyParent={() => handleMapChange()}
                       />
                       <DeleteModal
-                        notifyParent={() => notified()}
+                        notifyParent={() => handleMapChange()}
                         id={data.id}
                       />
                     </Box>
                   </LogMenuList>
                 </Menu>
               </WrapItem>
-              <Box marginTop="15px" padding="20px" onClick={() => handleServiceClick(data.id)} textOverflow="ellipsis">
+              <Box
+                marginTop="15px"
+                padding="20px"
+                onClick={() => handleServiceClick(data.id)}
+                textOverflow="ellipsis"
+              >
                 <Box fontWeight="bold"> {data.name}</Box>
                 <Box>
                   <span>{data.region}</span>
-                  <br/>
+                  <br />
                   <span>{data.country}</span>
-                  <br/>
-                  <span>{data.state}</span>  
+                  <br />
+                  <span>{data.state}</span>
                 </Box>
               </Box>
             </Card>
@@ -146,7 +165,7 @@ const ListMapPage = () => {
               textAlign="center"
               marginTop="15px"
             >
-              {t('startup.list.map.page.add.map.card')}
+              {t("startup.list.map.page.add.map.card")}
             </Text>
           </Card>
         </Grid>
@@ -155,4 +174,4 @@ const ListMapPage = () => {
   );
 };
 
-export { ListMapPage };
+export default ListMapPage;

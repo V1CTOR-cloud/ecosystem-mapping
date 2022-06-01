@@ -1,37 +1,21 @@
-import { auth } from "../Firebase/firebase";
-import { GoogleAuthProvider,signInWithPopup } from "firebase/auth";
-import Services from "./EcosystemMapServices";
+import Logo from "../assets/images/Logo.png";
 
-function signInWithGoogle(callback){
-    let google_provider = new GoogleAuthProvider();
-      signInWithPopup(auth,google_provider)
-      .then((res) => {      
-       Services.addUser(res)
-        callback(true)
-      })
-      .catch((err) => {
-        console.log(err);
-        callback(false)
-      });
+function isLoggedIn() {
+  return !!JSON.parse(sessionStorage.getItem("user"));
 }
-function isLoggedIn(){
-   let user =  JSON.parse(sessionStorage.getItem("user"))
-   if(user){
-       return true
-   }
-   return false
+
+function getCurrentUser() {
+  let user = JSON.parse(sessionStorage.getItem("user"));
+  if (user) {
+    if (!user.profileImage.url) {
+      user.profileImage = {
+        url: Logo,
+      };
+      sessionStorage.setItem("user", JSON.stringify(user));
+    }
+    return user;
+  }
+  return null;
 }
-function userLogOut(){
-  auth.signOut();
-  sessionStorage.removeItem("user");
-}
-function getCurrentUser(){
-  let user =  JSON.parse(sessionStorage.getItem("user"))
-  if(user){
-    return user
-}
-return null
-}
-export{
-    signInWithGoogle,isLoggedIn,userLogOut,getCurrentUser
-}
+
+export { isLoggedIn, getCurrentUser };
