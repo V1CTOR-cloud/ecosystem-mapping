@@ -1,7 +1,7 @@
 import React from "react";
 
 import styled from "styled-components";
-import { Handles, Slider, Tracks } from "react-compound-slider";
+import { Handles, Rail, Slider, Tracks } from "react-compound-slider";
 import { Draggable } from "react-beautiful-dnd";
 import { Box } from "@chakra-ui/react";
 
@@ -69,6 +69,22 @@ function ServiceContainer(props) {
     }
   }
 
+  function onClick(getEventData, service) {
+    document.addEventListener(
+      "click",
+      (e) => displayPosition(e, getEventData, service),
+      {
+        once: true,
+      }
+    );
+  }
+
+  function displayPosition(e, getEventData, service) {
+    console.log(getEventData(e).value);
+    console.log(service.order);
+    console.log(service.applicationType);
+  }
+
   return (
     <Draggable
       draggableId={props.service.id}
@@ -96,21 +112,17 @@ function ServiceContainer(props) {
             mode={2}
             onSlideEnd={() => handleSlideEnd(sourceValue, targetValue)}
           >
-            {/*<Rail>*/}
-            {/*  {({ getEventData }) => (*/}
-            {/*    <Box*/}
-            {/*      cursor={"pointer"}*/}
-            {/*      position={"absolute"}*/}
-            {/*      w={"100%"}*/}
-            {/*      h="30px"*/}
-            {/*      bg={"#78a787"}*/}
-            {/*      _hover={{*/}
-            {/*        backgroundColor: "#454554",*/}
-            {/*      }}*/}
-            {/*      onClick={(e) => console.log({ ...getEventData(e) })}*/}
-            {/*    />*/}
-            {/*  )}*/}
-            {/*</Rail>*/}
+            <Rail>
+              {({ getEventData }) => (
+                <Box
+                  cursor={"pointer"}
+                  position={"absolute"}
+                  w={"100%"}
+                  h="30px"
+                  onClick={() => onClick(getEventData, props.service)}
+                />
+              )}
+            </Rail>
             <Handles>
               {({ handles, getHandleProps }) => (
                 <Box>
@@ -147,25 +159,6 @@ function ServiceContainer(props) {
                 </Box>
               )}
             </Tracks>
-            {/*TODO check if we can retrieve the postion where we just clicked*/}
-            {/*<Tracks right={false} left={false}>*/}
-            {/*  {({ tracks, getTrackProps }) => (*/}
-            {/*    <Box>*/}
-            {/*      {tracks.map(({ id, source }) => {*/}
-            {/*        return (*/}
-            {/*          <Box*/}
-            {/*            key={id}*/}
-            {/*            bg={"#45a454"}*/}
-            {/*            position="absolute"*/}
-            {/*            height="30px"*/}
-            {/*            w={`calc(${source.percent}%)`}*/}
-            {/*            onClick={(e) => console.log(getTrackProps)}*/}
-            {/*          />*/}
-            {/*        );*/}
-            {/*      })}*/}
-            {/*    </Box>*/}
-            {/*  )}*/}
-            {/*</Tracks>*/}
           </Slider>
         </ServiceLineContainer>
       )}
