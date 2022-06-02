@@ -33,18 +33,27 @@ const sliderStyle = {
 function ServiceContainer(props) {
   const { t } = useTranslation();
 
-  let sourceValue = replacePhaseToNumber(props.service.fromPhase);
-  let targetValue = replacePhaseToNumber(props.service.toPhase);
+  let sourceValue = replacePhaseToNumber(
+    props.service.servicePhaseRange.startPhase
+  );
+  let targetValue = replacePhaseToNumber(
+    props.service.servicePhaseRange.endPhase
+  );
 
   async function handleSlideEnd(sourceValue, targetValue) {
     // Update the model everytime we resize it.
-    props.service.fromPhase = replaceNumberToPhase(sourceValue);
-    props.service.toPhase = replaceNumberToPhase(targetValue);
+    props.service.servicePhaseRange.startPhase =
+      replaceNumberToPhase(sourceValue);
+    props.service.servicePhaseRange.endPhase =
+      replaceNumberToPhase(targetValue);
 
     const dataToUpdate = {
       id: props.service.id,
-      fromPhase: props.service.fromPhase,
-      toPhase: props.service.toPhase,
+      servicePhaseRange: {
+        id: props.service.servicePhaseRange.id,
+        startPhase: props.service.servicePhaseRange.startPhase,
+        endPhase: props.service.servicePhaseRange.endPhase,
+      },
     };
 
     const res = await Services.updateRangesPhase(dataToUpdate).catch((e) => [
@@ -78,8 +87,10 @@ function ServiceContainer(props) {
             values={
               // Convert all the string to numeric value
               [
-                replacePhaseToNumber(props.service.fromPhase),
-                replacePhaseToNumber(props.service.toPhase),
+                replacePhaseToNumber(
+                  props.service.servicePhaseRange.startPhase
+                ),
+                replacePhaseToNumber(props.service.servicePhaseRange.endPhase),
               ]
             }
             mode={2}

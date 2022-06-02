@@ -29,6 +29,29 @@ function LocationComponent(props) {
   const region = location.region;
 
   useEffect(() => {
+    const tempLocation = {
+      continent: "Continent",
+      country: "Country",
+      region: "Region",
+      city: "City",
+    };
+    if (props.value.continent !== null) {
+      tempLocation.continent = props.value.continent;
+    }
+    if (props.value.country !== null) {
+      tempLocation.country = props.value.country;
+    }
+    if (props.value.region !== null) {
+      tempLocation.region = props.value.region;
+    }
+    if (props.value.city !== null) {
+      tempLocation.city = props.value.city;
+    }
+
+    setLocation(tempLocation);
+  }, [props.value]);
+
+  useEffect(() => {
     props.onChange(location);
   }, [location, props]);
 
@@ -79,58 +102,62 @@ function LocationComponent(props) {
 
   // Populate the list of region (run everyTime we change the country)
   useEffect(() => {
-    const tempRegionList = [...initialRegionList];
+    if (countryList.length !== 1 && country !== null) {
+      const tempRegionList = [...initialRegionList];
 
-    const thisCountry = countryList.find(
-      (thisCountry) => thisCountry.name === country
-    );
+      const thisCountry = countryList.find(
+        (thisCountry) => thisCountry.name === country
+      );
 
-    if (thisCountry.regions) {
-      thisCountry.regions.forEach((region) => {
-        const containsRegion = tempRegionList.some(
-          (country) => country.name === country.country
-        );
+      if (thisCountry.regions) {
+        thisCountry.regions.forEach((region) => {
+          const containsRegion = tempRegionList.some(
+            (country) => country.name === country.country
+          );
 
-        // Add to the list of region
-        if (!containsRegion) {
-          tempRegionList.push({
-            id: tempRegionList.length,
-            name: region.name,
-            cities: region.cities,
-          });
-        }
-      });
+          // Add to the list of region
+          if (!containsRegion) {
+            tempRegionList.push({
+              id: tempRegionList.length,
+              name: region.name,
+              cities: region.cities,
+            });
+          }
+        });
+      }
+
+      setRegionList(tempRegionList);
     }
-
-    setRegionList(tempRegionList);
-  }, [country, countryList, props.locations]);
+  }, [country, countryList]);
 
   // Populate the list of city (run everyTime we change the region)
   useEffect(() => {
-    const tempCityList = [...initialCityList];
+    if (regionList.length !== 1 && region !== null) {
+      const tempCityList = [...initialCityList];
 
-    const thisRegion = regionList.find(
-      (thisRegion) => thisRegion.name === region
-    );
+      const thisRegion = regionList.find(
+        (thisRegion) => thisRegion.name === region
+      );
 
-    // Add to the list of cities
-    if (thisRegion.cities) {
-      thisRegion.cities.forEach((city) => {
-        const containsCity = tempCityList.some(
-          (thisCity) => city.name === thisCity.name
-        );
+      // Add to the list of cities
+      if (thisRegion.cities) {
+        thisRegion.cities.forEach((city) => {
+          const containsCity = tempCityList.some(
+            (thisCity) => city.name === thisCity.name
+          );
 
-        if (!containsCity) {
-          tempCityList.push({
-            id: tempCityList.length,
-            name: city.name,
-          });
-        }
-      });
+          if (!containsCity) {
+            tempCityList.push({
+              id: tempCityList.length,
+              name: city.name,
+            });
+          }
+        });
+      }
+
+      setCityList(tempCityList);
     }
-
-    setCityList(tempCityList);
-  }, [region, props.locations, regionList]);
+  }, [region, regionList]);
 
   function handleContinentChange(continent) {
     const tempLocation = { ...location };
@@ -187,7 +214,9 @@ function LocationComponent(props) {
         <SmallLabelLocation
           label={t("common.region")}
           wantScroll={true}
-          isDisabled={location.country === countryList[0].name}
+          isDisabled={
+            location.country === countryList[0].name || regionList.length === 1
+          }
           items={regionList}
           item={location.region}
           onChange={(region) => handleRegionChange(region)}

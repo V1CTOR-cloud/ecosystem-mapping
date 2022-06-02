@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
-import ButtonComponent from "../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import {
   mediumPadding,
   verySmallPadding,

@@ -22,25 +22,20 @@ class Service {
               id
             }
           }
-          verifiedService
           serviceStartTime
           serviceEndTime
           timezone
           stage
           serviceDescription
-          serviceBreif
           serviceOutcomes
-          fromPhase
-          toPhase
-          serviceComments {
-            userComments
-            updatedDataAt
-            serviceStatus
-            currentUser
+          servicePhaseRange {
+            id
+            endPhase
+            startPhase
           }
-          budget
+          serviceLink
+          serviceBudget
           serviceAudience
-          tagTitle
           followingService
           previousService
           applicationType
@@ -51,10 +46,7 @@ class Service {
             country
             region
           }
-          onlineService
-          offlineService
           serviceStatus
-          updatedTypeAt
           order
         }
         ecosystemMap(where: {id:"${mapID}"}) {
@@ -118,6 +110,7 @@ class Service {
           applicationType
           serviceStartTime
           serviceEndTime
+          serviceLink
           serviceLocation {
             id
             continent
@@ -125,14 +118,18 @@ class Service {
             region
             city
           }
+          serviceBudget
           serviceAudience
           serviceDescription
           serviceStatus
           serviceOutcomes
           previousService
           followingService
-          fromPhase
-          toPhase
+          servicePhaseRange {
+            id
+            endPhase
+            startPhase
+          }
           order
         }
       }`;
@@ -141,13 +138,16 @@ class Service {
       data: {
         serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
-        serviceOwner: {
-          connect: [{ Organisation: { id: data.organisationId } }],
-        },
+        serviceOwner:
+          data.organisationId === null
+            ? null
+            : {
+                connect: [{ Organisation: { id: data.organisationId } }],
+              },
         applicationType: data.applicationType,
         serviceStartTime: data.serviceStartTime,
         serviceEndTime: data.serviceEndTime,
-        link: data.link,
+        serviceLink: data.serviceLink,
         serviceLocation: {
           create: {
             continent: data.serviceLocation.continent,
@@ -156,13 +156,18 @@ class Service {
             city: data.serviceLocation.city,
           },
         },
-        serviceAudience: data.audience,
-        serviceDescription: data.description,
-        serviceOutcomes: data.outcomes,
+        serviceBudget: data.serviceBudget,
+        serviceAudience: data.serviceAudience,
+        serviceDescription: data.serviceDescription,
+        serviceOutcomes: data.serviceOutcomes,
         previousService: data.precededService,
         followingService: data.followedService,
-        fromPhase: data.fromPhase,
-        toPhase: data.toPhase,
+        servicePhaseRange: {
+          create: {
+            startPhase: data.servicePhaseRange.startPhase,
+            endPhase: data.servicePhaseRange.endPhase,
+          },
+        },
         order: data.order,
 
         ecosystemMap: { connect: { id: data.mapId } },
@@ -212,15 +217,26 @@ class Service {
             applicationType
             serviceStartTime
             serviceEndTime
-            serviceLocation
+            serviceLink
+            serviceLocation {
+                id
+                continent
+                country
+                region
+                city
+            }
+            serviceBudget
             serviceAudience
             serviceDescription
             serviceOutcomes
             serviceStatus
             previousService
             followingService
-            fromPhase
-            toPhase
+            servicePhaseRange {
+              id
+              endPhase
+              startPhase
+            }
             order
         }
     }`;
@@ -236,7 +252,9 @@ class Service {
       }`;
 
     let serviceOwner;
-    if (data.organisationIdWithoutModification === data.organisationId) {
+    if (data.organisationId === null) {
+      serviceOwner = null;
+    } else if (data.organisationIdWithoutModification === data.organisationId) {
       serviceOwner = {};
     } else {
       serviceOwner = {
@@ -260,21 +278,40 @@ class Service {
         applicationType: data.applicationType,
         serviceStartTime: data.serviceStartTime,
         serviceEndTime: data.serviceEndTime,
-        link: data.link,
-        serviceLocation: data.location,
-        serviceAudience: data.audience,
-        serviceDescription: data.description,
-        serviceOutcomes: data.outcomes,
+        serviceLink: data.serviceLink,
+        serviceLocation: {
+          update: {
+            where: { id: data.serviceLocation.id },
+            data: {
+              continent: data.serviceLocation.continent,
+              country: data.serviceLocation.country,
+              region: data.serviceLocation.region,
+              city: data.serviceLocation.city,
+            },
+          },
+        },
+        serviceBudget: data.serviceBudget,
+        serviceAudience: data.serviceAudience,
+        serviceDescription: data.serviceDescription,
+        serviceOutcomes: data.serviceOutcomes,
         previousService: data.precededService,
         followingService: data.followedService,
-        fromPhase: data.fromPhase,
-        toPhase: data.toPhase,
+        servicePhaseRange: {
+          update: {
+            where: { id: data.servicePhaseRange.id },
+            data: {
+              startPhase: data.servicePhaseRange.startPhase,
+              endPhase: data.servicePhaseRange.endPhase,
+            },
+          },
+        },
         order: data.order,
 
         ecosystemMap: { connect: { id: data.mapId } },
         serviceStatus: data.serviceStatus,
       },
     };
+
     const graphCMS = new GraphQLClient(graphCMSKey, {
       headers: {
         authorization: authorizationKey,
@@ -302,16 +339,26 @@ class Service {
     const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
           serviceName
-          fromPhase
-          toPhase
+          servicePhaseRange {
+            id
+            endPhase
+            startPhase
+          }
         }
     }`;
 
     const variables = {
       id: data.id,
       data: {
-        fromPhase: data.fromPhase,
-        toPhase: data.toPhase,
+        servicePhaseRange: {
+          update: {
+            where: { id: data.servicePhaseRange.id },
+            data: {
+              startPhase: data.servicePhaseRange.startPhase,
+              endPhase: data.servicePhaseRange.endPhase,
+            },
+          },
+        },
       },
     };
 
@@ -354,23 +401,6 @@ class Service {
       organisations {
         id
         organisationName
-      }
-    }`;
-
-    const graphCMS = new GraphQLClient(graphCMSKey, {
-      headers: {
-        authorization: authorizationKey,
-      },
-    });
-
-    return await graphCMS.request(query);
-  }
-
-  async getAllAudiences() {
-    const query = `{
-      audiences {
-        id
-        audienceName
       }
     }`;
 

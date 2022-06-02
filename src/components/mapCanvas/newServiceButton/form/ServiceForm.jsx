@@ -16,6 +16,7 @@ import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
 
 import {
+  audienceList,
   greyTextColor,
   market,
   market_and_organization,
@@ -25,7 +26,7 @@ import {
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
 import ServiceTabs from "./tabs/ServiceTabs";
-import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
 import Service from "../../../../service/EcosystemMapServices";
 import toastComponent from "../../../basic/ToastComponent";
@@ -43,27 +44,34 @@ function ServiceForm(props) {
   ];
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
+  const organisations = [
+    { id: 0, name: "Organisation" },
+    ...props.organisations,
+  ];
+  const audiences = [{ id: 0, name: "Audience" }, ...audienceList];
   const formValue = {
     serviceName: "",
     serviceFocus: service.servicesFocus[0],
-    ownerOrganisation: props.organisations[0].name,
+    ownerOrganisation: organisations[0].name,
     applicationType: applicationTypeButtons[0],
-    phases: [-1.0, 1.0],
-
+    servicePhaseRange: {
+      startPhase: -1.0,
+      endPhase: 1.0,
+    },
     serviceStartTime: new Date(),
     serviceEndTime: new Date(),
-    link: "",
-    audience: props.audiences[0].name,
+    serviceLink: "",
+    serviceAudience: audiences[0].name,
     serviceLocation: {
-      continent: "",
-      country: "",
-      region: "",
-      city: "",
+      continent: null,
+      country: null,
+      region: null,
+      city: null,
     },
-    budgets: [{ name: "", value: "", currency: "€" }],
+    serviceBudget: [{ budgetTitle: "", budgetValue: "", budgetCurrency: "€" }],
 
-    description: "",
-    outcomes: "",
+    serviceDescription: "",
+    serviceOutcomes: "",
     precededService: t("mapping.canvas.form.service.select.service"),
     followedService: t("mapping.canvas.form.service.select.service"),
   };
@@ -77,42 +85,62 @@ function ServiceForm(props) {
         result.name.split(" ").join("") ===
         props.serviceWithoutModification.serviceFocus
     );
-    formValue["ownerOrganisation"] =
-      props.serviceWithoutModification.serviceOwner[0].organisationName;
+    formValue["ownerOrganisation"] = props.serviceWithoutModification
+      .serviceOwner
+      ? organisations[0].name
+      : props.serviceWithoutModification.serviceOwner[0].organisationName;
     formValue["applicationType"] =
       props.serviceWithoutModification.applicationType;
-    formValue["phases"] = [
-      replacePhaseToNumber(props.serviceWithoutModification.fromPhase),
-      replacePhaseToNumber(props.serviceWithoutModification.toPhase),
-    ];
+    formValue["servicePhaseRange"] = {
+      startPhase: replacePhaseToNumber(
+        props.serviceWithoutModification.servicePhaseRange.startPhase
+      ),
+      endPhase: replacePhaseToNumber(
+        props.serviceWithoutModification.servicePhaseRange.endPhase
+      ),
+    };
 
-    formValue["serviceStartTime"] =
-      props.serviceWithoutModification.serviceStartTime;
-    formValue["serviceEndTime"] =
-      props.serviceWithoutModification.serviceEndTime;
+    // For the time we convert the data to the timeZone of the user because the data retrieve are in GMT+00:00
+    formValue["serviceStartTime"] = timeZoneConvertor(
+      props.serviceWithoutModification.serviceStartTime,
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    );
+    formValue["serviceEndTime"] = timeZoneConvertor(
+      props.serviceWithoutModification.serviceEndTime,
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    );
     formValue["serviceLocation"] = props.serviceWithoutModification
       .serviceLocation
       ? props.serviceWithoutModification.serviceLocation
       : {
-          continent: "",
-          country: "",
-          region: "",
-          city: "",
+          continent: null,
+          country: null,
+          region: null,
+          city: null,
         };
-    formValue["link"] = props.serviceWithoutModification.link
-      ? props.serviceWithoutModification.link
+    formValue["serviceLink"] = props.serviceWithoutModification.serviceLink
+      ? props.serviceWithoutModification.serviceLink
       : "";
-    formValue["audience"] = props.serviceWithoutModification.serviceAudience
-      .split("_")
-      .join(" ");
-    formValue["budgets"] = props.serviceWithoutModification.budgets
-      ? props.serviceWithoutModification.budgets
-      : [{ name: "", value: "" }];
-    formValue["description"] = props.serviceWithoutModification.description
-      ? props.serviceWithoutModification.description
+    formValue["serviceAudience"] = props.serviceWithoutModification
+      .serviceAudience
+      ? props.serviceWithoutModification.serviceAudience
+      : audiences[0].name;
+    formValue["serviceBudget"] = props.serviceWithoutModification.serviceBudget
+      ? props.serviceWithoutModification.serviceBudget
+      : [
+          {
+            budgetTitle: "",
+            budgetValue: "",
+            budgetCurrency: "€",
+          },
+        ];
+    formValue["serviceDescription"] = props.serviceWithoutModification
+      .serviceDescription
+      ? props.serviceWithoutModification.serviceDescription
       : "";
-    formValue["outcomes"] = props.serviceWithoutModification.outcomes
-      ? props.serviceWithoutModification.outcomes
+    formValue["serviceOutcomes"] = props.serviceWithoutModification
+      .serviceOutcomes
+      ? props.serviceWithoutModification.serviceOutcomes
       : "";
 
     if (props.serviceWithoutModification.previousService !== "") {
@@ -134,32 +162,29 @@ function ServiceForm(props) {
         formValue["followingService"] = followingService;
       }
     }
+
+    // Check if the budget is 0 to replace it with an empty string
+    formValue["serviceBudget"].forEach((budget) => {
+      budget.budgetValue = budget.budgetValue === 0 ? "" : budget.budgetValue;
+    });
   }
 
   // Function that will send to the database the new service that was created (publish and draft)
   async function handleDraftOrPublishClick(serviceStatus) {
-    const organisationId = props.organisations.find(
-      (organisation) => formValue["ownerOrganisation"] === organisation.name
-    ).id;
+    formatLocation();
+    formatAudience();
+    formatOrganisation();
+    formatBudget();
 
-    const fromPhase = replaceNumberToPhase(formValue["phases"][0]);
-    const toPhase = replaceNumberToPhase(formValue["phases"][1]);
+    let organisationId = null;
+    if (formValue["ownerOrganisation"] !== null) {
+      organisationId = props.organisations.find(
+        (organisation) => formValue["ownerOrganisation"] === organisation.name
+      ).id;
+    }
 
     const order =
       props.fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
-
-    if (formValue["serviceLocation"].continent === "Continent") {
-      formValue["serviceLocation"].continent = null;
-    }
-    if (formValue["serviceLocation"].country === "Country") {
-      formValue["serviceLocation"].country = null;
-    }
-    if (formValue["serviceLocation"].region === "Region") {
-      formValue["serviceLocation"].region = null;
-    }
-    if (formValue["serviceLocation"].city === "City") {
-      formValue["serviceLocation"].city = null;
-    }
 
     const data = {
       serviceName: formValue["serviceName"],
@@ -170,11 +195,12 @@ function ServiceForm(props) {
         .replace("&", "and"),
       serviceStartTime: formValue["serviceStartTime"],
       serviceEndTime: formValue["serviceEndTime"],
-      link: formValue["link"],
+      serviceLink: formValue["serviceLink"],
       serviceLocation: formValue["serviceLocation"],
-      audience: formValue["audience"].split(" ").join("_"),
-      description: formValue["description"],
-      outcomes: formValue["outcomes"],
+      serviceAudience: formValue["serviceAudience"],
+      serviceBudget: formValue["serviceBudget"],
+      serviceDescription: formValue["serviceDescription"],
+      serviceOutcomes: formValue["serviceOutcomes"],
       precededService:
         formValue["precededService"] === "Select a service"
           ? ""
@@ -183,8 +209,13 @@ function ServiceForm(props) {
         formValue["followedService"] === "Select a service"
           ? ""
           : formValue["followedService"],
-      fromPhase: fromPhase,
-      toPhase: toPhase,
+
+      servicePhaseRange: {
+        startPhase: replaceNumberToPhase(
+          formValue["servicePhaseRange"].startPhase
+        ),
+        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+      },
 
       mapId: props.mapId,
       serviceStatus: serviceStatus,
@@ -247,20 +278,28 @@ function ServiceForm(props) {
   }
 
   async function handleUpdateClick(serviceStatus) {
-    // Retrieve the organisation id that we selected (modified or not)
-    const organisationId = props.organisations.find(
-      (organisation) => formValue["ownerOrganisation"] === organisation.name
-    ).id;
+    formatLocation();
+    formatAudience();
+    formatOrganisation();
+    formatBudget();
 
-    // Retrieve the organisation id that was previously selected to disconnected it.
-    const organisationIdWithoutModification = props.organisations.find(
-      (organisation) =>
-        props.serviceWithoutModification.serviceOwner[0].organisationName ===
-        organisation.name
-    ).id;
+    let organisationId = null;
+    if (formValue["ownerOrganisation"] !== null) {
+      // Retrieve the organisation id that we selected (modified or not)
+      organisationId = props.organisations.find(
+        (organisation) => formValue["ownerOrganisation"] === organisation.name
+      ).id;
+    }
 
-    const fromPhase = replaceNumberToPhase(formValue["phases"][0]);
-    const toPhase = replaceNumberToPhase(formValue["phases"][1]);
+    let organisationIdWithoutModification;
+    if (props.serviceWithoutModification.serviceOwner.length !== 0) {
+      // Retrieve the organisation id that was previously selected to disconnected it.
+      organisationIdWithoutModification = props.organisations.find(
+        (organisation) =>
+          props.serviceWithoutModification.serviceOwner[0].organisationName ===
+          organisation.name
+      ).id;
+    }
 
     let order;
 
@@ -297,20 +336,28 @@ function ServiceForm(props) {
         .replace("&", "and"),
       organisationId: organisationId,
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
-      fromPhase: fromPhase,
-      toPhase: toPhase,
+      servicePhaseRange: {
+        id: props.serviceWithoutModification.servicePhaseRange.id,
+        startPhase: replaceNumberToPhase(
+          formValue["servicePhaseRange"].startPhase
+        ),
+        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+      },
 
       // Second tabs
       serviceStartTime: formValue["serviceStartTime"],
       serviceEndTime: formValue["serviceEndTime"],
-      link: formValue["link"],
-      location: formValue["location"],
-      audience: formValue["audience"].split(" ").join("_"),
-      budgets: formValue["budget"],
+      serviceLink: formValue["serviceLink"],
+      serviceLocation: {
+        ...formValue["serviceLocation"],
+        id: props.serviceWithoutModification.serviceLocation.id,
+      },
+      serviceAudience: formValue["serviceAudience"],
+      serviceBudget: formValue["serviceBudget"],
 
       // Third tabs
-      description: formValue["description"],
-      outcomes: formValue["outcomes"],
+      serviceDescription: formValue["serviceDescription"],
+      serviceOutcomes: formValue["serviceOutcomes"],
       precededService:
         formValue["precededService"] ===
         t("mapping.canvas.form.service.select.service")
@@ -363,6 +410,7 @@ function ServiceForm(props) {
 
     // Add the service id to the corresponding row
     const tempRows = props.fetchedData[0].rows;
+
     if (
       props.serviceWithoutModification.applicationType ===
       updateService.applicationType
@@ -439,6 +487,52 @@ function ServiceForm(props) {
     }
   }
 
+  // Set to null when we have no location selected.
+  function formatLocation() {
+    if (formValue["serviceLocation"].continent === "Continent") {
+      formValue["serviceLocation"].continent = null;
+    }
+    if (formValue["serviceLocation"].country === "Country") {
+      formValue["serviceLocation"].country = null;
+    }
+    if (formValue["serviceLocation"].region === "Region") {
+      formValue["serviceLocation"].region = null;
+    }
+    if (formValue["serviceLocation"].city === "City") {
+      formValue["serviceLocation"].city = null;
+    }
+  }
+
+  // Set to null when we have no audience selected.
+  function formatAudience() {
+    if (formValue["serviceAudience"] === "Audience") {
+      formValue["serviceAudience"] = null;
+    }
+  }
+
+  // Set to null when we have no organisation selected.
+  function formatOrganisation() {
+    if (formValue["ownerOrganisation"] === "Organisation") {
+      formValue["ownerOrganisation"] = null;
+    }
+  }
+
+  function formatBudget() {
+    formValue["serviceBudget"].forEach((budget) => {
+      budget.budgetValue =
+        budget.budgetValue === "" ? 0 : parseFloat(budget.budgetValue);
+    });
+  }
+
+  function timeZoneConvertor(date, timeZone) {
+    return new Date(
+      (typeof date === "string" ? new Date(date) : date).toLocaleString(
+        "en-US",
+        { timeZone: timeZone }
+      )
+    );
+  }
+
   return (
     <AlertDialog
       size="2xl"
@@ -482,9 +576,9 @@ function ServiceForm(props) {
             </HStack>
             <Box zIndex={10}>
               <ServiceTabs
-                organisations={props.organisations}
+                organisations={organisations}
                 applicationTypeButtons={applicationTypeButtons}
-                audiences={props.audiences}
+                audiences={audiences}
                 services={props.services}
                 locations={props.locations}
                 formValue={formValue}

@@ -12,7 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
-import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import {
   greyTextColor,
   mediumPadding,
@@ -26,13 +26,17 @@ function SaveFilterAlertDialog(props) {
   const [filterName, setFilterName] = useState("");
 
   useEffect(() => {
-    if (props.isEditing) {
-      setIsError(false);
-      setFilterName(props.name);
-    } else {
-      setFilterName("");
+    function changeFilterName() {
+      if (props.isEditing) {
+        setIsError(false);
+        setFilterName(props.name);
+      } else {
+        setFilterName("");
+      }
     }
-  }, [props.isOpen]);
+
+    changeFilterName();
+  }, [props.isEditing, props.isOpen, props.name]);
 
   function handleNameFilterChange(input) {
     if (input === "") {

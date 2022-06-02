@@ -10,7 +10,7 @@ import {
   verySmallPadding,
 } from "../../../../../helper/constant";
 import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithTooltip";
-import ButtonComponent from "../../../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../../../basic/buttons/ButtonComponent";
 
 function ApplicationTypeComponent(props) {
   const { t } = useTranslation();

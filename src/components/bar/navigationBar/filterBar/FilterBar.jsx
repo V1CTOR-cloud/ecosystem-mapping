@@ -14,7 +14,7 @@ import {
   whiteColor,
 } from "../../../../helper/constant";
 import FilterMenuButton from "./filtersButtons/FilterMenuButton";
-import ButtonComponent from "../../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
@@ -54,6 +54,7 @@ function FilterBar(props) {
     tempFilters[index] = filter;
     setValue("");
     setFilters(tempFilters);
+    setIsFilterApplied(false);
   }
 
   function handleApplyFilter() {

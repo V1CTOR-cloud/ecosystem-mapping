@@ -8,7 +8,7 @@ import {
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
-import IconButtonComponent from "../../basic/Buttons/IconButtonComponent";
+import IconButtonComponent from "../../basic/buttons/IconButtonComponent";
 import {
   blackColor,
   blueColor,

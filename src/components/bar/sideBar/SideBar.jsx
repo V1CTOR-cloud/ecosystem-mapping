@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
-import { Draft } from "@styled-icons/remix-line/Draft";
+import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
 import { Accordion } from "@chakra-ui/accordion";
 import { useTranslation } from "react-i18next";
 
-import ButtonComponent from "../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import AccordionItemComponent from "./AccordionItemComponent";
 import {
   blackColor,

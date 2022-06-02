@@ -7,8 +7,8 @@ function DatePickerComponent(props) {
   const [value, setValue] = useState(props.date);
 
   function handleOnChange(value) {
-    setValue(value);
-    props.handleDateChange(value);
+    setValue(new Date(value));
+    props.handleDateChange(new Date(value));
   }
 
   return (
@@ -16,6 +16,7 @@ function DatePickerComponent(props) {
       data-enable-time
       value={value}
       onChange={(date) => handleOnChange(date)}
+      options={{ minuteIncrement: 1 }}
     />
   );
 }

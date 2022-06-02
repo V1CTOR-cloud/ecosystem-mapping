@@ -17,9 +17,9 @@ import styled from "styled-components";
 import { HomeAlt } from "@styled-icons/boxicons-regular";
 import { Grid, SortDownAlt } from "@styled-icons/bootstrap";
 
-import ButtonComponent from "../../basic/Buttons/ButtonComponent";
+import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import Authentication from "../../authentication/Authentication";
-import IconButtonComponent from "../../basic/Buttons/IconButtonComponent";
+import IconButtonComponent from "../../basic/buttons/IconButtonComponent";
 import {
   blackColor,
   blueColor,

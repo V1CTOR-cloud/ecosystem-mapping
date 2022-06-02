@@ -15,6 +15,7 @@ import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import FilterBar from "../components/bar/navigationBar/filterBar/FilterBar";
 import {
+  audienceList,
   greyColor,
   market,
   market_and_organization,
@@ -30,7 +31,7 @@ import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServic
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
-import ButtonComponent from "../components/basic/Buttons/ButtonComponent";
+import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { useTranslation } from "react-i18next";
 
 const ArrowDown = styled.div`
@@ -60,8 +61,7 @@ const data = {
       id: organization,
       serviceIds: [],
     },
-  },
-  // Reordering of the columns (the easiest way)
+  }, // Reordering of the columns (the easiest way)
   rowsOrder: [market, market_and_organization, organization],
 };
 
@@ -141,7 +141,6 @@ function MapCanvasPage(props) {
   const [fetchedData, setFetchedData] = useState(null);
   const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
-  const [fetchedAudiences, setFetchedAudiences] = useState(null);
   const [fetchedFilters, setFetchedFilters] = useState(null);
   const [fetchedLocation, setFetchedLocation] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -162,7 +161,7 @@ function MapCanvasPage(props) {
     setContainerHeight(fullHeight);
   }, [heights, isOpenFilter]);
 
-  // Fetch all the data required to display the page with all the information.
+  // Fetch all the data required to display the page with all the information need to be trigger only once.
   useEffect(() => {
     const fetchData = async () => {
       // Get the name of the
@@ -191,18 +190,6 @@ function MapCanvasPage(props) {
       );
       setFetchedOrganization(tempOrganizations);
 
-      // Get all audiences
-      res = await Service.getAllAudiences();
-      const tempAudiences = [];
-      // Formatting our organisation to fit for the component LabeledMenu
-      res.audiences.forEach((audience) =>
-        tempAudiences.push({
-          id: audience.id,
-          name: audience.audienceName,
-        })
-      );
-      setFetchedAudiences(tempAudiences);
-
       // Get all locations
       res = await RegionService.listAllRegions();
       const tempLocations = [];
@@ -227,7 +214,7 @@ function MapCanvasPage(props) {
     };
 
     fetchData().then(() => setIsDataLoaded(true));
-  }, [props.mapId]);
+  }, [props.mapId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the secondary list at each new service or service update
   // In addition we update the sidebar
@@ -247,7 +234,7 @@ function MapCanvasPage(props) {
         }
       });
     }
-  }, [fetchedData]);
+  }, [archivedData, draftData, fetchedData, isDataLoaded]);
 
   // Each modification in the filters, we update our secondaryList to display the right data
   useEffect(() => {
@@ -282,20 +269,54 @@ function MapCanvasPage(props) {
               // The item is selected so, we add all element corresponding to that
               if (item.value) {
                 if (filter.id === 1 || filter.id === 3 || filter.id === 5) {
+                  if (service[filterName]) {
+                    if (
+                      service[filterName].replaceAll("_", "").toLowerCase() ===
+                      item.name.replaceAll(" ", "").toLowerCase()
+                    ) {
+                      filterBool[index] = true;
+                    }
+                  }
+                } else if (filter.id === 2) {
+                  if (service[filterName].length !== 0) {
+                    if (service[filterName][0].organisationName === item.name) {
+                      filterBool[index] = true;
+                    }
+                  }
+                } else if (filter.id === 4) {
+                  const serviceLocation = service[filterName];
+                  const thisLocation =
+                    serviceLocation.continent +
+                    " " +
+                    serviceLocation.country +
+                    " " +
+                    serviceLocation.region +
+                    " " +
+                    serviceLocation.city;
+
                   if (
-                    service[filterName].replaceAll("_", "").toLowerCase() ===
-                    item.name.replaceAll(" ", "").toLowerCase()
+                    thisLocation.toLowerCase().includes(item.name.toLowerCase())
                   ) {
                     filterBool[index] = true;
                   }
-                } else if (filter.id === 2) {
-                  if (service[filterName][0].organisationName === item.name) {
-                    filterBool[index] = true;
-                  }
-                } else if (filter.id === 4) {
-                  if (service[filterName].includes(item.name.toLowerCase())) {
-                    filterBool[index] = true;
-                  }
+                } else if (filter.id === 6) {
+                  service.serviceBudget.forEach((budget) => {
+                    if (item.name !== "+10000") {
+                      const filtersValues = item.name.split("-");
+                      if (
+                        budget.budgetValue >= parseFloat(filtersValues[0]) &&
+                        budget.budgetValue <= parseFloat(filtersValues[1]) &&
+                        budget.budgetValue !== 0
+                      ) {
+                        filterBool[index] = true;
+                      }
+                    } else {
+                      const filterValue = item.name.substring(1);
+                      if (budget.budgetValue >= parseFloat(filterValue)) {
+                        filterBool[index] = true;
+                      }
+                    }
+                  });
                 }
               }
             });
@@ -343,7 +364,7 @@ function MapCanvasPage(props) {
     } else {
       setSecondaryFetchedData(fetchedData);
     }
-  }, [filters]);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
@@ -379,17 +400,70 @@ function MapCanvasPage(props) {
       });
     }
 
-    if (fetchedLocation) {
-      fetchedLocation.forEach((location) => {
-        tempLocation.push({ name: location.name, value: false });
-      });
-    }
+    if (fetchedData) {
+      const serviceArray = Object.values(fetchedData.services);
+      serviceArray.forEach((service) => {
+        if (service.serviceLocation.continent !== null) {
+          let locationToAdd = service.serviceLocation.continent;
 
-    if (fetchedAudiences) {
-      fetchedAudiences.forEach((audience) => {
-        tempAudience.push({ name: audience.name, value: false });
+          // Check if we have already the continent that exist in the list
+          const locationExist = isLocationExistInList(
+            locationToAdd,
+            tempLocation
+          );
+          if (!locationExist) {
+            tempLocation.push({
+              name: service.serviceLocation.continent,
+              value: false,
+            });
+          }
+
+          if (service.serviceLocation.country !== null) {
+            locationToAdd += " " + service.serviceLocation.country;
+
+            // Check if we have already the continent + country that exist in the list
+            const locationExist = isLocationExistInList(
+              locationToAdd,
+              tempLocation
+            );
+            if (!locationExist) {
+              tempLocation.push({ name: locationToAdd, value: false });
+            }
+
+            if (service.serviceLocation.region !== null) {
+              locationToAdd += " " + service.serviceLocation.region;
+
+              // Check if we have already the continent + country + region that exist in the list
+              const locationExist = isLocationExistInList(
+                locationToAdd,
+                tempLocation
+              );
+              if (!locationExist) {
+                tempLocation.push({ name: locationToAdd, value: false });
+              }
+              if (service.serviceLocation.city !== null) {
+                locationToAdd += " " + service.serviceLocation.city;
+
+                // Check if we have already the continent + country + region + city that exist in the list
+                const locationExist = isLocationExistInList(
+                  locationToAdd,
+                  tempLocation
+                );
+                if (!locationExist) {
+                  tempLocation.push({ name: locationToAdd, value: false });
+                }
+              }
+            }
+          }
+        }
       });
     }
+    // Sort alphabetically
+    tempLocation.sort((a, b) => a.name.localeCompare(b.name));
+
+    audienceList.forEach((audience) => {
+      tempAudience.push({ name: audience.name, value: false });
+    });
 
     if (fetchedFilters) {
       fetchedFilters.forEach((filters) => {
@@ -409,7 +483,14 @@ function MapCanvasPage(props) {
     initialFilters[5].items = tempAudience;
     initialFilters[6].items = tempBudget;
     setFilters(initialFilters);
-  }, [isDataLoaded]);
+  }, [isDataLoaded, fetchedData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function isLocationExistInList(location, list) {
+    const checkLocationExist = list.find(
+      (thisLocation) => thisLocation.name === location
+    );
+    return checkLocationExist !== undefined;
+  }
 
   function sortServices(fetchedData) {
     let sortedData = data;
@@ -480,7 +561,6 @@ function MapCanvasPage(props) {
       onClose={onCloseForm}
       onOpen={onOpenForm}
       organisations={fetchedOrganization}
-      audiences={fetchedAudiences}
       fetchedData={[fetchedData, setFetchedData]}
       services={services}
       locations={fetchedLocation}
@@ -577,7 +657,6 @@ function MapCanvasPage(props) {
           isOpen={isOpenFormEdition}
           onClose={onCloseFormEdition}
           organisations={fetchedOrganization}
-          audiences={fetchedAudiences}
           fetchedData={[fetchedData, setFetchedData]}
           services={services}
           locations={fetchedLocation}

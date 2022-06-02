@@ -5,7 +5,7 @@ import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 
 import InputComponent from "../input/inputComponent/InputComponent";
-import IconButtonComponent from "../../Buttons/IconButtonComponent";
+import IconButtonComponent from "../../buttons/IconButtonComponent";
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import {
   greyColor,
@@ -27,8 +27,12 @@ function LabeledBudgetInputComponent(props) {
 
   function handleAddOrRemoveBudget(index) {
     const tempBudgets = Array.from(budgets);
-    if (index === props.budgets.length - 1) {
-      tempBudgets.push({ name: "", value: "", currency: "€" });
+    if (index === budgets.length - 1) {
+      tempBudgets.push({
+        budgetTitle: "",
+        budgetValue: "",
+        budgetCurrency: "€",
+      });
     } else {
       tempBudgets.splice(index, 1);
     }
@@ -36,23 +40,23 @@ function LabeledBudgetInputComponent(props) {
     props.onChange(tempBudgets);
   }
 
-  function handleBudgetNameChange(name, index) {
+  function handleBudgetTitleChange(budgetTitle, index) {
     const tempBudgets = Array.from(budgets);
-    tempBudgets[index].name = name;
+    tempBudgets[index].budgetTitle = budgetTitle;
     setBudgets(tempBudgets);
     props.onChange(tempBudgets);
   }
 
-  function handleBudgetValueChange(value, index) {
+  function handleBudgetValueChange(budgetValue, index) {
     const tempBudgets = Array.from(budgets);
-    tempBudgets[index].value = value;
+    tempBudgets[index].budgetValue = budgetValue;
     setBudgets(tempBudgets);
     props.onChange(tempBudgets);
   }
 
-  function handleBudgeCurrencyChange(currency, index) {
+  function handleBudgetCurrencyChange(budgetCurrency, index) {
     const tempBudgets = Array.from(budgets);
-    tempBudgets[index].currency = currency;
+    tempBudgets[index].budgetCurrency = budgetCurrency;
     setBudgets(tempBudgets);
     props.onChange(tempBudgets);
   }
@@ -88,26 +92,28 @@ function LabeledBudgetInputComponent(props) {
           <HStack key={index} paddingBottom={smallPadding}>
             <Box>
               <InputComponent
-                value={budget.name}
+                value={budget.budgetTitle}
                 placeholder={t("mapping.canvas.form.budget.title.placeholder")}
-                isBudget={true}
-                onChange={(name) => handleBudgetNameChange(name, index)}
+                onChange={(budgetTitle) =>
+                  handleBudgetTitleChange(budgetTitle, index)
+                }
               />
             </Box>
 
             <Box w="100%" paddingX={smallPadding}>
               <NumberInputComponent
-                value={budget.value}
+                value={budget.budgetValue}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
-                isBudget={true}
-                onChange={(value) => handleBudgetValueChange(value, index)}
+                onChange={(budgetValue) =>
+                  handleBudgetValueChange(budgetValue, index)
+                }
               />
             </Box>
             <MenuComponent
-              item={budget.currency}
+              item={budget.budgetCurrency}
               items={currencies}
-              onChange={(currency) =>
-                handleBudgeCurrencyChange(currency, index)
+              onChange={(budgetCurrency) =>
+                handleBudgetCurrencyChange(budgetCurrency, index)
               }
             />
             <Box w="30px" h="30px" paddingLeft={smallPadding}>
@@ -116,7 +122,7 @@ function LabeledBudgetInputComponent(props) {
                 width="15px"
                 onClick={() => handleAddOrRemoveBudget(index)}
                 icon={
-                  index === props.budgets.length - 1 ? (
+                  index === budgets.length - 1 ? (
                     <AddIcon color={greyColor} />
                   ) : (
                     <CloseIcon color={greyColor} />

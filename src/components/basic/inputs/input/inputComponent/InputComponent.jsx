@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Input } from "@chakra-ui/react";
 
@@ -6,12 +6,6 @@ import { blueColor, greyColor } from "../../../../../helper/constant";
 
 function InputComponent(props) {
   const [value, setValue] = useState(props.value);
-
-  useEffect(() => {
-    if (props.isBudget === true) {
-      setValue(props.value);
-    }
-  });
 
   function handleOnChange(event) {
     setValue(event.target.value);

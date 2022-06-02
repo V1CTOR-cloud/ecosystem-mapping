@@ -32,7 +32,6 @@ import LocationComponent from "../../../../basic/location/LocationComponent";
 
 function ServiceTabs(props) {
   const { t } = useTranslation();
-
   return (
     <Tabs marginTop={mediumPadding}>
       <TabList>
@@ -71,7 +70,9 @@ function ServiceTabs(props) {
               tooltipAriaLabel={t("mapping.canvas.form.phase")}
               tooltipText={t("mapping.canvas.form.phase.tooltip")}
             />
-            <SliderComponent phase={props.formValue["phases"]} />
+            <SliderComponent
+              servicePhaseRange={props.formValue["servicePhaseRange"]}
+            />
           </Box>
 
           {/*TODO tags component to think about later on*/}
@@ -107,8 +108,8 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.link")}
               tooltipAriaLabel={t("mapping.canvas.form.link")}
               placeholder={t("mapping.canvas.form.link.placeholder")}
-              value={props.formValue["link"]}
-              onChange={(link) => (props.formValue["link"] = link)}
+              value={props.formValue["serviceLink"]}
+              onChange={(link) => (props.formValue["serviceLink"] = link)}
             />
           </Box>
           <Box marginTop={mediumPadding}>
@@ -125,9 +126,11 @@ function ServiceTabs(props) {
               tooltipText={t("mapping.canvas.form.audience.tooltip")}
               label={t("mapping.canvas.form.audience")}
               tooltipAriaLabel={t("mapping.canvas.form.audience")}
-              item={props.formValue["audience"]}
+              item={props.formValue["serviceAudience"]}
               items={props.audiences}
-              onChange={(audience) => (props.formValue["audience"] = audience)}
+              onChange={(audience) =>
+                (props.formValue["serviceAudience"] = audience)
+              }
             />
           </Box>
           <Box marginTop={mediumPadding}>
@@ -135,8 +138,10 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.budget")}
               tooltipText={t("mapping.canvas.form.budget.tooltip")}
               tooltipAriaLabel={t("mapping.canvas.form.budget")}
-              budgets={props.formValue["budgets"]}
-              onChange={(budgets) => (props.formValue["budgets"] = budgets)}
+              budgets={props.formValue["serviceBudget"]}
+              onChange={(budgets) =>
+                (props.formValue["serviceBudget"] = budgets)
+              }
             />
           </Box>
         </TabPanel>
@@ -146,9 +151,9 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.description")}
             tooltipAriaLabel={t("mapping.canvas.form.description")}
             placeholder={t("mapping.canvas.form.description.placeholder")}
-            value={props.formValue["description"]}
+            value={props.formValue["serviceDescription"]}
             onChange={(description) =>
-              (props.formValue["description"] = description)
+              (props.formValue["serviceDescription"] = description)
             }
           />
           <Box paddingTop={smallPadding}>
@@ -157,8 +162,10 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.outcomes")}
               tooltipAriaLabel={t("mapping.canvas.form.outcomes")}
               placeholder={t("mapping.canvas.form.outcomes.placeholder")}
-              value={props.formValue["outcomes"]}
-              onChange={(outcomes) => (props.formValue["outcomes"] = outcomes)}
+              value={props.formValue["serviceOutcomes"]}
+              onChange={(outcomes) =>
+                (props.formValue["serviceOutcomes"] = outcomes)
+              }
             />
           </Box>
           {props.services.length >= 2 ? (
@@ -221,3 +228,7 @@ function ServiceTabs(props) {
 }
 
 export default React.memo(ServiceTabs);
+
+Tab.defaultProps = {
+  _focus: { boxShadow: "none" },
+};

@@ -59,7 +59,10 @@ function SliderComponent(props) {
         domain={[-2, 4]}
         step={1 / 3}
         mode={2}
-        values={props.phase}
+        values={[
+          props.servicePhaseRange.startPhase,
+          props.servicePhaseRange.endPhase,
+        ]}
       >
         <Rail>
           {({ getRailProps }) => <div style={railStyle} {...getRailProps()} />}
@@ -82,8 +85,8 @@ function SliderComponent(props) {
             <div>
               {tracks.map(({ id, source, target }) => {
                 // Each change we assign the value to the temporary variables to update in the onSlideEnd
-                props.phase[0] = source.value;
-                props.phase[1] = target.value;
+                props.servicePhaseRange.startPhase = source.value;
+                props.servicePhaseRange.endPhase = target.value;
 
                 return (
                   <Track
@@ -107,7 +110,10 @@ function SliderComponent(props) {
                   tick={tick}
                   count={ticks.length}
                   index={index}
-                  phase={props.phase}
+                  phase={[
+                    props.servicePhaseRange.startPhase,
+                    props.servicePhaseRange.endPhase,
+                  ]}
                 />
               ))}
             </div>
@@ -122,7 +128,10 @@ function SliderComponent(props) {
                   tick={tick}
                   count={ticks.length}
                   index={index}
-                  phase={props.phase}
+                  phase={[
+                    props.servicePhaseRange.startPhase,
+                    props.servicePhaseRange.endPhase,
+                  ]}
                 />
               ))}
             </div>
