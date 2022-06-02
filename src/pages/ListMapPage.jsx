@@ -15,13 +15,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
+import NavigationBar from "../components/bar/navigationBar/NavigationBar";
+import Service from "../service/RegionServices";
+import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
 import {
   AddMapModal,
   DeleteModal,
 } from "../components/miscellaneousComponents";
-import NavigationBar from "../components/miscellaneousComponents/NavigationBar";
-import Service from "../service/RegionServices";
-import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
 import dotsImg from "../../src/assets/images/3dots.png";
 
 const Card = chakra(Box, {
@@ -105,10 +105,12 @@ const ListMapPage = () => {
 
   return (
     <>
+      <NavigationBar
+        title={t("mapping.navigation.bar.map.dashboard.title")}
+        buttonText={t("mapping.navigation.bar.new.map.button")}
+        isMapDashboard={true}
+      />
       <Box className="wrapper">
-        <Grid className="topNav">
-          <NavigationBar />
-        </Grid>
         <Text textAlign="center" mt="20px">
           {t("startup.list.map.page.header")}
         </Text>
