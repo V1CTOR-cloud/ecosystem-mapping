@@ -26,13 +26,17 @@ function SaveFilterAlertDialog(props) {
   const [filterName, setFilterName] = useState("");
 
   useEffect(() => {
-    if (props.isEditing) {
-      setIsError(false);
-      setFilterName(props.name);
-    } else {
-      setFilterName("");
+    function changeFilterName() {
+      if (props.isEditing) {
+        setIsError(false);
+        setFilterName(props.name);
+      } else {
+        setFilterName("");
+      }
     }
-  }, [props.isOpen]);
+
+    changeFilterName();
+  }, [props.isEditing, props.isOpen, props.name]);
 
   function handleNameFilterChange(input) {
     if (input === "") {

@@ -161,7 +161,7 @@ function MapCanvasPage(props) {
     setContainerHeight(fullHeight);
   }, [heights, isOpenFilter]);
 
-  // Fetch all the data required to display the page with all the information.
+  // Fetch all the data required to display the page with all the information need to be trigger only once.
   useEffect(() => {
     const fetchData = async () => {
       // Get the name of the
@@ -214,7 +214,7 @@ function MapCanvasPage(props) {
     };
 
     fetchData().then(() => setIsDataLoaded(true));
-  }, [props.mapId]);
+  }, [props.mapId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the secondary list at each new service or service update
   // In addition we update the sidebar
@@ -234,7 +234,7 @@ function MapCanvasPage(props) {
         }
       });
     }
-  }, [fetchedData]);
+  }, [archivedData, draftData, fetchedData, isDataLoaded]);
 
   // Each modification in the filters, we update our secondaryList to display the right data
   useEffect(() => {
@@ -269,15 +269,19 @@ function MapCanvasPage(props) {
               // The item is selected so, we add all element corresponding to that
               if (item.value) {
                 if (filter.id === 1 || filter.id === 3 || filter.id === 5) {
-                  if (
-                    service[filterName].replaceAll("_", "").toLowerCase() ===
-                    item.name.replaceAll(" ", "").toLowerCase()
-                  ) {
-                    filterBool[index] = true;
+                  if (service[filterName]) {
+                    if (
+                      service[filterName].replaceAll("_", "").toLowerCase() ===
+                      item.name.replaceAll(" ", "").toLowerCase()
+                    ) {
+                      filterBool[index] = true;
+                    }
                   }
                 } else if (filter.id === 2) {
-                  if (service[filterName][0].organisationName === item.name) {
-                    filterBool[index] = true;
+                  if (service[filterName].length !== 0) {
+                    if (service[filterName][0].organisationName === item.name) {
+                      filterBool[index] = true;
+                    }
                   }
                 } else if (filter.id === 4) {
                   const serviceLocation = service[filterName];
@@ -295,6 +299,24 @@ function MapCanvasPage(props) {
                   ) {
                     filterBool[index] = true;
                   }
+                } else if (filter.id === 6) {
+                  service.serviceBudget.forEach((budget) => {
+                    if (item.name !== "+10000") {
+                      const filtersValues = item.name.split("-");
+                      if (
+                        budget.budgetValue >= parseFloat(filtersValues[0]) &&
+                        budget.budgetValue <= parseFloat(filtersValues[1]) &&
+                        budget.budgetValue !== 0
+                      ) {
+                        filterBool[index] = true;
+                      }
+                    } else {
+                      const filterValue = item.name.substring(1);
+                      if (budget.budgetValue >= parseFloat(filterValue)) {
+                        filterBool[index] = true;
+                      }
+                    }
+                  });
                 }
               }
             });
@@ -342,7 +364,7 @@ function MapCanvasPage(props) {
     } else {
       setSecondaryFetchedData(fetchedData);
     }
-  }, [filters]);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // We populate each filter once the data is fully loaded
   useEffect(() => {
@@ -461,7 +483,7 @@ function MapCanvasPage(props) {
     initialFilters[5].items = tempAudience;
     initialFilters[6].items = tempBudget;
     setFilters(initialFilters);
-  }, [isDataLoaded, fetchedData]);
+  }, [isDataLoaded, fetchedData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function isLocationExistInList(location, list) {
     const checkLocationExist = list.find(

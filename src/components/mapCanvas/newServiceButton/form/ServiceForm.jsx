@@ -162,6 +162,11 @@ function ServiceForm(props) {
         formValue["followingService"] = followingService;
       }
     }
+
+    // Check if the budget is 0 to replace it with an empty string
+    formValue["serviceBudget"].forEach((budget) => {
+      budget.budgetValue = budget.budgetValue === 0 ? "" : budget.budgetValue;
+    });
   }
 
   // Function that will send to the database the new service that was created (publish and draft)
@@ -169,6 +174,7 @@ function ServiceForm(props) {
     formatLocation();
     formatAudience();
     formatOrganisation();
+    formatBudget();
 
     let organisationId = null;
     if (formValue["ownerOrganisation"] !== null) {
@@ -275,6 +281,7 @@ function ServiceForm(props) {
     formatLocation();
     formatAudience();
     formatOrganisation();
+    formatBudget();
 
     let organisationId = null;
     if (formValue["ownerOrganisation"] !== null) {
@@ -508,6 +515,13 @@ function ServiceForm(props) {
     if (formValue["ownerOrganisation"] === "Organisation") {
       formValue["ownerOrganisation"] = null;
     }
+  }
+
+  function formatBudget() {
+    formValue["serviceBudget"].forEach((budget) => {
+      budget.budgetValue =
+        budget.budgetValue === "" ? 0 : parseFloat(budget.budgetValue);
+    });
   }
 
   function timeZoneConvertor(date, timeZone) {

@@ -27,7 +27,7 @@ function LabeledBudgetInputComponent(props) {
 
   function handleAddOrRemoveBudget(index) {
     const tempBudgets = Array.from(budgets);
-    if (index === props.budgets.length - 1) {
+    if (index === budgets.length - 1) {
       tempBudgets.push({
         budgetTitle: "",
         budgetValue: "",
@@ -94,7 +94,6 @@ function LabeledBudgetInputComponent(props) {
               <InputComponent
                 value={budget.budgetTitle}
                 placeholder={t("mapping.canvas.form.budget.title.placeholder")}
-                isBudget={true}
                 onChange={(budgetTitle) =>
                   handleBudgetTitleChange(budgetTitle, index)
                 }
@@ -105,7 +104,6 @@ function LabeledBudgetInputComponent(props) {
               <NumberInputComponent
                 value={budget.budgetValue}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
-                isBudget={true}
                 onChange={(budgetValue) =>
                   handleBudgetValueChange(budgetValue, index)
                 }
@@ -124,7 +122,7 @@ function LabeledBudgetInputComponent(props) {
                 width="15px"
                 onClick={() => handleAddOrRemoveBudget(index)}
                 icon={
-                  index === props.budgets.length - 1 ? (
+                  index === budgets.length - 1 ? (
                     <AddIcon color={greyColor} />
                   ) : (
                     <CloseIcon color={greyColor} />
