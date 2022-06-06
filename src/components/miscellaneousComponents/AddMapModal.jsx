@@ -383,4 +383,4 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   );
 };
 
-export default AddMapModal;
+export default withRouter(AddMapModal);
