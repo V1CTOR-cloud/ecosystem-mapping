@@ -21,9 +21,9 @@ import service from "../../../../assets/servicesFocus.json";
 
 
 const ServiceLineContainer = styled.div`
-  margin-bottom: ${smallPadding};
+  padding-bottom: ${smallPadding};
   display: flex;
-  height: 30px;
+  height: 40px;
   width: 100%;
   border-radius: ${borderRadius};
 `;
@@ -248,7 +248,7 @@ function ServiceContainer(props) {
                   cursor={"pointer"}
                   position={"absolute"}
                   w={"100%"}
-                  h="30px"
+                  h="40px"
                   onClick={() => onClick(getEventData, props.service)}
                 />
               )}
