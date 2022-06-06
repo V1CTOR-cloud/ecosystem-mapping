@@ -1,6 +1,6 @@
 import axios from "axios";
 import { GraphQLClient } from "graphql-request";
-import { getCurrentUser } from "./AuthenticationService";
+import { Authentication } from "./authentication";
 
 let allRegions = [];
 let allIndustry = [];
@@ -115,7 +115,7 @@ class Service {
     });
     const { ecosystemMaps } = await graphcms.request(
       `query MyQuery {
-        ecosystemMaps(where: {cPTUserAccount: {id: "${getCurrentUser().id}"}}){
+        ecosystemMaps(where: {cPTUserAccount: {id: "${Authentication.getCurrentUser().id}"}}){
           id
           name
           region
@@ -156,7 +156,7 @@ class Service {
           industry: data.industry,
           subIndustry: data.subIndustry,
           cPTUserAccount: {
-            connect: { id: getCurrentUser().id },
+            connect: { id: Authentication.getCurrentUser().id },
           },
         },
       }
