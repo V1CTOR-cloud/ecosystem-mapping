@@ -28,13 +28,8 @@ import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent
 import ServiceTabs from "./tabs/ServiceTabs";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
-import Service from "../../../../service/EcosystemMapServices";
 import toastComponent from "../../../basic/ToastComponent";
-import {
-  replaceNumberToPhase,
-  replacePhaseToNumber,
-} from "../../../../service/phaseConverter";
-import Services from "../../../../service/EcosystemMapServices";
+import { Service } from "../../../../service/service";
 
 function ServiceForm(props) {
   const applicationTypeButtons = [
@@ -92,10 +87,10 @@ function ServiceForm(props) {
     formValue["applicationType"] =
       props.serviceWithoutModification.applicationType;
     formValue["servicePhaseRange"] = {
-      startPhase: replacePhaseToNumber(
+      startPhase: Service.replacePhaseToNumber(
         props.serviceWithoutModification.servicePhaseRange.startPhase
       ),
-      endPhase: replacePhaseToNumber(
+      endPhase: Service.replacePhaseToNumber(
         props.serviceWithoutModification.servicePhaseRange.endPhase
       ),
     };
@@ -211,10 +206,10 @@ function ServiceForm(props) {
           : formValue["followedService"],
 
       servicePhaseRange: {
-        startPhase: replaceNumberToPhase(
+        startPhase: Service.replaceNumberToPhase(
           formValue["servicePhaseRange"].startPhase
         ),
-        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+        endPhase: Service.replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
       },
 
       mapId: props.mapId,
@@ -338,10 +333,10 @@ function ServiceForm(props) {
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
       servicePhaseRange: {
         id: props.serviceWithoutModification.servicePhaseRange.id,
-        startPhase: replaceNumberToPhase(
+        startPhase: Service.replaceNumberToPhase(
           formValue["servicePhaseRange"].startPhase
         ),
-        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+        endPhase: Service.replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
       },
 
       // Second tabs
@@ -469,7 +464,7 @@ function ServiceForm(props) {
           applicationType: service.applicationType,
         };
 
-        Services.updateServiceOrderAndApplicationType(
+        Service.updateServiceOrderAndApplicationType(
           service.id,
           data
           // eslint-disable-next-line no-loop-func

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -6,7 +6,7 @@ import {
   HStack,
   Text,
   useDisclosure,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
@@ -21,18 +21,19 @@ import {
   market_and_organization,
   mediumPadding,
   organization,
-  smallPadding,
+  smallPadding
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
-import Service from "../service/EcosystemMapServices";
-import RegionService from "../service/RegionServices";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
 import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { useTranslation } from "react-i18next";
+import { Map } from "../service/map";
+import { Organisation } from "../service/organisation";
+import { Region } from "../service/region";
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
@@ -46,23 +47,26 @@ const ArrowUp = styled.div`
   border-bottom: 7.5px solid ${greyColor};
 `;
 
+export const MapCanvasPageContext = createContext(undefined);
+
+
 const data = {
   services: {},
   rows: {
     Market: {
       id: market,
-      serviceIds: [],
+      serviceIds: []
     },
     Market_and_Organization: {
       id: market_and_organization,
-      serviceIds: [],
+      serviceIds: []
     },
     Organization: {
       id: organization,
-      serviceIds: [],
-    },
+      serviceIds: []
+    }
   }, // Reordering of the columns (the easiest way)
-  rowsOrder: [market, market_and_organization, organization],
+  rowsOrder: [market, market_and_organization, organization]
 };
 
 function MapCanvasPage(props) {
@@ -70,67 +74,67 @@ function MapCanvasPage(props) {
     {
       id: 0,
       name: "Saved Filters",
-      items: [],
+      items: []
     },
     {
       id: 1,
       name: "Service Status",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0,
+      selectedFilterCount: 0
     },
     {
       id: 2,
       name: "Service Owner",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0,
+      selectedFilterCount: 0
     },
     {
       id: 3,
       name: "Service Focus",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0,
+      selectedFilterCount: 0
     },
     {
       id: 4,
       name: "Service Location",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0,
+      selectedFilterCount: 0
     },
     {
       id: 5,
       name: "Service Audience",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0,
+      selectedFilterCount: 0
     },
     {
       id: 6,
       name: "Budget",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0,
-    },
+      selectedFilterCount: 0
+    }
   ];
   const { t } = useTranslation();
 
   const {
     isOpen: isOpenFilter,
     onOpen: onOpenFilter,
-    onClose: onCloseFilter,
+    onClose: onCloseFilter
   } = useDisclosure();
   const {
     isOpen: isOpenForm,
     onOpen: onOpenForm,
-    onClose: onCloseForm,
+    onClose: onCloseForm
   } = useDisclosure();
   const {
     isOpen: isOpenFormEdition,
     onOpen: onOpenFormEdition,
-    onClose: onCloseFormEdition,
+    onClose: onCloseFormEdition
   } = useDisclosure();
 
   const [serviceWithoutModification, setServiceWithoutModification] =
@@ -167,11 +171,11 @@ function MapCanvasPage(props) {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Service.getMapServicesAndMapInformation(props.mapId);
+      let res = await Map.getMapServicesAndMapInformation(props.mapId);
       setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
-      setSecondaryFetchedData(structuredClone(sortedData));
+      setSecondaryFetchedData(sortedData);
 
       // Get all savedFilters by the user
       if (res.ecosystemMap["filters"] != null) {
@@ -179,26 +183,26 @@ function MapCanvasPage(props) {
       }
 
       // Get all organisations
-      res = await Service.getAllOrganisation();
+      res = await Organisation.getAllOrganisation();
       const tempOrganizations = [];
       // Formatting our organisation to fit for the component LabeledMenu
       res.organisations.forEach((organisation) =>
         tempOrganizations.push({
           id: organisation.id,
-          name: organisation.organisationName,
+          name: organisation.organisationName
         })
       );
       setFetchedOrganization(tempOrganizations);
 
       // Get all locations
-      res = await RegionService.listAllRegions();
+      res = await Region.listAllRegions();
       const tempLocations = [];
       res.data.forEach((item) => {
         tempLocations.push({
           id: item.id,
           continent: item.region,
           country: item.name,
-          regions: item.states,
+          regions: item.states
         });
       });
       tempLocations.pop();
@@ -208,7 +212,7 @@ function MapCanvasPage(props) {
       tempServices.forEach((thisService) => {
         services.push({
           id: thisService.id,
-          name: thisService.serviceName,
+          name: thisService.serviceName
         });
       });
     };
@@ -342,7 +346,7 @@ function MapCanvasPage(props) {
         // Fill the services
         tempSecondaryData.services = {
           ...tempSecondaryData.services,
-          [service.id]: service,
+          [service.id]: service
         };
 
         // Fill the serviceIds for each row
@@ -370,7 +374,7 @@ function MapCanvasPage(props) {
   useEffect(() => {
     const tempStatus = [
       { name: "Draft", value: false },
-      { name: "Published", value: false },
+      { name: "Published", value: false }
     ];
     const tempPrimaryFocus = [];
     const tempAudience = [];
@@ -382,10 +386,10 @@ function MapCanvasPage(props) {
       { name: "10-99", value: false },
       {
         name: "100-999",
-        value: false,
+        value: false
       },
       { name: "1000-9999", value: false },
-      { name: "+10000", value: false },
+      { name: "+10000", value: false }
     ];
 
     if (fetchedOrganization) {
@@ -414,7 +418,7 @@ function MapCanvasPage(props) {
           if (!locationExist) {
             tempLocation.push({
               name: service.serviceLocation.continent,
-              value: false,
+              value: false
             });
           }
 
@@ -470,7 +474,7 @@ function MapCanvasPage(props) {
         tempFilters.push({
           name: filters[0],
           value: false,
-          selectedFilters: filters[1],
+          selectedFilters: filters[1]
         });
       });
     }
@@ -493,7 +497,10 @@ function MapCanvasPage(props) {
   }
 
   function sortServices(fetchedData) {
-    let sortedData = data;
+    let sortedData = { ...data };
+    sortedData.rows[market].serviceIds = [];
+    sortedData.rows[market_and_organization].serviceIds = [];
+    sortedData.rows[organization].serviceIds = [];
 
     // Sort by order
     fetchedData.services.sort((a, b) => {
@@ -505,7 +512,7 @@ function MapCanvasPage(props) {
       if (service.serviceStatus === "Archived") {
         archivedData.push(service);
       } else {
-        sortedData.services = { ...data.services, [service.id]: service };
+        sortedData.services = { ...sortedData.services, [service.id]: service };
 
         if (service.serviceStatus === "Draft") {
           draftData.push(service);
@@ -571,105 +578,108 @@ function MapCanvasPage(props) {
   return !isDataLoaded ? (
     <Text>Loading</Text>
   ) : (
-    <Flex align="start" direction="column" h={containerHeight}>
-      <Box w="100%" zIndex={2}>
-        <NavigationBar
-          title={mapTitle}
-          button={primaryButton}
-          additionalButtons={additionalButton}
-        />
-      </Box>
-      {isOpenFilter && (
-        <Box zIndex={2} w="100%">
-          <FilterBar
-            filtersState={[filters, setFilters]}
-            handleClearAllFilters={handleClearAllFilters}
-            mapId={props.mapId}
+    <MapCanvasPageContext.Provider
+      value={{ mapId: props.mapId, fetchedData: [fetchedData, setFetchedData], services: services }}>
+      <Flex align="start" direction="column" h={containerHeight}>
+        <Box w="100%" zIndex={2}>
+          <NavigationBar
+            title={mapTitle}
+            button={primaryButton}
+            additionalButtons={additionalButton}
           />
         </Box>
-      )}
-      <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
-        <SideBar
-          isFilterOpen={isOpenFilter}
-          archivedData={archivedData}
-          draftData={draftData}
-          onOpenFormEdition={onOpenFormEdition}
-          handleServiceClick={(service) => handleServiceClick(service)}
-        />
-        <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
-          <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
-          <ContentCanvas
+        {isOpenFilter && (
+          <Box zIndex={2} w="100%">
+            <FilterBar
+              filtersState={[filters, setFilters]}
+              handleClearAllFilters={handleClearAllFilters}
+              mapId={props.mapId}
+            />
+          </Box>
+        )}
+        <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
+          <SideBar
             isFilterOpen={isOpenFilter}
-            isFiltersActive={isFiltersActive}
-            data={[fetchedData, setFetchedData]}
-            secondaryData={secondaryFetchedData}
+            archivedData={archivedData}
+            draftData={draftData}
+            onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
-            heights={[heights, setHeights]}
-            containerHeight={[containerHeight, setContainerHeight]}
           />
-          {data.rowsOrder.map((row, index) => {
-            return (
-              <Box
-                key={index}
-                position="absolute"
-                right="20px"
-                top={
-                  (isOpenFilter ? 135 : 75) +
-                  12 * 2 +
-                  (index === 0
-                    ? 0
-                    : index === 1
-                    ? heights[0]
-                    : heights[0] + heights[1]) +
-                  +index * 24 +
-                  "px"
-                }
-                w="50px"
-                h={heights[index]}
-                textAlign="center"
-              >
-                <HStack position="relative" w="100%" h="100%">
-                  <VStack
-                    bg={greyColor}
-                    w="2px"
-                    h="100%"
-                    justify="space-between"
-                  >
-                    <ArrowDown />
-                    <ArrowUp />
-                  </VStack>
-                  <Text
-                    marginLeft={smallPadding}
-                    color={greyColor}
-                    style={{ writingMode: "vertical-lr" }}
-                  >
-                    {row.replaceAll("_", " ").replace("and", "&")}
-                  </Text>
-                </HStack>
-              </Box>
-            );
-          })}
+          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
+            <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
+            <ContentCanvas
+              isFilterOpen={isOpenFilter}
+              isFiltersActive={isFiltersActive}
+              data={[fetchedData, setFetchedData]}
+              secondaryData={secondaryFetchedData}
+              handleServiceClick={(service) => handleServiceClick(service)}
+              heights={[heights, setHeights]}
+              containerHeight={[containerHeight, setContainerHeight]}
+            />
+            {data.rowsOrder.map((row, index) => {
+              return (
+                <Box
+                  key={index}
+                  position="absolute"
+                  right="20px"
+                  top={
+                    (isOpenFilter ? 135 : 75) +
+                    12 * 2 +
+                    (index === 0
+                      ? 0
+                      : index === 1
+                        ? heights[0]
+                        : heights[0] + heights[1]) +
+                    +index * 24 +
+                    "px"
+                  }
+                  w="50px"
+                  h={heights[index]}
+                  textAlign="center"
+                >
+                  <HStack position="relative" w="100%" h="100%">
+                    <VStack
+                      bg={greyColor}
+                      w="2px"
+                      h="100%"
+                      justify="space-between"
+                    >
+                      <ArrowDown />
+                      <ArrowUp />
+                    </VStack>
+                    <Text
+                      marginLeft={smallPadding}
+                      color={greyColor}
+                      style={{ writingMode: "vertical-lr" }}
+                    >
+                      {row.replaceAll("_", " ").replace("and", "&")}
+                    </Text>
+                  </HStack>
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
-      </Box>
-      {isOpenFormEdition && (
-        <ServiceForm
-          isEditing={true}
-          isOpen={isOpenFormEdition}
-          onClose={onCloseFormEdition}
-          organisations={fetchedOrganization}
-          fetchedData={[fetchedData, setFetchedData]}
-          services={services}
-          locations={fetchedLocation}
-          mapId={props.mapId}
-          serviceWithoutModification={serviceWithoutModification}
-        />
-      )}
-    </Flex>
+        {isOpenFormEdition && (
+          <ServiceForm
+            isEditing={true}
+            isOpen={isOpenFormEdition}
+            onClose={onCloseFormEdition}
+            organisations={fetchedOrganization}
+            fetchedData={[fetchedData, setFetchedData]}
+            services={services}
+            locations={fetchedLocation}
+            mapId={props.mapId}
+            serviceWithoutModification={serviceWithoutModification}
+          />
+        )}
+      </Flex>
+    </MapCanvasPageContext.Provider>
   );
 }
 
 HStack.defaultProps = {
-  spacing: 0,
+  spacing: 0
 };
 
 export default withRouter(MapCanvasPage);
