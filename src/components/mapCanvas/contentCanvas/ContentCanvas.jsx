@@ -5,8 +5,8 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
 import Row from "../drap&dropComponent/row/Row";
-import Services from "../../../service/EcosystemMapServices";
 import toastComponent from "../../basic/ToastComponent";
+import { Service } from "../../../service/service";
 
 function ContentCanvas(props) {
   const [data, setData] = props.data;
@@ -33,7 +33,7 @@ function ContentCanvas(props) {
           applicationType: value.applicationType,
         };
 
-        await Services.updateServiceOrderAndApplicationType(
+        await Service.updateServiceOrderAndApplicationType(
           value.id,
           data
           // eslint-disable-next-line no-loop-func

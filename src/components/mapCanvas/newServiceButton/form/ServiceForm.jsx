@@ -28,13 +28,12 @@ import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent
 import ServiceTabs from "./tabs/ServiceTabs";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
-import Service from "../../../../service/EcosystemMapServices";
 import toastComponent from "../../../basic/ToastComponent";
 import {
   replaceNumberToPhase,
   replacePhaseToNumber,
 } from "../../../../service/phaseConverter";
-import Services from "../../../../service/EcosystemMapServices";
+import { Service } from "../../../../service/service";
 
 function ServiceForm(props) {
   const applicationTypeButtons = [
@@ -469,7 +468,7 @@ function ServiceForm(props) {
           applicationType: service.applicationType,
         };
 
-        Services.updateServiceOrderAndApplicationType(
+        Service.updateServiceOrderAndApplicationType(
           service.id,
           data
           // eslint-disable-next-line no-loop-func

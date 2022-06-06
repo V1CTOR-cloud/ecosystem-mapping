@@ -13,11 +13,10 @@ import {
   replaceNumberToPhase,
   replacePhaseToNumber
 } from "../../../../service/phaseConverter";
-import Services from "../../../../service/EcosystemMapServices";
 import toastComponent from "../../../basic/ToastComponent";
 import { MapCanvasPageContext } from "../../../../pages/MapCanvasPage";
-import Service from "../../../../service/EcosystemMapServices";
 import service from "../../../../assets/servicesFocus.json";
+import { Service } from "../../../../service/service";
 
 
 const ServiceLineContainer = styled.div`
@@ -62,7 +61,7 @@ function ServiceContainer(props) {
       }
     };
 
-    const res = await Services.updateRangesPhase(dataToUpdate).catch((e) => [
+    const res = await Service.updateRangesPhase(dataToUpdate).catch((e) => [
       "Error",
       e
     ]);
@@ -179,7 +178,7 @@ function ServiceContainer(props) {
           applicationType: value.applicationType,
         };
 
-        await Services.updateServiceOrderAndApplicationType(
+        await Service.updateServiceOrderAndApplicationType(
           value.id,
           data
           // eslint-disable-next-line no-loop-func

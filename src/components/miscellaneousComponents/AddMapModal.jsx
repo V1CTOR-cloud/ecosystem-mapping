@@ -26,9 +26,9 @@ import { useTranslation } from "react-i18next";
 
 import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
 import Service from "../../service/RegionServices";
-import { isLoggedIn } from "../../service/AuthenticationService";
 import "../../assets/fonts/fonts.css";
-import SelectIndustry from "../industryComponant/SelectIndustry";
+import SelectIndustry from "../IndustryComponant/SelectIndustry";
+import { Authentication } from "../../service/authentication";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -230,7 +230,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   };
 
   const handleOpenModal = () => {
-    if (isLoggedIn()) {
+    if (Authentication.isLoggedIn()) {
       setInitialLocation(locationData);
       onOpen();
     } else {

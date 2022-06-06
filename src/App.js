@@ -12,10 +12,10 @@ import { initReactI18next } from "react-i18next";
 import axios from "axios";
 
 import "./assets/css/Style.scss";
-import { isLoggedIn } from "service/AuthenticationService";
 import LandingPage from "./pages/LandingPage";
 import ListMapPage from "./pages/ListMapPage";
 import MapCanvasPage from "./pages/MapCanvasPage";
+import { Authentication } from "./service/authentication";
 
 function App() {
   const [resource, setresource] = useState("");
@@ -62,14 +62,14 @@ function App() {
                 exact
                 path="/home"
                 render={() =>
-                  isLoggedIn() ? <MapCanvasPage /> : <Redirect to="/" />
+                  Authentication.isLoggedIn() ? <MapCanvasPage /> : <Redirect to="/" />
                 }
               />
               <Route
                 exact
                 path="/ecosystemmap"
                 render={() =>
-                  isLoggedIn() ? <ListMapPage /> : <Redirect to="/" />
+                  Authentication.isLoggedIn() ? <ListMapPage /> : <Redirect to="/" />
                 }
               />
               <Route
@@ -80,7 +80,7 @@ function App() {
                   const pathNameSplit = pathName.split("/");
                   const mapId = pathNameSplit[2];
 
-                  return isLoggedIn() ? (
+                  return Authentication.isLoggedIn() ? (
                     <MapCanvasPage mapId={mapId} />
                   ) : (
                     <Redirect to="/" />
