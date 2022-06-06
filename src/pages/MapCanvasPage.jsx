@@ -174,7 +174,7 @@ function MapCanvasPage(props) {
       setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
-      setSecondaryFetchedData(structuredClone(sortedData));
+      setSecondaryFetchedData(sortedData);
 
       // Get all savedFilters by the user
       if (res.ecosystemMap["filters"] != null) {
@@ -496,7 +496,10 @@ function MapCanvasPage(props) {
   }
 
   function sortServices(fetchedData) {
-    let sortedData = data;
+    let sortedData = { ...data };
+    sortedData.rows[market].serviceIds = [];
+    sortedData.rows[market_and_organization].serviceIds = [];
+    sortedData.rows[organization].serviceIds = [];
 
     // Sort by order
     fetchedData.services.sort((a, b) => {
@@ -508,7 +511,7 @@ function MapCanvasPage(props) {
       if (service.serviceStatus === "Archived") {
         archivedData.push(service);
       } else {
-        sortedData.services = { ...data.services, [service.id]: service };
+        sortedData.services = { ...sortedData.services, [service.id]: service };
 
         if (service.serviceStatus === "Draft") {
           draftData.push(service);
