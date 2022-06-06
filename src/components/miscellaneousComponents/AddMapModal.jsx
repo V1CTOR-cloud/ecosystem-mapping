@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 
 import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
 import "../../assets/fonts/fonts.css";
-import SelectIndustry from "../IndustryComponant/SelectIndustry";
+import SelectIndustry from "../industryComponant/SelectIndustry";
 import { Authentication } from "../../service/authentication";
 import { Region } from "../../service/region";
 import { Map } from "../../service/map";
@@ -383,4 +383,4 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   );
 };
 
-export default withRouter(AddMapModal);
+export default AddMapModal;
