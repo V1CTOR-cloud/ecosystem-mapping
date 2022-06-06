@@ -18,7 +18,7 @@ import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
-import { Maps } from "../../../../service/maps";
+import { Map } from "../../../../service/map";
 
 function FilterBar(props) {
   const { t } = useTranslation();
@@ -133,7 +133,7 @@ function FilterBar(props) {
         filters: savedFilters
       };
 
-      const res = await Maps.createSavedFilter(data);
+      const res = await Map.createSavedFilter(data);
 
       if (res.updateEcosystemMap) {
         const tempFilter = [...filters];

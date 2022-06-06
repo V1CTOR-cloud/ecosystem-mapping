@@ -19,16 +19,17 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
 import { useHistory, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
-import Service from "../../service/RegionServices";
 import "../../assets/fonts/fonts.css";
 import SelectIndustry from "../IndustryComponant/SelectIndustry";
 import { Authentication } from "../../service/authentication";
+import { Region } from "../../service/region";
+import { Map } from "../../service/map";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -37,7 +38,7 @@ const headerStyle = {
   fontWeight: "500",
   lineHeight: "90px",
   letterSpacing: "0em",
-  textAlign: "left",
+  textAlign: "left"
 };
 
 const htagStyle = {
@@ -48,10 +49,10 @@ const htagStyle = {
   lineHeight: "28px",
   letterSpacing: "0em",
   textAlign: "left",
-  mt: "24px",
+  mt: "24px"
 };
 const modalWidth = {
-  maxWidth: "704px",
+  maxWidth: "704px"
 };
 
 const CreateButton = chakra(IconButton, {
@@ -64,8 +65,8 @@ const CreateButton = chakra(IconButton, {
     display: "block",
     cursor: "pointer",
     marginTop: "15px",
-    size: "lg",
-  },
+    size: "lg"
+  }
 });
 
 const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
@@ -85,21 +86,21 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   const [subIndustries, setSubIndustries] = useState([]);
 
   const setInitialLocation = (locData) => {
-    const allRegions = Service.getregions();
-    const allCountries = Service.getCountriesByRegion(locData.region);
-    const getStatesByCountry = Service.getStatesByCountry(
+    const allRegions = Region.getregions();
+    const allCountries = Region.getCountriesByRegion(locData.region);
+    const getStatesByCountry = Region.getStatesByCountry(
       locData.region,
       locData.country
     );
 
-    const getCities = Service.getCitiesByState(
+    const getCities = Region.getCitiesByState(
       locData.region,
       locData.country,
       locData.state
     );
 
-    const allIndustries = Service.getIndustries();
-    const getSubIndustriesByIndustry = Service.getSubIndustriesByIndustry(
+    const allIndustries = Region.getIndustries();
+    const getSubIndustriesByIndustry = Region.getSubIndustriesByIndustry(
       locData.industry
     );
 
@@ -158,7 +159,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
       locationData.inValidFields.length === 0 ||
       locationData.region === "Global"
     ) {
-      Service.addEcoMap(location).then((res) => {
+      Map.addMap(location).then((res) => {
         if (res.id !== undefined) {
           toast({
             title: t("startup.toast.create"),
@@ -166,12 +167,12 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
             status: "success",
             duration: 5000,
             position: "top-right",
-            isClosable: true,
+            isClosable: true
           });
           onClose();
           history.push({
             pathname: "/services/" + res.id,
-            state: { mapName: mapName },
+            state: { mapName: mapName }
           });
         }
       });
@@ -181,7 +182,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
         status: "warning",
         duration: 3000,
         position: "top-right",
-        isClosable: true,
+        isClosable: true
       });
     }
   };
@@ -199,7 +200,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
       locationData.inValidFields.length === 0 ||
       locationData.region === "Global"
     ) {
-      Service.editEcoMap(locationData).then((res) => {
+      Map.editMap(locationData).then((res) => {
         if (res !== undefined) {
           toast({
             title: t("startup.toast.update"),
@@ -207,7 +208,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
             status: "success",
             duration: 5000,
             position: "top-right",
-            isClosable: true,
+            isClosable: true
           });
         }
         notifyParent();
@@ -219,7 +220,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
         status: "warning",
         duration: 3000,
         position: "top-right",
-        isClosable: true,
+        isClosable: true
       });
     }
   };
@@ -239,15 +240,15 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
         status: "warning",
         duration: 3000,
         position: "top-right",
-        isClosable: true,
+        isClosable: true
       });
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      await Service.listAllRegions();
-      await Service.listAllIndustries();
+      await Region.listAllRegions();
+      await Region.listAllIndustries();
       setInitialLocation(locationData);
     };
 
@@ -314,7 +315,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
                   onChange={(e) => {
                     setLocationData({
                       ...locationData,
-                      name: e.target.value,
+                      name: e.target.value
                     });
                   }}
                 />

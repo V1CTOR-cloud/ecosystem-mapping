@@ -9,10 +9,6 @@ import { useTranslation } from "react-i18next";
 import Handle from "../handle/Handle";
 import { borderRadius, smallPadding } from "../../../../helper/constant";
 import ServiceName from "./ServiceName";
-import {
-  replaceNumberToPhase,
-  replacePhaseToNumber
-} from "../../../../service/phaseConverter";
 import toastComponent from "../../../basic/ToastComponent";
 import { MapCanvasPageContext } from "../../../../pages/MapCanvasPage";
 import service from "../../../../assets/servicesFocus.json";
@@ -38,19 +34,19 @@ function ServiceContainer(props) {
   const { t } = useTranslation();
   const mapCanvasPageContext = useContext(MapCanvasPageContext);
 
-  let sourceValue = replacePhaseToNumber(
+  let sourceValue = Service.replacePhaseToNumber(
     props.service.servicePhaseRange.startPhase
   );
-  let targetValue = replacePhaseToNumber(
+  let targetValue = Service.replacePhaseToNumber(
     props.service.servicePhaseRange.endPhase
   );
 
   async function handleSlideEnd(sourceValue, targetValue) {
     // Update the model everytime we resize it.
     props.service.servicePhaseRange.startPhase =
-      replaceNumberToPhase(sourceValue);
+      Service.replaceNumberToPhase(sourceValue);
     props.service.servicePhaseRange.endPhase =
-      replaceNumberToPhase(targetValue);
+      Service.replaceNumberToPhase(targetValue);
 
     const dataToUpdate = {
       id: props.service.id,
@@ -95,8 +91,8 @@ function ServiceContainer(props) {
       serviceFocus: service.servicesFocus[0].name.replaceAll(" ", ""),
       order: thisService.order + 1,
       servicePhaseRange: {
-        startPhase: replaceNumberToPhase(newStartPhase),
-        endPhase: replaceNumberToPhase(newEndPhase)
+        startPhase: Service.replaceNumberToPhase(newStartPhase),
+        endPhase: Service.replaceNumberToPhase(newEndPhase)
       },
       serviceStartTime: new Date(),
       serviceEndTime: new Date(),
@@ -232,10 +228,10 @@ function ServiceContainer(props) {
             values={
               // Convert all the string to numeric value
               [
-                replacePhaseToNumber(
+                Service.replacePhaseToNumber(
                   props.service.servicePhaseRange.startPhase
                 ),
-                replacePhaseToNumber(props.service.servicePhaseRange.endPhase)
+                Service.replacePhaseToNumber(props.service.servicePhaseRange.endPhase)
               ]
             }
             mode={2}

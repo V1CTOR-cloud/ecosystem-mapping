@@ -25,15 +25,15 @@ import {
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
-import RegionService from "../service/RegionServices";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
 import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { useTranslation } from "react-i18next";
-import { Maps } from "../service/maps";
+import { Map } from "../service/map";
 import { Organisation } from "../service/organisation";
+import { Region } from "../service/region";
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
@@ -171,7 +171,7 @@ function MapCanvasPage(props) {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Maps.getMapServicesAndMapInformation(props.mapId);
+      let res = await Map.getMapServicesAndMapInformation(props.mapId);
       setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
@@ -195,7 +195,7 @@ function MapCanvasPage(props) {
       setFetchedOrganization(tempOrganizations);
 
       // Get all locations
-      res = await RegionService.listAllRegions();
+      res = await Region.listAllRegions();
       const tempLocations = [];
       res.data.forEach((item) => {
         tempLocations.push({

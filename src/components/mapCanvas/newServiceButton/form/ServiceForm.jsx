@@ -29,10 +29,6 @@ import ServiceTabs from "./tabs/ServiceTabs";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
 import toastComponent from "../../../basic/ToastComponent";
-import {
-  replaceNumberToPhase,
-  replacePhaseToNumber,
-} from "../../../../service/phaseConverter";
 import { Service } from "../../../../service/service";
 
 function ServiceForm(props) {
@@ -91,10 +87,10 @@ function ServiceForm(props) {
     formValue["applicationType"] =
       props.serviceWithoutModification.applicationType;
     formValue["servicePhaseRange"] = {
-      startPhase: replacePhaseToNumber(
+      startPhase: Service.replacePhaseToNumber(
         props.serviceWithoutModification.servicePhaseRange.startPhase
       ),
-      endPhase: replacePhaseToNumber(
+      endPhase: Service.replacePhaseToNumber(
         props.serviceWithoutModification.servicePhaseRange.endPhase
       ),
     };
@@ -210,10 +206,10 @@ function ServiceForm(props) {
           : formValue["followedService"],
 
       servicePhaseRange: {
-        startPhase: replaceNumberToPhase(
+        startPhase: Service.replaceNumberToPhase(
           formValue["servicePhaseRange"].startPhase
         ),
-        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+        endPhase: Service.replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
       },
 
       mapId: props.mapId,
@@ -337,10 +333,10 @@ function ServiceForm(props) {
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
       servicePhaseRange: {
         id: props.serviceWithoutModification.servicePhaseRange.id,
-        startPhase: replaceNumberToPhase(
+        startPhase: Service.replaceNumberToPhase(
           formValue["servicePhaseRange"].startPhase
         ),
-        endPhase: replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+        endPhase: Service.replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
       },
 
       // Second tabs

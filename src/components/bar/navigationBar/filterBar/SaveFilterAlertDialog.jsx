@@ -18,7 +18,7 @@ import {
   mediumPadding,
   verySmallPadding,
 } from "../../../../helper/constant";
-import { Maps } from "../../../../service/maps";
+import { Map } from "../../../../service/map";
 
 function SaveFilterAlertDialog(props) {
   const { t } = useTranslation();
@@ -108,7 +108,7 @@ function SaveFilterAlertDialog(props) {
         filters: savedFilter,
       };
 
-      const res = await Maps.createSavedFilter(data);
+      const res = await Map.createSavedFilter(data);
 
       if (res.updateEcosystemMap) {
         props.onClose();

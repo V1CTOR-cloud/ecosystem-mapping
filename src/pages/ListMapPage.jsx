@@ -16,13 +16,14 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
-import Service from "../service/RegionServices";
 import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
 import {
   AddMapModal,
   DeleteModal,
 } from "../components/miscellaneousComponents";
 import dotsImg from "../../src/assets/images/3dots.png";
+import { Region } from "../service/region";
+import { Map } from "../service/map";
 
 const Card = chakra(Box, {
   baseStyle: {
@@ -88,7 +89,7 @@ const ListMapPage = () => {
   };
 
   const getAllEcoMaps = () => {
-    Service.getAllEcoMap().then((res) => {
+    Map.getAllUserMaps().then((res) => {
       setData(res);
     });
   };
@@ -96,8 +97,8 @@ const ListMapPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       getAllEcoMaps();
-      await Service.listAllRegions();
-      await Service.listAllIndustries();
+      await Region.listAllRegions();
+      await Region.listAllIndustries();
     };
 
     fetchData().catch(console.error);
