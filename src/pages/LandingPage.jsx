@@ -5,13 +5,13 @@ import { Box, Flex, Grid, SimpleGrid, VStack } from "@chakra-ui/react";
 import NavigationBarLandingPage from "../components/bar/navigationBar/NavigationBarLandingPage";
 import DashboardImages from "../components/miscellaneousComponents/DashboardImages";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
-import Service from "../service/RegionServices";
+import { Region } from "../service/region";
 
 const LandingPage = () => {
   useEffect(() => {
     const fetchData = async () => {
-      await Service.listAllRegions();
-      await Service.listAllIndustries();
+      await Region.listAllRegions();
+      await Region.listAllIndustries();
     };
 
     fetchData().catch(console.error);

@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
-import Service from "../../service/RegionServices";
 import "../../assets/fonts/fonts.css";
+import { Map } from "../../service/map";
 
 const DeleteModal = (props) => {
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ const DeleteModal = (props) => {
   const handleClose = () => setIsOpen(false);
 
   const handleConfirm = () => {
-    Service.DeleteEcoMap(props.id).then(() => {
+    Map.deleteMap(props.id).then(() => {
       setIsOpen(false);
       toast({
         title: t("startup.toast.delete"),

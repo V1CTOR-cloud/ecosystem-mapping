@@ -11,14 +11,14 @@ import {
   greyTextColor,
   smallPadding,
   verySmallPadding,
-  whiteColor,
+  whiteColor
 } from "../../../../helper/constant";
 import FilterMenuButton from "./filtersButtons/FilterMenuButton";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
-import EcosystemMapServices from "../../../../service/EcosystemMapServices";
+import { Map } from "../../../../service/map";
 
 function FilterBar(props) {
   const { t } = useTranslation();
@@ -26,10 +26,10 @@ function FilterBar(props) {
   const {
     isOpen: isOpenDeleteDialog,
     onOpen: onOpenDeleteDialog,
-    onClose: onCloseDeleteDialog,
+    onClose: onCloseDeleteDialog
   } = useDisclosure();
   const [filters, setFilters] = useState(props.filtersState[0]);
-  const [isActive, setIsActive] = useState(
+  const [isButtonsActive, setIsButtonsActive] = useState(
     filters.some((filter) => filter.selectedFilterCount > 0)
   );
   const [isFilterApplied, setIsFilterApplied] = useState(false);
@@ -44,7 +44,7 @@ function FilterBar(props) {
 
   useEffect(() => {
     if (filters.some((filter) => filter.selectedFilterCount > 0)) {
-      setIsActive(true);
+      setIsButtonsActive(true);
       setIsFilterApplied(false);
     }
   }, [filters]);
@@ -61,11 +61,16 @@ function FilterBar(props) {
     // Update in the canvas the display of the service every filter changes
     props.filtersState[1](filters);
     setIsFilterApplied(true);
+
+    // If we apply no filters (default filters) then we are hiding the buttons.
+    if (filters.every((filter) => filter.id === 0 ? true : filter.selectedFilterCount === 0)) {
+      setIsButtonsActive(false);
+    }
   }
 
   function handleClearAllFilters() {
     props.handleClearAllFilters();
-    setIsActive(false);
+    setIsButtonsActive(false);
   }
 
   function handleSavedFilterChange(filter) {
@@ -118,17 +123,17 @@ function FilterBar(props) {
         if (savedFilter.name !== name) {
           savedFilters = {
             ...savedFilters,
-            [savedFilter.name]: savedFilter.selectedFilters,
+            [savedFilter.name]: savedFilter.selectedFilters
           };
         }
       });
 
       const data = {
         id: props.mapId,
-        filters: savedFilters,
+        filters: savedFilters
       };
 
-      const res = await EcosystemMapServices.createSavedFilter(data);
+      const res = await Map.createSavedFilter(data);
 
       if (res.updateEcosystemMap) {
         const tempFilter = [...filters];
@@ -188,7 +193,7 @@ function FilterBar(props) {
           );
         }
       })}
-      {isActive && !isFilterApplied && (
+      {isButtonsActive && !isFilterApplied && (
         <ButtonComponent
           buttonText={t("mapping.navigation.bar.apply.filter.button")}
           isWithoutBorder={true}
@@ -199,7 +204,7 @@ function FilterBar(props) {
       )}
       <Spacer />
 
-      {isActive && (
+      {isButtonsActive && (
         <Box paddingRight={smallPadding}>
           <Text
             as="u"
@@ -211,7 +216,7 @@ function FilterBar(props) {
           </Text>
         </Box>
       )}
-      {isActive && (
+      {isButtonsActive && (
         <Box paddingRight={verySmallPadding}>
           <ButtonComponent
             buttonText={
@@ -229,7 +234,8 @@ function FilterBar(props) {
                 <Save color={whiteColor} size={25} />
               )
             }
-            onClick={isSavedFilterSelected ? () => {} : handleSaveFilterClick}
+            onClick={isSavedFilterSelected ? () => {
+            } : handleSaveFilterClick}
           />
         </Box>
       )}
