@@ -19,24 +19,27 @@ import {
   verySmallPadding,
 } from "../../../../helper/constant";
 import { Map } from "../../../../service/map";
+import PropTypes from "prop-types";
 
 function SaveFilterAlertDialog(props) {
+  const { isEditing, isOpen, name, filters, mapId, onClose, setFilters } =
+    props;
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
   const [filterName, setFilterName] = useState("");
 
   useEffect(() => {
     function changeFilterName() {
-      if (props.isEditing) {
+      if (isEditing) {
         setIsError(false);
-        setFilterName(props.name);
+        setFilterName(name);
       } else {
         setFilterName("");
       }
     }
 
     changeFilterName();
-  }, [props.isEditing, props.isOpen, props.name]);
+  }, [isEditing, isOpen, name]);
 
   function handleNameFilterChange(input) {
     if (input === "") {
@@ -52,24 +55,24 @@ function SaveFilterAlertDialog(props) {
       setIsError(true);
     } else {
       let savedFilter;
-      if (props.filters[0].items !== []) {
+      if (filters[0].items !== []) {
         let tempObject = {};
 
-        props.filters[0].items.forEach((savedFilter) => {
+        filters[0].items.forEach((savedFilter) => {
           tempObject = {
             ...tempObject,
             [savedFilter.name]: savedFilter.selectedFilters,
           };
         });
 
-        if (props.isEditing) {
+        if (isEditing) {
           savedFilter = {
             ...tempObject,
           };
 
           // Rename the key of the object
-          savedFilter[filterName] = savedFilter[props.name];
-          delete savedFilter[props.name];
+          savedFilter[filterName] = savedFilter[name];
+          delete savedFilter[name];
         } else {
           // We create a new object
           savedFilter = {
@@ -83,7 +86,7 @@ function SaveFilterAlertDialog(props) {
         };
       }
 
-      props.filters.forEach((filter) => {
+      filters.forEach((filter) => {
         if (filter.id !== 0 && filter.selectedFilterCount !== 0) {
           savedFilter[filterName] = {
             ...savedFilter[filterName],
@@ -104,19 +107,19 @@ function SaveFilterAlertDialog(props) {
       });
 
       const data = {
-        id: props.mapId,
+        id: mapId,
         filters: savedFilter,
       };
 
       const res = await Map.createSavedFilter(data);
 
       if (res.updateEcosystemMap) {
-        props.onClose();
-        const tempFilter = [...props.filters];
+        onClose();
+        const tempFilter = [...filters];
 
         const entries = Object.entries(res.updateEcosystemMap.filters);
 
-        if (!props.isEditing) {
+        if (!isEditing) {
           const index = entries.length - 1;
 
           // Length-1 to retrieve the last element that we just add.
@@ -136,21 +139,21 @@ function SaveFilterAlertDialog(props) {
         }
 
         setFilterName("");
-        props.setFilters(tempFilter);
+        setFilters(tempFilter);
       }
     }
   }
 
   return (
     <AlertDialog
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
       leastDestructiveRef={React.useRef()}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg">
-            {props.isEditing
+            {isEditing
               ? t("mapping.alert.dialog.edit.filter.title")
               : t("mapping.alert.dialog.save.filter.title")}
           </AlertDialogHeader>
@@ -179,7 +182,7 @@ function SaveFilterAlertDialog(props) {
               color={greyTextColor}
               onClick={() => {
                 setFilterName("");
-                props.onClose();
+                onClose();
               }}
             />
             <ButtonComponent
@@ -193,5 +196,15 @@ function SaveFilterAlertDialog(props) {
     </AlertDialog>
   );
 }
+
+SaveFilterAlertDialog.propTypes = {
+  isEditing: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  mapId: PropTypes.string.isRequired,
+  filters: PropTypes.array.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setFilters: PropTypes.func.isRequired,
+};
 
 export default SaveFilterAlertDialog;
