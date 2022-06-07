@@ -11,7 +11,7 @@ import {
   greyTextColor,
   smallPadding,
   verySmallPadding,
-  whiteColor
+  whiteColor,
 } from "../../../../helper/constant";
 import FilterMenuButton from "./filtersButtons/FilterMenuButton";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
@@ -19,16 +19,18 @@ import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
 import { Map } from "../../../../service/map";
+import PropTypes from "prop-types";
 
 function FilterBar(props) {
+  const { filtersState, handleClearAllFilters, mapId } = props;
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenDeleteDialog,
     onOpen: onOpenDeleteDialog,
-    onClose: onCloseDeleteDialog
+    onClose: onCloseDeleteDialog,
   } = useDisclosure();
-  const [filters, setFilters] = useState(props.filtersState[0]);
+  const [filters, setFilters] = useState(filtersState[0]);
   const [isButtonsActive, setIsButtonsActive] = useState(
     filters.some((filter) => filter.selectedFilterCount > 0)
   );
@@ -59,17 +61,21 @@ function FilterBar(props) {
 
   function handleApplyFilter() {
     // Update in the canvas the display of the service every filter changes
-    props.filtersState[1](filters);
+    filtersState[1](filters);
     setIsFilterApplied(true);
 
     // If we apply no filters (default filters) then we are hiding the buttons.
-    if (filters.every((filter) => filter.id === 0 ? true : filter.selectedFilterCount === 0)) {
+    if (
+      filters.every((filter) =>
+        filter.id === 0 ? true : filter.selectedFilterCount === 0
+      )
+    ) {
       setIsButtonsActive(false);
     }
   }
 
-  function handleClearAllFilters() {
-    props.handleClearAllFilters();
+  function handleClearFilters() {
+    handleClearAllFilters();
     setIsButtonsActive(false);
   }
 
@@ -123,14 +129,14 @@ function FilterBar(props) {
         if (savedFilter.name !== name) {
           savedFilters = {
             ...savedFilters,
-            [savedFilter.name]: savedFilter.selectedFilters
+            [savedFilter.name]: savedFilter.selectedFilters,
           };
         }
       });
 
       const data = {
-        id: props.mapId,
-        filters: savedFilters
+        id: mapId,
+        filters: savedFilters,
       };
 
       const res = await Map.createSavedFilter(data);
@@ -145,7 +151,7 @@ function FilterBar(props) {
 
         tempFilter[0].items.splice(index, 1);
 
-        props.filtersState[1](tempFilter);
+        filtersState[1](tempFilter);
         onCloseDeleteDialog();
       }
     }
@@ -168,7 +174,7 @@ function FilterBar(props) {
       <Text color={greyTextColor}>
         {t("mapping.navigation.filter.bar.filter.by")}
       </Text>
-      {props.filtersState[0].map((filter, index) => {
+      {filtersState[0].map((filter, index) => {
         if (index === 0) {
           return (
             <SavedFilterButton
@@ -187,7 +193,6 @@ function FilterBar(props) {
             <FilterMenuButton
               key={filter.name}
               filter={filter}
-              savedFilters={props.savedFilters}
               handleFilterChange={(filter) => handleFilterChange(filter, index)}
             />
           );
@@ -210,7 +215,7 @@ function FilterBar(props) {
             as="u"
             cursor="pointer"
             color={greyTextColor}
-            onClick={handleClearAllFilters}
+            onClick={handleClearFilters}
           >
             {t("mapping.navigation.bar.clear.filter.button")}
           </Text>
@@ -234,18 +239,16 @@ function FilterBar(props) {
                 <Save color={whiteColor} size={25} />
               )
             }
-            onClick={isSavedFilterSelected ? () => {
-            } : handleSaveFilterClick}
+            onClick={isSavedFilterSelected ? () => {} : handleSaveFilterClick}
           />
         </Box>
       )}
       <SaveFilterAlertDialog
         isOpen={isOpen}
         onClose={onClose}
-        setFilters={props.filtersState[1]}
+        setFilters={filtersState[1]}
         filters={filters}
-        mapId={props.mapId}
-        savedFilters={props.savedFilters}
+        mapId={mapId}
         isEditing={isEditing}
         name={name}
       />
@@ -257,5 +260,11 @@ function FilterBar(props) {
     </HStack>
   );
 }
+
+FilterBar.propTypes = {
+  filtersState: PropTypes.array,
+  handleClearAllFilters: PropTypes.func,
+  mapId: PropTypes.string,
+};
 
 export default FilterBar;
