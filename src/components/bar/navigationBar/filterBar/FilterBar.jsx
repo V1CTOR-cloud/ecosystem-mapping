@@ -262,9 +262,9 @@ function FilterBar(props) {
 }
 
 FilterBar.propTypes = {
-  filtersState: PropTypes.array,
-  handleClearAllFilters: PropTypes.func,
-  mapId: PropTypes.string,
+  filtersState: PropTypes.array.isRequired,
+  handleClearAllFilters: PropTypes.func.isRequired,
+  mapId: PropTypes.string.isRequired,
 };
 
 export default FilterBar;
