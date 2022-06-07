@@ -6,10 +6,10 @@ import {
   HStack,
   Text,
   useDisclosure,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
-import { withRouter } from "react-router-dom";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
 import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
@@ -21,7 +21,7 @@ import {
   market_and_organization,
   mediumPadding,
   organization,
-  smallPadding
+  smallPadding,
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
@@ -49,92 +49,91 @@ const ArrowUp = styled.div`
 
 export const MapCanvasPageContext = createContext(undefined);
 
-
 const data = {
   services: {},
   rows: {
     Market: {
       id: market,
-      serviceIds: []
+      serviceIds: [],
     },
     Market_and_Organization: {
       id: market_and_organization,
-      serviceIds: []
+      serviceIds: [],
     },
     Organization: {
       id: organization,
-      serviceIds: []
-    }
+      serviceIds: [],
+    },
   }, // Reordering of the columns (the easiest way)
-  rowsOrder: [market, market_and_organization, organization]
+  rowsOrder: [market, market_and_organization, organization],
 };
 
-function MapCanvasPage(props) {
+function MapCanvasPage() {
   const initialFilters = [
     {
       id: 0,
       name: "Saved Filters",
-      items: []
+      items: [],
     },
     {
       id: 1,
       name: "Service Status",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0
+      selectedFilterCount: 0,
     },
     {
       id: 2,
       name: "Service Owner",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0
+      selectedFilterCount: 0,
     },
     {
       id: 3,
       name: "Service Focus",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0
+      selectedFilterCount: 0,
     },
     {
       id: 4,
       name: "Service Location",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0
+      selectedFilterCount: 0,
     },
     {
       id: 5,
       name: "Service Audience",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0
+      selectedFilterCount: 0,
     },
     {
       id: 6,
       name: "Budget",
       items: [],
       isAllSelected: false,
-      selectedFilterCount: 0
-    }
+      selectedFilterCount: 0,
+    },
   ];
   const { t } = useTranslation();
 
   const {
     isOpen: isOpenFilter,
     onOpen: onOpenFilter,
-    onClose: onCloseFilter
+    onClose: onCloseFilter,
   } = useDisclosure();
   const {
     isOpen: isOpenForm,
     onOpen: onOpenForm,
-    onClose: onCloseForm
+    onClose: onCloseForm,
   } = useDisclosure();
   const {
     isOpen: isOpenFormEdition,
     onOpen: onOpenFormEdition,
-    onClose: onCloseFormEdition
+    onClose: onCloseFormEdition,
   } = useDisclosure();
 
   const [serviceWithoutModification, setServiceWithoutModification] =
@@ -153,6 +152,7 @@ function MapCanvasPage(props) {
   const [isFiltersActive, setIsFilterActive] = useState(false);
   const [archivedData] = useState([]);
   const [draftData] = useState([]);
+  const { mapId } = useParams();
 
   useEffect(() => {
     const fullHeight =
@@ -171,7 +171,7 @@ function MapCanvasPage(props) {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Map.getMapServicesAndMapInformation(props.mapId);
+      let res = await Map.getMapServicesAndMapInformation(mapId);
       setMapTitle(res.ecosystemMap["name"]);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
@@ -189,7 +189,7 @@ function MapCanvasPage(props) {
       res.organisations.forEach((organisation) =>
         tempOrganizations.push({
           id: organisation.id,
-          name: organisation.organisationName
+          name: organisation.organisationName,
         })
       );
       setFetchedOrganization(tempOrganizations);
@@ -202,7 +202,7 @@ function MapCanvasPage(props) {
           id: item.id,
           continent: item.region,
           country: item.name,
-          regions: item.states
+          regions: item.states,
         });
       });
       tempLocations.pop();
@@ -212,13 +212,13 @@ function MapCanvasPage(props) {
       tempServices.forEach((thisService) => {
         services.push({
           id: thisService.id,
-          name: thisService.serviceName
+          name: thisService.serviceName,
         });
       });
     };
 
     fetchData().then(() => setIsDataLoaded(true));
-  }, [props.mapId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mapId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update the secondary list at each new service or service update
   // In addition we update the sidebar
@@ -346,7 +346,7 @@ function MapCanvasPage(props) {
         // Fill the services
         tempSecondaryData.services = {
           ...tempSecondaryData.services,
-          [service.id]: service
+          [service.id]: service,
         };
 
         // Fill the serviceIds for each row
@@ -374,7 +374,7 @@ function MapCanvasPage(props) {
   useEffect(() => {
     const tempStatus = [
       { name: "Draft", value: false },
-      { name: "Published", value: false }
+      { name: "Published", value: false },
     ];
     const tempPrimaryFocus = [];
     const tempAudience = [];
@@ -386,10 +386,10 @@ function MapCanvasPage(props) {
       { name: "10-99", value: false },
       {
         name: "100-999",
-        value: false
+        value: false,
       },
       { name: "1000-9999", value: false },
-      { name: "+10000", value: false }
+      { name: "+10000", value: false },
     ];
 
     if (fetchedOrganization) {
@@ -418,7 +418,7 @@ function MapCanvasPage(props) {
           if (!locationExist) {
             tempLocation.push({
               name: service.serviceLocation.continent,
-              value: false
+              value: false,
             });
           }
 
@@ -474,7 +474,7 @@ function MapCanvasPage(props) {
         tempFilters.push({
           name: filters[0],
           value: false,
-          selectedFilters: filters[1]
+          selectedFilters: filters[1],
         });
       });
     }
@@ -571,7 +571,7 @@ function MapCanvasPage(props) {
       fetchedData={[fetchedData, setFetchedData]}
       services={services}
       locations={fetchedLocation}
-      mapId={props.mapId}
+      mapId={mapId}
     />
   );
 
@@ -579,7 +579,12 @@ function MapCanvasPage(props) {
     <Text>Loading</Text>
   ) : (
     <MapCanvasPageContext.Provider
-      value={{ mapId: props.mapId, fetchedData: [fetchedData, setFetchedData], services: services }}>
+      value={{
+        mapId: mapId,
+        fetchedData: [fetchedData, setFetchedData],
+        services: services,
+      }}
+    >
       <Flex align="start" direction="column" h={containerHeight}>
         <Box w="100%" zIndex={2}>
           <NavigationBar
@@ -593,7 +598,7 @@ function MapCanvasPage(props) {
             <FilterBar
               filtersState={[filters, setFilters]}
               handleClearAllFilters={handleClearAllFilters}
-              mapId={props.mapId}
+              mapId={mapId}
             />
           </Box>
         )}
@@ -628,8 +633,8 @@ function MapCanvasPage(props) {
                     (index === 0
                       ? 0
                       : index === 1
-                        ? heights[0]
-                        : heights[0] + heights[1]) +
+                      ? heights[0]
+                      : heights[0] + heights[1]) +
                     +index * 24 +
                     "px"
                   }
@@ -669,7 +674,7 @@ function MapCanvasPage(props) {
             fetchedData={[fetchedData, setFetchedData]}
             services={services}
             locations={fetchedLocation}
-            mapId={props.mapId}
+            mapId={mapId}
             serviceWithoutModification={serviceWithoutModification}
           />
         )}
@@ -679,7 +684,7 @@ function MapCanvasPage(props) {
 }
 
 HStack.defaultProps = {
-  spacing: 0
+  spacing: 0,
 };
 
-export default withRouter(MapCanvasPage);
+export default MapCanvasPage;

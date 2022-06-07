@@ -21,12 +21,12 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
-import { useHistory, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
 import "../../assets/fonts/fonts.css";
-import SelectIndustry from "../IndustryComponant/SelectIndustry";
+import SelectIndustry from "../industryComponant/SelectIndustry";
 import { Authentication } from "../../service/authentication";
 import { Region } from "../../service/region";
 import { Map } from "../../service/map";
@@ -71,7 +71,7 @@ const CreateButton = chakra(IconButton, {
 
 const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -170,10 +170,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
             isClosable: true
           });
           onClose();
-          history.push({
-            pathname: "/services/" + res.id,
-            state: { mapName: mapName }
-          });
+          navigate("/dashboard/" + res.id);
         }
       });
     } else {
@@ -383,4 +380,4 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
   );
 };
 
-export default withRouter(AddMapModal);
+export default AddMapModal;

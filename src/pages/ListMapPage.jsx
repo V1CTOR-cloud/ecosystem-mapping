@@ -13,7 +13,7 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
@@ -76,7 +76,7 @@ const LogMenuList = chakra(MenuList, {
 });
 
 const ListMapPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [data, setData] = useState([]);
 
@@ -85,7 +85,7 @@ const ListMapPage = () => {
   };
 
   const handleServiceClick = (id) => {
-    history.push({ pathname: "/services/" + id });
+    navigate("/dashboard/" + id);
   };
 
   const getAllEcoMaps = () => {
