@@ -179,8 +179,7 @@ function FilterBar(props) {
           return (
             <SavedFilterButton
               key={filter.name}
-              filter={filter}
-              value={value}
+              propsFilter={filter}
               handleSavedFilterChange={(filter) =>
                 handleSavedFilterChange(filter)
               }
