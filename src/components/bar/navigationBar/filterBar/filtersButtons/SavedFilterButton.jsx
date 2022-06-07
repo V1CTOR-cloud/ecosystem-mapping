@@ -27,12 +27,19 @@ import {
 } from "../../../../../helper/constant";
 import InputComponent from "../../../../basic/inputs/input/inputComponent/InputComponent";
 import { CheckIcon, EditIcon } from "@chakra-ui/icons";
+import PropTypes from "prop-types";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function SavedFilterButton(props) {
+  const {
+    propsFilter,
+    handleSavedFilterChange,
+    handleEditSavedFilter,
+    handleOpenDeleteAlertDialog,
+  } = props;
   const { t } = useTranslation();
-  const [filter] = useState(props.filter);
-  const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
+  const [filter] = useState(propsFilter);
+  const [secondaryFilter, setSecondaryFilter] = useState(propsFilter);
   const [value, setValue] = useState("");
 
   function handleInputChange(input) {
@@ -52,7 +59,7 @@ function SavedFilterButton(props) {
 
     setValue(filterName);
 
-    props.handleSavedFilterChange(selectedSavedFilter);
+    handleSavedFilterChange(selectedSavedFilter);
   }
 
   return (
@@ -130,7 +137,7 @@ function SavedFilterButton(props) {
                     color: blueColor,
                   }}
                   onClick={() => {
-                    props.handleEditSavedFilter(item.name);
+                    handleEditSavedFilter(item.name);
                   }}
                   cursor="pointer"
                 />
@@ -152,7 +159,7 @@ function SavedFilterButton(props) {
                       color: "red",
                     }}
                     onClick={() => {
-                      props.handleOpenDeleteAlertDialog(item.name);
+                      handleOpenDeleteAlertDialog(item.name);
                     }}
                   />
                 </Box>
@@ -164,5 +171,12 @@ function SavedFilterButton(props) {
     </Box>
   );
 }
+
+SavedFilterButton.propTypes = {
+  propsFilter: PropTypes.array.isRequired,
+  handleSavedFilterChange: PropTypes.func.isRequired,
+  handleEditSavedFilter: PropTypes.func.isRequired,
+  handleOpenDeleteAlertDialog: PropTypes.func.isRequired,
+};
 
 export default SavedFilterButton;
