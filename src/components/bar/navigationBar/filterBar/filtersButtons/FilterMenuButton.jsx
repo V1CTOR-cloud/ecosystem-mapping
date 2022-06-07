@@ -12,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import {
   accentColor,
@@ -30,9 +31,10 @@ import InputComponent from "../../../../basic/inputs/input/inputComponent/InputC
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function FilterMenuButton(props) {
+  const { propFilter, handleFilterChange } = props;
   const { t } = useTranslation();
-  const [filter, setFilter] = useState(props.filter);
-  const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
+  const [filter, setFilter] = useState(propFilter);
+  const [secondaryFilter, setSecondaryFilter] = useState(propFilter);
   const [isButtonActive, setIsButtonActive] = useState(false);
 
   useEffect(() => {
@@ -46,9 +48,9 @@ function FilterMenuButton(props) {
 
   // Update the filters (when we add a new location for instance)
   useEffect(() => {
-    setFilter(props.filter);
-    setSecondaryFilter(props.filter);
-  }, [props.filter]);
+    setFilter(propFilter);
+    setSecondaryFilter(propFilter);
+  }, [propFilter]);
 
   function handleInputChange(input) {
     const tempFilter = { ...filter };
@@ -71,7 +73,7 @@ function FilterMenuButton(props) {
       : 0;
 
     setFilter(tempFilter);
-    props.handleFilterChange(tempFilter);
+    handleFilterChange(tempFilter);
   }
 
   // Uncheck all items in the filter
@@ -84,7 +86,7 @@ function FilterMenuButton(props) {
     tempFilter.selectedFilterCount = 0;
 
     setFilter(tempFilter);
-    props.handleFilterChange(tempFilter);
+    handleFilterChange(tempFilter);
   }
 
   // Check the only item that was selected.
@@ -108,7 +110,7 @@ function FilterMenuButton(props) {
     });
 
     setFilter(tempFilter);
-    props.handleFilterChange(tempFilter);
+    handleFilterChange(tempFilter);
   }
 
   return (
@@ -219,5 +221,10 @@ function FilterMenuButton(props) {
     </Box>
   );
 }
+
+FilterMenuButton.propTypes = {
+  propFilter: PropTypes.array.isRequired,
+  handleFilterChange: PropTypes.func.isRequired,
+};
 
 export default FilterMenuButton;
