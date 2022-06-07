@@ -5,11 +5,17 @@ import {
   Button,
   chakra,
   Grid,
+  HStack,
   Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
   Menu,
   MenuButton,
   MenuList,
   Text,
+  useDisclosure,
   WrapItem,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
@@ -24,6 +30,19 @@ import {
 import dotsImg from "../../src/assets/images/3dots.png";
 import { Region } from "../service/region";
 import { Map } from "../service/map";
+import {
+  blackColor,
+  blueColor,
+  borderThickness,
+  greyColor,
+  mediumPadding,
+  verySmallPadding,
+  whiteColor,
+} from "../helper/constant";
+import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
+import ButtonComponent from "../components/basic/buttons/ButtonComponent";
+import { SortDownAlt } from "@styled-icons/bootstrap";
+import IconButtonComponent from "../components/basic/buttons/IconButtonComponent";
 
 const Card = chakra(Box, {
   baseStyle: {
@@ -78,6 +97,7 @@ const LogMenuList = chakra(MenuList, {
 const ListMapPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [data, setData] = useState([]);
 
   const handleMapChange = () => {
@@ -104,12 +124,90 @@ const ListMapPage = () => {
     fetchData().catch(console.error);
   });
 
+  const primaryButton = (
+    <ButtonComponent
+      isPrimary={true}
+      padding={`0 0 0 ${mediumPadding}`}
+      buttonText={t("mapping.navigation.bar.new.map.button")}
+      icon={
+        <AddIcon
+          marginRight={verySmallPadding}
+          color={whiteColor}
+          w="15px"
+          h="15px"
+        />
+      }
+      onClick={() => {
+        //TODO Create the function to create a map
+      }}
+    />
+  );
+
+  const additionalButton = (
+    <HStack>
+      {/* Button View */}
+      <ButtonComponent
+        isWithoutBorder={true}
+        buttonText={t("mapping.navigation.bar.view.button")}
+        icon={
+          <Grid size="20" title={t("mapping.navigation.bar.view.button")} />
+        }
+        color={blackColor}
+        onClick={() => {}}
+      />
+      {/*Button sort*/}
+      <ButtonComponent
+        padding={`0 ${mediumPadding} 0 ${mediumPadding}`}
+        isWithoutBorder={true}
+        buttonText={t("mapping.navigation.bar.sort.button")}
+        icon={
+          <SortDownAlt
+            size="20"
+            title={t("mapping.navigation.bar.sort.button")}
+          />
+        }
+        color={blackColor}
+        onClick={() => {}}
+      />
+      {/* Button search */}
+      {!isOpen && (
+        <IconButtonComponent
+          icon={
+            <SearchIcon
+              color={isOpen ? blueColor : greyColor}
+              w="15px"
+              h="15px"
+            />
+          }
+          onClick={onOpen}
+        />
+      )}
+      {isOpen && (
+        <InputGroup w="200px">
+          <InputLeftElement cursor="pointer" onClick={() => {}}>
+            <SearchIcon color={isOpen ? blueColor : greyColor} />
+          </InputLeftElement>
+          <Input
+            type="text"
+            placeholder={t("mapping.navigation.bar.search.placeholder")}
+            border={borderThickness}
+            borderColor={blueColor}
+            _hover={{ borderColor: blueColor }}
+          />
+          <InputRightElement cursor="pointer" onClick={onClose}>
+            <CloseIcon color={greyColor} />
+          </InputRightElement>
+        </InputGroup>
+      )}
+    </HStack>
+  );
+
   return (
     <>
       <NavigationBar
         title={t("mapping.navigation.bar.map.dashboard.title")}
-        buttonText={t("mapping.navigation.bar.new.map.button")}
-        isMapDashboard={true}
+        button={primaryButton}
+        additionalButtons={additionalButton}
       />
       <Box className="wrapper">
         <Text textAlign="center" mt="20px">
@@ -117,7 +215,7 @@ const ListMapPage = () => {
         </Text>
         <Grid templateColumns="repeat(5, 1fr)" gap={5} mt="20px">
           {data.map((data) => (
-            <Card w="80%" h="170" cursor="pointer">
+            <Card key={data.name} w="80%" h="170" cursor="pointer">
               <WrapItem float="right" display="flex">
                 <Menu>
                   <MenuButton as={CreateButton}>
