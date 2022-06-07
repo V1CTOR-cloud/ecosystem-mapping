@@ -192,7 +192,7 @@ function FilterBar(props) {
           return (
             <FilterMenuButton
               key={filter.name}
-              filter={filter}
+              propFilter={filter}
               handleFilterChange={(filter) => handleFilterChange(filter, index)}
             />
           );
