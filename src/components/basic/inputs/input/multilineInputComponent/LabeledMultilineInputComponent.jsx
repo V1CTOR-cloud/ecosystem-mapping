@@ -4,22 +4,35 @@ import { Box } from "@chakra-ui/react";
 
 import MultilineInputComponent from "./MultilineInputComponent";
 import LabelWithTooltip from "../../../labelWithTooltip/LabelWithTooltip";
+import PropTypes from "prop-types";
 
 function LabeledMultilineInputComponent(props) {
+  const { tooltipText, tooltipAriaLabel, label, value, placeholder, onChange } =
+    props;
+
   return (
     <Box>
       <LabelWithTooltip
-        tooltipText={props.tooltipText}
-        tooltipAriaLabel={props.tooltipAriaLabel}
-        label={props.label}
+        tooltipText={tooltipText}
+        tooltipAriaLabel={tooltipAriaLabel}
+        label={label}
       />
       <MultilineInputComponent
-        value={props.value}
-        placeholder={props.placeholder}
-        onChange={props.onChange}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
       />
     </Box>
   );
 }
+
+LabeledMultilineInputComponent.propTypes = {
+  tooltipText: PropTypes.string.isRequired,
+  tooltipAriaLabel: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default React.memo(LabeledMultilineInputComponent);
