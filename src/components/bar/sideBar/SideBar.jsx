@@ -15,6 +15,7 @@ import {
   smallPadding,
   whiteColor,
 } from "../../../helper/constant";
+import PropTypes from "prop-types";
 
 const SideBarContainer = styled.div`
   position: absolute;
@@ -32,13 +33,20 @@ const SideBarContainer = styled.div`
 
 function SideBar(props) {
   const { t } = useTranslation();
+  const {
+    archivedData,
+    onOpenFormEdition,
+    handleServiceClick,
+    isFilterOpen,
+    draftData,
+  } = props;
 
   const initialButtons = [
     {
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: [
-        <TableChart color={blueColor} />,
-        <TableChart color={blackColor} />,
+        <TableChart key={0} color={blueColor} />,
+        <TableChart key={1} color={blackColor} />,
       ],
       children: [
         <ButtonComponent
@@ -63,24 +71,30 @@ function SideBar(props) {
     },
     {
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
-      icon: [<Draft color={blueColor} />, <Draft color={blackColor} />],
+      icon: [
+        <Draft key={0} color={blueColor} />,
+        <Draft key={1} color={blackColor} />,
+      ],
       children: [],
     },
     {
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
-      icon: [<Archive color={blueColor} />, <Archive color={blackColor} />],
+      icon: [
+        <Archive key={0} color={blueColor} />,
+        <Archive key={1} color={blackColor} />,
+      ],
       children: [],
     },
   ];
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [buttons] = useState(initialButtons);
+  const buttons = useState(initialButtons);
 
   // Update the draft buttons and archived buttons at every update or creation of a service
   useEffect(() => {
     buttons[2].children = [];
     buttons[1].children = [];
 
-    props.archivedData.forEach((service) => {
+    archivedData.forEach((service) => {
       buttons[2].children.push(
         <ButtonComponent
           key={service.id}
@@ -94,7 +108,7 @@ function SideBar(props) {
       );
     });
 
-    props.draftData.forEach((service) => {
+    draftData.forEach((service) => {
       buttons[1].children.push(
         <ButtonComponent
           key={service.id}
@@ -122,15 +136,15 @@ function SideBar(props) {
   }
 
   function handleDraftOrArchivedServiceClick(service) {
-    props.onOpenFormEdition();
-    props.handleServiceClick(service);
+    onOpenFormEdition();
+    handleServiceClick(service);
   }
 
   return (
     <SideBarContainer
       onMouseOver={handleOnMouseOver}
       onMouseLeave={handleOnMouseLeave}
-      isFilterOpen={props.isFilterOpen}
+      isFilterOpen={isFilterOpen}
     >
       <Accordion allowToggle>
         {buttons.map((button) => (
@@ -145,5 +159,13 @@ function SideBar(props) {
     </SideBarContainer>
   );
 }
+
+SideBar.propTypes = {
+  isFilterOpen: PropTypes.bool.isRequired,
+  archivedData: PropTypes.array.isRequired,
+  draftData: PropTypes.array.isRequired,
+  onOpenFormEdition: PropTypes.func.isRequired,
+  handleServiceClick: PropTypes.func.isRequired,
+};
 
 export default SideBar;
