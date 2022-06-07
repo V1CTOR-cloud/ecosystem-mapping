@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import InputComponent from "../input/inputComponent/InputComponent";
 import IconButtonComponent from "../../buttons/IconButtonComponent";
@@ -22,7 +23,9 @@ const currencies = [
 ];
 
 function LabeledBudgetInputComponent(props) {
-  const [budgets, setBudgets] = useState(props.budgets);
+  const { propsBudgets, onChange, label, tooltipText, tooltipAriaLabel } =
+    props;
+  const [budgets, setBudgets] = useState(propsBudgets);
   const { t } = useTranslation();
 
   function handleAddOrRemoveBudget(index) {
@@ -37,36 +40,36 @@ function LabeledBudgetInputComponent(props) {
       tempBudgets.splice(index, 1);
     }
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   function handleBudgetTitleChange(budgetTitle, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].budgetTitle = budgetTitle;
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   function handleBudgetValueChange(budgetValue, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].budgetValue = budgetValue;
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   function handleBudgetCurrencyChange(budgetCurrency, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].budgetCurrency = budgetCurrency;
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   return (
     <React.Fragment>
       <LabelWithTooltip
-        label={props.label}
-        tooltipText={props.tooltipText}
-        tooltipAriaLabel={props.tooltipAriaLabel}
+        label={label}
+        tooltipText={tooltipText}
+        tooltipAriaLabel={tooltipAriaLabel}
       />
 
       <HStack>
@@ -136,5 +139,13 @@ function LabeledBudgetInputComponent(props) {
     </React.Fragment>
   );
 }
+
+LabeledBudgetInputComponent.propTypes = {
+  label: PropTypes.string.isRequired,
+  tooltipText: PropTypes.string.isRequired,
+  tooltipAriaLabel: PropTypes.string.isRequired,
+  propsBudgets: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default React.memo(LabeledBudgetInputComponent);
