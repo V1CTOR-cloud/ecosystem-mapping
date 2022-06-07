@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 
 import { NumberInput, NumberInputField } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import { blueColor, greyColor } from "../../../../../helper/constant";
 
 function NumberInputComponent(props) {
-  const [value, setValue] = useState(props.value);
+  const { propValue, onChange, placeholder } = props;
+  const [value, setValue] = useState(propValue);
   const regex = RegExp("^(0|[1-9]\\d*)(\\.\\d*)?$");
 
   function handleOnChange(value) {
     // Use the regex to avoid the scientific number (with an e)
     if (regex.test(value) || value === "") {
       setValue(value);
-      props.onChange(value);
+      onChange(value);
     }
   }
 
@@ -20,7 +22,7 @@ function NumberInputComponent(props) {
     <NumberInput value={value} onChange={(value) => handleOnChange(value)}>
       <NumberInputField
         precision={2}
-        placeholder={props.placeholder}
+        placeholder={placeholder}
         size="md"
         border={`2px solid`}
         focusBorderColor={blueColor}
@@ -30,8 +32,10 @@ function NumberInputComponent(props) {
   );
 }
 
-NumberInputComponent.defaultProps = {
-  isRequired: false,
+NumberInputComponent.propTypes = {
+  propValue: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default React.memo(NumberInputComponent);
