@@ -45,7 +45,7 @@ function LocationComponent(props) {
       tempLocation.country = value.country;
     }
     if (value.region !== null) {
-      tempLocation.region = props.value.region;
+      tempLocation.region = value.region;
     }
     if (value.city !== null) {
       tempLocation.city = value.city;
@@ -56,7 +56,7 @@ function LocationComponent(props) {
 
   useEffect(() => {
     onChange(location);
-  }, [location, props]);
+  }, [location]);
 
   // Populate the list of continent (run once)
   useEffect(() => {

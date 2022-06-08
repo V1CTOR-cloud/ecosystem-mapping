@@ -25,9 +25,14 @@ function SmallLabelLocation(props) {
   );
 }
 
+SmallLabelLocation.defaultProp = {
+  isDisabled: false,
+  wantScroll: false,
+};
+
 SmallLabelLocation.propTypes = {
-  isDisabled: PropTypes.bool.isRequired,
-  wantScroll: PropTypes.bool.isRequired,
+  isDisabled: PropTypes.bool,
+  wantScroll: PropTypes.bool,
   label: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
   item: PropTypes.object.isRequired,

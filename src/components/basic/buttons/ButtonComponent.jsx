@@ -85,6 +85,7 @@ Button.defaultProps = {
 };
 
 ButtonComponent.defaultProps = {
+  padding: `0 ${smallPadding} 0 ${smallPadding}`,
   isPrimary: false,
   isSelected: false,
   isWithoutBorder: false,
@@ -94,6 +95,7 @@ ButtonComponent.defaultProps = {
   width: undefined,
   color: undefined,
   hover: undefined,
+  icon: undefined,
 };
 
 ButtonComponent.propTypes = {
@@ -106,10 +108,10 @@ ButtonComponent.propTypes = {
   width: PropTypes.string,
   color: PropTypes.string,
   hover: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  padding: PropTypes.string,
+  icon: PropTypes.element,
   buttonText: PropTypes.string.isRequired,
-  icon: PropTypes.element.isRequired,
-  padding: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default ButtonComponent;
