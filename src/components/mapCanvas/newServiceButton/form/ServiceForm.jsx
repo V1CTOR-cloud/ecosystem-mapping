@@ -532,8 +532,6 @@ function ServiceForm(props) {
     );
   }
 
-  console.log(formValue.serviceName);
-
   return (
     <AlertDialog
       size="2xl"
