@@ -76,7 +76,7 @@ const DeleteModal = (props) => {
 };
 
 DeleteModal.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   notifyParent: PropTypes.func.isRequired,
 };
 

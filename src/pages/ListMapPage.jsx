@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import {
   Box,
-  Button,
   chakra,
   Grid,
   HStack,
@@ -20,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Grid as GridIcon } from "@styled-icons/bootstrap";
 
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import imgAkar from "../../src/assets/images/akar-icons_circle-plus.png";
@@ -51,6 +51,9 @@ const Card = chakra(Box, {
     margin: "0px 30px 15px 30px",
     fontSize: "18px",
     rounded: "xl",
+    width: "80%",
+    height: "170px",
+    cursor: "pointer",
   },
 });
 
@@ -71,17 +74,6 @@ const ImgDots = chakra(Image, {
     width: "23px",
     cursor: "pointer",
     marginTop: "15px",
-  },
-});
-
-const CreateButton = chakra(Button, {
-  baseStyle: {
-    backgroundColor: "transparent !important",
-    border: "none !important",
-    boxShadow: "none !important",
-    height: "100%",
-    borderRadius: "60%",
-    position: "unset",
   },
 });
 
@@ -149,9 +141,7 @@ const ListMapPage = () => {
       <ButtonComponent
         isWithoutBorder={true}
         buttonText={t("mapping.navigation.bar.view.button")}
-        icon={
-          <Grid size="20" title={t("mapping.navigation.bar.view.button")} />
-        }
+        icon={<GridIcon size="20" />}
         color={blackColor}
         onClick={() => {}}
       />
@@ -215,19 +205,15 @@ const ListMapPage = () => {
         </Text>
         <Grid templateColumns="repeat(5, 1fr)" gap={5} mt="20px">
           {data.map((data) => (
-            <Card key={data.name} w="80%" h="170" cursor="pointer">
+            <Card key={data.name}>
               <WrapItem float="right" display="flex">
                 <Menu>
-                  <MenuButton as={CreateButton}>
+                  <MenuButton>
                     <ImgDots src={dotsImg} />
                   </MenuButton>
                   <LogMenuList>
                     <Box>
-                      <AddMapModal
-                        data={data}
-                        isEdit={true}
-                        notifyParent={() => handleMapChange()}
-                      />
+                      <AddMapModal isAdd={false} isEdit={true} />
                       <DeleteModal
                         notifyParent={() => handleMapChange()}
                         id={data.id}
