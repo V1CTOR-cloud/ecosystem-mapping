@@ -5,9 +5,10 @@ import tagsComponentStyle from "./tagsComponent.css";
 import PropTypes from "prop-types";
 
 function TagComponent(props) {
-  const { handleTagsChange, tags } = props;
+  const { propHandleTagsChange, tags } = props;
+
   function handleTagsChange(tag) {
-    handleTagsChange(tag);
+    propHandleTagsChange(tag);
   }
 
   return (
@@ -24,7 +25,7 @@ function TagComponent(props) {
 
 TagComponent.propTypes = {
   tags: PropTypes.array.isRequired,
-  handleTagsChange: PropTypes.func.isRequired,
+  propHandleTagsChange: PropTypes.func.isRequired,
 };
 
 export default TagComponent;

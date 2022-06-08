@@ -84,7 +84,7 @@ function Row(props) {
           >
             <Box ref={rowRef} h="100%" minH="180px">
               {services.map((service, index) => (
-                <Box zIndex={2} position="relative" key={service.id}>
+                <Box key={service.id} zIndex={2} position="relative">
                   <ServiceContainer
                     service={service}
                     index={index}

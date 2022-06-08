@@ -4,7 +4,7 @@ import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
 import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
-import { Accordion } from "@chakra-ui/accordion";
+import { Accordion } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import ButtonComponent from "../../basic/buttons/ButtonComponent";

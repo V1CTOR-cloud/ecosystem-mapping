@@ -219,15 +219,19 @@ function ServiceContainer(props) {
     return result;
   }
 
+  console.debug(service.id);
+
   return (
     <Draggable
-      draggableId={service.id}
+      key={service.id}
+      draggableId={service.id.toString()}
       index={index}
       isDragDisabled={isFilterActive}
     >
       {(provided) => (
         <ServiceLineContainer
           {...provided.draggableProps}
+          {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
           <Slider

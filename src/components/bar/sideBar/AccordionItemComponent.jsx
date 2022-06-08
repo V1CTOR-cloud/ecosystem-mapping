@@ -1,11 +1,13 @@
 import React from "react";
 
 import {
+  Box,
+  HStack,
+  Text,
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-} from "@chakra-ui/accordion";
-import { Box, HStack, Text } from "@chakra-ui/react";
+} from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import IconButtonComponent from "../../basic/buttons/IconButtonComponent";
