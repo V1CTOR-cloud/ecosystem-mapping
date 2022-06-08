@@ -62,7 +62,7 @@ MenuComponent.propTypes = {
   wantScroll: PropTypes.bool,
   isDisabled: PropTypes.bool,
   width: PropTypes.string,
-  item: PropTypes.object.isRequired,
+  item: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

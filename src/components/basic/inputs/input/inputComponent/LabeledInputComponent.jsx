@@ -7,15 +7,8 @@ import LabelWithTooltip from "../../../labelWithTooltip/LabelWithTooltip";
 import InputComponent from "./InputComponent";
 
 function LabeledInputComponent(props) {
-  const {
-    tooltipText,
-    tooltipAriaLabel,
-    label,
-    value,
-    placeholder,
-    handleOnChange,
-    onChange,
-  } = props;
+  const { tooltipText, tooltipAriaLabel, label, value, placeholder, onChange } =
+    props;
 
   return (
     <Box>
@@ -27,7 +20,6 @@ function LabeledInputComponent(props) {
       <InputComponent
         value={value}
         placeholder={placeholder}
-        handleOnChange={handleOnChange}
         onChange={onChange}
       />
     </Box>
@@ -40,7 +32,6 @@ LabeledInputComponent.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
-  handleOnChange: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

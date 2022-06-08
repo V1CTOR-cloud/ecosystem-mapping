@@ -672,7 +672,7 @@ function MapCanvasPage() {
             isEditing={true}
             isOpen={isOpenFormEdition}
             onClose={onCloseFormEdition}
-            organisations={fetchedOrganization}
+            propOrganisations={fetchedOrganization}
             fetchedData={[fetchedData, setFetchedData]}
             services={services}
             locations={fetchedLocation}

@@ -35,7 +35,7 @@ SmallLabelLocation.propTypes = {
   wantScroll: PropTypes.bool,
   label: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
-  item: PropTypes.object.isRequired,
+  item: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

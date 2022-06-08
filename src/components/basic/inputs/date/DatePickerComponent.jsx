@@ -24,7 +24,7 @@ function DatePickerComponent(props) {
 }
 
 DatePickerComponent.propTypes = {
-  date: PropTypes.string.isRequired,
+  date: PropTypes.instanceOf(Date).isRequired,
   handleDateChange: PropTypes.func.isRequired,
 };
 

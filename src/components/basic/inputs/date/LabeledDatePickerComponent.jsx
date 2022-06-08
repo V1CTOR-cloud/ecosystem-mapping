@@ -47,8 +47,8 @@ LabeledDatePickerComponent.propTypes = {
   tooltipText: PropTypes.string.isRequired,
   tooltipAriaLabel: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  serviceStartTime: PropTypes.string.isRequired,
-  serviceEndTime: PropTypes.string.isRequired,
+  serviceStartTime: PropTypes.instanceOf(Date).isRequired,
+  serviceEndTime: PropTypes.instanceOf(Date).isRequired,
   onChangeStartTime: PropTypes.func.isRequired,
   onChangeEndTime: PropTypes.func.isRequired,
 };

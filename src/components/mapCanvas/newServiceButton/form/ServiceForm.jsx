@@ -662,10 +662,10 @@ ServiceForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   mapId: PropTypes.string.isRequired,
-  cancelRef: PropTypes.element.isRequired,
+  cancelRef: PropTypes.object.isRequired,
   locations: PropTypes.array.isRequired,
-  services: PropTypes.object.isRequired,
-  fetchedData: PropTypes.object.isRequired,
+  services: PropTypes.array.isRequired,
+  fetchedData: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 

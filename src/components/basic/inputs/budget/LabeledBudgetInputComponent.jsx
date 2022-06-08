@@ -105,7 +105,7 @@ function LabeledBudgetInputComponent(props) {
 
             <Box w="100%" paddingX={smallPadding}>
               <NumberInputComponent
-                value={budget.budgetValue}
+                propValue={budget.budgetValue.toString()}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
                 onChange={(budgetValue) =>
                   handleBudgetValueChange(budgetValue, index)

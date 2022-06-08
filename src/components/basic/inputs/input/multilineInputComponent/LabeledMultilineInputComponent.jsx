@@ -18,7 +18,7 @@ function LabeledMultilineInputComponent(props) {
         label={label}
       />
       <MultilineInputComponent
-        value={value}
+        propValue={value}
         placeholder={placeholder}
         onChange={onChange}
       />

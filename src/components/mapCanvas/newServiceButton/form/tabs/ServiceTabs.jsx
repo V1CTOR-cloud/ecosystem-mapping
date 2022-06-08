@@ -141,7 +141,7 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.budget")}
               tooltipText={t("mapping.canvas.form.budget.tooltip")}
               tooltipAriaLabel={t("mapping.canvas.form.budget")}
-              budgets={formValue["serviceBudget"]}
+              propsBudgets={formValue["serviceBudget"]}
               onChange={(budgets) => (formValue["serviceBudget"] = budgets)}
             />
           </Box>
@@ -225,7 +225,7 @@ function ServiceTabs(props) {
 ServiceTabs.propTypes = {
   formValue: PropTypes.object.isRequired,
   applicationTypeButtons: PropTypes.array.isRequired,
-  services: PropTypes.object.isRequired,
+  services: PropTypes.array.isRequired,
   audiences: PropTypes.array.isRequired,
   organisations: PropTypes.array.isRequired,
   locations: PropTypes.array.isRequired,

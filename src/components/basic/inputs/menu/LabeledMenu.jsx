@@ -24,7 +24,7 @@ LabeledMenu.propTypes = {
   tooltipText: PropTypes.string.isRequired,
   tooltipAriaLabel: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  item: PropTypes.object.isRequired,
+  item: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

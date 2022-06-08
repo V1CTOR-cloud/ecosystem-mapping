@@ -28,7 +28,7 @@ function Handle(props) {
 
 Handle.propTypes = {
   handle: PropTypes.object.isRequired,
-  getHandleProps: PropTypes.object.isRequired,
+  getHandleProps: PropTypes.func.isRequired,
 };
 
 export default Handle;

@@ -6,7 +6,7 @@ import { blueColor, greyColor } from "../../../../../helper/constant";
 import PropTypes from "prop-types";
 
 function MultilineInputComponent(props) {
-  const { propValue, onChange, isRequired, placeholder } = props;
+  const { propValue, onChange, placeholder } = props;
   const [value, setValue] = useState(propValue);
 
   function handleOnChange(event) {
@@ -16,7 +16,6 @@ function MultilineInputComponent(props) {
 
   return (
     <Textarea
-      isRequired={isRequired}
       value={value}
       onChange={handleOnChange}
       placeholder={placeholder}
@@ -29,7 +28,6 @@ function MultilineInputComponent(props) {
 }
 
 MultilineInputComponent.propTypes = {
-  isRequired: PropTypes.bool.isRequired,
   placeholder: PropTypes.string.isRequired,
   propValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
