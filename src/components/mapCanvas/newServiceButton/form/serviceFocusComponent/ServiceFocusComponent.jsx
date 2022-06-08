@@ -14,13 +14,15 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 import { smallPadding, verySmallPadding } from "../../../../../helper/constant";
 import service from "../../../../../assets/servicesFocus.json";
+import PropTypes from "prop-types";
 
 function ServiceFocusComponent(props) {
-  const [value, setValue] = useState(props.serviceFocus);
+  const { serviceFocus, onChange } = props;
+  const [value, setValue] = useState(serviceFocus);
 
   function handleOnChange(serviceFocus) {
     setValue(serviceFocus);
-    props.onChange(serviceFocus);
+    onChange(serviceFocus);
   }
 
   return (
@@ -55,5 +57,10 @@ function ServiceFocusComponent(props) {
     </Box>
   );
 }
+
+ServiceFocusComponent.propTypes = {
+  serviceFocus: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default ServiceFocusComponent;
