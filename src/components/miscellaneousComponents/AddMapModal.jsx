@@ -216,7 +216,7 @@ const AddMapModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMapName({ mapName: mapName });
+    setMapName(mapName);
   };
 
   const handleOpenModal = () => {

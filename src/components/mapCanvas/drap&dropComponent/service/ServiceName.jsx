@@ -14,7 +14,7 @@ import {
 import Service from "../../../../assets/servicesFocus.json";
 
 const Container = styled.div`
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   position: absolute;
   height: 30px;
   z-index: 1;

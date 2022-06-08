@@ -219,8 +219,6 @@ function ServiceContainer(props) {
     return result;
   }
 
-  console.debug(service.id);
-
   return (
     <Draggable
       key={service.id}
@@ -231,7 +229,6 @@ function ServiceContainer(props) {
       {(provided) => (
         <ServiceLineContainer
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
           <Slider

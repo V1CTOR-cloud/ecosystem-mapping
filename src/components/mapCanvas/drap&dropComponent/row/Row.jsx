@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { Text, Center, Box } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import {
   greyHoverColor,
@@ -13,11 +14,10 @@ import {
   smallPadding,
 } from "../../../../helper/constant";
 import ServiceContainer from "../service/ServiceContainer";
-import PropTypes from "prop-types";
 
 const RowContainer = styled.div`
-  background: ${(props) =>
-    props.isDraggingOver ? greyHoverColor : "transparent"};
+  background: ${({ isDraggingOver }) =>
+    isDraggingOver ? greyHoverColor : "transparent"};
   transition: background-color 0.1s ease-in-out;
   flex-grow: 1;
   min-height: 180px;

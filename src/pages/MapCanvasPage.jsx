@@ -224,7 +224,7 @@ function MapCanvasPage() {
   // Update the secondary list at each new service or service update
   // In addition we update the sidebar
   useEffect(() => {
-    setSecondaryFetchedData(structuredClone(fetchedData));
+    setSecondaryFetchedData(fetchedData);
 
     if (isDataLoaded) {
       const servicesArray = Object.values(fetchedData.services);
@@ -252,7 +252,7 @@ function MapCanvasPage() {
     if (isDataLoaded && bool) {
       const services = [];
       // Clone the object
-      const tempSecondaryData = structuredClone(fetchedData);
+      const tempSecondaryData = { ...fetchedData };
       tempSecondaryData.services = {};
       // We clear each rows because we want to add instead of removing each element
       Object.values(tempSecondaryData.rows).forEach((row) => {

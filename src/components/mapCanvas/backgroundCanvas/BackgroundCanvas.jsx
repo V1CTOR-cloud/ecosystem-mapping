@@ -8,7 +8,8 @@ import PropTypes from "prop-types";
 
 const SectionCanvas = styled.div`
   width: 100%;
-  border-right: ${(props) => (props.isLastSection ? "none" : "1px solid")};
+  border-right: ${({ isLastSection }) =>
+    isLastSection ? "none" : "1px solid"};
   border-right-color: #c5d6fc;
   height: 100%;
   display: flex;
@@ -16,7 +17,8 @@ const SectionCanvas = styled.div`
 
 const SubSectionCanvas = styled.div`
   width: 100%;
-  border-right: ${(props) => (props.isLastSubSection ? "none" : "1px dashed")};
+  border-right: ${({ isLastSubSection }) =>
+    isLastSubSection ? "none" : "1px dashed"};
   border-right-color: #c5d6fc;
   height: 100%;
   display: flex;
