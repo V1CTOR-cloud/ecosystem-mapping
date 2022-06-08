@@ -1,21 +1,24 @@
 import React from "react";
 
+import PropTypes from "prop-types";
+
 import { Box, Select } from "@chakra-ui/react";
 
 const SelectRegion = (props) => {
+  const { data, region, selectedRegion } = props;
   return (
     <Box>
       <Select
         size="sm"
-        disabled={props.data.length <= 0}
+        disabled={data.length <= 0}
         placeholder={"Select Region"}
-        value={props.region}
+        value={region}
         onChange={(e) => {
-          props.selectedRegion(e.target.value);
+          selectedRegion(e.target.value);
         }}
       >
-        {props.data.length > 0 &&
-          props.data.map((p, key) => {
+        {data.length > 0 &&
+          data.map((p, key) => {
             return (
               <option value={p} key={key}>
                 {p}
@@ -25,6 +28,12 @@ const SelectRegion = (props) => {
       </Select>
     </Box>
   );
+};
+
+SelectRegion.propTypes = {
+  region: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  selectedRegion: PropTypes.func.isRequired,
 };
 
 export default SelectRegion;
