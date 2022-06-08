@@ -8,7 +8,6 @@ import {
   FormLabel,
   IconButton,
   Input,
-  Link,
   MenuItem,
   Modal,
   ModalBody,
@@ -17,7 +16,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -248,30 +246,27 @@ const AddMapModal = (props) => {
 
   return (
     <React.Fragment>
-      <Link onClick={handleOpenModal}>
-        <Text color="blue" m="7px" fontSize="17px">
-          {t("startup.home.page.header.add.map.link")}
-        </Text>
-      </Link>
-      ) : isEdit ? (
-      <MenuItem onClick={onOpen}>
-        {t("startup.list.map.page.map.card.edit")}
-      </MenuItem>
+      {isEdit ? (
+        <MenuItem onClick={onOpen}>
+          {t("startup.list.map.page.map.card.edit")}
+        </MenuItem>
       ) : isAdd ? (
-      <CreateButton onClick={handleOpenModal} />) : (
-      <React.Fragment>
-        <h1 style={headerStyle}>
-          {t("startup.landing.page.content.welcome.message")}
-        </h1>
-        <h1 style={htagStyle}>
-          {t("startup.landing.page.content.welcome.tagline.text")}
-        </h1>
-        <Flex alignItems="flex-start">
-          <Button mt="30px" onClick={handleOpenModal} className="btn-ad-mp">
-            {t("startup.landing.page.create.map.button")}
-          </Button>
-        </Flex>
-      </React.Fragment>
+        <CreateButton onClick={handleOpenModal} />
+      ) : (
+        <React.Fragment>
+          <h1 style={headerStyle}>
+            {t("startup.landing.page.content.welcome.message")}
+          </h1>
+          <h1 style={htagStyle}>
+            {t("startup.landing.page.content.welcome.tagline.text")}
+          </h1>
+          <Flex alignItems="flex-start">
+            <Button mt="30px" onClick={handleOpenModal} className="btn-ad-mp">
+              {t("startup.landing.page.create.map.button")}
+            </Button>
+          </Flex>
+        </React.Fragment>
+      )}
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}

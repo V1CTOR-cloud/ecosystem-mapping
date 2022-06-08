@@ -26,7 +26,7 @@ const SelectIndustry = (props) => {
 
 SelectIndustry.propTypes = {
   industries: PropTypes.array.isRequired,
-  subIndustries: PropTypes.object.isRequired,
+  subIndustries: PropTypes.array.isRequired,
   locationData: PropTypes.object.isRequired,
   onIndustryChange: PropTypes.func.isRequired,
 };

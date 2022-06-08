@@ -55,12 +55,13 @@ function MenuComponent(props) {
 MenuComponent.defaultProps = {
   wantScroll: false,
   isDisabled: false,
+  width: undefined,
 };
 
 MenuComponent.propTypes = {
   wantScroll: PropTypes.bool,
   isDisabled: PropTypes.bool,
-  width: PropTypes.string.isRequired,
+  width: PropTypes.string,
   item: PropTypes.object.isRequired,
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
