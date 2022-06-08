@@ -3,16 +3,27 @@ import React from "react";
 import { Box } from "@chakra-ui/react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import Row from "../drap&dropComponent/row/Row";
 import toastComponent from "../../basic/ToastComponent";
 import { Service } from "../../../service/service";
 
 function ContentCanvas(props) {
-  const [data, setData] = props.data;
+  const {
+    propData,
+    isFilterOpen,
+    secondaryData,
+    rowsRef,
+    handleServiceClick,
+    heights,
+    containerHeight,
+    isFiltersActive,
+  } = props;
+  const [data, setData] = propData;
   const { t } = useTranslation();
 
-  const height = (props.isFilterOpen ? 135 : 75) + 12;
+  const height = (isFilterOpen ? 135 : 75) + 12;
 
   function setOrder(list, servicesId) {
     list.forEach((value) => {
@@ -173,8 +184,8 @@ function ContentCanvas(props) {
       position="absolute"
     >
       <DragDropContext onDragEnd={handleDragEnd}>
-        {props.secondaryData.rowsOrder.map((rowId) => {
-          const row = props.secondaryData.rows[rowId];
+        {secondaryData.rowsOrder.map((rowId) => {
+          const row = secondaryData.rows[rowId];
           const services = row.serviceIds.map(
             (serviceId) => data.services[serviceId]
           );
@@ -184,12 +195,12 @@ function ContentCanvas(props) {
               key={row.id}
               row={row}
               services={services}
-              rowsRef={props.rowsRef}
-              handleServiceClick={props.handleServiceClick}
-              heights={props.heights}
-              containerHeight={props.containerHeight}
-              isFilterOpen={props.isFilterOpen}
-              isFiltersActive={props.isFiltersActive}
+              rowsRef={rowsRef}
+              handleServiceClick={handleServiceClick}
+              heights={heights}
+              containerHeight={containerHeight}
+              isFilterOpen={isFilterOpen}
+              isFiltersActive={isFiltersActive}
             />
           );
         })}
@@ -197,5 +208,16 @@ function ContentCanvas(props) {
     </Box>
   );
 }
+
+ContentCanvas.propTypes = {
+  isFiltersActive: PropTypes.bool.isRequired,
+  isFilterOpen: PropTypes.bool.isRequired,
+  containerHeight: PropTypes.number.isRequired,
+  rowsRef: PropTypes.string.isRequired,
+  heights: PropTypes.array.isRequired,
+  propData: PropTypes.object.isRequired,
+  secondaryData: PropTypes.object.isRequired,
+  handleServiceClick: PropTypes.func.isRequired,
+};
 
 export default ContentCanvas;
