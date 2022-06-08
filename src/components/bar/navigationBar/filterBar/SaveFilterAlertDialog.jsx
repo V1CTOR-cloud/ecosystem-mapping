@@ -161,7 +161,7 @@ function SaveFilterAlertDialog(props) {
           <AlertDialogBody>
             <InputComponent
               isRequired={true}
-              value={filterName}
+              value={filterName ? filterName : ""}
               placeholder={t(
                 "mapping.navigation.bar.save.filter.placeholder.text"
               )}

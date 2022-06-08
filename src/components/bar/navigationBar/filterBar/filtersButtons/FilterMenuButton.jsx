@@ -223,7 +223,7 @@ function FilterMenuButton(props) {
 }
 
 FilterMenuButton.propTypes = {
-  propFilter: PropTypes.array.isRequired,
+  propFilter: PropTypes.object.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
 };
 

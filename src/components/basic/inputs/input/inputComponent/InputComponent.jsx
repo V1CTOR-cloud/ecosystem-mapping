@@ -34,8 +34,8 @@ InputComponent.defaultProps = {
 
 InputComponent.propTypes = {
   isRequired: PropTypes.bool,
+  propValue: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
-  propValue: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

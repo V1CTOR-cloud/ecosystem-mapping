@@ -173,7 +173,7 @@ function SavedFilterButton(props) {
 }
 
 SavedFilterButton.propTypes = {
-  propsFilter: PropTypes.array.isRequired,
+  propsFilter: PropTypes.object.isRequired,
   handleSavedFilterChange: PropTypes.func.isRequired,
   handleEditSavedFilter: PropTypes.func.isRequired,
   handleOpenDeleteAlertDialog: PropTypes.func.isRequired,

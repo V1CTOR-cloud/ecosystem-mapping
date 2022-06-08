@@ -249,7 +249,7 @@ function FilterBar(props) {
         filters={filters}
         mapId={mapId}
         isEditing={isEditing}
-        name={name}
+        name={name ? name : ""}
       />
       <DeleteFilterAlertDialog
         isOpen={isOpenDeleteDialog}
