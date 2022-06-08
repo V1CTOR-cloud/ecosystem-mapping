@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 
 import {
   Box,
@@ -152,6 +152,7 @@ function MapCanvasPage() {
   const [isFiltersActive, setIsFilterActive] = useState(false);
   const [archivedData] = useState([]);
   const [draftData] = useState([]);
+  const cancelRef = useRef();
   const { mapId } = useParams();
 
   useEffect(() => {
@@ -615,7 +616,7 @@ function MapCanvasPage() {
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
-              data={[fetchedData, setFetchedData]}
+              propData={[fetchedData, setFetchedData]}
               secondaryData={secondaryFetchedData}
               handleServiceClick={(service) => handleServiceClick(service)}
               heights={[heights, setHeights]}
@@ -667,6 +668,7 @@ function MapCanvasPage() {
         </Box>
         {isOpenFormEdition && (
           <ServiceForm
+            cancelRef={cancelRef}
             isEditing={true}
             isOpen={isOpenFormEdition}
             onClose={onCloseFormEdition}

@@ -14,7 +14,6 @@ function ContentCanvas(props) {
     propData,
     isFilterOpen,
     secondaryData,
-    rowsRef,
     handleServiceClick,
     heights,
     containerHeight,
@@ -195,7 +194,6 @@ function ContentCanvas(props) {
               key={row.id}
               row={row}
               services={services}
-              rowsRef={rowsRef}
               handleServiceClick={handleServiceClick}
               heights={heights}
               containerHeight={containerHeight}
@@ -212,10 +210,9 @@ function ContentCanvas(props) {
 ContentCanvas.propTypes = {
   isFiltersActive: PropTypes.bool.isRequired,
   isFilterOpen: PropTypes.bool.isRequired,
-  containerHeight: PropTypes.number.isRequired,
-  rowsRef: PropTypes.string.isRequired,
+  containerHeight: PropTypes.array.isRequired,
   heights: PropTypes.array.isRequired,
-  propData: PropTypes.object.isRequired,
+  propData: PropTypes.array.isRequired,
   secondaryData: PropTypes.object.isRequired,
   handleServiceClick: PropTypes.func.isRequired,
 };

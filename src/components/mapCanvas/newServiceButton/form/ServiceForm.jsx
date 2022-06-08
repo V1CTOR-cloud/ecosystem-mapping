@@ -657,13 +657,13 @@ function ServiceForm(props) {
 }
 
 ServiceForm.propTypes = {
+  propOrganisations: PropTypes.array,
+  serviceWithoutModification: PropTypes.object,
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   mapId: PropTypes.string.isRequired,
-  cancelRef: PropTypes.string.isRequired,
+  cancelRef: PropTypes.element.isRequired,
   locations: PropTypes.array.isRequired,
-  propOrganisations: PropTypes.array.isRequired,
-  serviceWithoutModification: PropTypes.object.isRequired,
   services: PropTypes.object.isRequired,
   fetchedData: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,

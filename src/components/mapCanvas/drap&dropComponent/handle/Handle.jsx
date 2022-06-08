@@ -26,7 +26,7 @@ function Handle(props) {
 
 Handle.propTypes = {
   isFirst: PropTypes.bool.isRequired,
-  getHandleProps: PropTypes.object.isRequired,
+  getHandleProps: PropTypes.func.isRequired,
   handle: PropTypes.object.isRequired,
 };
 

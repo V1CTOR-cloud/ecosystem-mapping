@@ -17,10 +17,8 @@ function NewServiceButton(props) {
     onOpen,
     isOpen,
     onClose,
-    isError,
     fetchedData,
     organisations,
-    audiences,
     services,
     locations,
     mapId,
@@ -49,10 +47,8 @@ function NewServiceButton(props) {
         isOpen={isOpen}
         onClose={onClose}
         cancelRef={cancelRef}
-        isError={isError}
         fetchedData={fetchedData}
-        organisations={organisations}
-        audiences={audiences}
+        propOrganisations={organisations}
         services={services}
         locations={locations}
         mapId={mapId}
@@ -62,14 +58,12 @@ function NewServiceButton(props) {
 }
 
 NewServiceButton.propTypes = {
-  isError: PropTypes.bool.isRequired,
+  organisations: PropTypes.array,
+  locations: PropTypes.array,
   isOpen: PropTypes.bool.isRequired,
   mapId: PropTypes.string.isRequired,
-  organisations: PropTypes.array.isRequired,
-  audiences: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
-  fetchedData: PropTypes.object.isRequired,
-  services: PropTypes.object.isRequired,
+  fetchedData: PropTypes.array.isRequired,
+  services: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
 };

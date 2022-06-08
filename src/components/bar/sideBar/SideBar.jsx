@@ -41,8 +41,9 @@ function SideBar(props) {
     draftData,
   } = props;
 
-  const initialButtons = [
+  const initialAccordionButtons = [
     {
+      key: 0,
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: [
         <TableChart key={0} color={blueColor} />,
@@ -70,6 +71,7 @@ function SideBar(props) {
       ],
     },
     {
+      key: 1,
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
       icon: [
         <Draft key={0} color={blueColor} />,
@@ -78,6 +80,7 @@ function SideBar(props) {
       children: [],
     },
     {
+      key: 2,
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
       icon: [
         <Archive key={0} color={blueColor} />,
@@ -87,15 +90,15 @@ function SideBar(props) {
     },
   ];
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const buttons = useState(initialButtons);
+  const [accordionButtons] = useState(initialAccordionButtons);
 
   // Update the draft buttons and archived buttons at every update or creation of a service
   useEffect(() => {
-    buttons[2].children = [];
-    buttons[1].children = [];
+    accordionButtons[2].children = [];
+    accordionButtons[1].children = [];
 
     archivedData.forEach((service) => {
-      buttons[2].children.push(
+      accordionButtons[2].children.push(
         <ButtonComponent
           key={service.id}
           buttonText={service.serviceName}
@@ -109,7 +112,7 @@ function SideBar(props) {
     });
 
     draftData.forEach((service) => {
-      buttons[1].children.push(
+      accordionButtons[1].children.push(
         <ButtonComponent
           key={service.id}
           buttonText={service.serviceName}
@@ -147,12 +150,12 @@ function SideBar(props) {
       isFilterOpen={isFilterOpen}
     >
       <Accordion allowToggle>
-        {buttons.map((button) => (
+        {accordionButtons.map((thisAccordionButtons) => (
           <AccordionItemComponent
-            key={button.title}
+            key={thisAccordionButtons.key}
             onClick={handleClick}
             isCollapsed={isCollapsed}
-            button={button}
+            button={thisAccordionButtons}
           />
         ))}
       </Accordion>

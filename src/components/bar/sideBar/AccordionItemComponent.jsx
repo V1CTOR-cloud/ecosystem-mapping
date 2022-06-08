@@ -92,7 +92,7 @@ function AccordionItemComponent(props) {
 
 AccordionItemComponent.propTypes = {
   isCollapsed: PropTypes.bool.isRequired,
-  button: PropTypes.object.isRequired,
+  button: PropTypes.any.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

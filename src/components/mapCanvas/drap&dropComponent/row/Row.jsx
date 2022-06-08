@@ -136,10 +136,10 @@ function Row(props) {
 Row.propTypes = {
   isFilterOpen: PropTypes.bool.isRequired,
   isFiltersActive: PropTypes.bool.isRequired,
-  containerHeight: PropTypes.number.isRequired,
+  containerHeight: PropTypes.array.isRequired,
   heights: PropTypes.array.isRequired,
+  services: PropTypes.array.isRequired,
   row: PropTypes.object.isRequired,
-  services: PropTypes.object.isRequired,
   handleServiceClick: PropTypes.func.isRequired,
 };
 
