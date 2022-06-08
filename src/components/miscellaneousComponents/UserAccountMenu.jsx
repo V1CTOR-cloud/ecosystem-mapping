@@ -11,10 +11,11 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
@@ -23,11 +24,12 @@ const LogMenuList = chakra(MenuList, {
     boxShadow: "0px 20px 40px -2px rgba(34, 44, 47, 0.15) !important",
     borderRadius: "4px !important",
     fontSize: "16px",
-    letterSpacing: "0.02em"
-  }
+    letterSpacing: "0.02em",
+  },
 });
 
 const UserAccountMenu = (props) => {
+  const { user, logOut } = props;
   const { t } = useTranslation();
 
   return (
@@ -42,14 +44,14 @@ const UserAccountMenu = (props) => {
         _active={{ bg: "none" }}
         _focus={{
           boxShadow: "none",
-          border: "none"
+          border: "none",
         }}
       >
         <HStack>
           <Image
             borderRadius="50%"
             width="40px"
-            src={props.user.profileImage.url}
+            src={user.profileImage.url}
             alt="image"
           />
         </HStack>
@@ -60,26 +62,31 @@ const UserAccountMenu = (props) => {
             ml="20px"
             borderRadius="50%"
             width="50px"
-            src={props.user.profileImage.url}
+            src={user.profileImage.url}
             alt="image"
           />
           <Text m="auto" ml="15px">
-            {props.user.firstName + " " + props.user.lastName}
+            {user.firstName + " " + user.lastName}
           </Text>
         </Flex>
         <Box p="15px">
           <MenuItem>
-            <NavLink to="/mapList">
+            <NavLink to="/dashboard">
               {t("startup.landing.page.header.user.profile.menu.list.map.text")}
             </NavLink>
           </MenuItem>
-          <MenuItem onClick={props.logOut}>
+          <MenuItem onClick={logOut}>
             {t("startup.landing.page.header.user.profile.logout.text")}
           </MenuItem>
         </Box>
       </LogMenuList>
     </Menu>
   );
+};
+
+UserAccountMenu.propTypes = {
+  user: PropTypes.object.isRequired,
+  logOut: PropTypes.func.isRequired,
 };
 
 export default UserAccountMenu;

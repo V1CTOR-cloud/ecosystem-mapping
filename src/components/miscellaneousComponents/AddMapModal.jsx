@@ -19,10 +19,11 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import SelectLocationComponent from "../regionComponents/SelectLocationComponent";
 import "../../assets/fonts/fonts.css";
@@ -38,7 +39,7 @@ const headerStyle = {
   fontWeight: "500",
   lineHeight: "90px",
   letterSpacing: "0em",
-  textAlign: "left"
+  textAlign: "left",
 };
 
 const htagStyle = {
@@ -49,10 +50,10 @@ const htagStyle = {
   lineHeight: "28px",
   letterSpacing: "0em",
   textAlign: "left",
-  mt: "24px"
+  mt: "24px",
 };
 const modalWidth = {
-  maxWidth: "704px"
+  maxWidth: "704px",
 };
 
 const CreateButton = chakra(IconButton, {
@@ -65,11 +66,12 @@ const CreateButton = chakra(IconButton, {
     display: "block",
     cursor: "pointer",
     marginTop: "15px",
-    size: "lg"
-  }
+    size: "lg",
+  },
 });
 
-const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
+const AddMapModal = (props) => {
+  const { isEdit, data, isAdd, notifyParent, isHome } = props;
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -167,7 +169,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
             status: "success",
             duration: 5000,
             position: "top-right",
-            isClosable: true
+            isClosable: true,
           });
           onClose();
           navigate("/dashboard/" + res.id);
@@ -179,7 +181,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
         status: "warning",
         duration: 3000,
         position: "top-right",
-        isClosable: true
+        isClosable: true,
       });
     }
   };
@@ -205,7 +207,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
             status: "success",
             duration: 5000,
             position: "top-right",
-            isClosable: true
+            isClosable: true,
           });
         }
         notifyParent();
@@ -217,7 +219,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
         status: "warning",
         duration: 3000,
         position: "top-right",
-        isClosable: true
+        isClosable: true,
       });
     }
   };
@@ -237,7 +239,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
         status: "warning",
         duration: 3000,
         position: "top-right",
-        isClosable: true
+        isClosable: true,
       });
     }
   };
@@ -312,7 +314,7 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
                   onChange={(e) => {
                     setLocationData({
                       ...locationData,
-                      name: e.target.value
+                      name: e.target.value,
                     });
                   }}
                 />
@@ -378,6 +380,14 @@ const AddMapModal = ({ isEdit, data, isAdd, notifyParent, isHome }) => {
       </Modal>
     </React.Fragment>
   );
+};
+
+AddMapModal.propTypes = {
+  isEdit: PropTypes.bool.isRequired,
+  isHome: PropTypes.bool.isRequired,
+  isAdd: PropTypes.bool.isRequired,
+  data: PropTypes.object.isRequired,
+  notifyParent: PropTypes.func.isRequired,
 };
 
 export default AddMapModal;

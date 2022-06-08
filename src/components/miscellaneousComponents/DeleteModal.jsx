@@ -12,11 +12,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import "../../assets/fonts/fonts.css";
 import { Map } from "../../service/map";
 
 const DeleteModal = (props) => {
+  const { id, notifyParent } = props;
   const { t } = useTranslation();
   const toast = useToast();
   const cancelRef = useRef();
@@ -25,7 +27,7 @@ const DeleteModal = (props) => {
   const handleClose = () => setIsOpen(false);
 
   const handleConfirm = () => {
-    Map.deleteMap(props.id).then(() => {
+    Map.deleteMap(id).then(() => {
       setIsOpen(false);
       toast({
         title: t("startup.toast.delete"),
@@ -35,7 +37,7 @@ const DeleteModal = (props) => {
         position: "top-right",
         isClosable: true,
       });
-      props.notifyParent();
+      notifyParent();
     });
   };
 
@@ -71,6 +73,11 @@ const DeleteModal = (props) => {
       </AlertDialog>
     </>
   );
+};
+
+DeleteModal.propTypes = {
+  id: PropTypes.number.isRequired,
+  notifyParent: PropTypes.func.isRequired,
 };
 
 export default DeleteModal;
