@@ -18,7 +18,7 @@ function Routing() {
           <Route path="/" element={<Home />} exact />
           {isLoggedIn ? (
             <>
-              <Route path="/mapList" element={<MapList />} exact />
+              <Route path="/dashboard" element={<MapList />} exact />
               <Route path="/dashboard/:mapId" element={<Canvas />} exact />
             </>
           ) : (
