@@ -8,7 +8,6 @@ import axios from "axios";
 import "./assets/css/Style.scss";
 import Routing from "./Routing";
 
-
 function App() {
   const [resource, setResource] = useState("");
 
@@ -25,19 +24,22 @@ function App() {
       });
   }, []);
 
-  i18n.use(initReactI18next).init({
-    resources: {
-      en: {
-        translation: {
-          ...resource.translation
-        }
-      }
-    },
-    lng: "en",
-    interpolation: {
-      escapeValue: false
-    }
-  });
+  i18n
+    .use(initReactI18next)
+    .init({
+      resources: {
+        en: {
+          translation: {
+            ...resource.translation,
+          },
+        },
+      },
+      lng: "en",
+      interpolation: {
+        escapeValue: false,
+      },
+    })
+    .then();
 
   return (
     <ChakraProvider theme={theme}>
