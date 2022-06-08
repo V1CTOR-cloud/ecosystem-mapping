@@ -1,25 +1,28 @@
 import React from "react";
 
+import PropTypes from "prop-types";
+
 import { Box, Select } from "@chakra-ui/react";
 
 const SelectIndustryComponent = (props) => {
+  const { data, industry, selectedIndustry } = props;
   return (
     <Box>
-      {props.data && (
+      {data && (
         <Select
           size="sm"
-          disabled={props.data.length <= 0}
+          disabled={data.length <= 0}
           placeholder={"Select Industry"}
-          value={props.industry}
+          value={industry}
           onChange={(e) => {
-            props.selectedIndustry(e.target.value);
+            selectedIndustry(e.target.value);
           }}
         >
-          {props.data.length > 0 &&
-            props.data.map((industry, key) => {
+          {data.length > 0 &&
+            data.map((thisIndustry, key) => {
               return (
-                <option value={industry.industryName} key={key}>
-                  {industry.industryName}
+                <option value={thisIndustry.industryName} key={key}>
+                  {thisIndustry.industryName}
                 </option>
               );
             })}
@@ -27,6 +30,12 @@ const SelectIndustryComponent = (props) => {
       )}
     </Box>
   );
+};
+
+SelectIndustryComponent.propTypes = {
+  industry: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  selectedIndustry: PropTypes.func.isRequired,
 };
 
 export default SelectIndustryComponent;

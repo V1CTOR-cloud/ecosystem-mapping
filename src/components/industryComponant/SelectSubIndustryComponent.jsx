@@ -1,12 +1,15 @@
 import React from "react";
 
+import PropTypes from "prop-types";
+
 import { Box, Select } from "@chakra-ui/react";
 
 const SelectSubIndustryComponent = (props) => {
+  const { data, subIndustry, selectedSubIndustry } = props;
   let subIndustries;
 
-  if (props.data.length > 0) {
-    subIndustries = props.data[0].subIndustries;
+  if (data.length > 0) {
+    subIndustries = data[0].subIndustries;
   }
 
   return (
@@ -15,23 +18,29 @@ const SelectSubIndustryComponent = (props) => {
         size="sm"
         disabled={!(subIndustries && subIndustries.length > 0)}
         placeholder="Select Sub-Industry"
-        value={props.subIndustry}
+        value={subIndustry}
         onChange={(e) => {
-          props.selectedSubIndustry(e.target.value);
+          selectedSubIndustry(e.target.value);
         }}
       >
         {subIndustries &&
           subIndustries.length > 0 &&
-          subIndustries.map((subIndustry, key) => {
+          subIndustries.map((thisSubIndustry, key) => {
             return (
-              <option value={subIndustry.industryName} key={key}>
-                {subIndustry.industryName}
+              <option value={thisSubIndustry.industryName} key={key}>
+                {thisSubIndustry.industryName}
               </option>
             );
           })}
       </Select>
     </Box>
   );
+};
+
+SelectSubIndustryComponent.propTypes = {
+  subIndustry: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  selectedSubIndustry: PropTypes.func.isRequired,
 };
 
 export default SelectSubIndustryComponent;
