@@ -1,21 +1,24 @@
 import React from "react";
 
+import PropTypes from "prop-types";
+
 import { Select, Box } from "@chakra-ui/react";
 
 const SelectCountry = (props) => {
+  const { data, country, selectedCountry } = props;
   return (
     <Box>
       <Select
         size="sm"
-        disabled={props.data.length <= 0}
+        disabled={data.length <= 0}
         placeholder="Select Country"
-        value={props.country}
+        value={country}
         onChange={(e) => {
-          props.selectedCountry(e.target.value);
+          selectedCountry(e.target.value);
         }}
       >
-        {props.data.length > 0 &&
-          props.data.map((p, key) => {
+        {data.length > 0 &&
+          data.map((p, key) => {
             return (
               <option value={p.name} key={key}>
                 {p.name}
@@ -25,6 +28,12 @@ const SelectCountry = (props) => {
       </Select>
     </Box>
   );
+};
+
+SelectCountry.propTypes = {
+  country: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  selectedCountry: PropTypes.func.isRequired,
 };
 
 export default SelectCountry;

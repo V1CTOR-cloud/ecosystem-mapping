@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { Copy } from "@styled-icons/fa-regular";
+import PropTypes from "prop-types";
 
 import {
   borderRadius,
@@ -13,7 +14,7 @@ import {
 import Service from "../../../../assets/servicesFocus.json";
 
 const Container = styled.div`
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   position: absolute;
   height: 30px;
   z-index: 1;
@@ -29,8 +30,9 @@ const Container = styled.div`
 `;
 
 function ServiceName(props) {
+  const { service, provided, source, target, handleServiceClick } = props;
   const serviceFocus = Service.servicesFocus.find((result) => {
-    return result.name.split(" ").join("") === props.service.serviceFocus;
+    return result.name.split(" ").join("") === service.serviceFocus;
   });
 
   const textColor = serviceFocus.textColor;
@@ -39,14 +41,14 @@ function ServiceName(props) {
   return (
     <Box position="relative">
       <Container
-        {...props.provided.dragHandleProps}
-        source={props.source}
-        target={props.target}
+        {...provided.dragHandleProps}
+        source={source}
+        target={target}
         backgroundColor={backgroundColor}
-        onClick={() => props.handleServiceClick(props.service)}
+        onClick={() => handleServiceClick(service)}
       >
         <HStack h="30px">
-          {props.service.serviceStatus === "Draft" && (
+          {service.serviceStatus === "Draft" && (
             <Box paddingBottom={"5px"} paddingRight={verySmallPadding}>
               <Copy size="15" color={textColor} />
             </Box>
@@ -59,12 +61,20 @@ function ServiceName(props) {
             overflow="hidden"
             whiteSpace="nonwrap"
           >
-            {props.service.serviceName}
+            {service.serviceName}
           </Text>
         </HStack>
       </Container>
     </Box>
   );
 }
+
+ServiceName.propTypes = {
+  service: PropTypes.object.isRequired,
+  provided: PropTypes.object.isRequired,
+  source: PropTypes.object.isRequired,
+  target: PropTypes.object.isRequired,
+  handleServiceClick: PropTypes.func.isRequired,
+};
 
 export default ServiceName;

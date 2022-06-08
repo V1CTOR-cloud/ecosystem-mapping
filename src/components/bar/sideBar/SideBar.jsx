@@ -4,7 +4,7 @@ import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
 import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
-import { Accordion } from "@chakra-ui/accordion";
+import { Accordion } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import ButtonComponent from "../../basic/buttons/ButtonComponent";
@@ -15,6 +15,7 @@ import {
   smallPadding,
   whiteColor,
 } from "../../../helper/constant";
+import PropTypes from "prop-types";
 
 const SideBarContainer = styled.div`
   position: absolute;
@@ -32,13 +33,21 @@ const SideBarContainer = styled.div`
 
 function SideBar(props) {
   const { t } = useTranslation();
+  const {
+    archivedData,
+    onOpenFormEdition,
+    handleServiceClick,
+    isFilterOpen,
+    draftData,
+  } = props;
 
-  const initialButtons = [
+  const initialAccordionButtons = [
     {
+      key: 0,
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: [
-        <TableChart color={blueColor} />,
-        <TableChart color={blackColor} />,
+        <TableChart key={0} color={blueColor} />,
+        <TableChart key={1} color={blackColor} />,
       ],
       children: [
         <ButtonComponent
@@ -62,26 +71,34 @@ function SideBar(props) {
       ],
     },
     {
+      key: 1,
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
-      icon: [<Draft color={blueColor} />, <Draft color={blackColor} />],
+      icon: [
+        <Draft key={0} color={blueColor} />,
+        <Draft key={1} color={blackColor} />,
+      ],
       children: [],
     },
     {
+      key: 2,
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
-      icon: [<Archive color={blueColor} />, <Archive color={blackColor} />],
+      icon: [
+        <Archive key={0} color={blueColor} />,
+        <Archive key={1} color={blackColor} />,
+      ],
       children: [],
     },
   ];
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [buttons] = useState(initialButtons);
+  const [accordionButtons] = useState(initialAccordionButtons);
 
   // Update the draft buttons and archived buttons at every update or creation of a service
   useEffect(() => {
-    buttons[2].children = [];
-    buttons[1].children = [];
+    accordionButtons[2].children = [];
+    accordionButtons[1].children = [];
 
-    props.archivedData.forEach((service) => {
-      buttons[2].children.push(
+    archivedData.forEach((service) => {
+      accordionButtons[2].children.push(
         <ButtonComponent
           key={service.id}
           buttonText={service.serviceName}
@@ -94,8 +111,8 @@ function SideBar(props) {
       );
     });
 
-    props.draftData.forEach((service) => {
-      buttons[1].children.push(
+    draftData.forEach((service) => {
+      accordionButtons[1].children.push(
         <ButtonComponent
           key={service.id}
           buttonText={service.serviceName}
@@ -122,28 +139,36 @@ function SideBar(props) {
   }
 
   function handleDraftOrArchivedServiceClick(service) {
-    props.onOpenFormEdition();
-    props.handleServiceClick(service);
+    onOpenFormEdition();
+    handleServiceClick(service);
   }
 
   return (
     <SideBarContainer
       onMouseOver={handleOnMouseOver}
       onMouseLeave={handleOnMouseLeave}
-      isFilterOpen={props.isFilterOpen}
+      isFilterOpen={isFilterOpen}
     >
       <Accordion allowToggle>
-        {buttons.map((button) => (
+        {accordionButtons.map((thisAccordionButtons) => (
           <AccordionItemComponent
-            key={button.title}
+            key={thisAccordionButtons.key}
             onClick={handleClick}
             isCollapsed={isCollapsed}
-            button={button}
+            button={thisAccordionButtons}
           />
         ))}
       </Accordion>
     </SideBarContainer>
   );
 }
+
+SideBar.propTypes = {
+  isFilterOpen: PropTypes.bool.isRequired,
+  archivedData: PropTypes.array.isRequired,
+  draftData: PropTypes.array.isRequired,
+  onOpenFormEdition: PropTypes.func.isRequired,
+  handleServiceClick: PropTypes.func.isRequired,
+};
 
 export default SideBar;

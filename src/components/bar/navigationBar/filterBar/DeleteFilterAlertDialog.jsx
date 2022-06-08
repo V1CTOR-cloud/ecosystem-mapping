@@ -10,6 +10,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import {
@@ -20,14 +21,15 @@ import {
 } from "../../../../helper/constant";
 
 function DeleteFilterAlertDialog(props) {
+  const { isOpen, onClose, handleDeleteSavedFilter } = props;
   const { t } = useTranslation();
   const cancelRef = useRef();
 
   return (
     <AlertDialog
-      isOpen={props.isOpen}
+      isOpen={isOpen}
       leastDestructiveRef={cancelRef}
-      onClose={props.onClose}
+      onClose={onClose}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -41,14 +43,14 @@ function DeleteFilterAlertDialog(props) {
 
           <AlertDialogFooter>
             <ButtonComponent
-              onClick={props.onClose}
+              onClick={onClose}
               buttonText={t("common.cancel")}
               isWithoutBorder={true}
               color={greyColor}
             />
             <Spacer />
             <ButtonComponent
-              onClick={props.handleDeleteSavedFilter}
+              onClick={handleDeleteSavedFilter}
               buttonText={t("common.delete")}
               isWithoutBorder={true}
               color={whiteColor}
@@ -61,5 +63,11 @@ function DeleteFilterAlertDialog(props) {
     </AlertDialog>
   );
 }
+
+DeleteFilterAlertDialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  handleDeleteSavedFilter: PropTypes.func.isRequired,
+};
 
 export default DeleteFilterAlertDialog;

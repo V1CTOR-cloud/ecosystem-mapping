@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 import { useTranslation } from "react-i18next";
 import { Box, HStack } from "@chakra-ui/react";
@@ -13,12 +14,13 @@ import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithToolti
 import ButtonComponent from "../../../../basic/buttons/ButtonComponent";
 
 function ApplicationTypeComponent(props) {
+  const { applicationType, onChange, applicationTypeButtons } = props;
   const { t } = useTranslation();
-  const [value, setValue] = useState(props.applicationType);
+  const [value, setValue] = useState(applicationType);
 
   function handleOnChange(applicationType) {
     setValue(applicationType);
-    props.onChange(applicationType);
+    onChange(applicationType);
   }
 
   return (
@@ -29,7 +31,7 @@ function ApplicationTypeComponent(props) {
         tooltipText={t("mapping.canvas.form.application.type.tooltip")}
       />
       <HStack marginTop={verySmallPadding}>
-        {props.applicationTypeButtons.map((buttonText) => {
+        {applicationTypeButtons.map((buttonText) => {
           return (
             <Box key={buttonText}>
               <ButtonComponent
@@ -47,5 +49,11 @@ function ApplicationTypeComponent(props) {
     </Box>
   );
 }
+
+ApplicationTypeComponent.propTypes = {
+  applicationType: PropTypes.string.isRequired,
+  applicationTypeButtons: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default ApplicationTypeComponent;

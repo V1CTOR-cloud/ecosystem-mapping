@@ -1,17 +1,27 @@
 import React from "react";
-import { smallPadding } from "../../../helper/constant";
+
 import { HStack, Text, Tooltip } from "@chakra-ui/react";
+import PropTypes from "prop-types";
+
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import { smallPadding } from "../../../helper/constant";
 
 function LabelWithTooltip(props) {
+  const { label, tooltipText, tooltipAriaLabel } = props;
   return (
     <HStack marginBottom={smallPadding}>
-      <Text marginRight={smallPadding}>{props.label}</Text>
-      <Tooltip label={props.tooltipText} aria-label={props.tooltipAriaLabel}>
+      <Text marginRight={smallPadding}>{label}</Text>
+      <Tooltip label={tooltipText} aria-label={tooltipAriaLabel}>
         <QuestionOutlineIcon w="12.5px" h="12.5px" />
       </Tooltip>
     </HStack>
   );
 }
 
-export default React.memo(LabelWithTooltip);
+LabelWithTooltip.propTypes = {
+  label: PropTypes.string.isRequired,
+  tooltipText: PropTypes.string.isRequired,
+  tooltipAriaLabel: PropTypes.string.isRequired,
+};
+
+export default LabelWithTooltip;

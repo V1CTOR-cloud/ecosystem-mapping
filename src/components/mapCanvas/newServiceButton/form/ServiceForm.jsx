@@ -28,10 +28,23 @@ import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent
 import ServiceTabs from "./tabs/ServiceTabs";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
-import toastComponent from "../../../basic/ToastComponent";
+import ToastComponent from "../../../basic/ToastComponent";
 import { Service } from "../../../../service/service";
+import PropTypes from "prop-types";
 
 function ServiceForm(props) {
+  const {
+    propOrganisations,
+    isEditing,
+    isOpen,
+    serviceWithoutModification,
+    services,
+    fetchedData,
+    mapId,
+    onClose,
+    cancelRef,
+    locations,
+  } = props;
   const applicationTypeButtons = [
     market,
     market_and_organization,
@@ -39,10 +52,7 @@ function ServiceForm(props) {
   ];
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
-  const organisations = [
-    { id: 0, name: "Organisation" },
-    ...props.organisations,
-  ];
+  const organisations = [{ id: 0, name: "Organisation" }, ...propOrganisations];
   const audiences = [{ id: 0, name: "Audience" }, ...audienceList];
   const formValue = {
     serviceName: "",
@@ -73,54 +83,50 @@ function ServiceForm(props) {
 
   // We set the values of formValue because we are in edition mode.
   // Do not need useEffect since this component is rendered only once
-  if (props.isEditing) {
-    formValue["serviceName"] = props.serviceWithoutModification.serviceName;
+  if (isEditing) {
+    formValue["serviceName"] = serviceWithoutModification.serviceName;
     formValue["serviceFocus"] = service.servicesFocus.find(
       (result) =>
         result.name.split(" ").join("") ===
-        props.serviceWithoutModification.serviceFocus
+        serviceWithoutModification.serviceFocus
     );
-    formValue["ownerOrganisation"] = props.serviceWithoutModification
-      .serviceOwner
+    formValue["ownerOrganisation"] = serviceWithoutModification.serviceOwner
       ? organisations[0].name
-      : props.serviceWithoutModification.serviceOwner[0].organisationName;
-    formValue["applicationType"] =
-      props.serviceWithoutModification.applicationType;
+      : serviceWithoutModification.serviceOwner[0].organisationName;
+    formValue["applicationType"] = serviceWithoutModification.applicationType;
     formValue["servicePhaseRange"] = {
       startPhase: Service.replacePhaseToNumber(
-        props.serviceWithoutModification.servicePhaseRange.startPhase
+        serviceWithoutModification.servicePhaseRange.startPhase
       ),
       endPhase: Service.replacePhaseToNumber(
-        props.serviceWithoutModification.servicePhaseRange.endPhase
+        serviceWithoutModification.servicePhaseRange.endPhase
       ),
     };
 
     // For the time we convert the data to the timeZone of the user because the data retrieve are in GMT+00:00
     formValue["serviceStartTime"] = timeZoneConvertor(
-      props.serviceWithoutModification.serviceStartTime,
+      serviceWithoutModification.serviceStartTime,
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
     formValue["serviceEndTime"] = timeZoneConvertor(
-      props.serviceWithoutModification.serviceEndTime,
+      serviceWithoutModification.serviceEndTime,
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
-    formValue["serviceLocation"] = props.serviceWithoutModification
-      .serviceLocation
-      ? props.serviceWithoutModification.serviceLocation
+    formValue["serviceLocation"] = serviceWithoutModification.serviceLocation
+      ? serviceWithoutModification.serviceLocation
       : {
           continent: null,
           country: null,
           region: null,
           city: null,
         };
-    formValue["serviceLink"] = props.serviceWithoutModification.serviceLink
-      ? props.serviceWithoutModification.serviceLink
+    formValue["serviceLink"] = serviceWithoutModification.serviceLink
+      ? serviceWithoutModification.serviceLink
       : "";
-    formValue["serviceAudience"] = props.serviceWithoutModification
-      .serviceAudience
-      ? props.serviceWithoutModification.serviceAudience
+    formValue["serviceAudience"] = serviceWithoutModification.serviceAudience
+      ? serviceWithoutModification.serviceAudience
       : audiences[0].name;
-    formValue["serviceBudget"] = props.serviceWithoutModification.serviceBudget
+    formValue["serviceBudget"] = serviceWithoutModification.serviceBudget
       ? props.serviceWithoutModification.serviceBudget
       : [
           {
@@ -129,29 +135,26 @@ function ServiceForm(props) {
             budgetCurrency: "€",
           },
         ];
-    formValue["serviceDescription"] = props.serviceWithoutModification
-      .serviceDescription
-      ? props.serviceWithoutModification.serviceDescription
-      : "";
-    formValue["serviceOutcomes"] = props.serviceWithoutModification
-      .serviceOutcomes
-      ? props.serviceWithoutModification.serviceOutcomes
+    formValue["serviceDescription"] =
+      serviceWithoutModification.serviceDescription
+        ? serviceWithoutModification.serviceDescription
+        : "";
+    formValue["serviceOutcomes"] = serviceWithoutModification.serviceOutcomes
+      ? serviceWithoutModification.serviceOutcomes
       : "";
 
-    if (props.serviceWithoutModification.previousService !== "") {
-      const previousService = props.services.find(
-        (service) =>
-          service.name === props.serviceWithoutModification.previousService
+    if (serviceWithoutModification.previousService !== "") {
+      const previousService = services.find(
+        (service) => service.name === serviceWithoutModification.previousService
       );
       if (previousService !== undefined) {
         formValue["precededService"] = previousService;
       }
     }
 
-    if (props.serviceWithoutModification.followedService !== "") {
-      const followingService = props.services.find(
-        (service) =>
-          service.name === props.serviceWithoutModification.followedService
+    if (serviceWithoutModification.followedService !== "") {
+      const followingService = services.find(
+        (service) => service.name === serviceWithoutModification.followedService
       );
       if (followingService !== undefined) {
         formValue["followingService"] = followingService;
@@ -173,13 +176,13 @@ function ServiceForm(props) {
 
     let organisationId = null;
     if (formValue["ownerOrganisation"] !== null) {
-      organisationId = props.organisations.find(
+      organisationId = propOrganisations.find(
         (organisation) => formValue["ownerOrganisation"] === organisation.name
       ).id;
     }
 
     const order =
-      props.fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+      fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
 
     const data = {
       serviceName: formValue["serviceName"],
@@ -209,10 +212,12 @@ function ServiceForm(props) {
         startPhase: Service.replaceNumberToPhase(
           formValue["servicePhaseRange"].startPhase
         ),
-        endPhase: Service.replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+        endPhase: Service.replaceNumberToPhase(
+          formValue["servicePhaseRange"].endPhase
+        ),
       },
 
-      mapId: props.mapId,
+      mapId: mapId,
       serviceStatus: serviceStatus,
       order: order,
     };
@@ -228,18 +233,18 @@ function ServiceForm(props) {
       const res = await Service.createService(data);
       // Check if we created the service
       if (res.createService) {
-        props.onClose();
+        onClose();
 
         const newData = addServiceToData(res);
 
-        props.fetchedData[1](newData);
-        toastComponent(
+        fetchedData[1](newData);
+        ToastComponent(
           t("mapping.toast.success.create.service"),
           "success",
           5000
         );
       } else {
-        toastComponent(res, "error", 5000);
+        ToastComponent(res, "error", 5000);
       }
     }
   }
@@ -247,26 +252,26 @@ function ServiceForm(props) {
   // Function that add the new service create to the canvas
   function addServiceToData(res) {
     // Format the list of services to correspond to the model of fetchedData
-    const tempServices = Object.assign(props.fetchedData[0].services, {
+    const tempServices = Object.assign(fetchedData[0].services, {
       [res.createService.id]: {
         ...res.createService,
       },
     });
 
     // Add the service id to the corresponding row
-    const tempRows = props.fetchedData[0].rows;
+    const tempRows = fetchedData[0].rows;
     tempRows[res.createService.applicationType].serviceIds.push(
       res.createService.id
     );
 
-    props.services.push({
+    services.push({
       id: res.createService.id,
       name: res.serviceName,
     });
 
     // Create new object to setState the fetchedData
     return {
-      rowsOrder: props.fetchedData[0].rowsOrder,
+      rowsOrder: fetchedData[0].rowsOrder,
       services: tempServices,
       rows: tempRows,
     };
@@ -281,17 +286,17 @@ function ServiceForm(props) {
     let organisationId = null;
     if (formValue["ownerOrganisation"] !== null) {
       // Retrieve the organisation id that we selected (modified or not)
-      organisationId = props.organisations.find(
+      organisationId = propOrganisations.find(
         (organisation) => formValue["ownerOrganisation"] === organisation.name
       ).id;
     }
 
     let organisationIdWithoutModification;
-    if (props.serviceWithoutModification.serviceOwner.length !== 0) {
+    if (serviceWithoutModification.serviceOwner.length !== 0) {
       // Retrieve the organisation id that was previously selected to disconnected it.
-      organisationIdWithoutModification = props.organisations.find(
+      organisationIdWithoutModification = propOrganisations.find(
         (organisation) =>
-          props.serviceWithoutModification.serviceOwner[0].organisationName ===
+          serviceWithoutModification.serviceOwner[0].organisationName ===
           organisation.name
       ).id;
     }
@@ -300,29 +305,25 @@ function ServiceForm(props) {
 
     // Check if we change of application type (row) if that is the case push the service at the last index, otherwise we are keeping the same.
     if (
-      props.serviceWithoutModification.applicationType ===
+      serviceWithoutModification.applicationType ===
       formValue["applicationType"].replaceAll(" ", "_").replace("&", "and")
     ) {
       // Put the order to 999 to avoid conflict when putting again in draft or published
       if (serviceStatus === "Archived") {
         order = 999;
-      } else if (
-        props.serviceWithoutModification.serviceStatus === "Archived"
-      ) {
+      } else if (serviceWithoutModification.serviceStatus === "Archived") {
         order =
-          props.fetchedData[0].rows[formValue["applicationType"]].serviceIds
-            .length;
+          fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
       } else {
-        order = props.serviceWithoutModification.order;
+        order = serviceWithoutModification.order;
       }
     } else {
       order =
-        props.fetchedData[0].rows[formValue["applicationType"]].serviceIds
-          .length;
+        fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
     }
 
     const data = {
-      id: props.serviceWithoutModification.id,
+      id: serviceWithoutModification.id,
 
       // First tabs
       serviceName: formValue["serviceName"],
@@ -332,11 +333,13 @@ function ServiceForm(props) {
       organisationId: organisationId,
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
       servicePhaseRange: {
-        id: props.serviceWithoutModification.servicePhaseRange.id,
+        id: serviceWithoutModification.servicePhaseRange.id,
         startPhase: Service.replaceNumberToPhase(
           formValue["servicePhaseRange"].startPhase
         ),
-        endPhase: Service.replaceNumberToPhase(formValue["servicePhaseRange"].endPhase),
+        endPhase: Service.replaceNumberToPhase(
+          formValue["servicePhaseRange"].endPhase
+        ),
       },
 
       // Second tabs
@@ -345,7 +348,7 @@ function ServiceForm(props) {
       serviceLink: formValue["serviceLink"],
       serviceLocation: {
         ...formValue["serviceLocation"],
-        id: props.serviceWithoutModification.serviceLocation.id,
+        id: serviceWithoutModification.serviceLocation.id,
       },
       serviceAudience: formValue["serviceAudience"],
       serviceBudget: formValue["serviceBudget"],
@@ -365,12 +368,12 @@ function ServiceForm(props) {
           : formValue["followedService"],
 
       // Others parameters hidden from the user
-      mapId: props.mapId,
+      mapId: mapId,
       serviceStatus: serviceStatus,
       order: order,
 
       // Parameters to be able to filter afterwards
-      serviceWithoutModification: props.serviceWithoutModification,
+      serviceWithoutModification: serviceWithoutModification,
       organisationIdWithoutModification: organisationIdWithoutModification,
     };
 
@@ -385,35 +388,35 @@ function ServiceForm(props) {
       // Check if we update the service
       if (res.updateService) {
         const newData = await updateServiceToData(res.updateService);
-        props.fetchedData[1](newData);
-        props.onClose();
+        fetchedData[1](newData);
+        onClose();
 
-        toastComponent(t("mapping.toast.success.service"), "success", 5000);
+        ToastComponent(t("mapping.toast.success.service"), "success", 5000);
       } else {
-        toastComponent(res, "error", 5000);
+        ToastComponent(res, "error", 5000);
       }
     }
   }
 
   async function updateServiceToData(updateService) {
     // Format the list of services to correspond to the model of fetchedData
-    const tempServices = Object.assign(props.fetchedData[0].services, {
+    const tempServices = Object.assign(fetchedData[0].services, {
       [updateService.id]: {
         ...updateService,
       },
     });
 
     // Add the service id to the corresponding row
-    const tempRows = props.fetchedData[0].rows;
+    const tempRows = fetchedData[0].rows;
 
     if (
-      props.serviceWithoutModification.applicationType ===
+      serviceWithoutModification.applicationType ===
       updateService.applicationType
     ) {
       if (updateService.serviceStatus === "Archived") {
         // Remove the element in the same row
         tempRows[updateService.applicationType].serviceIds.splice(
-          props.serviceWithoutModification.order,
+          serviceWithoutModification.order,
           1
         );
 
@@ -421,16 +424,17 @@ function ServiceForm(props) {
       } else {
         // Remove the element in the same row to put it the updated version.
         tempRows[updateService.applicationType].serviceIds.splice(
-          props.serviceWithoutModification.order,
+          serviceWithoutModification.order,
           1,
           updateService.id
         );
       }
     } else {
       // Remove the element in the original row.
-      tempRows[
-        props.serviceWithoutModification.applicationType
-      ].serviceIds.splice(props.serviceWithoutModification.order, 1);
+      tempRows[serviceWithoutModification.applicationType].serviceIds.splice(
+        serviceWithoutModification.order,
+        1
+      );
       if (updateService.serviceStatus !== "Archived") {
         // Add it at the last index of the new row.
         tempRows[updateService.applicationType].serviceIds.push(
@@ -442,7 +446,7 @@ function ServiceForm(props) {
 
     // Create new object to setState the fetchedData
     return {
-      rowsOrder: props.fetchedData[0].rowsOrder,
+      rowsOrder: fetchedData[0].rowsOrder,
       services: tempServices,
       rows: tempRows,
     };
@@ -455,8 +459,8 @@ function ServiceForm(props) {
     for (const service of values) {
       if (
         service.applicationType ===
-          props.serviceWithoutModification.applicationType &&
-        service.order > props.serviceWithoutModification.order
+          serviceWithoutModification.applicationType &&
+        service.order > serviceWithoutModification.order
       ) {
         service.order -= 1;
         const data = {
@@ -472,7 +476,7 @@ function ServiceForm(props) {
 
         //Stop the loop if we have an error
         if (error) {
-          toastComponent(
+          ToastComponent(
             t("mapping.canvas.error.service.order.modification"),
             "error"
           );
@@ -528,12 +532,14 @@ function ServiceForm(props) {
     );
   }
 
+  console.log(formValue.serviceName);
+
   return (
     <AlertDialog
       size="2xl"
-      isOpen={props.isOpen}
-      leastDestructiveRef={props.cancelRef}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
       closeOnOverlayClick={false}
     >
       <AlertDialogOverlay>
@@ -543,7 +549,7 @@ function ServiceForm(props) {
               <FormControl isInvalid={isError}>
                 <InputComponent
                   isRequired={true}
-                  value={formValue["serviceName"]}
+                  propValue={formValue["serviceName"]}
                   placeholder={t("mapping.canvas.form.service.name")}
                   onChange={(serviceName) => {
                     formValue["serviceName"] = serviceName;
@@ -574,13 +580,13 @@ function ServiceForm(props) {
                 organisations={organisations}
                 applicationTypeButtons={applicationTypeButtons}
                 audiences={audiences}
-                services={props.services}
-                locations={props.locations}
+                services={services}
+                locations={locations}
                 formValue={formValue}
               />
             </Box>
             <Flex paddingTop={mediumPadding}>
-              {props.isEditing ? (
+              {isEditing ? (
                 <ButtonComponent
                   buttonText={t("mapping.canvas.form.archive.button")}
                   isWithoutBorder={true}
@@ -595,24 +601,24 @@ function ServiceForm(props) {
                   buttonText={t("common.cancel")}
                   isWithoutBorder={true}
                   color={greyTextColor}
-                  onClick={props.onClose}
+                  onClick={onClose}
                 />
               )}
               <Spacer />
-              {props.isEditing ? (
+              {isEditing ? (
                 <ButtonComponent
                   padding={`0 ${mediumPadding} 0 0`}
                   buttonText={t("common.cancel")}
                   isWithoutBorder={true}
                   color={greyTextColor}
                   onClick={() => {
-                    props.onClose();
+                    onClose();
                   }}
                 />
               ) : (
                 <Box />
               )}
-              {props.isEditing ? (
+              {isEditing ? (
                 <ButtonComponent
                   padding={`0 ${mediumPadding} 0 0`}
                   buttonText={t("mapping.canvas.form.unpublished.button")}
@@ -629,7 +635,7 @@ function ServiceForm(props) {
                   onClick={() => handleDraftOrPublishClick("Draft")}
                 />
               )}
-              {props.isEditing ? (
+              {isEditing ? (
                 <ButtonComponent
                   buttonText={t("mapping.canvas.form.save.button")}
                   isPrimary={true}
@@ -651,5 +657,18 @@ function ServiceForm(props) {
     </AlertDialog>
   );
 }
+
+ServiceForm.propTypes = {
+  propOrganisations: PropTypes.array,
+  serviceWithoutModification: PropTypes.object,
+  isOpen: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  mapId: PropTypes.string.isRequired,
+  cancelRef: PropTypes.object.isRequired,
+  locations: PropTypes.array.isRequired,
+  services: PropTypes.array.isRequired,
+  fetchedData: PropTypes.array.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 
 export default ServiceForm;

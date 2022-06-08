@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Box, Button } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import {
   blueColor,
@@ -16,43 +17,49 @@ import {
 } from "../../../helper/constant";
 
 const ButtonComponent = (props) => {
+  const {
+    padding,
+    as,
+    bg,
+    isPrimary,
+    isSelected,
+    width,
+    propsBorderRadius,
+    isWithoutBorder,
+    color,
+    icon,
+    hover,
+    onClick,
+    buttonText,
+  } = props;
+
   return (
-    <Box padding={props.padding}>
+    <Box padding={padding}>
       <Button
-        as={props.as}
+        as={as}
         bg={
-          props.bg
-            ? props.bg
-            : props.isPrimary
+          bg
+            ? bg
+            : isPrimary
             ? blueColor
-            : props.isSelected
+            : isSelected
             ? whiteActiveColor
             : whiteColor
         }
-        width={props.width}
+        width={width}
         height="40px"
         paddingX={smallPadding}
-        borderRadius={props.borderRadius ? props.borderRadius : borderRadius}
-        border={
-          props.isPrimary || props.isWithoutBorder
-            ? 0
-            : `2px solid ${blueColor}`
-        }
-        color={
-          props.color ? props.color : props.isPrimary ? whiteColor : blueColor
-        }
-        leftIcon={props.icon}
+        borderRadius={propsBorderRadius ? propsBorderRadius : borderRadius}
+        border={isPrimary || isWithoutBorder ? 0 : `2px solid ${blueColor}`}
+        color={color ? color : isPrimary ? whiteColor : blueColor}
+        leftIcon={icon}
         _hover={{
-          bg: props.hover
-            ? props.hover
-            : props.isPrimary
-            ? blueHoverColor
-            : whiteHoverColor,
+          bg: hover ? hover : isPrimary ? blueHoverColor : whiteHoverColor,
         }}
         _focus={{ boxShadow: "none" }}
-        onClick={props.onClick}
+        onClick={onClick}
       >
-        {props.buttonText}
+        {buttonText}
       </Button>
     </Box>
   );
@@ -78,13 +85,33 @@ Button.defaultProps = {
 };
 
 ButtonComponent.defaultProps = {
+  padding: `0 ${smallPadding} 0 ${smallPadding}`,
   isPrimary: false,
   isSelected: false,
   isWithoutBorder: false,
-  borderRadius: undefined,
-  margin: undefined,
+  propsBorderRadius: undefined,
   as: undefined,
+  bg: undefined,
   width: undefined,
+  color: undefined,
+  hover: undefined,
+  icon: undefined,
+};
+
+ButtonComponent.propTypes = {
+  isPrimary: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  isWithoutBorder: PropTypes.bool,
+  propsBorderRadius: PropTypes.string,
+  as: PropTypes.string,
+  bg: PropTypes.string,
+  width: PropTypes.string,
+  color: PropTypes.string,
+  hover: PropTypes.string,
+  padding: PropTypes.string,
+  icon: PropTypes.element,
+  buttonText: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default ButtonComponent;

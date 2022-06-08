@@ -10,8 +10,19 @@ import {
   whiteColor,
 } from "../../../helper/constant";
 import ServiceForm from "./form/ServiceForm";
+import PropTypes from "prop-types";
 
 function NewServiceButton(props) {
+  const {
+    onOpen,
+    isOpen,
+    onClose,
+    fetchedData,
+    organisations,
+    services,
+    locations,
+    mapId,
+  } = props;
   const cancelRef = useRef();
   const { t } = useTranslation();
 
@@ -29,23 +40,32 @@ function NewServiceButton(props) {
             h="15px"
           />
         }
-        onClick={props.onOpen}
+        onClick={onOpen}
       />
       <ServiceForm
         isEditing={false}
-        isOpen={props.isOpen}
-        onClose={props.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
         cancelRef={cancelRef}
-        isError={props.isError}
-        fetchedData={props.fetchedData}
-        organisations={props.organisations}
-        audiences={props.audiences}
-        services={props.services}
-        locations={props.locations}
-        mapId={props.mapId}
+        fetchedData={fetchedData}
+        propOrganisations={organisations}
+        services={services}
+        locations={locations}
+        mapId={mapId}
       />
     </React.Fragment>
   );
 }
+
+NewServiceButton.propTypes = {
+  organisations: PropTypes.array,
+  locations: PropTypes.array,
+  isOpen: PropTypes.bool.isRequired,
+  mapId: PropTypes.string.isRequired,
+  fetchedData: PropTypes.array.isRequired,
+  services: PropTypes.array.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
+};
 
 export default NewServiceButton;

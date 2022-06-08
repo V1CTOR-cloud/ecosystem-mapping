@@ -1,11 +1,13 @@
 import React from "react";
 
 import {
+  Box,
+  HStack,
+  Text,
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-} from "@chakra-ui/accordion";
-import { Box, HStack, Text } from "@chakra-ui/react";
+} from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import IconButtonComponent from "../../basic/buttons/IconButtonComponent";
@@ -17,8 +19,10 @@ import {
   verySmallPadding,
   whiteHoverColor,
 } from "../../../helper/constant";
+import PropTypes from "prop-types";
 
 function AccordionItemComponent(props) {
+  const { isCollapsed, button, onClick } = props;
   const { t } = useTranslation();
 
   return (
@@ -26,7 +30,7 @@ function AccordionItemComponent(props) {
       {({ isExpanded }) => {
         const isSelected = isExpanded;
 
-        if (props.isCollapsed) {
+        if (isCollapsed) {
           isExpanded = false;
         }
 
@@ -38,23 +42,19 @@ function AccordionItemComponent(props) {
               borderColor={isSelected ? blueColor : greyColor}
               _focus={{ bg: whiteHoverColor }}
             >
-              {props.isCollapsed && (
+              {isCollapsed && (
                 <IconButtonComponent
-                  icon={
-                    isSelected ? props.button.icon[0] : props.button.icon[1]
-                  }
-                  onClick={props.onClick}
+                  icon={isSelected ? button.icon[0] : button.icon[1]}
+                  onClick={onClick}
                   height="30px"
                   width="30px"
                 />
               )}
-              {!props.isCollapsed && (
+              {!isCollapsed && (
                 <HStack>
                   <IconButtonComponent
-                    icon={
-                      isSelected ? props.button.icon[0] : props.button.icon[1]
-                    }
-                    onClick={props.onClick}
+                    icon={isSelected ? button.icon[0] : button.icon[1]}
+                    onClick={onClick}
                     height="30px"
                     width="30px"
                   />
@@ -62,15 +62,15 @@ function AccordionItemComponent(props) {
                     paddingLeft={smallPadding}
                     color={isSelected ? blueColor : blackColor}
                   >
-                    {props.button.title}
+                    {button.title}
                   </Text>
                 </HStack>
               )}
             </AccordionButton>
             {isExpanded && (
               <AccordionPanel>
-                {props.button.children.length !== 0 ? (
-                  props.button.children
+                {button.children.length !== 0 ? (
+                  button.children
                 ) : (
                   <Box
                     w="100%"
@@ -91,5 +91,11 @@ function AccordionItemComponent(props) {
     </AccordionItem>
   );
 }
+
+AccordionItemComponent.propTypes = {
+  isCollapsed: PropTypes.bool.isRequired,
+  button: PropTypes.any.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default AccordionItemComponent;

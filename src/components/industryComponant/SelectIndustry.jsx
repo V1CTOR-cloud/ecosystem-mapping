@@ -1,25 +1,34 @@
 import React from "react";
 
 import { SimpleGrid } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import SelectIndustryComponent from "./SelectIndustryComponent";
 import SelectSubIndustryComponent from "./SelectSubIndustryComponent";
 
 const SelectIndustry = (props) => {
+  const { industries, locationData, onIndustryChange, subIndustries } = props;
   return (
     <SimpleGrid columns={2} spacing={4}>
       <SelectIndustryComponent
-        data={props.industries}
-        industry={props.locationData.industry}
-        selectedIndustry={(s) => props.onIndustryChange("industry", s)}
+        data={industries}
+        industry={locationData.industry}
+        selectedIndustry={(s) => onIndustryChange("industry", s)}
       />
       <SelectSubIndustryComponent
-        data={props.subIndustries}
-        subIndustry={props.locationData.subIndustry}
-        selectedSubIndustry={(s) => props.onIndustryChange("subIndustry", s)}
+        data={subIndustries}
+        subIndustry={locationData.subIndustry}
+        selectedSubIndustry={(s) => onIndustryChange("subIndustry", s)}
       />
     </SimpleGrid>
   );
+};
+
+SelectIndustry.propTypes = {
+  industries: PropTypes.array.isRequired,
+  subIndustries: PropTypes.array.isRequired,
+  locationData: PropTypes.object.isRequired,
+  onIndustryChange: PropTypes.func.isRequired,
 };
 
 export default SelectIndustry;
