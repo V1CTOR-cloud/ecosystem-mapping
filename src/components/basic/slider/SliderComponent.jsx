@@ -142,7 +142,6 @@ function SliderComponent(props) {
 
 SliderComponent.propTypes = {
   servicePhaseRange: PropTypes.object.isRequired,
-  handlePhaseChange: PropTypes.func.isRequired,
 };
 
 export default SliderComponent;
