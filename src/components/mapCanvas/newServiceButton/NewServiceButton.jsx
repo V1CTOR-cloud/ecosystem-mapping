@@ -10,8 +10,21 @@ import {
   whiteColor,
 } from "../../../helper/constant";
 import ServiceForm from "./form/ServiceForm";
+import PropTypes from "prop-types";
 
 function NewServiceButton(props) {
+  const {
+    onOpen,
+    isOpen,
+    onClose,
+    isError,
+    fetchedData,
+    organisations,
+    audiences,
+    services,
+    locations,
+    mapId,
+  } = props;
   const cancelRef = useRef();
   const { t } = useTranslation();
 
@@ -29,23 +42,36 @@ function NewServiceButton(props) {
             h="15px"
           />
         }
-        onClick={props.onOpen}
+        onClick={onOpen}
       />
       <ServiceForm
         isEditing={false}
-        isOpen={props.isOpen}
-        onClose={props.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
         cancelRef={cancelRef}
-        isError={props.isError}
-        fetchedData={props.fetchedData}
-        organisations={props.organisations}
-        audiences={props.audiences}
-        services={props.services}
-        locations={props.locations}
-        mapId={props.mapId}
+        isError={isError}
+        fetchedData={fetchedData}
+        organisations={organisations}
+        audiences={audiences}
+        services={services}
+        locations={locations}
+        mapId={mapId}
       />
     </React.Fragment>
   );
 }
+
+NewServiceButton.propTypes = {
+  isError: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  mapId: PropTypes.string.isRequired,
+  organisations: PropTypes.array.isRequired,
+  audiences: PropTypes.array.isRequired,
+  locations: PropTypes.array.isRequired,
+  fetchedData: PropTypes.object.isRequired,
+  services: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
+};
 
 export default NewServiceButton;
