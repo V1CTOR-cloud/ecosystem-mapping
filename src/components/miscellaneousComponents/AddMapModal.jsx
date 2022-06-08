@@ -71,7 +71,7 @@ const CreateButton = chakra(IconButton, {
 });
 
 const AddMapModal = (props) => {
-  const { isEdit, data, isAdd, notifyParent, isHome } = props;
+  const { isEdit, isAdd } = props;
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -186,13 +186,6 @@ const AddMapModal = (props) => {
     }
   };
 
-  const handleEdit = () => {
-    onOpen();
-    handleLocationDataChange(data);
-    setMapName(data.name);
-    setLocationData(data);
-  };
-
   const EditMap = () => {
     handleLocationDataValidate();
     if (
@@ -210,7 +203,6 @@ const AddMapModal = (props) => {
             isClosable: true,
           });
         }
-        notifyParent();
         onClose();
       });
     } else {
@@ -252,37 +244,34 @@ const AddMapModal = (props) => {
     };
 
     fetchData().catch(console.error);
-  }, [locationData, isEdit, isAdd, data, isHome]);
+  }, [locationData, isEdit, isAdd]);
 
   return (
     <React.Fragment>
-      {isHome ? (
-        <Link onClick={handleOpenModal}>
-          <Text color="blue" m="7px" fontSize="17px">
-            {t("startup.home.page.header.add.map.link")}
-          </Text>
-        </Link>
+      <Link onClick={handleOpenModal}>
+        <Text color="blue" m="7px" fontSize="17px">
+          {t("startup.home.page.header.add.map.link")}
+        </Text>
+      </Link>
       ) : isEdit ? (
-        <MenuItem onClick={handleEdit}>
-          {t("startup.list.map.page.map.card.edit")}
-        </MenuItem>
+      <MenuItem onClick={onOpen}>
+        {t("startup.list.map.page.map.card.edit")}
+      </MenuItem>
       ) : isAdd ? (
-        <CreateButton onClick={handleOpenModal} />
-      ) : (
-        <React.Fragment>
-          <h1 style={headerStyle}>
-            {t("startup.landing.page.content.welcome.message")}
-          </h1>
-          <h1 style={htagStyle}>
-            {t("startup.landing.page.content.welcome.tagline.text")}
-          </h1>
-          <Flex alignItems="flex-start">
-            <Button mt="30px" onClick={handleOpenModal} className="btn-ad-mp">
-              {t("startup.landing.page.create.map.button")}
-            </Button>
-          </Flex>
-        </React.Fragment>
-      )}
+      <CreateButton onClick={handleOpenModal} />) : (
+      <React.Fragment>
+        <h1 style={headerStyle}>
+          {t("startup.landing.page.content.welcome.message")}
+        </h1>
+        <h1 style={htagStyle}>
+          {t("startup.landing.page.content.welcome.tagline.text")}
+        </h1>
+        <Flex alignItems="flex-start">
+          <Button mt="30px" onClick={handleOpenModal} className="btn-ad-mp">
+            {t("startup.landing.page.create.map.button")}
+          </Button>
+        </Flex>
+      </React.Fragment>
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -382,12 +371,13 @@ const AddMapModal = (props) => {
   );
 };
 
+AddMapModal.defaultProps = {
+  isEdit: false,
+};
+
 AddMapModal.propTypes = {
-  isEdit: PropTypes.bool.isRequired,
-  isHome: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool,
   isAdd: PropTypes.bool.isRequired,
-  data: PropTypes.object.isRequired,
-  notifyParent: PropTypes.func.isRequired,
 };
 
 export default AddMapModal;
