@@ -1,7 +1,6 @@
 import { graphCMSRequest } from "./graphCMS";
 
 export const Organisation = {
-
   // Get all the existing organisation.
   async getAllOrganisation() {
     const query = `{
@@ -25,10 +24,10 @@ export const Organisation = {
         startingStageRange: parseInt(data.startRange),
         endingStageRange: parseInt(data.endRange),
         organizationType: data.type,
-        websiteURL: data.orgUrl
-      }
+        websiteURL: data.orgUrl,
+      },
     };
 
-    return await graphCMSRequest(query, variables);;
-  }
+    return await graphCMSRequest(query, variables);
+  },
 };
