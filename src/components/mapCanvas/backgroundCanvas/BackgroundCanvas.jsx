@@ -4,6 +4,7 @@ import { Box, HStack } from "@chakra-ui/react";
 
 import { whiteColor } from "../../../helper/constant";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const SectionCanvas = styled.div`
   width: 100%;
@@ -22,10 +23,11 @@ const SubSectionCanvas = styled.div`
 `;
 
 function BackgroundCanvas(props) {
+  const { isFilterOpen } = props;
   const sectionCanvas = [1, 2, 3, 4, 5, 6];
   const subSectionCanvas = [1, 2, 3];
 
-  const height = (props.isFilterOpen ? 135 : 75) + 12;
+  const height = (isFilterOpen ? 135 : 75) + 12;
 
   return (
     <Box
@@ -57,5 +59,9 @@ function BackgroundCanvas(props) {
     </Box>
   );
 }
+
+BackgroundCanvas.propTypes = {
+  isFilterOpen: PropTypes.bool.isRequired,
+};
 
 export default BackgroundCanvas;
