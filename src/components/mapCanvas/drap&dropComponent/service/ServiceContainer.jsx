@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import Handle from "../handle/Handle";
 import { borderRadius, smallPadding } from "../../../../helper/constant";
 import ServiceName from "./ServiceName";
-import toastComponent from "../../../basic/ToastComponent";
+import ToastComponent from "../../../basic/ToastComponent";
 import { MapCanvasPageContext } from "../../../../pages/MapCanvasPage";
 import serviceFocus from "../../../../assets/servicesFocus.json";
 import { Service } from "../../../../service/service";
@@ -64,9 +64,9 @@ function ServiceContainer(props) {
 
     // Display toast to show to the user that either they were a problem or it was updated.
     if (res[0] === "Error") {
-      toastComponent(t("mapping.toast.error"), "error");
+      ToastComponent(t("mapping.toast.error"), "error");
     } else {
-      toastComponent(t("mapping.toast.success.service"), "success");
+      ToastComponent(t("mapping.toast.success.service"), "success");
     }
   }
 
@@ -117,16 +117,16 @@ function ServiceContainer(props) {
 
       // const newData = addServiceToData(res);
       if (newRes === undefined) {
-        toastComponent(
+        ToastComponent(
           t("mapping.toast.success.create.service"),
           "success",
           5000
         );
       } else {
-        toastComponent(res, "error", 5000);
+        ToastComponent(res, "error", 5000);
       }
     } else {
-      toastComponent(res, "error", 5000);
+      ToastComponent(res, "error", 5000);
     }
   }
 

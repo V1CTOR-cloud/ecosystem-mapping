@@ -70,9 +70,9 @@ function NavigationBar(props) {
 }
 
 NavigationBar.propTypes = {
-  title: PropTypes.string.isRequired,
-  primaryButton: PropTypes.element,
   additionalButtons: PropTypes.element,
+  title: PropTypes.string.isRequired,
+  primaryButton: PropTypes.element.isRequired,
 };
 
 export default NavigationBar;

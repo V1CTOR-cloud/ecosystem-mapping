@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import Row from "../drap&dropComponent/row/Row";
-import toastComponent from "../../basic/ToastComponent";
+import ToastComponent from "../../basic/ToastComponent";
 import { Service } from "../../../service/service";
 
 function ContentCanvas(props) {
@@ -62,9 +62,9 @@ function ContentCanvas(props) {
   function getToast(res) {
     // Display toast to show to the user that either they were a problem or it was updated.
     if (res) {
-      toastComponent(t("mapping.toast.error"), "error");
+      ToastComponent(t("mapping.toast.error"), "error");
     } else {
-      toastComponent(t("mapping.toast.success.services"), "success");
+      ToastComponent(t("mapping.toast.success.services"), "success");
     }
   }
 

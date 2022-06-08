@@ -28,7 +28,7 @@ import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent
 import ServiceTabs from "./tabs/ServiceTabs";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
-import toastComponent from "../../../basic/ToastComponent";
+import ToastComponent from "../../../basic/ToastComponent";
 import { Service } from "../../../../service/service";
 import PropTypes from "prop-types";
 
@@ -238,13 +238,13 @@ function ServiceForm(props) {
         const newData = addServiceToData(res);
 
         fetchedData[1](newData);
-        toastComponent(
+        ToastComponent(
           t("mapping.toast.success.create.service"),
           "success",
           5000
         );
       } else {
-        toastComponent(res, "error", 5000);
+        ToastComponent(res, "error", 5000);
       }
     }
   }
@@ -391,9 +391,9 @@ function ServiceForm(props) {
         fetchedData[1](newData);
         onClose();
 
-        toastComponent(t("mapping.toast.success.service"), "success", 5000);
+        ToastComponent(t("mapping.toast.success.service"), "success", 5000);
       } else {
-        toastComponent(res, "error", 5000);
+        ToastComponent(res, "error", 5000);
       }
     }
   }
@@ -476,7 +476,7 @@ function ServiceForm(props) {
 
         //Stop the loop if we have an error
         if (error) {
-          toastComponent(
+          ToastComponent(
             t("mapping.canvas.error.service.order.modification"),
             "error"
           );
@@ -532,6 +532,8 @@ function ServiceForm(props) {
     );
   }
 
+  console.log(formValue.serviceName);
+
   return (
     <AlertDialog
       size="2xl"
@@ -547,7 +549,7 @@ function ServiceForm(props) {
               <FormControl isInvalid={isError}>
                 <InputComponent
                   isRequired={true}
-                  value={formValue["serviceName"]}
+                  propValue={formValue["serviceName"]}
                   placeholder={t("mapping.canvas.form.service.name")}
                   onChange={(serviceName) => {
                     formValue["serviceName"] = serviceName;

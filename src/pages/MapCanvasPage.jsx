@@ -590,7 +590,7 @@ function MapCanvasPage() {
         <Box w="100%" zIndex={2}>
           <NavigationBar
             title={mapTitle}
-            button={primaryButton}
+            primaryButton={primaryButton}
             additionalButtons={additionalButton}
           />
         </Box>
