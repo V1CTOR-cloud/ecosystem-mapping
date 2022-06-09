@@ -13,11 +13,6 @@ import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
-import {
-  greyTextColor,
-  mediumPadding,
-  verySmallPadding,
-} from "../../../../helper/constant";
 import { Map } from "../../../../service/map";
 import PropTypes from "prop-types";
 
@@ -168,18 +163,19 @@ function SaveFilterAlertDialog(props) {
               onChange={handleNameFilterChange}
             />
             {isError && (
-              <Text color="red" paddingTop={verySmallPadding}>
+              <Text color="red" paddingTop={2}>
                 {t("mapping.canvas.form.filter.name.error")}
               </Text>
             )}
           </AlertDialogBody>
 
           <AlertDialogFooter>
+            {/*TODO changer boutton*/}
             <ButtonComponent
-              padding={`0 ${mediumPadding} 0 0`}
+              padding={`0 24px 0 0`}
               buttonText={t("common.cancel")}
               isWithoutBorder={true}
-              color={greyTextColor}
+              color={"blackAlpha.600"}
               onClick={() => {
                 setFilterName("");
                 onClose();

@@ -13,12 +13,6 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import ButtonComponent from "../../../basic/buttons/ButtonComponent";
-import {
-  greyColor,
-  redColor,
-  redHoverColor,
-  whiteColor,
-} from "../../../../helper/constant";
 
 function DeleteFilterAlertDialog(props) {
   const { isOpen, onClose, handleDeleteSavedFilter } = props;
@@ -46,16 +40,16 @@ function DeleteFilterAlertDialog(props) {
               onClick={onClose}
               buttonText={t("common.cancel")}
               isWithoutBorder={true}
-              color={greyColor}
+              color={"blackAlpha.700"}
             />
             <Spacer />
             <ButtonComponent
               onClick={handleDeleteSavedFilter}
               buttonText={t("common.delete")}
               isWithoutBorder={true}
-              color={whiteColor}
-              bg={redColor}
-              hover={redHoverColor}
+              color={"white"}
+              bg={"red.500"}
+              hover={"red.300"}
             />
           </AlertDialogFooter>
         </AlertDialogContent>

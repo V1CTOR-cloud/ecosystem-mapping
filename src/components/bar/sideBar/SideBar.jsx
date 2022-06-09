@@ -6,25 +6,19 @@ import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
 import { Accordion } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import AccordionItemComponent from "./AccordionItemComponent";
-import {
-  blackColor,
-  blueColor,
-  smallPadding,
-  whiteColor,
-} from "../../../helper/constant";
-import PropTypes from "prop-types";
 
 const SideBarContainer = styled.div`
   position: absolute;
-  background-color: ${whiteColor};
+  background-color: white;
   z-index: 100;
   width: 50px;
   // Height depending of the filter bar: 75px for the navbar and 60px for the filter bar when open
-  height: ${(props) =>
-    props.isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
+  height: ${({ isFilterOpen }) =>
+    isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
 
   &:hover {
     width: 250px
@@ -46,26 +40,28 @@ function SideBar(props) {
       key: 0,
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: [
-        <TableChart key={0} color={blueColor} />,
-        <TableChart key={1} color={blackColor} />,
+        <TableChart key={0} color={"brand.500"} />,
+        <TableChart key={1} color={"black"} />,
       ],
       children: [
+        // TODO changer boutton
         <ButtonComponent
           key="Financing"
           buttonText="Financing"
           isPrimary={true}
           onClick={() => {}}
           width="100%"
-          padding={`0 ${smallPadding} 0 ${smallPadding}`}
+          padding={`0 12px 0 12px`}
           borderRadius="50"
         />,
+        // TODO changer boutton
         <ButtonComponent
           key="Business Model"
           buttonText="Business Model"
           isPrimary={true}
           onClick={() => {}}
           width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
+          padding={"12px 12px 0 12px"}
           borderRadius="50"
         />,
       ],
@@ -74,8 +70,8 @@ function SideBar(props) {
       key: 1,
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
       icon: [
-        <Draft key={0} color={blueColor} />,
-        <Draft key={1} color={blackColor} />,
+        <Draft key={0} color={"brand.500"} />,
+        <Draft key={1} color={"black"} />,
       ],
       children: [],
     },
@@ -83,8 +79,8 @@ function SideBar(props) {
       key: 2,
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
       icon: [
-        <Archive key={0} color={blueColor} />,
-        <Archive key={1} color={blackColor} />,
+        <Archive key={0} color={"brand.500"} />,
+        <Archive key={1} color={"black"} />,
       ],
       children: [],
     },
@@ -105,7 +101,7 @@ function SideBar(props) {
           isPrimary={true}
           onClick={() => handleDraftOrArchivedServiceClick(service)}
           width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
+          padding={"12px 12px 0 12px"}
           borderRadius="50"
         />
       );
@@ -119,7 +115,7 @@ function SideBar(props) {
           isPrimary={true}
           onClick={() => handleDraftOrArchivedServiceClick(service)}
           width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
+          padding={"12px 12px 0 12px"}
           borderRadius="50"
         />
       );

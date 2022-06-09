@@ -11,14 +11,6 @@ import {
 import { useTranslation } from "react-i18next";
 
 import IconButtonComponent from "../../basic/buttons/IconButtonComponent";
-import {
-  blackColor,
-  blueColor,
-  greyColor,
-  smallPadding,
-  verySmallPadding,
-  whiteHoverColor,
-} from "../../../helper/constant";
 import PropTypes from "prop-types";
 
 function AccordionItemComponent(props) {
@@ -37,10 +29,10 @@ function AccordionItemComponent(props) {
         return (
           <>
             <AccordionButton
-              padding={verySmallPadding}
+              padding={2}
               borderBottom="solid 3px"
-              borderColor={isSelected ? blueColor : greyColor}
-              _focus={{ bg: whiteHoverColor }}
+              borderColor={isSelected ? "brand.500" : "blackAlpha.700"}
+              _focus={{ bg: "brand.50" }}
             >
               {isCollapsed && (
                 <IconButtonComponent
@@ -59,8 +51,8 @@ function AccordionItemComponent(props) {
                     width="30px"
                   />
                   <Text
-                    paddingLeft={smallPadding}
-                    color={isSelected ? blueColor : blackColor}
+                    paddingLeft={3}
+                    color={isSelected ? "brand.500" : "black"}
                   >
                     {button.title}
                   </Text>
@@ -72,12 +64,7 @@ function AccordionItemComponent(props) {
                 {button.children.length !== 0 ? (
                   button.children
                 ) : (
-                  <Box
-                    w="100%"
-                    h="100%"
-                    align="center"
-                    paddingTop={smallPadding}
-                  >
+                  <Box w="100%" h="100%" align="center" paddingTop={3}>
                     <Text>
                       {t("mapping.canvas.side.bar.toggle.no.element")}
                     </Text>
