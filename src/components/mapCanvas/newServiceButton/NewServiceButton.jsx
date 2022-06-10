@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 
 import { AddIcon } from "@chakra-ui/icons";
+import { Button } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import ServiceForm from "./form/ServiceForm";
 
 function NewServiceButton(props) {
@@ -23,13 +23,12 @@ function NewServiceButton(props) {
 
   return (
     <React.Fragment>
-      <ButtonComponent
-        isPrimary={true}
-        padding={`0 0 0 ${6}`}
-        buttonText={t("mapping.navigation.bar.new.service.button")}
-        icon={<AddIcon marginRight={2} color={"white"} w="15px" h="15px" />}
+      <Button
+        leftIcon={<AddIcon marginRight={2} color={"white"} w="15px" h="15px" />}
         onClick={onOpen}
-      />
+      >
+        {t("mapping.navigation.bar.new.service.button")}
+      </Button>
       <ServiceForm
         isEditing={false}
         isOpen={isOpen}
