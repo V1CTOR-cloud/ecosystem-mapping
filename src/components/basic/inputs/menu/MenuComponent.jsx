@@ -28,10 +28,15 @@ function MenuComponent(props) {
     <Box>
       <Menu isLazy>
         <MenuButton
+          variant="outline"
+          color="black"
+          borderColor="blackAlpha.500"
+          _hover={{ bg: "blackAlpha.200" }}
+          _active={{ bg: "blackAlpha.300" }}
           w={width ? width : undefined}
           as={Button}
           rightIcon={<ChevronDownIcon />}
-          isDisabled={isDisabled ? isDisabled : false}
+          isDisabled={isDisabled}
         >
           {value}
         </MenuButton>
