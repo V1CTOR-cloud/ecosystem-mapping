@@ -17,6 +17,7 @@ import {
   Text,
   useDisclosure,
   WrapItem,
+  Button,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +33,6 @@ import dotsImg from "../../src/assets/images/3dots.png";
 import { Region } from "../service/region";
 import { Map } from "../service/map";
 import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
-import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { SortDownAlt } from "@styled-icons/bootstrap";
 
 const Card = chakra(Box, {
@@ -108,56 +108,59 @@ const ListMapPage = () => {
   });
 
   const primaryButton = (
-    <ButtonComponent
-      isPrimary={true}
-      padding={`0 0 0 12px`}
-      buttonText={t("mapping.navigation.bar.new.map.button")}
+    <Button
       icon={<AddIcon marginRight={2} color={"white"} w="15px" h="15px" />}
       onClick={() => {
         //TODO Create the function to create a map
       }}
-    />
+    >
+      {t("mapping.navigation.bar.new.map.button")}
+    </Button>
   );
 
   const additionalButton = (
     <HStack>
       {/* Button View */}
-      <ButtonComponent
-        isWithoutBorder={true}
-        buttonText={t("mapping.navigation.bar.view.button")}
-        icon={<GridIcon size="20" />}
-        color={"black"}
+      <Button
+        variant="blackGhost"
+        marginRight="1rem"
+        leftIcon={<GridIcon size="20" />}
         onClick={() => {}}
-      />
+      >
+        {t("mapping.navigation.bar.view.button")}
+      </Button>
       {/*Button sort*/}
-      {/*TODO boutton*/}
-      <ButtonComponent
-        padding={`0 12px 0 12px`}
-        isWithoutBorder={true}
-        buttonText={t("mapping.navigation.bar.sort.button")}
-        icon={
-          <SortDownAlt
-            size="20"
-            title={t("mapping.navigation.bar.sort.button")}
-          />
-        }
-        color={"black"}
-        onClick={() => {}}
-      />
-      {/* Button search */}
-      {!isOpen && (
-        <IconButton
-          variant="ghost"
-          icon={
-            <SearchIcon
-              color={isOpen ? "brand.500" : "blackAlpha.700"}
-              w="15px"
-              h="15px"
+      <Box paddingRight="1rem">
+        <Button
+          variant="blackGhost"
+          leftIcon={
+            <SortDownAlt
+              size="20"
+              title={t("mapping.navigation.bar.sort.button")}
             />
           }
-          onClick={onOpen}
-          aria-label={t("mapping.navigation.bar.search.aria.label")}
-        />
+          onClick={() => {}}
+        >
+          {t("mapping.navigation.bar.sort.button")}
+        </Button>
+      </Box>
+      {/* Button search */}
+      {!isOpen && (
+        <Box paddingRight="1rem">
+          <IconButton
+            variant="ghost"
+            marginRight="1rem"
+            icon={
+              <SearchIcon
+                color={isOpen ? "brand.500" : "blackAlpha.700"}
+                w="15px"
+                h="15px"
+              />
+            }
+            onClick={onOpen}
+            aria-label={t("mapping.navigation.bar.search.aria.label")}
+          />
+        </Box>
       )}
       {isOpen && (
         <InputGroup w="200px">
