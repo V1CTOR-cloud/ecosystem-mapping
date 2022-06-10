@@ -4,12 +4,6 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Box, HStack } from "@chakra-ui/react";
 
-import {
-  blueColor,
-  greyTextColor,
-  smallPadding,
-  verySmallPadding,
-} from "../../../../../helper/constant";
 import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithTooltip";
 import ButtonComponent from "../../../../basic/buttons/ButtonComponent";
 
@@ -24,21 +18,22 @@ function ApplicationTypeComponent(props) {
   }
 
   return (
-    <Box marginTop={smallPadding}>
+    <Box marginTop={3}>
       <LabelWithTooltip
         label={t("mapping.canvas.form.application.type")}
         tooltipAriaLabel={t("mapping.canvas.form.application.type")}
         tooltipText={t("mapping.canvas.form.application.type.tooltip")}
       />
-      <HStack marginTop={verySmallPadding}>
+      <HStack marginTop={2}>
         {applicationTypeButtons.map((buttonText) => {
           return (
             <Box key={buttonText}>
+              {/*TODO changer boutton*/}
               <ButtonComponent
-                padding={`0 0 0 ${verySmallPadding}`}
+                padding={`0 0 0 8px`}
                 isWithoutBorder={true}
                 buttonText={buttonText}
-                color={value === buttonText ? blueColor : greyTextColor}
+                color={value === buttonText ? "brand.500" : "blackAlpha.600"}
                 isSelected={value === buttonText}
                 onClick={() => handleOnChange(buttonText)}
               />

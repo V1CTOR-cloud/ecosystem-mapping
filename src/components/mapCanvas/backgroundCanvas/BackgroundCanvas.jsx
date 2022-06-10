@@ -1,8 +1,6 @@
 import React from "react";
 
 import { Box, HStack } from "@chakra-ui/react";
-
-import { whiteColor } from "../../../helper/constant";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -35,7 +33,7 @@ function BackgroundCanvas(props) {
     <Box
       h={`calc(100% - ${height}px)`}
       w="calc(100% - 200px)"
-      bg={whiteColor}
+      bg={"white"}
       position="absolute"
     >
       <HStack h="100%" justify="space-evenly">

@@ -9,10 +9,14 @@ import "./assets/css/Style.scss";
 import Routing from "./Routing";
 import { fonts } from "./theme/fonts/fonts";
 import { colors } from "./theme/colors/colors";
+import { text } from "./theme/components/text";
 
 const theme = extendTheme({
   fonts: fonts,
   colors: colors,
+  components: {
+    Text: text,
+  },
 });
 
 function App() {

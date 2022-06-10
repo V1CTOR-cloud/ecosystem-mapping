@@ -33,7 +33,7 @@ function NavigationBar(props) {
     <React.Fragment>
       <HStack height="75px" justify="space-between" paddingX={10} shadow="base">
         <HStack>
-          <Circle border={0.5} borderColor={"brand.500"} padding="4px">
+          <Circle border={"2px"} borderColor={"brand.500"} padding="4px">
             <BlueHome size="22.5" title="Home" />
           </Circle>
           <MyDivider />

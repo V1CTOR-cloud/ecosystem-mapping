@@ -31,7 +31,7 @@ function AccordionItemComponent(props) {
             <AccordionButton
               padding={2}
               borderBottom="solid 3px"
-              borderColor={isSelected ? "brand.500" : "blackAlpha.700"}
+              borderColor={isSelected ? "brand.500" : "blackAlpha.400"}
               _focus={{ bg: "brand.50" }}
             >
               {isCollapsed && (

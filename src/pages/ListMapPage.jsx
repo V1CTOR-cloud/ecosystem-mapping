@@ -30,15 +30,6 @@ import {
 import dotsImg from "../../src/assets/images/3dots.png";
 import { Region } from "../service/region";
 import { Map } from "../service/map";
-import {
-  blackColor,
-  blueColor,
-  borderThickness,
-  greyColor,
-  mediumPadding,
-  verySmallPadding,
-  whiteColor,
-} from "../helper/constant";
 import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { SortDownAlt } from "@styled-icons/bootstrap";
@@ -119,16 +110,9 @@ const ListMapPage = () => {
   const primaryButton = (
     <ButtonComponent
       isPrimary={true}
-      padding={`0 0 0 ${mediumPadding}`}
+      padding={`0 0 0 12px`}
       buttonText={t("mapping.navigation.bar.new.map.button")}
-      icon={
-        <AddIcon
-          marginRight={verySmallPadding}
-          color={whiteColor}
-          w="15px"
-          h="15px"
-        />
-      }
+      icon={<AddIcon marginRight={2} color={"white"} w="15px" h="15px" />}
       onClick={() => {
         //TODO Create the function to create a map
       }}
@@ -142,12 +126,13 @@ const ListMapPage = () => {
         isWithoutBorder={true}
         buttonText={t("mapping.navigation.bar.view.button")}
         icon={<GridIcon size="20" />}
-        color={blackColor}
+        color={"black"}
         onClick={() => {}}
       />
       {/*Button sort*/}
+      {/*TODO boutton*/}
       <ButtonComponent
-        padding={`0 ${mediumPadding} 0 ${mediumPadding}`}
+        padding={`0 12px 0 12px`}
         isWithoutBorder={true}
         buttonText={t("mapping.navigation.bar.sort.button")}
         icon={
@@ -156,7 +141,7 @@ const ListMapPage = () => {
             title={t("mapping.navigation.bar.sort.button")}
           />
         }
-        color={blackColor}
+        color={"black"}
         onClick={() => {}}
       />
       {/* Button search */}
@@ -164,7 +149,7 @@ const ListMapPage = () => {
         <IconButtonComponent
           icon={
             <SearchIcon
-              color={isOpen ? blueColor : greyColor}
+              color={isOpen ? "brand.500" : "blackAlpha.700"}
               w="15px"
               h="15px"
             />
@@ -175,17 +160,17 @@ const ListMapPage = () => {
       {isOpen && (
         <InputGroup w="200px">
           <InputLeftElement cursor="pointer" onClick={() => {}}>
-            <SearchIcon color={isOpen ? blueColor : greyColor} />
+            <SearchIcon color={isOpen ? "brand.500" : "blackAlpha.700"} />
           </InputLeftElement>
           <Input
             type="text"
             placeholder={t("mapping.navigation.bar.search.placeholder")}
-            border={borderThickness}
-            borderColor={blueColor}
-            _hover={{ borderColor: blueColor }}
+            border={0.5}
+            borderColor={"brand.500"}
+            _hover={{ borderColor: "brand.500" }}
           />
           <InputRightElement cursor="pointer" onClick={onClose}>
-            <CloseIcon color={greyColor} />
+            <CloseIcon color={"blackAlpha.700"} />
           </InputRightElement>
         </InputGroup>
       )}

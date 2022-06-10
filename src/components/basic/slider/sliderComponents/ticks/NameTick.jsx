@@ -1,8 +1,7 @@
 import React from "react";
 
 import PropTypes from "prop-types";
-
-import { defaultFontSize, greyTextColor } from "../../../../../helper/constant";
+import { Box } from "@chakra-ui/react";
 
 function NameTick(props) {
   const { index, tick } = props;
@@ -31,35 +30,28 @@ function NameTick(props) {
 
   return (
     <React.Fragment>
-      <div
-        style={{
-          position: "absolute",
-          marginTop: -30,
-          marginLeft: index === 4 || index === 0 ? -17.5 : -25,
-          fontSize: 10,
-          color: greyTextColor,
-          fontFamily: "Ubuntu, sans serif",
-          left: `${tick.percent}%`,
-        }}
+      <Box
+        position="absolute"
+        marginTop="-30px"
+        marginLeft={index === 4 || index === 0 ? -17.5 : -25}
+        fontSize="10px"
+        color="blackAlpha.500"
+        left={`${tick.percent}%`}
       >
         {phaseName}
-      </div>
+      </Box>
       {index !== 6 ? (
-        <div
-          style={{
-            position: "absolute",
-            fontSize: defaultFontSize,
-            color: greyTextColor,
-            fontFamily: "Ubuntu, sans serif",
-            marginTop: -15,
-            textAlign: "center",
-            marginLeft: `${-(100 / tick.length) / 2}%`,
-            width: `${100 / tick.length}%`,
-            left: `${tick.percent}%`,
-          }}
+        <Box
+          position="absolute"
+          color="blackAlpha.500"
+          marginTop="-15px"
+          marginLeft={`${-(100 / tick.length) / 2}%`}
+          textAlign="center"
+          width={`${100 / tick.length}%`}
+          left={`${tick.percent}%`}
         >
           {tick.value - 0.5}
-        </div>
+        </Box>
       ) : (
         <div />
       )}

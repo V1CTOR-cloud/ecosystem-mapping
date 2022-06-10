@@ -14,13 +14,12 @@ import {
 } from "@chakra-ui/react";
 import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import {
   audienceList,
-  greyTextColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
 } from "../../../../helper/constant";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
@@ -30,7 +29,6 @@ import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
 import ToastComponent from "../../../basic/ToastComponent";
 import { Service } from "../../../../service/service";
-import PropTypes from "prop-types";
 
 function ServiceForm(props) {
   const {
@@ -542,7 +540,7 @@ function ServiceForm(props) {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogBody paddingY={mediumPadding}>
+          <AlertDialogBody paddingY={6}>
             <HStack alignItems="flex-start" zIndex={11}>
               <FormControl isInvalid={isError}>
                 <InputComponent
@@ -583,13 +581,13 @@ function ServiceForm(props) {
                 formValue={formValue}
               />
             </Box>
-            <Flex paddingTop={mediumPadding}>
+            <Flex paddingTop={6}>
               {isEditing ? (
                 <ButtonComponent
                   buttonText={t("mapping.canvas.form.archive.button")}
                   isWithoutBorder={true}
-                  color={greyTextColor}
-                  icon={<Archive color={greyTextColor} size="20px" />}
+                  color={"blackAlpha.600"}
+                  icon={<Archive color={"blackAlpha.600"} size="20px" />}
                   onClick={async () => {
                     await handleUpdateClick("Archived");
                   }}
@@ -598,17 +596,17 @@ function ServiceForm(props) {
                 <ButtonComponent
                   buttonText={t("common.cancel")}
                   isWithoutBorder={true}
-                  color={greyTextColor}
+                  color={"blackAlpha.600"}
                   onClick={onClose}
                 />
               )}
               <Spacer />
               {isEditing ? (
                 <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
+                  padding={`0 ${6} 0 0`}
                   buttonText={t("common.cancel")}
                   isWithoutBorder={true}
-                  color={greyTextColor}
+                  color={"blackAlpha.600"}
                   onClick={() => {
                     onClose();
                   }}
@@ -618,7 +616,7 @@ function ServiceForm(props) {
               )}
               {isEditing ? (
                 <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
+                  padding={`0 ${6} 0 0`}
                   buttonText={t("mapping.canvas.form.unpublished.button")}
                   isWithoutBorder={false}
                   onClick={async () => {
@@ -627,7 +625,7 @@ function ServiceForm(props) {
                 />
               ) : (
                 <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
+                  padding={`0 ${6} 0 0`}
                   buttonText={t("mapping.canvas.form.draft.button")}
                   isWithoutBorder={true}
                   onClick={() => handleDraftOrPublishClick("Draft")}

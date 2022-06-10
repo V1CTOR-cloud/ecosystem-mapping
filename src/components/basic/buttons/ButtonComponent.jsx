@@ -3,19 +3,6 @@ import React from "react";
 import { Box, Button } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-import {
-  blueColor,
-  blueHoverColor,
-  borderRadius,
-  defaultFontFamily,
-  defaultFontSize,
-  greyColor,
-  smallPadding,
-  whiteActiveColor,
-  whiteColor,
-  whiteHoverColor,
-} from "../../../helper/constant";
-
 const ButtonComponent = (props) => {
   const {
     padding,
@@ -38,23 +25,18 @@ const ButtonComponent = (props) => {
       <Button
         as={as}
         bg={
-          bg
-            ? bg
-            : isPrimary
-            ? blueColor
-            : isSelected
-            ? whiteActiveColor
-            : whiteColor
+          bg ? bg : isPrimary ? "brand.500" : isSelected ? "gray.200" : "white"
         }
         width={width}
         height="40px"
-        paddingX={smallPadding}
-        borderRadius={propsBorderRadius ? propsBorderRadius : borderRadius}
-        border={isPrimary || isWithoutBorder ? 0 : `2px solid ${blueColor}`}
-        color={color ? color : isPrimary ? whiteColor : blueColor}
+        paddingX={3}
+        borderRadius={propsBorderRadius ? propsBorderRadius : "base"}
+        border={isPrimary || isWithoutBorder ? 0 : "2px solid"}
+        borderColor={"brand.500"}
+        color={color ? color : isPrimary ? "white" : "brand.500"}
         leftIcon={icon}
         _hover={{
-          bg: hover ? hover : isPrimary ? blueHoverColor : whiteHoverColor,
+          bg: hover ? hover : isPrimary ? "brand.300" : "gray.100",
         }}
         _focus={{ boxShadow: "none" }}
         onClick={onClick}
@@ -65,27 +47,26 @@ const ButtonComponent = (props) => {
   );
 };
 
+// TODO changer boutton
 Button.defaultProps = {
-  fontSize: defaultFontSize,
-  fontFamily: defaultFontFamily,
   fontWeight: "normal",
   _focus: {
     boxShadow: "none",
   },
-  bg: whiteColor,
-  border: `2px solid ${greyColor}`,
+  bg: "white",
+  border: `2px solid ${"blackAlpha.700"}`,
   _active: {
-    borderColor: blueColor,
+    borderColor: "brand.500",
   },
   _hover: {
-    bg: whiteHoverColor,
+    bg: "gray.100",
   },
   overflow: "hidden",
   whiteSpace: "nonwrap",
 };
 
 ButtonComponent.defaultProps = {
-  padding: `0 ${smallPadding} 0 ${smallPadding}`,
+  padding: "0 12px 0 12px",
   isPrimary: false,
   isSelected: false,
   isWithoutBorder: false,

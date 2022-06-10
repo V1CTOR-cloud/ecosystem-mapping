@@ -2,8 +2,6 @@ import React from "react";
 
 import PropTypes from "prop-types";
 
-import { blueColor } from "../../../../helper/constant";
-
 function Handle(props) {
   const { handle, getHandleProps } = props;
   return (
@@ -19,7 +17,7 @@ function Handle(props) {
         textAlign: "center",
         cursor: "pointer",
         borderRadius: "50%",
-        backgroundColor: blueColor,
+        backgroundColor: "#0753F8",
       }}
       {...getHandleProps(handle.id)}
     />

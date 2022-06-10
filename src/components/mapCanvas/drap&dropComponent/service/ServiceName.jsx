@@ -5,12 +5,6 @@ import { Box, HStack, Text } from "@chakra-ui/react";
 import { Copy } from "@styled-icons/fa-regular";
 import PropTypes from "prop-types";
 
-import {
-  borderRadius,
-  smallPadding,
-  titleFontSize,
-  verySmallPadding,
-} from "../../../../helper/constant";
 import Service from "../../../../assets/servicesFocus.json";
 
 const Container = styled.div`
@@ -18,13 +12,13 @@ const Container = styled.div`
   position: absolute;
   height: 30px;
   z-index: 1;
-  padding-left: ${smallPadding};
-  padding-right: ${smallPadding};
+  padding-left: 12px;
+  padding-right: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: fade;
   cursor: pointer;
-  border-radius: ${borderRadius};
+  border-radius: 4px;
   left: ${(props) => props.source.percent}%;
   width: calc(${(props) => props.target.percent - props.source.percent}%);
 `;
@@ -49,13 +43,13 @@ function ServiceName(props) {
       >
         <HStack h="30px">
           {service.serviceStatus === "Draft" && (
-            <Box paddingBottom={"5px"} paddingRight={verySmallPadding}>
+            <Box paddingBottom={"5px"} paddingRight={2}>
               <Copy size="15" color={textColor} />
             </Box>
           )}
           <Text
             h="100%"
-            fontSize={titleFontSize}
+            fontSize={"xl"}
             color={textColor}
             textOverflow="ellipsis"
             overflow="hidden"

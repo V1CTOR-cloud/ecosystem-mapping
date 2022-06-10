@@ -16,12 +16,9 @@ import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import FilterBar from "../components/bar/navigationBar/filterBar/FilterBar";
 import {
   audienceList,
-  greyColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
-  smallPadding,
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
@@ -38,13 +35,13 @@ import { Region } from "../service/region";
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
   border-right: 7.5px solid transparent;
-  border-top: 7.5px solid ${greyColor};
+  border-top: 7.5px solid #aaaaaa;
 `;
 
 const ArrowUp = styled.div`
   border-right: 7.5px solid transparent;
   border-left: 7.5px solid transparent;
-  border-bottom: 7.5px solid ${greyColor};
+  border-bottom: 7.5px solid #aaaaaa;
 `;
 
 export const MapCanvasPageContext = createContext(undefined);
@@ -555,7 +552,7 @@ function MapCanvasPage() {
 
   const additionalButton = (
     <ButtonComponent
-      padding={`0 0 0 ${mediumPadding}`}
+      padding={`0 0 0 ${6}`}
       isWithoutBorder={!isOpenFilter}
       buttonText={t("mapping.navigation.bar.filter.button")}
       icon={<FilterAlt size="20" title="Filter" />}
@@ -611,7 +608,7 @@ function MapCanvasPage() {
             onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
           />
-          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
+          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={3}>
             <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
             <ContentCanvas
               isFilterOpen={isOpenFilter}
@@ -645,7 +642,7 @@ function MapCanvasPage() {
                 >
                   <HStack position="relative" w="100%" h="100%">
                     <VStack
-                      bg={greyColor}
+                      bg={"blackAlpha.400"}
                       w="2px"
                       h="100%"
                       justify="space-between"
@@ -654,8 +651,8 @@ function MapCanvasPage() {
                       <ArrowUp />
                     </VStack>
                     <Text
-                      marginLeft={smallPadding}
-                      color={greyColor}
+                      marginLeft={3}
+                      color={"blackAlpha.400"}
                       style={{ writingMode: "vertical-lr" }}
                     >
                       {row.replaceAll("_", " ").replace("and", "&")}

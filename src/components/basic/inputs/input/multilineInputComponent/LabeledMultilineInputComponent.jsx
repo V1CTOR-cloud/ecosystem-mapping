@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Box } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import MultilineInputComponent from "./MultilineInputComponent";
 import LabelWithTooltip from "../../../labelWithTooltip/LabelWithTooltip";
-import PropTypes from "prop-types";
 
 function LabeledMultilineInputComponent(props) {
   const { tooltipText, tooltipAriaLabel, label, value, placeholder, onChange } =
