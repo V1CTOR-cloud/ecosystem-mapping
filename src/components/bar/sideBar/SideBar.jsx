@@ -39,10 +39,7 @@ function SideBar(props) {
     {
       key: 0,
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
-      icon: [
-        <TableChart key={0} color={"brand.500"} />,
-        <TableChart key={1} color={"black"} />,
-      ],
+      icon: <TableChart />,
       children: [
         // TODO changer boutton
         <ButtonComponent
@@ -69,19 +66,13 @@ function SideBar(props) {
     {
       key: 1,
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
-      icon: [
-        <Draft key={0} color={"brand.500"} />,
-        <Draft key={1} color={"black"} />,
-      ],
+      icon: <Draft />,
       children: [],
     },
     {
       key: 2,
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
-      icon: [
-        <Archive key={0} color={"brand.500"} />,
-        <Archive key={1} color={"black"} />,
-      ],
+      icon: <Archive />,
       children: [],
     },
   ];
@@ -122,10 +113,6 @@ function SideBar(props) {
     });
   });
 
-  function handleClick() {
-    //todo
-  }
-
   function handleOnMouseOver() {
     setIsCollapsed(false);
   }
@@ -149,7 +136,6 @@ function SideBar(props) {
         {accordionButtons.map((thisAccordionButtons) => (
           <AccordionItemComponent
             key={thisAccordionButtons.key}
-            onClick={handleClick}
             isCollapsed={isCollapsed}
             button={thisAccordionButtons}
           />
