@@ -5,6 +5,7 @@ import {
   chakra,
   Grid,
   HStack,
+  IconButton,
   Image,
   Input,
   InputGroup,
@@ -33,7 +34,6 @@ import { Map } from "../service/map";
 import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { SortDownAlt } from "@styled-icons/bootstrap";
-import IconButtonComponent from "../components/basic/buttons/IconButtonComponent";
 
 const Card = chakra(Box, {
   baseStyle: {
@@ -146,7 +146,8 @@ const ListMapPage = () => {
       />
       {/* Button search */}
       {!isOpen && (
-        <IconButtonComponent
+        <IconButton
+          variant="ghost"
           icon={
             <SearchIcon
               color={isOpen ? "brand.500" : "blackAlpha.700"}
@@ -155,6 +156,7 @@ const ListMapPage = () => {
             />
           }
           onClick={onOpen}
+          aria-label={t("mapping.navigation.bar.search.aria.label")}
         />
       )}
       {isOpen && (
@@ -181,7 +183,7 @@ const ListMapPage = () => {
     <>
       <NavigationBar
         title={t("mapping.navigation.bar.map.dashboard.title")}
-        button={primaryButton}
+        primaryButton={primaryButton}
         additionalButtons={additionalButton}
       />
       <Box className="wrapper">
