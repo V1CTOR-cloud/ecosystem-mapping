@@ -8,16 +8,11 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
-import {
-  greyTextColor,
-  mediumPadding,
-  verySmallPadding,
-} from "../../../../helper/constant";
 import { Map } from "../../../../service/map";
 import PropTypes from "prop-types";
 
@@ -144,6 +139,11 @@ function SaveFilterAlertDialog(props) {
     }
   }
 
+  function handleCancel() {
+    setFilterName("");
+    onClose();
+  }
+
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -168,28 +168,25 @@ function SaveFilterAlertDialog(props) {
               onChange={handleNameFilterChange}
             />
             {isError && (
-              <Text color="red" paddingTop={verySmallPadding}>
+              <Text color="red" paddingTop={2}>
                 {t("mapping.canvas.form.filter.name.error")}
               </Text>
             )}
           </AlertDialogBody>
-
           <AlertDialogFooter>
-            <ButtonComponent
-              padding={`0 ${mediumPadding} 0 0`}
-              buttonText={t("common.cancel")}
-              isWithoutBorder={true}
-              color={greyTextColor}
-              onClick={() => {
-                setFilterName("");
-                onClose();
-              }}
-            />
-            <ButtonComponent
-              buttonText={t("mapping.canvas.form.save.button")}
-              isPrimary={true}
-              onClick={handleSaveFilter}
-            />
+            <Button
+              variant="ghost"
+              marginRight="1.5rem"
+              color={"blackAlpha.600"}
+              _hover={{ bg: "blackAlpha.200" }}
+              _active={{ bg: "blackAlpha.400" }}
+              onClick={handleCancel}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={handleSaveFilter}>
+              {t("mapping.canvas.form.save.button")}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>

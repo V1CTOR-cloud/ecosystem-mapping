@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Box } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import MenuComponent from "./MenuComponent";
-import PropTypes from "prop-types";
 
 function LabeledMenu(props) {
   const { tooltipText, tooltipAriaLabel, label, item, items, onChange } = props;

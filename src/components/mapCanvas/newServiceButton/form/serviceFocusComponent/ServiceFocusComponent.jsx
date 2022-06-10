@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-import { smallPadding, verySmallPadding } from "../../../../../helper/constant";
 import service from "../../../../../assets/servicesFocus.json";
 import PropTypes from "prop-types";
 
@@ -26,7 +25,7 @@ function ServiceFocusComponent(props) {
   }
 
   return (
-    <Box paddingLeft={verySmallPadding}>
+    <Box paddingLeft={2}>
       <Menu>
         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
           <Box w="15px" h="15px" bg={value.color} borderRadius="50%" />
@@ -45,7 +44,7 @@ function ServiceFocusComponent(props) {
                     w="15px"
                     bg={serviceFocus.color}
                     borderRadius="50%"
-                    marginRight={smallPadding}
+                    marginRight={3}
                   />
                   <Text>{serviceFocus.name}</Text>
                 </HStack>

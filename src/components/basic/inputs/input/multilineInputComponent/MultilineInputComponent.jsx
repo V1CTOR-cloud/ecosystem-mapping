@@ -1,8 +1,6 @@
 import React, { memo, useState } from "react";
 
 import { Textarea } from "@chakra-ui/react";
-
-import { blueColor, greyColor } from "../../../../../helper/constant";
 import PropTypes from "prop-types";
 
 function MultilineInputComponent(props) {
@@ -21,8 +19,8 @@ function MultilineInputComponent(props) {
       placeholder={placeholder}
       size="md"
       border={`2px solid`}
-      focusBorderColor={blueColor}
-      borderColor={greyColor}
+      focusBorderColor={"brand.500"}
+      borderColor={"blackAlpha.500"}
     />
   );
 }

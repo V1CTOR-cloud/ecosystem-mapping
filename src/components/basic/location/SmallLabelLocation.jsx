@@ -1,16 +1,15 @@
 import React from "react";
 
 import { Text, VStack } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import MenuComponent from "../inputs/menu/MenuComponent";
-import { greyTextColor, smallFontSize } from "../../../helper/constant";
-import PropTypes from "prop-types";
 
 function SmallLabelLocation(props) {
   const { label, wantScroll, items, item, onChange, isDisabled } = props;
   return (
     <VStack align="self-start">
-      <Text fontSize={smallFontSize} color={greyTextColor}>
+      <Text fontSize={"xs"} color={"blackAlpha.600"}>
         {label}
       </Text>
       <MenuComponent

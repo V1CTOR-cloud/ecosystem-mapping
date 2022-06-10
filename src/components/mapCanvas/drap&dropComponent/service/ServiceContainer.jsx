@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import Handle from "../handle/Handle";
-import { borderRadius, smallPadding } from "../../../../helper/constant";
 import ServiceName from "./ServiceName";
 import ToastComponent from "../../../basic/ToastComponent";
 import { MapCanvasPageContext } from "../../../../pages/MapCanvasPage";
@@ -16,11 +15,11 @@ import serviceFocus from "../../../../assets/servicesFocus.json";
 import { Service } from "../../../../service/service";
 
 const ServiceLineContainer = styled.div`
-  padding-bottom: ${smallPadding};
+  padding-bottom: ${3};
   display: flex;
   height: 40px;
   width: 100%;
-  border-radius: ${borderRadius};
+  border-radius: 4px;
 `;
 
 const sliderStyle = {

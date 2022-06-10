@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-import { HStack, Spacer, Text, Box, useDisclosure } from "@chakra-ui/react";
+import {
+  HStack,
+  Spacer,
+  Text,
+  Box,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Save } from "@styled-icons/boxicons-regular";
 import { Check2Circle } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-import {
-  blueColor,
-  defaultPadding,
-  greyTextColor,
-  smallPadding,
-  verySmallPadding,
-  whiteColor,
-} from "../../../../helper/constant";
 import FilterMenuButton from "./filtersButtons/FilterMenuButton";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
 import { Map } from "../../../../service/map";
-import PropTypes from "prop-types";
 
 function FilterBar(props) {
   const { filtersState, handleClearAllFilters, mapId } = props;
@@ -170,8 +168,8 @@ function FilterBar(props) {
   }
 
   return (
-    <HStack paddingY={smallPadding} paddingX={defaultPadding} w="100%" h="60px">
-      <Text color={greyTextColor}>
+    <HStack paddingY={3} paddingX={10} w="100%" h="60px">
+      <Text color={"blackAlpha.800"}>
         {t("mapping.navigation.filter.bar.filter.by")}
       </Text>
       {filtersState[0].map((filter, index) => {
@@ -198,22 +196,22 @@ function FilterBar(props) {
         }
       })}
       {isButtonsActive && !isFilterApplied && (
-        <ButtonComponent
-          buttonText={t("mapping.navigation.bar.apply.filter.button")}
-          isWithoutBorder={true}
-          isSelected={true}
-          icon={<Check2Circle color={blueColor} size={25} />}
+        <Button
+          variant="ghost"
+          rightIcon={<Check2Circle color={"brand.500"} size={25} />}
           onClick={handleApplyFilter}
-        />
+        >
+          {t("mapping.navigation.bar.apply.filter.button")}
+        </Button>
       )}
       <Spacer />
 
       {isButtonsActive && (
-        <Box paddingRight={smallPadding}>
+        <Box paddingRight={3}>
           <Text
             as="u"
             cursor="pointer"
-            color={greyTextColor}
+            color={"blackAlpha.800"}
             onClick={handleClearFilters}
           >
             {t("mapping.navigation.bar.clear.filter.button")}
@@ -221,25 +219,23 @@ function FilterBar(props) {
         </Box>
       )}
       {isButtonsActive && (
-        <Box paddingRight={verySmallPadding}>
-          <ButtonComponent
-            buttonText={
-              isSavedFilterSelected
-                ? t("mapping.navigation.bar.saved.filter.text")
-                : t("mapping.navigation.bar.saved.filter.button")
-            }
-            isPrimary={!isSavedFilterSelected}
-            isWithoutBorder={isSavedFilterSelected}
-            isSelected={isSavedFilterSelected}
-            icon={
+        <Box paddingRight={2}>
+          <Button
+            variant={"solid"}
+            isDisabled={isSavedFilterSelected}
+            rightIcon={
               isSavedFilterSelected ? (
-                <Check2Circle color={blueColor} size={25} />
+                <Check2Circle color={"brand.500"} size={25} />
               ) : (
-                <Save color={whiteColor} size={25} />
+                <Save color={"white"} size={25} />
               )
             }
             onClick={isSavedFilterSelected ? () => {} : handleSaveFilterClick}
-          />
+          >
+            {isSavedFilterSelected
+              ? t("mapping.navigation.bar.saved.filter.text")
+              : t("mapping.navigation.bar.saved.filter.button")}{" "}
+          </Button>
         </Box>
       )}
       <SaveFilterAlertDialog

@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { NumberInput, NumberInputField } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-import { blueColor, greyColor } from "../../../../../helper/constant";
-
 function NumberInputComponent(props) {
   const { propValue, onChange, placeholder } = props;
   const [value, setValue] = useState(propValue);
@@ -25,8 +23,8 @@ function NumberInputComponent(props) {
         placeholder={placeholder}
         size="md"
         border={`2px solid`}
-        focusBorderColor={blueColor}
-        borderColor={greyColor}
+        focusBorderColor={"brand.500"}
+        borderColor={"blackAlpha.500"}
       />
     </NumberInput>
   );

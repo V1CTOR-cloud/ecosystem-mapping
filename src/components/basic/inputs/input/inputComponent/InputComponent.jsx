@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { Input } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-import { blueColor, greyColor } from "../../../../../helper/constant";
-
 function InputComponent(props) {
   const { propValue, onChange, isRequired, placeholder } = props;
   const [value, setValue] = useState(propValue);
@@ -22,8 +20,8 @@ function InputComponent(props) {
       placeholder={placeholder}
       size="md"
       border={`2px solid`}
-      focusBorderColor={blueColor}
-      borderColor={greyColor}
+      focusBorderColor={"brand.500"}
+      borderColor={"blackAlpha.500"}
     />
   );
 }

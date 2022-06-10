@@ -7,6 +7,7 @@ import {
   Text,
   useDisclosure,
   VStack,
+  Button,
 } from "@chakra-ui/react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
@@ -16,12 +17,9 @@ import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import FilterBar from "../components/bar/navigationBar/filterBar/FilterBar";
 import {
   audienceList,
-  greyColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
-  smallPadding,
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
@@ -29,7 +27,6 @@ import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServic
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
-import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
 import { Organisation } from "../service/organisation";
@@ -38,13 +35,13 @@ import { Region } from "../service/region";
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
   border-right: 7.5px solid transparent;
-  border-top: 7.5px solid ${greyColor};
+  border-top: 7.5px solid #aaaaaa;
 `;
 
 const ArrowUp = styled.div`
   border-right: 7.5px solid transparent;
   border-left: 7.5px solid transparent;
-  border-bottom: 7.5px solid ${greyColor};
+  border-bottom: 7.5px solid #aaaaaa;
 `;
 
 export const MapCanvasPageContext = createContext(undefined);
@@ -554,13 +551,15 @@ function MapCanvasPage() {
   }
 
   const additionalButton = (
-    <ButtonComponent
-      padding={`0 0 0 ${mediumPadding}`}
-      isWithoutBorder={!isOpenFilter}
-      buttonText={t("mapping.navigation.bar.filter.button")}
-      icon={<FilterAlt size="20" title="Filter" />}
-      onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
-    />
+    <Box paddingRight="1rem">
+      <Button
+        variant={isOpenFilter ? "outline" : "ghost"}
+        icon={<FilterAlt size="20" title="Filter" />}
+        onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
+      >
+        {t("mapping.navigation.bar.filter.button")}
+      </Button>
+    </Box>
   );
 
   const primaryButton = (
@@ -611,7 +610,7 @@ function MapCanvasPage() {
             onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
           />
-          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
+          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={3}>
             <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
             <ContentCanvas
               isFilterOpen={isOpenFilter}
@@ -645,7 +644,7 @@ function MapCanvasPage() {
                 >
                   <HStack position="relative" w="100%" h="100%">
                     <VStack
-                      bg={greyColor}
+                      bg={"blackAlpha.400"}
                       w="2px"
                       h="100%"
                       justify="space-between"
@@ -654,8 +653,8 @@ function MapCanvasPage() {
                       <ArrowUp />
                     </VStack>
                     <Text
-                      marginLeft={smallPadding}
-                      color={greyColor}
+                      marginLeft={3}
+                      color={"blackAlpha.400"}
                       style={{ writingMode: "vertical-lr" }}
                     >
                       {row.replaceAll("_", " ").replace("and", "&")}

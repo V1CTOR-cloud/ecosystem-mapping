@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import DatePickerComponent from "./DatePickerComponent";
-import { greyColor } from "../../../../helper/constant";
 
 function LabeledDatePickerComponent(props) {
   const {
@@ -30,7 +29,7 @@ function LabeledDatePickerComponent(props) {
             date={serviceStartTime}
             handleDateChange={onChangeStartTime}
           />
-          <Box w="5px" h="1px" bg={greyColor} />
+          <Box w="5px" h="1px" bg={"blackAlpha.700"} />
           <Box paddingLeft="70px">
             <DatePickerComponent
               date={serviceEndTime}

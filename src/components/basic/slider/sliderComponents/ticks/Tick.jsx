@@ -1,42 +1,38 @@
 import React from "react";
-import { blueHoverColor, greyColor } from "../../../../../helper/constant";
+
 import PropTypes from "prop-types";
+import { Box } from "@chakra-ui/react";
 
 function Tick(props) {
-  const { index, tick, phase } = props;
+  const { tick, phase } = props;
   return (
-    <React.Fragment>
-      <div
-        style={{
-          position: "absolute",
-          marginLeft: index === 0 ? 1 : index === 6 ? -1 : -0.5,
-          width: 1,
-          height: 20,
-          marginTop: -5,
-          borderRight: "dotted 2px",
-          borderColor:
-            tick.value > phase[0] && tick.value < phase[1]
-              ? blueHoverColor
-              : greyColor,
-          left: `${tick.percent}%`,
-        }}
+    <>
+      <Box
+        position="absolute"
+        width="1px"
+        height="12px"
+        marginTop="-5px"
+        borderRight="dotted 2px"
+        borderColor={
+          tick.value > phase[0] && tick.value < phase[1]
+            ? "brand.300"
+            : "blackAlpha.500"
+        }
+        left={`${tick.percent}%`}
       />
-      <div
-        style={{
-          position: "absolute",
-          marginLeft: index === 0 ? 1 : index === 6 ? -1 : -0.5,
-          width: 10,
-          height: 10,
-          backgroundColor:
-            tick.value > phase[0] && tick.value < phase[1]
-              ? blueHoverColor
-              : greyColor,
-          rotate: "45deg",
-          translate: "-4px 8px",
-          left: `${tick.percent}%`,
-        }}
+      <Box
+        position="absolute"
+        width="10px"
+        height="10px"
+        backgroundColor={
+          tick.value > phase[0] && tick.value < phase[1]
+            ? "brand.300"
+            : "blackAlpha.500"
+        }
+        transform="translate(-4px, 8px) rotate(45deg)"
+        left={`${tick.percent}%`}
       />
-    </React.Fragment>
+    </>
   );
 }
 

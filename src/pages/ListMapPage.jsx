@@ -5,6 +5,7 @@ import {
   chakra,
   Grid,
   HStack,
+  IconButton,
   Image,
   Input,
   InputGroup,
@@ -16,6 +17,7 @@ import {
   Text,
   useDisclosure,
   WrapItem,
+  Button,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -30,19 +32,8 @@ import {
 import dotsImg from "../../src/assets/images/3dots.png";
 import { Region } from "../service/region";
 import { Map } from "../service/map";
-import {
-  blackColor,
-  blueColor,
-  borderThickness,
-  greyColor,
-  mediumPadding,
-  verySmallPadding,
-  whiteColor,
-} from "../helper/constant";
 import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
-import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { SortDownAlt } from "@styled-icons/bootstrap";
-import IconButtonComponent from "../components/basic/buttons/IconButtonComponent";
 
 const Card = chakra(Box, {
   baseStyle: {
@@ -117,75 +108,74 @@ const ListMapPage = () => {
   });
 
   const primaryButton = (
-    <ButtonComponent
-      isPrimary={true}
-      padding={`0 0 0 ${mediumPadding}`}
-      buttonText={t("mapping.navigation.bar.new.map.button")}
-      icon={
-        <AddIcon
-          marginRight={verySmallPadding}
-          color={whiteColor}
-          w="15px"
-          h="15px"
-        />
-      }
+    <Button
+      icon={<AddIcon marginRight={2} color={"white"} w="15px" h="15px" />}
       onClick={() => {
         //TODO Create the function to create a map
       }}
-    />
+    >
+      {t("mapping.navigation.bar.new.map.button")}
+    </Button>
   );
 
   const additionalButton = (
     <HStack>
       {/* Button View */}
-      <ButtonComponent
-        isWithoutBorder={true}
-        buttonText={t("mapping.navigation.bar.view.button")}
-        icon={<GridIcon size="20" />}
-        color={blackColor}
+      <Button
+        variant="blackGhost"
+        marginRight="1rem"
+        leftIcon={<GridIcon size="20" />}
         onClick={() => {}}
-      />
+      >
+        {t("mapping.navigation.bar.view.button")}
+      </Button>
       {/*Button sort*/}
-      <ButtonComponent
-        padding={`0 ${mediumPadding} 0 ${mediumPadding}`}
-        isWithoutBorder={true}
-        buttonText={t("mapping.navigation.bar.sort.button")}
-        icon={
-          <SortDownAlt
-            size="20"
-            title={t("mapping.navigation.bar.sort.button")}
-          />
-        }
-        color={blackColor}
-        onClick={() => {}}
-      />
-      {/* Button search */}
-      {!isOpen && (
-        <IconButtonComponent
-          icon={
-            <SearchIcon
-              color={isOpen ? blueColor : greyColor}
-              w="15px"
-              h="15px"
+      <Box paddingRight="1rem">
+        <Button
+          variant="blackGhost"
+          leftIcon={
+            <SortDownAlt
+              size="20"
+              title={t("mapping.navigation.bar.sort.button")}
             />
           }
-          onClick={onOpen}
-        />
+          onClick={() => {}}
+        >
+          {t("mapping.navigation.bar.sort.button")}
+        </Button>
+      </Box>
+      {/* Button search */}
+      {!isOpen && (
+        <Box paddingRight="1rem">
+          <IconButton
+            variant="ghost"
+            marginRight="1rem"
+            icon={
+              <SearchIcon
+                color={isOpen ? "brand.500" : "blackAlpha.700"}
+                w="15px"
+                h="15px"
+              />
+            }
+            onClick={onOpen}
+            aria-label={t("mapping.navigation.bar.search.aria.label")}
+          />
+        </Box>
       )}
       {isOpen && (
         <InputGroup w="200px">
           <InputLeftElement cursor="pointer" onClick={() => {}}>
-            <SearchIcon color={isOpen ? blueColor : greyColor} />
+            <SearchIcon color={isOpen ? "brand.500" : "blackAlpha.700"} />
           </InputLeftElement>
           <Input
             type="text"
             placeholder={t("mapping.navigation.bar.search.placeholder")}
-            border={borderThickness}
-            borderColor={blueColor}
-            _hover={{ borderColor: blueColor }}
+            border={0.5}
+            borderColor={"brand.500"}
+            _hover={{ borderColor: "brand.500" }}
           />
           <InputRightElement cursor="pointer" onClick={onClose}>
-            <CloseIcon color={greyColor} />
+            <CloseIcon color={"blackAlpha.700"} />
           </InputRightElement>
         </InputGroup>
       )}
@@ -196,7 +186,7 @@ const ListMapPage = () => {
     <>
       <NavigationBar
         title={t("mapping.navigation.bar.map.dashboard.title")}
-        button={primaryButton}
+        primaryButton={primaryButton}
         additionalButtons={additionalButton}
       />
       <Box className="wrapper">

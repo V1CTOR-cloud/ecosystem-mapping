@@ -8,17 +8,10 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Spacer,
+  Button,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
-import {
-  greyColor,
-  redColor,
-  redHoverColor,
-  whiteColor,
-} from "../../../../helper/constant";
 
 function DeleteFilterAlertDialog(props) {
   const { isOpen, onClose, handleDeleteSavedFilter } = props;
@@ -42,21 +35,24 @@ function DeleteFilterAlertDialog(props) {
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <ButtonComponent
+            <Button
+              variant="ghost"
+              color={"blackAlpha.700"}
+              _hover={{ bg: "blackAlpha.200" }}
+              _active={{ bg: "blackAlpha.400" }}
               onClick={onClose}
-              buttonText={t("common.cancel")}
-              isWithoutBorder={true}
-              color={greyColor}
-            />
+            >
+              {t("common.cancel")}{" "}
+            </Button>
             <Spacer />
-            <ButtonComponent
+            <Button
+              bg={"red.500"}
+              _hover={{ bg: "red.300" }}
+              _active={{ bg: "red.600" }}
               onClick={handleDeleteSavedFilter}
-              buttonText={t("common.delete")}
-              isWithoutBorder={true}
-              color={whiteColor}
-              bg={redColor}
-              hover={redHoverColor}
-            />
+            >
+              {t("common.delete")}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>

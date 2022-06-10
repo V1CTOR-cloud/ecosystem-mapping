@@ -11,26 +11,24 @@ import {
   FormErrorMessage,
   HStack,
   Spacer,
+  Button,
 } from "@chakra-ui/react";
 import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import {
   audienceList,
-  greyTextColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
 } from "../../../../helper/constant";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
 import ServiceTabs from "./tabs/ServiceTabs";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
 import ToastComponent from "../../../basic/ToastComponent";
 import { Service } from "../../../../service/service";
-import PropTypes from "prop-types";
 
 function ServiceForm(props) {
   const {
@@ -532,8 +530,6 @@ function ServiceForm(props) {
     );
   }
 
-  console.log(formValue.serviceName);
-
   return (
     <AlertDialog
       size="2xl"
@@ -544,7 +540,7 @@ function ServiceForm(props) {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogBody paddingY={mediumPadding}>
+          <AlertDialogBody paddingY={6}>
             <HStack alignItems="flex-start" zIndex={11}>
               <FormControl isInvalid={isError}>
                 <InputComponent
@@ -585,70 +581,63 @@ function ServiceForm(props) {
                 formValue={formValue}
               />
             </Box>
-            <Flex paddingTop={mediumPadding}>
+            <Flex paddingTop={6}>
               {isEditing ? (
-                <ButtonComponent
-                  buttonText={t("mapping.canvas.form.archive.button")}
-                  isWithoutBorder={true}
-                  color={greyTextColor}
-                  icon={<Archive color={greyTextColor} size="20px" />}
+                <Button
+                  variant="greyGhost"
+                  leftIcon={<Archive color={"blackAlpha.600"} size="20px" />}
                   onClick={async () => {
                     await handleUpdateClick("Archived");
                   }}
-                />
+                >
+                  {t("mapping.canvas.form.archive.button")}
+                </Button>
               ) : (
-                <ButtonComponent
-                  buttonText={t("common.cancel")}
-                  isWithoutBorder={true}
-                  color={greyTextColor}
+                <Button
+                  variant="greyGhost"
+                  color={"blackAlpha.600"}
                   onClick={onClose}
-                />
+                >
+                  {t("common.cancel")}
+                </Button>
               )}
               <Spacer />
               {isEditing ? (
-                <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("common.cancel")}
-                  isWithoutBorder={true}
-                  color={greyTextColor}
-                  onClick={() => {
-                    onClose();
-                  }}
-                />
+                <Button variant="greyGhost" onClick={onClose}>
+                  {t("common.cancel")}
+                </Button>
               ) : (
                 <Box />
               )}
               {isEditing ? (
-                <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("mapping.canvas.form.unpublished.button")}
-                  isWithoutBorder={false}
+                <Button
+                  variant="outline"
                   onClick={async () => {
                     await handleUpdateClick("Draft");
                   }}
-                />
+                >
+                  {t("mapping.canvas.form.unpublished.button")}
+                </Button>
               ) : (
-                <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("mapping.canvas.form.draft.button")}
-                  isWithoutBorder={true}
+                <Button
+                  variant="outline"
                   onClick={() => handleDraftOrPublishClick("Draft")}
-                />
+                >
+                  {t("mapping.canvas.form.draft.button")}
+                </Button>
               )}
               {isEditing ? (
-                <ButtonComponent
-                  buttonText={t("mapping.canvas.form.save.button")}
-                  isPrimary={true}
+                <Button
                   onClick={async () => {
                     await handleUpdateClick("Published");
                   }}
-                />
+                >
+                  {t("mapping.canvas.form.save.button")}
+                </Button>
               ) : (
-                <ButtonComponent
-                  buttonText={t("mapping.canvas.form.publish.button")}
-                  isPrimary={true}
-                  onClick={() => handleDraftOrPublishClick("Published")}
-                />
+                <Button onClick={() => handleDraftOrPublishClick("Published")}>
+                  {t("mapping.canvas.form.publish.button")}
+                </Button>
               )}
             </Flex>
           </AlertDialogBody>

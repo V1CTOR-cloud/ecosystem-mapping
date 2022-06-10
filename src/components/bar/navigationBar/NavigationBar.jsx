@@ -6,15 +6,7 @@ import { HomeAlt } from "@styled-icons/boxicons-regular";
 import PropTypes from "prop-types";
 
 import Authentication from "../../authentication/Authentication";
-import {
-  blueColor,
-  borderThickness,
-  defaultFontFamily,
-  defaultFontSize,
-  defaultPadding,
-  smallPadding,
-  titleFontSize,
-} from "../../../helper/constant";
+import { blueColor } from "../../../helper/constant";
 
 const DividerLine = styled.div`
   background-color: #000000;
@@ -24,7 +16,7 @@ const DividerLine = styled.div`
 
 function MyDivider() {
   return (
-    <Box paddingX={smallPadding}>
+    <Box paddingX={3}>
       <DividerLine />
     </Box>
   );
@@ -39,22 +31,13 @@ function NavigationBar(props) {
 
   return (
     <React.Fragment>
-      <HStack
-        height="75px"
-        justify="space-between"
-        paddingX={defaultPadding}
-        shadow="base"
-      >
+      <HStack height="75px" justify="space-between" paddingX={10} shadow="base">
         <HStack>
-          <Circle
-            border={borderThickness}
-            borderColor={blueColor}
-            padding="4px"
-          >
+          <Circle border={"2px"} borderColor={"brand.500"} padding="4px">
             <BlueHome size="22.5" title="Home" />
           </Circle>
           <MyDivider />
-          <Text fontSize={titleFontSize}>{title}</Text>
+          <Text fontSize={"xl"}>{title}</Text>
         </HStack>
         <HStack>
           {/* Button located to the left side of the primary button (filter for the canvas page */}
@@ -76,9 +59,3 @@ NavigationBar.propTypes = {
 };
 
 export default NavigationBar;
-
-//TODO check to put it elsewhere
-Text.defaultProps = {
-  fontFamily: defaultFontFamily,
-  fontSize: defaultFontSize,
-};
