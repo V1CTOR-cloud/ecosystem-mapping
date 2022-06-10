@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "react-i18next";
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, HStack, Button } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithTooltip";
-import ButtonComponent from "../../../../basic/buttons/ButtonComponent";
 
 function ApplicationTypeComponent(props) {
   const { applicationType, onChange, applicationTypeButtons } = props;
@@ -28,15 +27,21 @@ function ApplicationTypeComponent(props) {
         {applicationTypeButtons.map((buttonText) => {
           return (
             <Box key={buttonText}>
-              {/*TODO changer boutton*/}
-              <ButtonComponent
-                padding={`0 0 0 8px`}
-                isWithoutBorder={true}
-                buttonText={buttonText}
+              <Button
+                marginRight="0.75rem"
+                variant="ghost"
+                bg={value === buttonText ? "brand.50" : undefined}
+                _hover={{
+                  bg: value === buttonText ? "brand.100" : "blackAlpha.200",
+                }}
+                _active={{
+                  bg: value === buttonText ? "brand.200" : "blackAlpha.300",
+                }}
                 color={value === buttonText ? "brand.500" : "blackAlpha.600"}
-                isSelected={value === buttonText}
                 onClick={() => handleOnChange(buttonText)}
-              />
+              >
+                {buttonText}
+              </Button>
             </Box>
           );
         })}
