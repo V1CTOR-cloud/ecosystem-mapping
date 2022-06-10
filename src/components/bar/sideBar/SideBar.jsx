@@ -4,11 +4,10 @@ import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
 import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
-import { Accordion } from "@chakra-ui/react";
+import { Accordion, Button } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import AccordionItemComponent from "./AccordionItemComponent";
 
 const SideBarContainer = styled.div`
@@ -41,26 +40,17 @@ function SideBar(props) {
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
       icon: <TableChart />,
       children: [
-        // TODO changer boutton
-        <ButtonComponent
+        <Button
           key="Financing"
-          buttonText="Financing"
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => {}}
-          width="100%"
-          padding={`0 12px 0 12px`}
-          borderRadius="50"
-        />,
-        // TODO changer boutton
-        <ButtonComponent
-          key="Business Model"
-          buttonText="Business Model"
-          isPrimary={true}
-          onClick={() => {}}
-          width="100%"
-          padding={"12px 12px 0 12px"}
-          borderRadius="50"
-        />,
+        >
+          Financing
+        </Button>,
+        <Button key="Business Model" w="100%" onClick={() => {}}>
+          Business Model
+        </Button>,
       ],
     },
     {
@@ -86,29 +76,27 @@ function SideBar(props) {
 
     archivedData.forEach((service) => {
       accordionButtons[2].children.push(
-        <ButtonComponent
+        <Button
           key={service.id}
-          buttonText={service.serviceName}
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => handleDraftOrArchivedServiceClick(service)}
-          width="100%"
-          padding={"12px 12px 0 12px"}
-          borderRadius="50"
-        />
+        >
+          {service.serviceName}
+        </Button>
       );
     });
 
     draftData.forEach((service) => {
       accordionButtons[1].children.push(
-        <ButtonComponent
+        <Button
           key={service.id}
-          buttonText={service.serviceName}
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => handleDraftOrArchivedServiceClick(service)}
-          width="100%"
-          padding={"12px 12px 0 12px"}
-          borderRadius="50"
-        />
+        >
+          {service.serviceName}
+        </Button>
       );
     });
   });
