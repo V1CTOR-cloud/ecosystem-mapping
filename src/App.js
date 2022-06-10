@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, ChakraProvider, extendTheme, Grid } from "@chakra-ui/react";
+import { Box, ChakraProvider, Grid } from "@chakra-ui/react";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import axios from "axios";
 
 import "./assets/css/Style.scss";
 import Routing from "./Routing";
-import { fonts } from "./theme/fonts/fonts";
-import { colors } from "./theme/colors/colors";
-import { text } from "./theme/components/text";
-
-const theme = extendTheme({
-  fonts: fonts,
-  colors: colors,
-  components: {
-    Text: text,
-  },
-});
+import { theme } from "./theme/theme";
 
 function App() {
   const [resource, setResource] = useState("");
