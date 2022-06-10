@@ -7,14 +7,13 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
+  Icon,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-
-import IconButtonComponent from "../../basic/buttons/IconButtonComponent";
 import PropTypes from "prop-types";
 
 function AccordionItemComponent(props) {
-  const { isCollapsed, button, onClick } = props;
+  const { isCollapsed, button } = props;
   const { t } = useTranslation();
 
   return (
@@ -35,21 +34,23 @@ function AccordionItemComponent(props) {
               _focus={{ bg: "brand.50" }}
             >
               {isCollapsed && (
-                <IconButtonComponent
-                  icon={isSelected ? button.icon[0] : button.icon[1]}
-                  onClick={onClick}
-                  height="30px"
-                  width="30px"
-                />
+                <Icon
+                  height="2rem"
+                  width="2rem"
+                  color={isSelected ? "brand.500" : "black"}
+                >
+                  {button.icon}
+                </Icon>
               )}
               {!isCollapsed && (
                 <HStack>
-                  <IconButtonComponent
-                    icon={isSelected ? button.icon[0] : button.icon[1]}
-                    onClick={onClick}
-                    height="30px"
-                    width="30px"
-                  />
+                  <Icon
+                    height="2rem"
+                    width="2rem"
+                    color={isSelected ? "brand.500" : "black"}
+                  >
+                    {button.icon}
+                  </Icon>
                   <Text
                     paddingLeft={3}
                     color={isSelected ? "brand.500" : "black"}
@@ -82,7 +83,6 @@ function AccordionItemComponent(props) {
 AccordionItemComponent.propTypes = {
   isCollapsed: PropTypes.bool.isRequired,
   button: PropTypes.any.isRequired,
-  onClick: PropTypes.func.isRequired,
 };
 
 export default AccordionItemComponent;
