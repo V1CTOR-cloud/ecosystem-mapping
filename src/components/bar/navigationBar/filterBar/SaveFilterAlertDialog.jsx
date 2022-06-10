@@ -8,11 +8,11 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import { Map } from "../../../../service/map";
 import PropTypes from "prop-types";
 
@@ -139,6 +139,11 @@ function SaveFilterAlertDialog(props) {
     }
   }
 
+  function handleCancel() {
+    setFilterName("");
+    onClose();
+  }
+
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -168,24 +173,20 @@ function SaveFilterAlertDialog(props) {
               </Text>
             )}
           </AlertDialogBody>
-
           <AlertDialogFooter>
-            {/*TODO changer boutton*/}
-            <ButtonComponent
-              padding={`0 24px 0 0`}
-              buttonText={t("common.cancel")}
-              isWithoutBorder={true}
+            <Button
+              variant="ghost"
+              marginRight="1.5rem"
               color={"blackAlpha.600"}
-              onClick={() => {
-                setFilterName("");
-                onClose();
-              }}
-            />
-            <ButtonComponent
-              buttonText={t("mapping.canvas.form.save.button")}
-              isPrimary={true}
-              onClick={handleSaveFilter}
-            />
+              _hover={{ bg: "blackAlpha.200" }}
+              _active={{ bg: "blackAlpha.400" }}
+              onClick={handleCancel}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={handleSaveFilter}>
+              {t("mapping.canvas.form.save.button")}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
