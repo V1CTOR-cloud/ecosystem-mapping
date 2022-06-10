@@ -7,4 +7,17 @@ export const button = {
       boxShadow: "none",
     },
   },
+  variants: {
+    outline: {
+      borderWidth: 2,
+      _active: {
+        bg: "brand.100",
+      },
+    },
+    ghost: {
+      _active: {
+        bg: "brand.100",
+      },
+    },
+  },
 };
