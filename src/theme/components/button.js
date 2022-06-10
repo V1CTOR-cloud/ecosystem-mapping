@@ -19,5 +19,25 @@ export const button = {
         bg: "brand.100",
       },
     },
+    greyGhost: {
+      bg: "white",
+      color: "blackAlpha.600",
+      _hover: {
+        bg: "blackAlpha.200",
+      },
+      _active: {
+        bg: "blackAlpha.400",
+      },
+    },
+    blackGhost: {
+      bg: "white",
+      color: "black",
+      _hover: {
+        bg: "blackAlpha.100",
+      },
+      _active: {
+        bg: "blackAlpha.300",
+      },
+    },
   },
 };
