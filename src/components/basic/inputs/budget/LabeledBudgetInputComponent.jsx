@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import InputComponent from "../input/inputComponent/InputComponent";
-import IconButtonComponent from "../../buttons/IconButtonComponent";
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import NumberInputComponent from "../input/numberInputComponent/NumberInputComponent";
 import MenuComponent from "../menu/MenuComponent";
@@ -113,10 +112,10 @@ function LabeledBudgetInputComponent(props) {
                 handleBudgetCurrencyChange(budgetCurrency, index)
               }
             />
-            <Box w="30px" h="30px" paddingLeft={3}>
-              <IconButtonComponent
-                height="30px"
-                width="15px"
+            <Box w="30px" paddingLeft={3}>
+              <IconButton
+                variant="ghost"
+                aria-label={tooltipAriaLabel}
                 onClick={() => handleAddOrRemoveBudget(index)}
                 icon={
                   index === budgets.length - 1 ? (
