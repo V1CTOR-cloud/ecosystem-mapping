@@ -7,6 +7,7 @@ import {
   Text,
   useDisclosure,
   VStack,
+  Button,
 } from "@chakra-ui/react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
@@ -26,7 +27,6 @@ import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServic
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
-import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
 import { Organisation } from "../service/organisation";
@@ -551,13 +551,15 @@ function MapCanvasPage() {
   }
 
   const additionalButton = (
-    <ButtonComponent
-      padding={`0 0 0 ${6}`}
-      isWithoutBorder={!isOpenFilter}
-      buttonText={t("mapping.navigation.bar.filter.button")}
-      icon={<FilterAlt size="20" title="Filter" />}
-      onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
-    />
+    <Box paddingRight="1rem">
+      <Button
+        variant={isOpenFilter ? "outline" : "ghost"}
+        icon={<FilterAlt size="20" title="Filter" />}
+        onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
+      >
+        {t("mapping.navigation.bar.filter.button")}
+      </Button>
+    </Box>
   );
 
   const primaryButton = (
