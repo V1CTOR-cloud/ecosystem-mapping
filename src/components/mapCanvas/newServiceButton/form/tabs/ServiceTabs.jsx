@@ -9,7 +9,6 @@ import {
   TabPanels,
   Tabs,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
@@ -35,6 +34,7 @@ function ServiceTabs(props) {
     locations,
   } = props;
   const { t } = useTranslation();
+
   return (
     <Tabs marginTop={6}>
       <TabList>
@@ -50,7 +50,6 @@ function ServiceTabs(props) {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <Button>test</Button>
           <LabeledMenu
             label={t("mapping.canvas.form.owner.organisation")}
             tooltipText={t("mapping.canvas.form.owner.organisation.tooltip")}
