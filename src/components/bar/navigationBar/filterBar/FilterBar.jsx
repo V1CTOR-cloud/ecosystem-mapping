@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-import { HStack, Spacer, Text, Box, useDisclosure } from "@chakra-ui/react";
+import {
+  HStack,
+  Spacer,
+  Text,
+  Box,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Save } from "@styled-icons/boxicons-regular";
 import { Check2Circle } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import FilterMenuButton from "./filtersButtons/FilterMenuButton";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
@@ -190,13 +196,13 @@ function FilterBar(props) {
         }
       })}
       {isButtonsActive && !isFilterApplied && (
-        <ButtonComponent
-          buttonText={t("mapping.navigation.bar.apply.filter.button")}
-          isWithoutBorder={true}
-          isSelected={true}
-          icon={<Check2Circle color={"brand.500"} size={25} />}
+        <Button
+          variant="ghost"
+          rightIcon={<Check2Circle color={"brand.500"} size={25} />}
           onClick={handleApplyFilter}
-        />
+        >
+          {t("mapping.navigation.bar.apply.filter.button")}
+        </Button>
       )}
       <Spacer />
 
@@ -214,16 +220,10 @@ function FilterBar(props) {
       )}
       {isButtonsActive && (
         <Box paddingRight={2}>
-          <ButtonComponent
-            buttonText={
-              isSavedFilterSelected
-                ? t("mapping.navigation.bar.saved.filter.text")
-                : t("mapping.navigation.bar.saved.filter.button")
-            }
-            isPrimary={!isSavedFilterSelected}
-            isWithoutBorder={isSavedFilterSelected}
-            isSelected={isSavedFilterSelected}
-            icon={
+          <Button
+            variant={"solid"}
+            isDisabled={isSavedFilterSelected}
+            rightIcon={
               isSavedFilterSelected ? (
                 <Check2Circle color={"brand.500"} size={25} />
               ) : (
@@ -231,7 +231,11 @@ function FilterBar(props) {
               )
             }
             onClick={isSavedFilterSelected ? () => {} : handleSaveFilterClick}
-          />
+          >
+            {isSavedFilterSelected
+              ? t("mapping.navigation.bar.saved.filter.text")
+              : t("mapping.navigation.bar.saved.filter.button")}{" "}
+          </Button>
         </Box>
       )}
       <SaveFilterAlertDialog
