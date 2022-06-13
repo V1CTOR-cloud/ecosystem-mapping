@@ -31,7 +31,6 @@ function ServiceTabs(props) {
     services,
     audiences,
     organisations,
-    locations,
   } = props;
   const { t } = useTranslation();
 
@@ -116,7 +115,6 @@ function ServiceTabs(props) {
           <Box marginTop={6}>
             <LocationComponent
               value={formValue["serviceLocation"]}
-              locations={locations}
               onChange={(location) => (formValue["serviceLocation"] = location)}
             />
           </Box>
@@ -222,11 +220,6 @@ ServiceTabs.propTypes = {
   services: PropTypes.array.isRequired,
   audiences: PropTypes.array.isRequired,
   organisations: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
 };
 
 export default ServiceTabs;
-
-// Tab.defaultProps = {
-//   _focus: { boxShadow: "none" },
-// };

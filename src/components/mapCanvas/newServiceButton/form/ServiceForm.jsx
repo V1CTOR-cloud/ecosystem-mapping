@@ -41,7 +41,6 @@ function ServiceForm(props) {
     mapId,
     onClose,
     cancelRef,
-    locations,
   } = props;
   const applicationTypeButtons = [
     market,
@@ -577,7 +576,6 @@ function ServiceForm(props) {
                 applicationTypeButtons={applicationTypeButtons}
                 audiences={audiences}
                 services={services}
-                locations={locations}
                 formValue={formValue}
               />
             </Box>
@@ -654,7 +652,6 @@ ServiceForm.propTypes = {
   isEditing: PropTypes.bool.isRequired,
   mapId: PropTypes.string.isRequired,
   cancelRef: PropTypes.object.isRequired,
-  locations: PropTypes.array.isRequired,
   services: PropTypes.array.isRequired,
   fetchedData: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,

@@ -15,7 +15,6 @@ function NewServiceButton(props) {
     fetchedData,
     organisations,
     services,
-    locations,
     mapId,
   } = props;
   const cancelRef = useRef();
@@ -37,7 +36,6 @@ function NewServiceButton(props) {
         fetchedData={fetchedData}
         propOrganisations={organisations}
         services={services}
-        locations={locations}
         mapId={mapId}
       />
     </React.Fragment>
@@ -46,7 +44,6 @@ function NewServiceButton(props) {
 
 NewServiceButton.propTypes = {
   organisations: PropTypes.array,
-  locations: PropTypes.array,
   isOpen: PropTypes.bool.isRequired,
   mapId: PropTypes.string.isRequired,
   fetchedData: PropTypes.array.isRequired,
