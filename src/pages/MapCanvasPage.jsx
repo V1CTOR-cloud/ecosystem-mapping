@@ -43,7 +43,7 @@ const ArrowUp = styled.div`
   border-bottom: 7.5px solid #aaaaaa;
 `;
 
-export const MapCanvasPageContext = createContext(undefined);
+export const CanvasProvider = createContext(undefined);
 
 const data = {
   services: {},
@@ -551,16 +551,13 @@ function MapCanvasPage() {
       onClose={onCloseForm}
       onOpen={onOpenForm}
       organisations={fetchedOrganization}
-      fetchedData={[fetchedData, setFetchedData]}
-      services={services}
-      mapId={mapId}
     />
   );
 
   return !isDataLoaded ? (
     <Text>Loading</Text>
   ) : (
-    <MapCanvasPageContext.Provider
+    <CanvasProvider.Provider
       value={{
         mapId: mapId,
         fetchedData: [fetchedData, setFetchedData],
@@ -580,7 +577,6 @@ function MapCanvasPage() {
             <FilterBar
               filtersState={[filters, setFilters]}
               handleClearAllFilters={handleClearAllFilters}
-              mapId={mapId}
             />
           </Box>
         )}
@@ -597,7 +593,6 @@ function MapCanvasPage() {
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
-              propData={[fetchedData, setFetchedData]}
               secondaryData={secondaryFetchedData}
               handleServiceClick={(service) => handleServiceClick(service)}
               heights={[heights, setHeights]}
@@ -654,14 +649,11 @@ function MapCanvasPage() {
             isOpen={isOpenFormEdition}
             onClose={onCloseFormEdition}
             propOrganisations={fetchedOrganization}
-            fetchedData={[fetchedData, setFetchedData]}
-            services={services}
-            mapId={mapId}
             serviceWithoutModification={serviceWithoutModification}
           />
         )}
       </Flex>
-    </MapCanvasPageContext.Provider>
+    </CanvasProvider.Provider>
   );
 }
 

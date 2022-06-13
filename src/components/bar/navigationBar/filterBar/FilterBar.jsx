@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   HStack,
@@ -18,9 +18,11 @@ import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
 import { Map } from "../../../../service/map";
+import { CanvasProvider } from "../../../../pages/MapCanvasPage";
 
 function FilterBar(props) {
-  const { filtersState, handleClearAllFilters, mapId } = props;
+  const canvasProvider = useContext(CanvasProvider);
+  const { filtersState, handleClearAllFilters } = props;
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -133,7 +135,7 @@ function FilterBar(props) {
       });
 
       const data = {
-        id: mapId,
+        id: canvasProvider.mapId,
         filters: savedFilters,
       };
 
@@ -243,7 +245,6 @@ function FilterBar(props) {
         onClose={onClose}
         setFilters={filtersState[1]}
         filters={filters}
-        mapId={mapId}
         isEditing={isEditing}
         name={name ? name : ""}
       />
@@ -259,7 +260,6 @@ function FilterBar(props) {
 FilterBar.propTypes = {
   filtersState: PropTypes.array.isRequired,
   handleClearAllFilters: PropTypes.func.isRequired,
-  mapId: PropTypes.string.isRequired,
 };
 
 export default FilterBar;
