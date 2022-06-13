@@ -30,7 +30,6 @@ import { FilterAlt } from "@styled-icons/boxicons-regular";
 import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
 import { Organisation } from "../service/organisation";
-import { Region } from "../service/region";
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
@@ -44,7 +43,7 @@ const ArrowUp = styled.div`
   border-bottom: 7.5px solid #aaaaaa;
 `;
 
-export const MapCanvasPageContext = createContext(undefined);
+export const CanvasProvider = createContext(undefined);
 
 const data = {
   services: {},
@@ -116,7 +115,6 @@ function MapCanvasPage() {
     },
   ];
   const { t } = useTranslation();
-
   const {
     isOpen: isOpenFilter,
     onOpen: onOpenFilter,
@@ -142,7 +140,6 @@ function MapCanvasPage() {
   const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedFilters, setFetchedFilters] = useState(null);
-  const [fetchedLocation, setFetchedLocation] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [heights, setHeights] = useState([180, 180, 180]);
   const [containerHeight, setContainerHeight] = useState("0px");
@@ -191,20 +188,6 @@ function MapCanvasPage() {
         })
       );
       setFetchedOrganization(tempOrganizations);
-
-      // Get all locations
-      res = await Region.listAllRegions();
-      const tempLocations = [];
-      res.data.forEach((item) => {
-        tempLocations.push({
-          id: item.id,
-          continent: item.region,
-          country: item.name,
-          regions: item.states,
-        });
-      });
-      tempLocations.pop();
-      setFetchedLocation(tempLocations);
 
       const tempServices = Object.values(sortedData.services);
       tempServices.forEach((thisService) => {
@@ -568,17 +551,13 @@ function MapCanvasPage() {
       onClose={onCloseForm}
       onOpen={onOpenForm}
       organisations={fetchedOrganization}
-      fetchedData={[fetchedData, setFetchedData]}
-      services={services}
-      locations={fetchedLocation}
-      mapId={mapId}
     />
   );
 
   return !isDataLoaded ? (
     <Text>Loading</Text>
   ) : (
-    <MapCanvasPageContext.Provider
+    <CanvasProvider.Provider
       value={{
         mapId: mapId,
         fetchedData: [fetchedData, setFetchedData],
@@ -598,7 +577,6 @@ function MapCanvasPage() {
             <FilterBar
               filtersState={[filters, setFilters]}
               handleClearAllFilters={handleClearAllFilters}
-              mapId={mapId}
             />
           </Box>
         )}
@@ -615,7 +593,6 @@ function MapCanvasPage() {
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
-              propData={[fetchedData, setFetchedData]}
               secondaryData={secondaryFetchedData}
               handleServiceClick={(service) => handleServiceClick(service)}
               heights={[heights, setHeights]}
@@ -672,20 +649,12 @@ function MapCanvasPage() {
             isOpen={isOpenFormEdition}
             onClose={onCloseFormEdition}
             propOrganisations={fetchedOrganization}
-            fetchedData={[fetchedData, setFetchedData]}
-            services={services}
-            locations={fetchedLocation}
-            mapId={mapId}
             serviceWithoutModification={serviceWithoutModification}
           />
         )}
       </Flex>
-    </MapCanvasPageContext.Provider>
+    </CanvasProvider.Provider>
   );
 }
-
-HStack.defaultProps = {
-  spacing: 0,
-};
 
 export default MapCanvasPage;

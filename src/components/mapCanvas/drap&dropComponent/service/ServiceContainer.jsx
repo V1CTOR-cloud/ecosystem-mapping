@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import Handle from "../handle/Handle";
 import ServiceName from "./ServiceName";
 import ToastComponent from "../../../basic/ToastComponent";
-import { MapCanvasPageContext } from "../../../../pages/MapCanvasPage";
+import { CanvasProvider } from "../../../../pages/MapCanvasPage";
 import serviceFocus from "../../../../assets/servicesFocus.json";
 import { Service } from "../../../../service/service";
 
@@ -31,7 +31,7 @@ const sliderStyle = {
 function ServiceContainer(props) {
   const { service, index, isFilterActive, handleServiceClick } = props;
   const { t } = useTranslation();
-  const mapCanvasPageContext = useContext(MapCanvasPageContext);
+  const mapCanvasPageContext = useContext(CanvasProvider);
 
   let sourceValue = Service.replacePhaseToNumber(
     service.servicePhaseRange.startPhase

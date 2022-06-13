@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   Button,
@@ -27,8 +27,10 @@ import SelectLocationComponent from "../regionComponents/SelectLocationComponent
 import "../../assets/fonts/fonts.css";
 import SelectIndustry from "../industryComponant/SelectIndustry";
 import { Authentication } from "../../service/authentication";
-import { Region } from "../../service/region";
+import { Location } from "../../service/location";
 import { Map } from "../../service/map";
+import { AppProvider } from "../../App";
+import { Industry } from "../../service/industry";
 
 const headerStyle = {
   fontFamily: "Ubuntu",
@@ -70,6 +72,7 @@ const CreateButton = chakra(IconButton, {
 
 const AddMapModal = (props) => {
   const { isEdit, isAdd } = props;
+  const appProvider = useContext(AppProvider);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -86,21 +89,21 @@ const AddMapModal = (props) => {
   const [subIndustries, setSubIndustries] = useState([]);
 
   const setInitialLocation = (locData) => {
-    const allRegions = Region.getregions();
-    const allCountries = Region.getCountriesByRegion(locData.region);
-    const getStatesByCountry = Region.getStatesByCountry(
+    const allRegions = Location.getregions();
+    const allCountries = Location.getCountriesByRegion(locData.region);
+    const getStatesByCountry = Location.getStatesByCountry(
       locData.region,
       locData.country
     );
 
-    const getCities = Region.getCitiesByState(
+    const getCities = Location.getCitiesByState(
       locData.region,
       locData.country,
       locData.state
     );
 
-    const allIndustries = Region.getIndustries();
-    const getSubIndustriesByIndustry = Region.getSubIndustriesByIndustry(
+    const allIndustries = appProvider.industries;
+    const getSubIndustriesByIndustry = Industry.getSubIndustriesByIndustry(
       locData.industry
     );
 
@@ -235,14 +238,8 @@ const AddMapModal = (props) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await Region.listAllRegions();
-      await Region.listAllIndustries();
-      setInitialLocation(locationData);
-    };
-
-    fetchData().catch(console.error);
-  }, [locationData, isEdit, isAdd]);
+    setInitialLocation(appProvider.locations);
+  }, []);
 
   return (
     <React.Fragment>

@@ -8,16 +8,7 @@ import PropTypes from "prop-types";
 import ServiceForm from "./form/ServiceForm";
 
 function NewServiceButton(props) {
-  const {
-    onOpen,
-    isOpen,
-    onClose,
-    fetchedData,
-    organisations,
-    services,
-    locations,
-    mapId,
-  } = props;
+  const { onOpen, isOpen, onClose, organisations } = props;
   const cancelRef = useRef();
   const { t } = useTranslation();
 
@@ -34,11 +25,7 @@ function NewServiceButton(props) {
         isOpen={isOpen}
         onClose={onClose}
         cancelRef={cancelRef}
-        fetchedData={fetchedData}
         propOrganisations={organisations}
-        services={services}
-        locations={locations}
-        mapId={mapId}
       />
     </React.Fragment>
   );
@@ -46,11 +33,7 @@ function NewServiceButton(props) {
 
 NewServiceButton.propTypes = {
   organisations: PropTypes.array,
-  locations: PropTypes.array,
   isOpen: PropTypes.bool.isRequired,
-  mapId: PropTypes.string.isRequired,
-  fetchedData: PropTypes.array.isRequired,
-  services: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
 };

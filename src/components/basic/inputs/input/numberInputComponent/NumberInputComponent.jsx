@@ -18,14 +18,7 @@ function NumberInputComponent(props) {
 
   return (
     <NumberInput value={value} onChange={(value) => handleOnChange(value)}>
-      <NumberInputField
-        precision={2}
-        placeholder={placeholder}
-        size="md"
-        border={`2px solid`}
-        focusBorderColor={"brand.500"}
-        borderColor={"blackAlpha.500"}
-      />
+      <NumberInputField precision={2} placeholder={placeholder} />
     </NumberInput>
   );
 }

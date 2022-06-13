@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   AlertDialog,
@@ -15,10 +15,11 @@ import { useTranslation } from "react-i18next";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import { Map } from "../../../../service/map";
 import PropTypes from "prop-types";
+import { CanvasProvider } from "../../../../pages/MapCanvasPage";
 
 function SaveFilterAlertDialog(props) {
-  const { isEditing, isOpen, name, filters, mapId, onClose, setFilters } =
-    props;
+  const { isEditing, isOpen, name, filters, onClose, setFilters } = props;
+  const canvasProvider = useContext(CanvasProvider);
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
   const [filterName, setFilterName] = useState("");
@@ -102,7 +103,7 @@ function SaveFilterAlertDialog(props) {
       });
 
       const data = {
-        id: mapId,
+        id: canvasProvider.mapId,
         filters: savedFilter,
       };
 
@@ -198,7 +199,6 @@ SaveFilterAlertDialog.propTypes = {
   isEditing: PropTypes.bool.isRequired,
   isOpen: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
-  mapId: PropTypes.string.isRequired,
   filters: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
   setFilters: PropTypes.func.isRequired,

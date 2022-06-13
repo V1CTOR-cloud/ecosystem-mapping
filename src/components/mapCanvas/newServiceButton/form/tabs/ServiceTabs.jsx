@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   Box,
@@ -23,17 +23,12 @@ import LabeledBudgetInputComponent from "../../../../basic/inputs/budget/Labeled
 import LabeledMultilineInputComponent from "../../../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import MenuComponent from "../../../../basic/inputs/menu/MenuComponent";
 import LocationComponent from "../../../../basic/location/LocationComponent";
+import { CanvasProvider } from "../../../../../pages/MapCanvasPage";
 
 function ServiceTabs(props) {
-  const {
-    formValue,
-    applicationTypeButtons,
-    services,
-    audiences,
-    organisations,
-    locations,
-  } = props;
+  const { formValue, applicationTypeButtons, audiences, organisations } = props;
   const { t } = useTranslation();
+  const canvasProvider = useContext(CanvasProvider);
 
   return (
     <Tabs marginTop={6}>
@@ -116,7 +111,6 @@ function ServiceTabs(props) {
           <Box marginTop={6}>
             <LocationComponent
               value={formValue["serviceLocation"]}
-              locations={locations}
               onChange={(location) => (formValue["serviceLocation"] = location)}
             />
           </Box>
@@ -161,7 +155,7 @@ function ServiceTabs(props) {
               onChange={(outcomes) => (formValue["serviceOutcomes"] = outcomes)}
             />
           </Box>
-          {services.length >= 2 ? (
+          {canvasProvider.services.length >= 2 ? (
             <Box paddingTop={3}>
               <LabelWithTooltip
                 tooltipText={t("mapping.canvas.form.related.services.tooltip")}
@@ -192,7 +186,7 @@ function ServiceTabs(props) {
                   <MenuComponent
                     width="100%"
                     item={formValue["precededService"]}
-                    items={services}
+                    items={canvasProvider.services}
                     onChange={(value) => (formValue["precededService"] = value)}
                   />
                 </Box>
@@ -201,7 +195,7 @@ function ServiceTabs(props) {
                   <MenuComponent
                     width="100%"
                     item={formValue["followedService"]}
-                    items={services}
+                    items={canvasProvider.services}
                     onChange={(value) => (formValue["followedService"] = value)}
                   />
                 </Box>
@@ -219,14 +213,8 @@ function ServiceTabs(props) {
 ServiceTabs.propTypes = {
   formValue: PropTypes.object.isRequired,
   applicationTypeButtons: PropTypes.array.isRequired,
-  services: PropTypes.array.isRequired,
   audiences: PropTypes.array.isRequired,
   organisations: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
 };
 
 export default ServiceTabs;
-
-// Tab.defaultProps = {
-//   _focus: { boxShadow: "none" },
-// };

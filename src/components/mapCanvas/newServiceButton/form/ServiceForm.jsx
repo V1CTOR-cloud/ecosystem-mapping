@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   AlertDialog,
@@ -29,6 +29,7 @@ import ServiceTabs from "./tabs/ServiceTabs";
 import service from "../../../../assets/servicesFocus.json";
 import ToastComponent from "../../../basic/ToastComponent";
 import { Service } from "../../../../service/service";
+import { CanvasProvider } from "../../../../pages/MapCanvasPage";
 
 function ServiceForm(props) {
   const {
@@ -36,13 +37,12 @@ function ServiceForm(props) {
     isEditing,
     isOpen,
     serviceWithoutModification,
-    services,
-    fetchedData,
-    mapId,
     onClose,
     cancelRef,
-    locations,
   } = props;
+  const canvasProvider = useContext(CanvasProvider);
+  const [data, setData] = canvasProvider.fetchedData;
+  const services = canvasProvider.services;
   const applicationTypeButtons = [
     market,
     market_and_organization,
@@ -179,10 +179,9 @@ function ServiceForm(props) {
       ).id;
     }
 
-    const order =
-      fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+    const order = data.rows[formValue["applicationType"]].serviceIds.length;
 
-    const data = {
+    const argument = {
       serviceName: formValue["serviceName"],
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
       organisationId: organisationId,
@@ -215,12 +214,12 @@ function ServiceForm(props) {
         ),
       },
 
-      mapId: mapId,
+      mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
       order: order,
     };
 
-    await createNewService(data);
+    await createNewService(argument);
   }
 
   // Function that will check if everything is correct to send it to the database to avoid errors
@@ -235,7 +234,7 @@ function ServiceForm(props) {
 
         const newData = addServiceToData(res);
 
-        fetchedData[1](newData);
+        setData(newData);
         ToastComponent(
           t("mapping.toast.success.create.service"),
           "success",
@@ -250,14 +249,14 @@ function ServiceForm(props) {
   // Function that add the new service create to the canvas
   function addServiceToData(res) {
     // Format the list of services to correspond to the model of fetchedData
-    const tempServices = Object.assign(fetchedData[0].services, {
+    const tempServices = Object.assign(data.services, {
       [res.createService.id]: {
         ...res.createService,
       },
     });
 
     // Add the service id to the corresponding row
-    const tempRows = fetchedData[0].rows;
+    const tempRows = data.rows;
     tempRows[res.createService.applicationType].serviceIds.push(
       res.createService.id
     );
@@ -269,7 +268,7 @@ function ServiceForm(props) {
 
     // Create new object to setState the fetchedData
     return {
-      rowsOrder: fetchedData[0].rowsOrder,
+      rowsOrder: data.rowsOrder,
       services: tempServices,
       rows: tempRows,
     };
@@ -310,17 +309,15 @@ function ServiceForm(props) {
       if (serviceStatus === "Archived") {
         order = 999;
       } else if (serviceWithoutModification.serviceStatus === "Archived") {
-        order =
-          fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+        order = data.rows[formValue["applicationType"]].serviceIds.length;
       } else {
         order = serviceWithoutModification.order;
       }
     } else {
-      order =
-        fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+      order = data.rows[formValue["applicationType"]].serviceIds.length;
     }
 
-    const data = {
+    const argument = {
       id: serviceWithoutModification.id,
 
       // First tabs
@@ -366,7 +363,7 @@ function ServiceForm(props) {
           : formValue["followedService"],
 
       // Others parameters hidden from the user
-      mapId: mapId,
+      mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
       order: order,
 
@@ -375,7 +372,7 @@ function ServiceForm(props) {
       organisationIdWithoutModification: organisationIdWithoutModification,
     };
 
-    await updateService(data);
+    await updateService(argument);
   }
 
   async function updateService(data) {
@@ -386,7 +383,7 @@ function ServiceForm(props) {
       // Check if we update the service
       if (res.updateService) {
         const newData = await updateServiceToData(res.updateService);
-        fetchedData[1](newData);
+        setData(newData);
         onClose();
 
         ToastComponent(t("mapping.toast.success.service"), "success", 5000);
@@ -398,14 +395,14 @@ function ServiceForm(props) {
 
   async function updateServiceToData(updateService) {
     // Format the list of services to correspond to the model of fetchedData
-    const tempServices = Object.assign(fetchedData[0].services, {
+    const tempServices = Object.assign(data.services, {
       [updateService.id]: {
         ...updateService,
       },
     });
 
     // Add the service id to the corresponding row
-    const tempRows = fetchedData[0].rows;
+    const tempRows = data.rows;
 
     if (
       serviceWithoutModification.applicationType ===
@@ -444,7 +441,7 @@ function ServiceForm(props) {
 
     // Create new object to setState the fetchedData
     return {
-      rowsOrder: fetchedData[0].rowsOrder,
+      rowsOrder: data.rowsOrder,
       services: tempServices,
       rows: tempRows,
     };
@@ -576,8 +573,6 @@ function ServiceForm(props) {
                 organisations={organisations}
                 applicationTypeButtons={applicationTypeButtons}
                 audiences={audiences}
-                services={services}
-                locations={locations}
                 formValue={formValue}
               />
             </Box>
@@ -652,11 +647,7 @@ ServiceForm.propTypes = {
   serviceWithoutModification: PropTypes.object,
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
-  mapId: PropTypes.string.isRequired,
   cancelRef: PropTypes.object.isRequired,
-  locations: PropTypes.array.isRequired,
-  services: PropTypes.array.isRequired,
-  fetchedData: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
