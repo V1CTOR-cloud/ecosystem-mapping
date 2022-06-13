@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { HStack } from "@chakra-ui/react";
@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 import SmallLabelLocation from "./SmallLabelLocation";
 import LabelWithTooltip from "../labelWithTooltip/LabelWithTooltip";
+import { AppProvider } from "../../../App";
 
 const initialContinentList = [{ id: 0, name: "Continent" }];
 const initialCountryList = [{ id: 0, name: "Country" }];
@@ -13,9 +14,10 @@ const initialRegionList = [{ id: 0, name: "Region" }];
 const initialCityList = [{ id: 0, name: "City" }];
 
 function LocationComponent(props) {
-  const { value, onChange, locations } = props;
+  const { value, onChange } = props;
 
   const { t } = useTranslation();
+  const appProvider = useContext(AppProvider);
   const [continentList, setContinentList] = useState(initialContinentList);
   const [countryList, setCountryList] = useState(initialCountryList);
   const [regionList, setRegionList] = useState(initialRegionList);
@@ -62,7 +64,7 @@ function LocationComponent(props) {
   useEffect(() => {
     const tempContinentList = [...initialContinentList];
 
-    locations.forEach((country) => {
+    appProvider.locations.forEach((country) => {
       const containsContinent = tempContinentList.some(
         (continent) => continent.name === country.continent
       );
@@ -77,13 +79,13 @@ function LocationComponent(props) {
     });
 
     setContinentList(tempContinentList);
-  }, [locations]);
+  }, [appProvider.locations]);
 
   // Populate the list of country (run everyTime we change the country)
   useEffect(() => {
     const tempCountryList = [...initialCountryList];
 
-    locations.forEach((country) => {
+    appProvider.locations.forEach((country) => {
       if (country.continent === continent) {
         const containsCountry = tempCountryList.some(
           (country) => country.name === country.country
@@ -101,7 +103,7 @@ function LocationComponent(props) {
     });
 
     setCountryList(tempCountryList);
-  }, [continent, locations]);
+  }, [continent, appProvider.locations]);
 
   // Populate the list of region (run everyTime we change the country)
   useEffect(() => {
@@ -241,7 +243,6 @@ function LocationComponent(props) {
 
 LocationComponent.propTypes = {
   value: PropTypes.object.isRequired,
-  locations: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
