@@ -8,6 +8,9 @@ export const input = {
         _hover: {
           borderColor: "brand.300",
         },
+        _focus: {
+          borderColor: "brand.500",
+        },
       },
     },
   },
