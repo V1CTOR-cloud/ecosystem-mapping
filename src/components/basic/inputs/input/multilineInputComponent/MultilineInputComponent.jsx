@@ -17,10 +17,6 @@ function MultilineInputComponent(props) {
       value={value}
       onChange={handleOnChange}
       placeholder={placeholder}
-      size="md"
-      border={`2px solid`}
-      focusBorderColor={"brand.500"}
-      borderColor={"blackAlpha.500"}
     />
   );
 }
