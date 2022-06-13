@@ -684,8 +684,4 @@ function MapCanvasPage() {
   );
 }
 
-HStack.defaultProps = {
-  spacing: 0,
-};
-
 export default MapCanvasPage;
