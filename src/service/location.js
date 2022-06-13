@@ -1,53 +1,38 @@
 import axios from "axios";
 
 let allRegions = [];
-let allIndustry = [];
 
-export const Region = {
-
-  async listAllRegions() {
-    return await axios({
+// Contains all functions related to the locations: continent, country, region, city.
+export const Location = {
+  /**
+   * Get request to retrieve all the locations.
+   * @return An array of object that contains all parameters: continent, country. Each country possess (not mandatory)
+   * an array of region and each region contains (not required) possess a list of city.
+   */
+  getAllLocations() {
+    return axios({
       method: "get",
-      url: `https://regionselectbucket.s3.ap-south-1.amazonaws.com/regionselection.json`
-    })
-      .then((res) => {
-        allRegions = res.data;
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
-  },
-
-  async listAllIndustries() {
-    return await axios({
-      method: "get",
-      url: `https://regionselectbucket.s3.ap-south-1.amazonaws.com/industries.json`
-    })
-      .then((res) => {
-        return (allIndustry = res.data.industries);
-      })
-      .catch((err) => {
-        return err;
-      });
-  },
-
-  getIndustries() {
-    let allIndustries = [];
-    allIndustry.forEach((industry) => {
-      allIndustries.push(industry.industry);
+      url: `https://regionselectbucket.s3.ap-south-1.amazonaws.com/regionselection.json`,
     });
-    return allIndustries;
   },
 
-  getSubIndustriesByIndustry(industryBy) {
-    let allSubIndustriesByIndustry = [];
-    allIndustry.forEach((industry) => {
-      if (industry.industry.industryName === industryBy) {
-        allSubIndustriesByIndustry.push(industry);
-      }
+  /**
+   * Format the list of locations correctly to have the id, continent, country and regions at the same level.
+   * @param locations Raw list of locations that we get from the function getAllLocations
+   * @return An array of object that is named correctly: id, continent, country, regions.
+   */
+  formatLocations(locations) {
+    const tempLocations = [];
+    locations.forEach((item) => {
+      tempLocations.push({
+        id: item.id,
+        continent: item.region,
+        country: item.name,
+        regions: item.states,
+      });
     });
-    return allSubIndustriesByIndustry;
+    tempLocations.pop();
+    return tempLocations;
   },
 
   getregions() {
@@ -98,5 +83,5 @@ export const Region = {
       });
     }
     return cities;
-  }
+  },
 };
