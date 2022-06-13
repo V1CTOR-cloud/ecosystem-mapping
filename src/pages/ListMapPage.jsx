@@ -30,7 +30,6 @@ import {
   DeleteModal,
 } from "../components/miscellaneousComponents";
 import dotsImg from "../../src/assets/images/3dots.png";
-import { Region } from "../service/region";
 import { Map } from "../service/map";
 import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { SortDownAlt } from "@styled-icons/bootstrap";
@@ -100,8 +99,6 @@ const ListMapPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       getAllEcoMaps();
-      await Region.listAllRegions();
-      await Region.listAllIndustries();
     };
 
     fetchData().catch(console.error);
