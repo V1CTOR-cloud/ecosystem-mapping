@@ -104,7 +104,7 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.link")}
               tooltipAriaLabel={t("mapping.canvas.form.link")}
               placeholder={t("mapping.canvas.form.link.placeholder")}
-              value={formValue["serviceLink"]}
+              initialValue={formValue["serviceLink"]}
               onChange={(link) => (formValue["serviceLink"] = link)}
             />
           </Box>
@@ -140,7 +140,7 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.description")}
             tooltipAriaLabel={t("mapping.canvas.form.description")}
             placeholder={t("mapping.canvas.form.description.placeholder")}
-            value={formValue["serviceDescription"]}
+            initialValue={formValue["serviceDescription"]}
             onChange={(description) =>
               (formValue["serviceDescription"] = description)
             }
@@ -151,7 +151,7 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.outcomes")}
               tooltipAriaLabel={t("mapping.canvas.form.outcomes")}
               placeholder={t("mapping.canvas.form.outcomes.placeholder")}
-              value={formValue["serviceOutcomes"]}
+              initialValue={formValue["serviceOutcomes"]}
               onChange={(outcomes) => (formValue["serviceOutcomes"] = outcomes)}
             />
           </Box>
