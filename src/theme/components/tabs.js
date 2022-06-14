@@ -1,7 +1,11 @@
-export const Tabs = {
-  baseStyle: {
-    _focus: {
-      boxShadow: "none",
+export const tabs = {
+  variants: {
+    line: {
+      tab: {
+        _focus: {
+          boxShadow: "none",
+        },
+      },
     },
   },
 };
