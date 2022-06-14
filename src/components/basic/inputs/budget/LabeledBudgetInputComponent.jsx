@@ -88,7 +88,7 @@ function LabeledBudgetInputComponent(props) {
           <HStack key={index} paddingBottom={3}>
             <Box>
               <InputComponent
-                value={budget.budgetTitle}
+                initialValue={budget.budgetTitle}
                 placeholder={t("mapping.canvas.form.budget.title.placeholder")}
                 onChange={(budgetTitle) =>
                   handleBudgetTitleChange(budgetTitle, index)
@@ -98,7 +98,7 @@ function LabeledBudgetInputComponent(props) {
 
             <Box w="100%" paddingX={3}>
               <NumberInputComponent
-                propValue={budget.budgetValue.toString()}
+                initialValue={budget.budgetValue.toString()}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
                 onChange={(budgetValue) =>
                   handleBudgetValueChange(budgetValue, index)
