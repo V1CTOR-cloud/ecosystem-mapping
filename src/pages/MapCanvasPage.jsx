@@ -7,6 +7,7 @@ import {
   Text,
   useDisclosure,
   VStack,
+  Button,
 } from "@chakra-ui/react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
@@ -16,12 +17,9 @@ import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import FilterBar from "../components/bar/navigationBar/filterBar/FilterBar";
 import {
   audienceList,
-  greyColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
-  smallPadding,
 } from "../helper/constant";
 import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/BackgroundCanvas";
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
@@ -29,25 +27,23 @@ import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServic
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
-import ButtonComponent from "../components/basic/buttons/ButtonComponent";
 import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
 import { Organisation } from "../service/organisation";
-import { Region } from "../service/region";
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
   border-right: 7.5px solid transparent;
-  border-top: 7.5px solid ${greyColor};
+  border-top: 7.5px solid #aaaaaa;
 `;
 
 const ArrowUp = styled.div`
   border-right: 7.5px solid transparent;
   border-left: 7.5px solid transparent;
-  border-bottom: 7.5px solid ${greyColor};
+  border-bottom: 7.5px solid #aaaaaa;
 `;
 
-export const MapCanvasPageContext = createContext(undefined);
+export const CanvasProvider = createContext(undefined);
 
 const data = {
   services: {},
@@ -119,7 +115,6 @@ function MapCanvasPage() {
     },
   ];
   const { t } = useTranslation();
-
   const {
     isOpen: isOpenFilter,
     onOpen: onOpenFilter,
@@ -145,7 +140,6 @@ function MapCanvasPage() {
   const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
   const [fetchedOrganization, setFetchedOrganization] = useState(null);
   const [fetchedFilters, setFetchedFilters] = useState(null);
-  const [fetchedLocation, setFetchedLocation] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [heights, setHeights] = useState([180, 180, 180]);
   const [containerHeight, setContainerHeight] = useState("0px");
@@ -194,20 +188,6 @@ function MapCanvasPage() {
         })
       );
       setFetchedOrganization(tempOrganizations);
-
-      // Get all locations
-      res = await Region.listAllRegions();
-      const tempLocations = [];
-      res.data.forEach((item) => {
-        tempLocations.push({
-          id: item.id,
-          continent: item.region,
-          country: item.name,
-          regions: item.states,
-        });
-      });
-      tempLocations.pop();
-      setFetchedLocation(tempLocations);
 
       const tempServices = Object.values(sortedData.services);
       tempServices.forEach((thisService) => {
@@ -554,13 +534,15 @@ function MapCanvasPage() {
   }
 
   const additionalButton = (
-    <ButtonComponent
-      padding={`0 0 0 ${mediumPadding}`}
-      isWithoutBorder={!isOpenFilter}
-      buttonText={t("mapping.navigation.bar.filter.button")}
-      icon={<FilterAlt size="20" title="Filter" />}
-      onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
-    />
+    <Box paddingRight="1rem">
+      <Button
+        variant={isOpenFilter ? "outline" : "ghost"}
+        icon={<FilterAlt size="20" title="Filter" />}
+        onClick={isOpenFilter ? onCloseFilter : onOpenFilter}
+      >
+        {t("mapping.navigation.bar.filter.button")}
+      </Button>
+    </Box>
   );
 
   const primaryButton = (
@@ -569,17 +551,13 @@ function MapCanvasPage() {
       onClose={onCloseForm}
       onOpen={onOpenForm}
       organisations={fetchedOrganization}
-      fetchedData={[fetchedData, setFetchedData]}
-      services={services}
-      locations={fetchedLocation}
-      mapId={mapId}
     />
   );
 
   return !isDataLoaded ? (
     <Text>Loading</Text>
   ) : (
-    <MapCanvasPageContext.Provider
+    <CanvasProvider.Provider
       value={{
         mapId: mapId,
         fetchedData: [fetchedData, setFetchedData],
@@ -599,7 +577,6 @@ function MapCanvasPage() {
             <FilterBar
               filtersState={[filters, setFilters]}
               handleClearAllFilters={handleClearAllFilters}
-              mapId={mapId}
             />
           </Box>
         )}
@@ -611,12 +588,11 @@ function MapCanvasPage() {
             onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
           />
-          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={smallPadding}>
+          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={3}>
             <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
-              propData={[fetchedData, setFetchedData]}
               secondaryData={secondaryFetchedData}
               handleServiceClick={(service) => handleServiceClick(service)}
               heights={[heights, setHeights]}
@@ -645,7 +621,7 @@ function MapCanvasPage() {
                 >
                   <HStack position="relative" w="100%" h="100%">
                     <VStack
-                      bg={greyColor}
+                      bg={"blackAlpha.400"}
                       w="2px"
                       h="100%"
                       justify="space-between"
@@ -654,8 +630,8 @@ function MapCanvasPage() {
                       <ArrowUp />
                     </VStack>
                     <Text
-                      marginLeft={smallPadding}
-                      color={greyColor}
+                      marginLeft={3}
+                      color={"blackAlpha.400"}
                       style={{ writingMode: "vertical-lr" }}
                     >
                       {row.replaceAll("_", " ").replace("and", "&")}
@@ -673,20 +649,12 @@ function MapCanvasPage() {
             isOpen={isOpenFormEdition}
             onClose={onCloseFormEdition}
             propOrganisations={fetchedOrganization}
-            fetchedData={[fetchedData, setFetchedData]}
-            services={services}
-            locations={fetchedLocation}
-            mapId={mapId}
             serviceWithoutModification={serviceWithoutModification}
           />
         )}
       </Flex>
-    </MapCanvasPageContext.Provider>
+    </CanvasProvider.Provider>
   );
 }
-
-HStack.defaultProps = {
-  spacing: 0,
-};
 
 export default MapCanvasPage;

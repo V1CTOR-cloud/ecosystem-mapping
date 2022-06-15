@@ -12,12 +12,13 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import PropTypes from "prop-types";
 
 function MenuComponent(props) {
-  const { item, onChange, width, isDisabled, wantScroll, items } = props;
-  const [value, setValue] = useState(item);
+  const { initialValue, onChange, width, isDisabled, wantScroll, items } =
+    props;
+  const [value, setValue] = useState(initialValue);
 
   useEffect(() => {
-    setValue(item);
-  }, [item]);
+    setValue(initialValue);
+  }, [initialValue]);
 
   function handleOnChange(event) {
     setValue(event.target.lastChild.data);
@@ -28,10 +29,15 @@ function MenuComponent(props) {
     <Box>
       <Menu isLazy>
         <MenuButton
+          variant="outline"
+          color="black"
+          borderColor="blackAlpha.500"
+          _hover={{ bg: "blackAlpha.200" }}
+          _active={{ bg: "blackAlpha.300" }}
           w={width ? width : undefined}
           as={Button}
           rightIcon={<ChevronDownIcon />}
-          isDisabled={isDisabled ? isDisabled : false}
+          isDisabled={isDisabled}
         >
           {value}
         </MenuButton>
@@ -62,7 +68,7 @@ MenuComponent.propTypes = {
   wantScroll: PropTypes.bool,
   isDisabled: PropTypes.bool,
   width: PropTypes.string,
-  item: PropTypes.string.isRequired,
+  initialValue: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };

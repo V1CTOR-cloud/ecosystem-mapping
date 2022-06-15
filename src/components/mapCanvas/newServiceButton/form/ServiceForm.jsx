@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   AlertDialog,
@@ -11,26 +11,25 @@ import {
   FormErrorMessage,
   HStack,
   Spacer,
+  Button,
 } from "@chakra-ui/react";
 import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import {
   audienceList,
-  greyTextColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
 } from "../../../../helper/constant";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
 import ServiceTabs from "./tabs/ServiceTabs";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import service from "../../../../assets/servicesFocus.json";
 import ToastComponent from "../../../basic/ToastComponent";
 import { Service } from "../../../../service/service";
-import PropTypes from "prop-types";
+import { CanvasProvider } from "../../../../pages/MapCanvasPage";
 
 function ServiceForm(props) {
   const {
@@ -38,13 +37,12 @@ function ServiceForm(props) {
     isEditing,
     isOpen,
     serviceWithoutModification,
-    services,
-    fetchedData,
-    mapId,
     onClose,
     cancelRef,
-    locations,
   } = props;
+  const canvasProvider = useContext(CanvasProvider);
+  const [data, setData] = canvasProvider.fetchedData;
+  const services = canvasProvider.services;
   const applicationTypeButtons = [
     market,
     market_and_organization,
@@ -181,10 +179,9 @@ function ServiceForm(props) {
       ).id;
     }
 
-    const order =
-      fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+    const order = data.rows[formValue["applicationType"]].serviceIds.length;
 
-    const data = {
+    const argument = {
       serviceName: formValue["serviceName"],
       serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
       organisationId: organisationId,
@@ -217,12 +214,12 @@ function ServiceForm(props) {
         ),
       },
 
-      mapId: mapId,
+      mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
       order: order,
     };
 
-    await createNewService(data);
+    await createNewService(argument);
   }
 
   // Function that will check if everything is correct to send it to the database to avoid errors
@@ -237,7 +234,7 @@ function ServiceForm(props) {
 
         const newData = addServiceToData(res);
 
-        fetchedData[1](newData);
+        setData(newData);
         ToastComponent(
           t("mapping.toast.success.create.service"),
           "success",
@@ -252,14 +249,14 @@ function ServiceForm(props) {
   // Function that add the new service create to the canvas
   function addServiceToData(res) {
     // Format the list of services to correspond to the model of fetchedData
-    const tempServices = Object.assign(fetchedData[0].services, {
+    const tempServices = Object.assign(data.services, {
       [res.createService.id]: {
         ...res.createService,
       },
     });
 
     // Add the service id to the corresponding row
-    const tempRows = fetchedData[0].rows;
+    const tempRows = data.rows;
     tempRows[res.createService.applicationType].serviceIds.push(
       res.createService.id
     );
@@ -271,7 +268,7 @@ function ServiceForm(props) {
 
     // Create new object to setState the fetchedData
     return {
-      rowsOrder: fetchedData[0].rowsOrder,
+      rowsOrder: data.rowsOrder,
       services: tempServices,
       rows: tempRows,
     };
@@ -312,17 +309,15 @@ function ServiceForm(props) {
       if (serviceStatus === "Archived") {
         order = 999;
       } else if (serviceWithoutModification.serviceStatus === "Archived") {
-        order =
-          fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+        order = data.rows[formValue["applicationType"]].serviceIds.length;
       } else {
         order = serviceWithoutModification.order;
       }
     } else {
-      order =
-        fetchedData[0].rows[formValue["applicationType"]].serviceIds.length;
+      order = data.rows[formValue["applicationType"]].serviceIds.length;
     }
 
-    const data = {
+    const argument = {
       id: serviceWithoutModification.id,
 
       // First tabs
@@ -368,7 +363,7 @@ function ServiceForm(props) {
           : formValue["followedService"],
 
       // Others parameters hidden from the user
-      mapId: mapId,
+      mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
       order: order,
 
@@ -377,7 +372,7 @@ function ServiceForm(props) {
       organisationIdWithoutModification: organisationIdWithoutModification,
     };
 
-    await updateService(data);
+    await updateService(argument);
   }
 
   async function updateService(data) {
@@ -388,7 +383,7 @@ function ServiceForm(props) {
       // Check if we update the service
       if (res.updateService) {
         const newData = await updateServiceToData(res.updateService);
-        fetchedData[1](newData);
+        setData(newData);
         onClose();
 
         ToastComponent(t("mapping.toast.success.service"), "success", 5000);
@@ -400,14 +395,14 @@ function ServiceForm(props) {
 
   async function updateServiceToData(updateService) {
     // Format the list of services to correspond to the model of fetchedData
-    const tempServices = Object.assign(fetchedData[0].services, {
+    const tempServices = Object.assign(data.services, {
       [updateService.id]: {
         ...updateService,
       },
     });
 
     // Add the service id to the corresponding row
-    const tempRows = fetchedData[0].rows;
+    const tempRows = data.rows;
 
     if (
       serviceWithoutModification.applicationType ===
@@ -446,7 +441,7 @@ function ServiceForm(props) {
 
     // Create new object to setState the fetchedData
     return {
-      rowsOrder: fetchedData[0].rowsOrder,
+      rowsOrder: data.rowsOrder,
       services: tempServices,
       rows: tempRows,
     };
@@ -532,8 +527,6 @@ function ServiceForm(props) {
     );
   }
 
-  console.log(formValue.serviceName);
-
   return (
     <AlertDialog
       size="2xl"
@@ -544,12 +537,12 @@ function ServiceForm(props) {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogBody paddingY={mediumPadding}>
+          <AlertDialogBody paddingY={6}>
             <HStack alignItems="flex-start" zIndex={11}>
               <FormControl isInvalid={isError}>
                 <InputComponent
                   isRequired={true}
-                  propValue={formValue["serviceName"]}
+                  initialValue={formValue["serviceName"]}
                   placeholder={t("mapping.canvas.form.service.name")}
                   onChange={(serviceName) => {
                     formValue["serviceName"] = serviceName;
@@ -580,75 +573,66 @@ function ServiceForm(props) {
                 organisations={organisations}
                 applicationTypeButtons={applicationTypeButtons}
                 audiences={audiences}
-                services={services}
-                locations={locations}
                 formValue={formValue}
               />
             </Box>
-            <Flex paddingTop={mediumPadding}>
+            <Flex paddingTop={6}>
               {isEditing ? (
-                <ButtonComponent
-                  buttonText={t("mapping.canvas.form.archive.button")}
-                  isWithoutBorder={true}
-                  color={greyTextColor}
-                  icon={<Archive color={greyTextColor} size="20px" />}
+                <Button
+                  variant="greyGhost"
+                  leftIcon={<Archive color={"blackAlpha.600"} size="20px" />}
                   onClick={async () => {
                     await handleUpdateClick("Archived");
                   }}
-                />
+                >
+                  {t("mapping.canvas.form.archive.button")}
+                </Button>
               ) : (
-                <ButtonComponent
-                  buttonText={t("common.cancel")}
-                  isWithoutBorder={true}
-                  color={greyTextColor}
+                <Button
+                  variant="greyGhost"
+                  color={"blackAlpha.600"}
                   onClick={onClose}
-                />
+                >
+                  {t("common.cancel")}
+                </Button>
               )}
               <Spacer />
               {isEditing ? (
-                <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("common.cancel")}
-                  isWithoutBorder={true}
-                  color={greyTextColor}
-                  onClick={() => {
-                    onClose();
-                  }}
-                />
+                <Button variant="greyGhost" onClick={onClose}>
+                  {t("common.cancel")}
+                </Button>
               ) : (
                 <Box />
               )}
               {isEditing ? (
-                <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("mapping.canvas.form.unpublished.button")}
-                  isWithoutBorder={false}
+                <Button
+                  variant="outline"
                   onClick={async () => {
                     await handleUpdateClick("Draft");
                   }}
-                />
+                >
+                  {t("mapping.canvas.form.unpublished.button")}
+                </Button>
               ) : (
-                <ButtonComponent
-                  padding={`0 ${mediumPadding} 0 0`}
-                  buttonText={t("mapping.canvas.form.draft.button")}
-                  isWithoutBorder={true}
+                <Button
+                  variant="outline"
                   onClick={() => handleDraftOrPublishClick("Draft")}
-                />
+                >
+                  {t("mapping.canvas.form.draft.button")}
+                </Button>
               )}
               {isEditing ? (
-                <ButtonComponent
-                  buttonText={t("mapping.canvas.form.save.button")}
-                  isPrimary={true}
+                <Button
                   onClick={async () => {
                     await handleUpdateClick("Published");
                   }}
-                />
+                >
+                  {t("mapping.canvas.form.save.button")}
+                </Button>
               ) : (
-                <ButtonComponent
-                  buttonText={t("mapping.canvas.form.publish.button")}
-                  isPrimary={true}
-                  onClick={() => handleDraftOrPublishClick("Published")}
-                />
+                <Button onClick={() => handleDraftOrPublishClick("Published")}>
+                  {t("mapping.canvas.form.publish.button")}
+                </Button>
               )}
             </Flex>
           </AlertDialogBody>
@@ -663,11 +647,7 @@ ServiceForm.propTypes = {
   serviceWithoutModification: PropTypes.object,
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
-  mapId: PropTypes.string.isRequired,
   cancelRef: PropTypes.object.isRequired,
-  locations: PropTypes.array.isRequired,
-  services: PropTypes.array.isRequired,
-  fetchedData: PropTypes.array.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 

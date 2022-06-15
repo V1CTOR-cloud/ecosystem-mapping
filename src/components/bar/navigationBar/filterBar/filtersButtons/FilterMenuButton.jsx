@@ -14,19 +14,6 @@ import {
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-import {
-  accentColor,
-  blueColor,
-  borderRadius,
-  defaultFontFamily,
-  defaultFontSize,
-  greyTextColor,
-  smallPadding,
-  verySmallPadding,
-  whiteActiveColor,
-  whiteColor,
-  whiteHoverColor,
-} from "../../../../../helper/constant";
 import InputComponent from "../../../../basic/inputs/input/inputComponent/InputComponent";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
@@ -115,19 +102,19 @@ function FilterMenuButton(props) {
 
   return (
     //  Wrap into a box because we have a warning in the console about margin error.
-    <Box paddingRight={verySmallPadding}>
+    <Box paddingRight={2}>
       <Menu closeOnSelect={false} margin="0px">
         <Box>
           {filter.items.some((item) => item.value === true) && (
             <Text
               w="15px"
               h="15px"
-              bg={accentColor}
+              bg={"pink.600"}
               position="absolute"
               borderRadius="100%"
               fontSize={filter.selectedFilterCount >= 100 ? "8px" : "10px"}
               paddingTop={filter.selectedFilterCount >= 100 ? "1.5px" : "0"}
-              color={whiteColor}
+              color={"white"}
               align="center"
               transform="translate(-5px, -5px)"
             >
@@ -135,34 +122,34 @@ function FilterMenuButton(props) {
             </Text>
           )}
           <Box
-            marginRight={verySmallPadding}
-            paddingX={smallPadding}
-            paddingY={verySmallPadding}
-            borderRadius={borderRadius}
-            bg={isButtonActive ? whiteActiveColor : whiteColor}
-            _hover={{ bg: whiteHoverColor }}
+            marginRight={2}
+            paddingX={3}
+            paddingY={2}
+            borderRadius={"base"}
+            bg={isButtonActive ? "gray.200" : "white"}
+            _hover={{ bg: "gray.100" }}
             _focus={{ boxShadow: "none" }}
-            _active={{ bg: whiteActiveColor, color: blueColor }}
+            _active={{ bg: "gray.200", color: "brand.500" }}
           >
             <HStack h="100%">
               <Text
                 as={MenuButton}
                 whiteSpace="nowrap"
-                color={isButtonActive ? blueColor : greyTextColor}
+                color={isButtonActive ? "brand.500" : "blackAlpha.600"}
               >
                 {filter.name}
               </Text>
               {isButtonActive && (
-                <Box paddingLeft={verySmallPadding} h="100%" w={"100%"}>
+                <Box paddingLeft={2} h="100%" w={"100%"}>
                   <CloseButton
                     w="17.5px"
                     h="17.5px"
                     padding="8px"
                     size="sm"
                     border="2px solid"
-                    borderColor={blueColor}
+                    borderColor={"brand.500"}
                     borderRadius="100%"
-                    color={blueColor}
+                    color={"brand.500"}
                     _focus={{
                       boxShadow: "none",
                     }}
@@ -177,7 +164,7 @@ function FilterMenuButton(props) {
           h={secondaryFilter.items.length >= 11 ? "400px" : "auto"}
           overflowY="scroll"
         >
-          <Box paddingX={smallPadding} paddingBottom={smallPadding}>
+          <Box paddingX={3} paddingBottom={3}>
             <InputComponent
               value={""}
               placeholder={
@@ -189,13 +176,11 @@ function FilterMenuButton(props) {
           </Box>
           {secondaryFilter.items.length !== 0 && (
             <Checkbox
-              paddingX={smallPadding}
+              paddingX={3}
               isChecked={filter.isAllSelected}
               onChange={(e) => {
                 handleAllClick(e);
               }}
-              fontFamily={defaultFontFamily}
-              fontSize={defaultFontSize}
             >
               Select all
             </Checkbox>
@@ -203,14 +188,12 @@ function FilterMenuButton(props) {
           {secondaryFilter.items.length === 0 && (
             <Text textAlign="center">No result</Text>
           )}
-          <VStack align={"start"} paddingX={smallPadding}>
+          <VStack align={"start"} paddingX={3}>
             {secondaryFilter.items.map((item) => (
               <Checkbox
                 key={item.name}
                 isChecked={item.value}
                 onChange={(e) => handleItemClick(item, e)}
-                fontFamily={defaultFontFamily}
-                fontSize={defaultFontSize}
               >
                 {item.name}
               </Checkbox>

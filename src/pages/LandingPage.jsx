@@ -1,22 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Box, Flex, Grid, SimpleGrid, VStack } from "@chakra-ui/react";
 
 import NavigationBarLandingPage from "../components/bar/navigationBar/NavigationBarLandingPage";
 import DashboardImages from "../components/miscellaneousComponents/DashboardImages";
 import AddMapModal from "components/miscellaneousComponents/AddMapModal";
-import { Region } from "../service/region";
 
 const LandingPage = () => {
-  useEffect(() => {
-    const fetchData = async () => {
-      await Region.listAllRegions();
-      await Region.listAllIndustries();
-    };
-
-    fetchData().catch(console.error);
-  });
-
   return (
     <Box className="wrapper">
       <VStack spacing={8} align="start">
