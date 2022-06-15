@@ -1,13 +1,14 @@
 import React from "react";
 
-import { Button, ChakraProvider } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { action } from "@storybook/addon-actions";
 
-import { theme } from "../../theme/theme";
+import { withChakra } from "../../../.storybook/preview";
 
 export default {
   title: "Mapping App/Basic/Button",
   component: Button,
+  decorators: [withChakra],
   parameters: {
     componentSubtitle:
       "Displays a button with different color depending of the use case.",
@@ -28,11 +29,9 @@ export default {
 };
 
 const Template = (args) => (
-  <ChakraProvider theme={theme}>
-    <Button {...args} onClick={action("button-Click")}>
-      {args.text}
-    </Button>
-  </ChakraProvider>
+  <Button {...args} onClick={action("button-Click")}>
+    {args.text}
+  </Button>
 );
 
 export const Primary = Template.bind({});

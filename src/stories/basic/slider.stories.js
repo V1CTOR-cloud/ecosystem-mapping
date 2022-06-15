@@ -1,13 +1,12 @@
 import React from "react";
 
-import { ChakraProvider } from "@chakra-ui/react";
-
-import { theme } from "../../theme/theme";
 import SliderComponent from "../../components/basic/slider/SliderComponent";
+import { withChakra } from "../../../.storybook/preview";
 
 export default {
   title: "Mapping App/Basic/Slider",
   component: SliderComponent,
+  decorators: [withChakra],
   parameters: {
     componentSubtitle:
       "Slider that allow the user to select the startup phases through predefined value -3 to 4.",
@@ -21,11 +20,7 @@ export default {
 };
 
 export function Slider(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <SliderComponent {...args} />
-    </ChakraProvider>
-  );
+  return <SliderComponent {...args} />;
 }
 
 Slider.args = {

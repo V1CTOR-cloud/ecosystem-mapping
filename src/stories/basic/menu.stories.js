@@ -1,13 +1,12 @@
 import React from "react";
 
-import { ChakraProvider } from "@chakra-ui/react";
-
-import { theme } from "../../theme/theme";
 import MenuComponent from "../../components/basic/inputs/menu/MenuComponent";
+import { withChakra } from "../../../.storybook/preview";
 
 export default {
   title: "Mapping App/Basic/Menu",
   component: MenuComponent,
+  decorators: [withChakra],
   parameters: {
     componentSubtitle:
       "Allow the user to pick an item through a predefined selection.",
@@ -40,11 +39,7 @@ export default {
 };
 
 export function Menu(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <MenuComponent {...args} />
-    </ChakraProvider>
-  );
+  return <MenuComponent {...args} />;
 }
 
 Menu.args = {

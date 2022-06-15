@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 
-import {
-  ChakraProvider,
-  FormControl,
-  FormErrorMessage,
-} from "@chakra-ui/react";
+import { FormControl, FormErrorMessage } from "@chakra-ui/react";
 
-import { theme } from "../../theme/theme";
 import InputComponent from "../../components/basic/inputs/input/inputComponent/InputComponent";
 import MultilineInputComponent from "../../components/basic/inputs/input/multilineInputComponent/MultilineInputComponent";
 import NumberInputComponent from "../../components/basic/inputs/input/numberInputComponent/NumberInputComponent";
+import { withChakra } from "../../../.storybook/preview";
 
 export default {
   title: "Mapping App/Basic/Input",
   component: MultilineInputComponent,
+  decorators: [withChakra],
   parameters: {
     componentSubtitle: "Allow the user to enter some value in the fields.",
   },
@@ -50,16 +47,14 @@ export function Classic(args) {
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <FormControl isInvalid={isError}>
-        <InputComponent
-          {...args}
-          onChange={handleOnChange}
-          initialValue={args.initialValue}
-        />
-        {isError && <FormErrorMessage>{args.errorText}</FormErrorMessage>}
-      </FormControl>
-    </ChakraProvider>
+    <FormControl isInvalid={isError}>
+      <InputComponent
+        {...args}
+        onChange={handleOnChange}
+        initialValue={args.initialValue}
+      />
+      {isError && <FormErrorMessage>{args.errorText}</FormErrorMessage>}
+    </FormControl>
   );
 }
 
@@ -72,13 +67,11 @@ Classic.args = {
 
 export function Multiline(args) {
   return (
-    <ChakraProvider theme={theme}>
-      <MultilineInputComponent
-        {...args}
-        value={args.initialValue}
-        onChange={() => {}}
-      />
-    </ChakraProvider>
+    <MultilineInputComponent
+      {...args}
+      value={args.initialValue}
+      onChange={() => {}}
+    />
   );
 }
 
@@ -89,13 +82,11 @@ Multiline.args = {
 
 export function Number(args) {
   return (
-    <ChakraProvider theme={theme}>
-      <NumberInputComponent
-        {...args}
-        value={args.initialValue}
-        onChange={() => {}}
-      />
-    </ChakraProvider>
+    <NumberInputComponent
+      {...args}
+      value={args.initialValue}
+      onChange={() => {}}
+    />
   );
 }
 

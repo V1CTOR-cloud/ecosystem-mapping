@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
-import { theme } from "../../../theme/theme";
 import LabelWithTooltip from "../../../components/basic/labelWithTooltip/LabelWithTooltip";
 import LabeledInputComponent from "../../../components/basic/inputs/input/inputComponent/LabeledInputComponent";
 import LabeledMultilineInputComponent from "../../../components/basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
@@ -10,6 +9,7 @@ import LabeledMenu from "../../../components/basic/inputs/menu/LabeledMenu";
 
 import LabeledDatePickerComponent from "../../../components/basic/inputs/date/LabeledDatePickerComponent";
 import LabeledBudgetInputComponent from "../../../components/basic/inputs/budget/LabeledBudgetInputComponent";
+import { withChakra } from "../../../../.storybook/preview";
 
 const doc = {
   label: {
@@ -34,6 +34,7 @@ export default {
     "Labeled Date Picker": LabeledDatePickerComponent,
     "Labeled Budget ": LabeledBudgetInputComponent,
   },
+  decorators: [withChakra],
   parameters: {
     componentSubtitle:
       "Text with a tooltip that help the user understand the meaning of the text.",
@@ -42,11 +43,7 @@ export default {
 };
 
 export function Label(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <LabelWithTooltip {...args} />
-    </ChakraProvider>
-  );
+  return <LabelWithTooltip {...args} />;
 }
 
 Label.args = {
@@ -56,11 +53,7 @@ Label.args = {
 };
 
 export function LabelClassicInput(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <LabeledInputComponent {...args} onChange={() => {}} />
-    </ChakraProvider>
-  );
+  return <LabeledInputComponent {...args} onChange={() => {}} />;
 }
 
 LabelClassicInput.args = {
@@ -70,11 +63,7 @@ LabelClassicInput.args = {
 };
 
 export function LabelMultiline(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <LabeledMultilineInputComponent {...args} onChange={() => {}} />
-    </ChakraProvider>
-  );
+  return <LabeledMultilineInputComponent {...args} onChange={() => {}} />;
 }
 
 LabelMultiline.args = {
@@ -82,11 +71,7 @@ LabelMultiline.args = {
 };
 
 export function LabelMenu(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <LabeledMenu {...args} onChange={() => {}} />
-    </ChakraProvider>
-  );
+  return <LabeledMenu {...args} onChange={() => {}} />;
 }
 
 LabelMenu.args = {
@@ -101,15 +86,13 @@ LabelMenu.args = {
 
 export function LabelDatePicker(args) {
   return (
-    <ChakraProvider theme={theme}>
-      <Box w="300px">
-        <LabeledDatePickerComponent
-          {...args}
-          onChangeStartTime={() => {}}
-          onChangeEndTime={() => {}}
-        />
-      </Box>
-    </ChakraProvider>
+    <Box w="300px">
+      <LabeledDatePickerComponent
+        {...args}
+        onChangeStartTime={() => {}}
+        onChangeEndTime={() => {}}
+      />
+    </Box>
   );
 }
 
@@ -120,11 +103,7 @@ LabelDatePicker.args = {
 };
 
 export function LabelBudget(args) {
-  return (
-    <ChakraProvider theme={theme}>
-      <LabeledBudgetInputComponent {...args} onChange={() => {}} />
-    </ChakraProvider>
-  );
+  return <LabeledBudgetInputComponent {...args} onChange={() => {}} />;
 }
 
 LabelBudget.args = {
