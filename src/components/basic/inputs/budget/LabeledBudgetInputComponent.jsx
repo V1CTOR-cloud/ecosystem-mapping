@@ -16,9 +16,9 @@ const currencies = [
 ];
 
 function LabeledBudgetInputComponent(props) {
-  const { propsBudgets, onChange, label, tooltipText, tooltipAriaLabel } =
+  const { initialBudgets, onChange, label, tooltipText, tooltipAriaLabel } =
     props;
-  const [budgets, setBudgets] = useState(propsBudgets);
+  const [budgets, setBudgets] = useState(initialBudgets);
   const { t } = useTranslation();
 
   function handleAddOrRemoveBudget(index) {
@@ -106,7 +106,7 @@ function LabeledBudgetInputComponent(props) {
               />
             </Box>
             <MenuComponent
-              item={budget.budgetCurrency}
+              initialValue={budget.budgetCurrency}
               items={currencies}
               onChange={(budgetCurrency) =>
                 handleBudgetCurrencyChange(budgetCurrency, index)
@@ -137,7 +137,7 @@ LabeledBudgetInputComponent.propTypes = {
   label: PropTypes.string.isRequired,
   tooltipText: PropTypes.string.isRequired,
   tooltipAriaLabel: PropTypes.string.isRequired,
-  propsBudgets: PropTypes.array.isRequired,
+  initialBudgets: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

@@ -49,7 +49,7 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.owner.organisation")}
             tooltipText={t("mapping.canvas.form.owner.organisation.tooltip")}
             tooltipAriaLabel={t("mapping.canvas.form.owner.organisation")}
-            item={formValue["ownerOrganisation"]}
+            initialValue={formValue["ownerOrganisation"]}
             items={organisations}
             onChange={(organisation) => {
               formValue["ownerOrganisation"] = organisation;
@@ -110,7 +110,7 @@ function ServiceTabs(props) {
           </Box>
           <Box marginTop={6}>
             <LocationComponent
-              value={formValue["serviceLocation"]}
+              initialLocation={formValue["serviceLocation"]}
               onChange={(location) => (formValue["serviceLocation"] = location)}
             />
           </Box>
@@ -119,7 +119,7 @@ function ServiceTabs(props) {
               tooltipText={t("mapping.canvas.form.audience.tooltip")}
               label={t("mapping.canvas.form.audience")}
               tooltipAriaLabel={t("mapping.canvas.form.audience")}
-              item={formValue["serviceAudience"]}
+              initialValue={formValue["serviceAudience"]}
               items={audiences}
               onChange={(audience) => (formValue["serviceAudience"] = audience)}
             />
@@ -129,7 +129,7 @@ function ServiceTabs(props) {
               label={t("mapping.canvas.form.budget")}
               tooltipText={t("mapping.canvas.form.budget.tooltip")}
               tooltipAriaLabel={t("mapping.canvas.form.budget")}
-              propsBudgets={formValue["serviceBudget"]}
+              initialBudgets={formValue["serviceBudget"]}
               onChange={(budgets) => (formValue["serviceBudget"] = budgets)}
             />
           </Box>
@@ -185,7 +185,7 @@ function ServiceTabs(props) {
                 <Box w="calc(100% / 2)">
                   <MenuComponent
                     width="100%"
-                    item={formValue["precededService"]}
+                    initialValue={formValue["precededService"]}
                     items={canvasProvider.services}
                     onChange={(value) => (formValue["precededService"] = value)}
                   />
@@ -194,7 +194,7 @@ function ServiceTabs(props) {
                 <Box w="calc(100% / 2)">
                   <MenuComponent
                     width="100%"
-                    item={formValue["followedService"]}
+                    initialValue={formValue["followedService"]}
                     items={canvasProvider.services}
                     onChange={(value) => (formValue["followedService"] = value)}
                   />

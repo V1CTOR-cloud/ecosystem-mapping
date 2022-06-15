@@ -26,13 +26,13 @@ function LabeledDatePickerComponent(props) {
       <Box>
         <HStack justifyContent="space-between">
           <DatePickerComponent
-            date={serviceStartTime}
+            initialDate={serviceStartTime}
             handleDateChange={onChangeStartTime}
           />
           <Box w="5px" h="1px" bg={"blackAlpha.700"} />
           <Box paddingLeft="70px">
             <DatePickerComponent
-              date={serviceEndTime}
+              initialDate={serviceEndTime}
               handleDateChange={onChangeEndTime}
             />
           </Box>
