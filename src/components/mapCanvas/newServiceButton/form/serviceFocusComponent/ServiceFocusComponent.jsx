@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-import { smallPadding, verySmallPadding } from "../../../../../helper/constant";
 import service from "../../../../../assets/servicesFocus.json";
 import PropTypes from "prop-types";
 
@@ -26,9 +25,17 @@ function ServiceFocusComponent(props) {
   }
 
   return (
-    <Box paddingLeft={verySmallPadding}>
+    <Box paddingLeft={2}>
       <Menu>
-        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+        <MenuButton
+          as={Button}
+          rightIcon={<ChevronDownIcon />}
+          variant="outline"
+          color="black"
+          borderColor="blackAlpha.500"
+          _hover={{ bg: "blackAlpha.200" }}
+          _active={{ bg: "blackAlpha.300" }}
+        >
           <Box w="15px" h="15px" bg={value.color} borderRadius="50%" />
         </MenuButton>
         {/* Keep Zindex >= 4 to not have the slider above the menu that have an index of 3*/}
@@ -45,7 +52,7 @@ function ServiceFocusComponent(props) {
                     w="15px"
                     bg={serviceFocus.color}
                     borderRadius="50%"
-                    marginRight={smallPadding}
+                    marginRight={3}
                   />
                   <Text>{serviceFocus.name}</Text>
                 </HStack>

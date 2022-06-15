@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Box } from "@chakra-ui/react";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -8,10 +8,10 @@ import PropTypes from "prop-types";
 import Row from "../drap&dropComponent/row/Row";
 import ToastComponent from "../../basic/ToastComponent";
 import { Service } from "../../../service/service";
+import { CanvasProvider } from "../../../pages/MapCanvasPage";
 
 function ContentCanvas(props) {
   const {
-    propData,
     isFilterOpen,
     secondaryData,
     handleServiceClick,
@@ -19,7 +19,8 @@ function ContentCanvas(props) {
     containerHeight,
     isFiltersActive,
   } = props;
-  const [data, setData] = propData;
+  const canvasProvider = useContext(CanvasProvider);
+  const [data, setData] = canvasProvider.fetchedData;
   const { t } = useTranslation();
 
   const height = (isFilterOpen ? 135 : 75) + 12;
@@ -212,7 +213,6 @@ ContentCanvas.propTypes = {
   isFilterOpen: PropTypes.bool.isRequired,
   containerHeight: PropTypes.array.isRequired,
   heights: PropTypes.array.isRequired,
-  propData: PropTypes.array.isRequired,
   secondaryData: PropTypes.object.isRequired,
   handleServiceClick: PropTypes.func.isRequired,
 };

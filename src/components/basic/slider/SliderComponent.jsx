@@ -4,11 +4,6 @@ import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider";
 import { Box } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-import {
-  borderRadius,
-  defaultPadding,
-  greyColor,
-} from "../../../helper/constant";
 import Tick from "./sliderComponents/ticks/Tick";
 import SmallTick from "./sliderComponents/ticks/SmallTick";
 import NameTick from "./sliderComponents/ticks/NameTick";
@@ -30,8 +25,8 @@ const railStyle = {
   height: 2.5,
   zIndex: 1,
   marginTop: marginTop,
-  borderRadius: borderRadius,
-  backgroundColor: greyColor,
+  borderRadius: "40px",
+  backgroundColor: "#AAAAAA",
 };
 
 function SliderComponent(props) {
@@ -56,7 +51,7 @@ function SliderComponent(props) {
   const namesTicks = [-1.5, -0.5, 0.5, 1.5, 2.5, 3.5];
 
   return (
-    <Box marginTop={defaultPadding}>
+    <Box marginTop={10}>
       <Slider
         rootStyle={sliderStyle}
         domain={[-2, 4]}

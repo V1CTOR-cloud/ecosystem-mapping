@@ -5,24 +5,21 @@ import styled from "styled-components";
 import { Text, Center, Box } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
+import ServiceContainer from "../service/ServiceContainer";
 import {
-  greyHoverColor,
   market,
   market_and_organization,
-  mediumPadding,
   organization,
-  smallPadding,
 } from "../../../../helper/constant";
-import ServiceContainer from "../service/ServiceContainer";
 
 const RowContainer = styled.div`
   background: ${({ isDraggingOver }) =>
-    isDraggingOver ? greyHoverColor : "transparent"};
+    isDraggingOver ? "#BFBFBF" : "transparent"};
   transition: background-color 0.1s ease-in-out;
   flex-grow: 1;
   min-height: 180px;
-  margin-bottom: ${(props) => (props.id === organization ? 0 : mediumPadding)};
-  margin-top: ${(props) => (props.id === market ? smallPadding : 0)};
+  margin-bottom: ${(props) => (props.id === organization ? 0 : "24px")};
+  margin-top: ${(props) => (props.id === market ? "12px" : 0)};
   position: relative;
 `;
 
@@ -110,12 +107,13 @@ function Row(props) {
                       <NumberContainer key={number}>
                         <Box
                           borderRadius="50%"
-                          border={`2px solid ${greyHoverColor}`}
+                          border={"2px solid"}
+                          borderColor={"blackAlpha.500"}
                           w="70px"
                           h="70px"
                         >
                           <Center h="100%" w="100%">
-                            <Text fontSize="30px" textColor={greyHoverColor}>
+                            <Text fontSize="30px" textColor={"blackAlpha.500"}>
                               {number}
                             </Text>
                           </Center>

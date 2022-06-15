@@ -4,27 +4,20 @@ import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
 import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
-import { Accordion } from "@chakra-ui/react";
+import { Accordion, Button } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-
-import ButtonComponent from "../../basic/buttons/ButtonComponent";
-import AccordionItemComponent from "./AccordionItemComponent";
-import {
-  blackColor,
-  blueColor,
-  smallPadding,
-  whiteColor,
-} from "../../../helper/constant";
 import PropTypes from "prop-types";
+
+import AccordionItemComponent from "./AccordionItemComponent";
 
 const SideBarContainer = styled.div`
   position: absolute;
-  background-color: ${whiteColor};
+  background-color: white;
   z-index: 100;
   width: 50px;
   // Height depending of the filter bar: 75px for the navbar and 60px for the filter bar when open
-  height: ${(props) =>
-    props.isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
+  height: ${({ isFilterOpen }) =>
+    isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
 
   &:hover {
     width: 250px
@@ -45,47 +38,31 @@ function SideBar(props) {
     {
       key: 0,
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
-      icon: [
-        <TableChart key={0} color={blueColor} />,
-        <TableChart key={1} color={blackColor} />,
-      ],
+      icon: <TableChart />,
       children: [
-        <ButtonComponent
+        <Button
           key="Financing"
-          buttonText="Financing"
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => {}}
-          width="100%"
-          padding={`0 ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />,
-        <ButtonComponent
-          key="Business Model"
-          buttonText="Business Model"
-          isPrimary={true}
-          onClick={() => {}}
-          width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />,
+        >
+          Financing
+        </Button>,
+        <Button key="Business Model" w="100%" onClick={() => {}}>
+          Business Model
+        </Button>,
       ],
     },
     {
       key: 1,
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
-      icon: [
-        <Draft key={0} color={blueColor} />,
-        <Draft key={1} color={blackColor} />,
-      ],
+      icon: <Draft />,
       children: [],
     },
     {
       key: 2,
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
-      icon: [
-        <Archive key={0} color={blueColor} />,
-        <Archive key={1} color={blackColor} />,
-      ],
+      icon: <Archive />,
       children: [],
     },
   ];
@@ -99,36 +76,30 @@ function SideBar(props) {
 
     archivedData.forEach((service) => {
       accordionButtons[2].children.push(
-        <ButtonComponent
+        <Button
           key={service.id}
-          buttonText={service.serviceName}
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => handleDraftOrArchivedServiceClick(service)}
-          width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />
+        >
+          {service.serviceName}
+        </Button>
       );
     });
 
     draftData.forEach((service) => {
       accordionButtons[1].children.push(
-        <ButtonComponent
+        <Button
           key={service.id}
-          buttonText={service.serviceName}
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => handleDraftOrArchivedServiceClick(service)}
-          width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />
+        >
+          {service.serviceName}
+        </Button>
       );
     });
   });
-
-  function handleClick() {
-    //todo
-  }
 
   function handleOnMouseOver() {
     setIsCollapsed(false);
@@ -153,7 +124,6 @@ function SideBar(props) {
         {accordionButtons.map((thisAccordionButtons) => (
           <AccordionItemComponent
             key={thisAccordionButtons.key}
-            onClick={handleClick}
             isCollapsed={isCollapsed}
             button={thisAccordionButtons}
           />

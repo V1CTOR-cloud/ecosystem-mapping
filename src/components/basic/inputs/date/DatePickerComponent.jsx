@@ -5,8 +5,8 @@ import Flatpickr from "react-flatpickr";
 import PropTypes from "prop-types";
 
 function DatePickerComponent(props) {
-  const { date, handleDateChange } = props;
-  const [value, setValue] = useState(date);
+  const { initialDate, handleDateChange } = props;
+  const [value, setValue] = useState(initialDate);
 
   function handleOnChange(value) {
     setValue(new Date(value));
@@ -24,7 +24,7 @@ function DatePickerComponent(props) {
 }
 
 DatePickerComponent.propTypes = {
-  date: PropTypes.instanceOf(Date).isRequired,
+  initialDate: PropTypes.instanceOf(Date).isRequired,
   handleDateChange: PropTypes.func.isRequired,
 };
 
