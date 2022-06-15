@@ -1,9 +1,11 @@
+import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
+
 import { fonts } from "./fonts/fonts";
 import { colors } from "./colors/colors";
 import { text } from "./components/text";
 import { input } from "./components/input";
 import { button } from "./components/button";
-import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
+import { tabs } from "./components/tabs";
 
 export const theme = extendTheme(
   withDefaultColorScheme({ colorScheme: "brand" }),
@@ -14,6 +16,8 @@ export const theme = extendTheme(
       Text: text,
       Button: button,
       Input: input,
+      NumberInput: input,
+      Tabs: tabs,
     },
   }
 );

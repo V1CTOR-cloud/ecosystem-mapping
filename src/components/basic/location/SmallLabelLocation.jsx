@@ -16,7 +16,7 @@ function SmallLabelLocation(props) {
         wantScroll={wantScroll}
         width="140px"
         items={items}
-        item={item}
+        initialValue={item}
         onChange={onChange}
         isDisabled={isDisabled}
       />

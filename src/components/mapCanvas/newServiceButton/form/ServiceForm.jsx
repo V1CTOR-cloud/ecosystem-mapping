@@ -542,7 +542,7 @@ function ServiceForm(props) {
               <FormControl isInvalid={isError}>
                 <InputComponent
                   isRequired={true}
-                  propValue={formValue["serviceName"]}
+                  initialValue={formValue["serviceName"]}
                   placeholder={t("mapping.canvas.form.service.name")}
                   onChange={(serviceName) => {
                     formValue["serviceName"] = serviceName;

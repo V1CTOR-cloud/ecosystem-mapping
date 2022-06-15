@@ -4,8 +4,8 @@ import { Input } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 function InputComponent(props) {
-  const { propValue, onChange, isRequired, placeholder } = props;
-  const [value, setValue] = useState(propValue);
+  const { initialValue, onChange, isRequired, placeholder } = props;
+  const [value, setValue] = useState(initialValue);
 
   function handleOnChange(event) {
     setValue(event.target.value);
@@ -29,7 +29,7 @@ InputComponent.defaultProps = {
 
 InputComponent.propTypes = {
   isRequired: PropTypes.bool,
-  propValue: PropTypes.string,
+  initialValue: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };

@@ -7,8 +7,14 @@ import MultilineInputComponent from "./MultilineInputComponent";
 import LabelWithTooltip from "../../../labelWithTooltip/LabelWithTooltip";
 
 function LabeledMultilineInputComponent(props) {
-  const { tooltipText, tooltipAriaLabel, label, value, placeholder, onChange } =
-    props;
+  const {
+    tooltipText,
+    tooltipAriaLabel,
+    label,
+    initialValue,
+    placeholder,
+    onChange,
+  } = props;
 
   return (
     <Box>
@@ -18,7 +24,7 @@ function LabeledMultilineInputComponent(props) {
         label={label}
       />
       <MultilineInputComponent
-        propValue={value}
+        initialValue={initialValue}
         placeholder={placeholder}
         onChange={onChange}
       />
@@ -30,7 +36,7 @@ LabeledMultilineInputComponent.propTypes = {
   tooltipText: PropTypes.string.isRequired,
   tooltipAriaLabel: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  initialValue: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
