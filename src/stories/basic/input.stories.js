@@ -14,6 +14,9 @@ import NumberInputComponent from "../../components/basic/inputs/input/numberInpu
 export default {
   title: "Mapping App/Basic/Input",
   component: MultilineInputComponent,
+  parameters: {
+    componentSubtitle: "Allow the user to enter some value in the fields.",
+  },
   argTypes: {
     placeholder: {
       description:
@@ -31,6 +34,10 @@ export default {
     initialValue: {
       description:
         "Value that is given to the field during the first render of the component.",
+    },
+    onChange: {
+      description:
+        "Function that will update the value of the model with a setState for example.",
     },
   },
 };
