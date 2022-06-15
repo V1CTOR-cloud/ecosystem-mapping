@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { GridItem, Text, Box, Flex, Grid, Checkbox, Button, InputGroup, Input, Stack, Image, Tab, Tabs, TabPanel, TabPanels, TabList, InputLeftElement } from '@chakra-ui/react';
+import { GridItem, Box, Flex, Grid, Checkbox, Button, InputGroup, Input, Stack, Image, Tab, Tabs, TabPanel, TabPanels, TabList, InputLeftElement } from '@chakra-ui/react';
 import styled from "styled-components";
 import CirclepassLogo from './../assets/images/CirclepassLogo.png';
-import { Icon } from '@iconify/react';
+import {Tag, Unlock} from '@styled-icons/bootstrap';
 
 const LeftSideWrapper = styled.section `
     display: flex;
@@ -166,7 +166,6 @@ flex: none;
 order: 0;
 flex-grow: 0;
 `
-
 export class Auth extends Component {
   render() {
     return (
@@ -211,23 +210,29 @@ export class Auth extends Component {
                                         <InputGroup>
                                             <InputLeftElement
                                             pointerEvents='none'
-                                            children={<Icon fontSize="20px" color='#A3A3A3' icon="mdi:tag-outline" />}
+                                            ><Tag
+                                            size="20"
+                                            color='#A3A3A3'
                                             />
-                                                <Input  width='90%'  bgColor='#ffffff' type='Username' placeholder='    Username' />
-                                        </InputGroup>
-                                        <Explanation>
-                                            Enter the username you have registered with
-                                        </Explanation>
+                                    </InputLeftElement>
+                                        <Input  width='90%'  bgColor='#ffffff' type='Username' placeholder='    Username' />
+                                    </InputGroup>
+                                    <Explanation>
+                                        Enter the username you have registered with
+                                    </Explanation>
                                     </Box>
                                     <Box>
                                     <Username color='#001011' size='16px' lineHeight='24px'>
                                         Password
                                     </Username>
                                     <InputGroup>
-                                        <InputLeftElement
-                                            pointerEvents='none'
-                                            children={<Icon fontSize="20px" color='#A3A3A3' icon="mdi:lock-open-outline" />}
+                                    <InputLeftElement
+                                        pointerEvents='none'
+                                        ><Unlock
+                                        color='#A3A3A3'
+                                        size="20"
                                         />
+                                    </InputLeftElement>
                                         <Input width='90%'  bgColor='#ffffff' type='Password' placeholder='    Password' />
                                     </InputGroup>
                                     <Explanation>
@@ -261,7 +266,7 @@ export class Auth extends Component {
                                         </SignInWrapper>
                                         </Button>
                                     </Stack>
-
+                                    {/* Some changes to be done... */}
                                     <Box
                                     marginTop={'230px'} marginLeft={'150px'}
                                     >

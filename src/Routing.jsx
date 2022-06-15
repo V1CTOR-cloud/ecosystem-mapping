@@ -7,6 +7,7 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 const Home = lazy(() => import("./pages/LandingPage"));
 const MapList = lazy(() => import("./pages/ListMapPage"));
 const Canvas = lazy(() => import("./pages/MapCanvasPage"));
+const Auth = lazy(()=>import("./pages/Auth"));
 
 function Routing() {
   // TODO once the auth is ready check if the user is connected
@@ -19,6 +20,8 @@ function Routing() {
           <Route path="/" element={<Home />} exact />
           <Route path="/dashboard" element={<MapList />} exact />
           <Route path="/dashboard/:mapId" element={<Canvas />} exact />
+          <Route path="/dashboard/:mapId" element={<Canvas />} exact />
+          <Route path="/authentication" element={<Auth />} exact />
           <Route path="*" element={<div>404 Not found</div>} />
         </Routes>
       </Router>
