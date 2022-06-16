@@ -53,7 +53,7 @@ function ServiceName(props) {
             color={textColor}
             textOverflow="ellipsis"
             overflow="hidden"
-            whiteSpace="nonwrap"
+            whiteSpace="nowrap"
           >
             {service.serviceName}
           </Text>

@@ -2,7 +2,7 @@ export const button = {
   baseStyle: {
     fontWeight: "normal",
     paddingX: 3,
-    whiteSpace: "nonwrap",
+    whiteSpace: "nowrap",
     _focus: {
       boxShadow: "none",
     },
