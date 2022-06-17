@@ -124,6 +124,7 @@ GridMap.defaultProps = {
       mainIndustry: "",
       subIndustry: "",
     },
+    services: [],
   },
 };
 
