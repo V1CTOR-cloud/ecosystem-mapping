@@ -1,0 +1,33 @@
+import { Meta, Story } from "@storybook/addon-docs";
+
+import { withChakra } from "../../../.storybook/preview";
+
+<Meta
+  title="Mapping App/Dashboard/Map view/Overview"
+  decorators={[withChakra]}
+/>
+
+# Map view
+
+This is the views that are available for displaying a map in the dashboard.
+
+You can rapidly see the title, owner, last modification, industries and location of the map.
+In addition, you can have access to a menu by clicking on the 3 dots icon.
+You will have access to the modification of the essential information, duplicate it, sharing or sending the map to the archive.
+
+## Grid
+
+Use the grid view when you want to display essential information in a condensed square format.
+
+<Story id="mapping-app-dashboard-map-view--grid" />
+
+[See the args table of this component](?path=/docs/mapping-app-dashboard-map-view--grid)
+
+
+## List
+
+Use the list view when you want to display essential information in a large horizontal format.
+
+<Story id="mapping-app-dashboard-map-view--list" />
+
+[See the args table of this component](?path=/docs/mapping-app-dashboard-map-view--list)
