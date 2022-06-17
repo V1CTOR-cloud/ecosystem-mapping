@@ -61,10 +61,18 @@ function DashboardMenuOptions() {
       >
         <ThreeDotsVertical size="1.5rem" />
       </MenuButton>
-      <MenuList w="300px">
-        {menuOptions.map((button) => {
+      <MenuList w="300px" padding={0}>
+        {menuOptions.map((button, index) => {
           return (
-            <MenuItem className="menuItem" key={button.id}>
+            <MenuItem
+              className="menuItem"
+              key={button.id}
+              _hover={{
+                backgroundColor: index === 3 ? "red.100" : undefined,
+              }}
+              borderTopRadius={index === 0 ? "base" : undefined}
+              borderBottomRadius={index === 3 ? "base" : undefined}
+            >
               <HStack>
                 <Box>{button.icon}</Box>
                 <VStack paddingLeft="2" spacing="0">
@@ -75,7 +83,7 @@ function DashboardMenuOptions() {
                     transition={transition}
                     sx={{
                       ".menuItem:hover &": {
-                        color: "brand.500",
+                        color: index === 3 ? "red" : "brand.500",
                       },
                     }}
                   >
