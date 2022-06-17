@@ -1,23 +1,10 @@
 import React from "react";
 
-import {
-  Box,
-  HStack,
-  VStack,
-  Text,
-  Image,
-  Menu,
-  MenuList,
-  MenuItem,
-  Button,
-  MenuButton,
-  Spacer,
-} from "@chakra-ui/react";
-import { Share, ThreeDotsVertical } from "@styled-icons/bootstrap";
+import { Box, HStack, VStack, Text, Image, Spacer } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { CopyIcon, EditIcon } from "@chakra-ui/icons";
-import { Archive } from "@styled-icons/boxicons-regular";
+
+import DashboardMenuOptions from "./DashboardMenuOptions";
 
 function ListMap(props) {
   const { data } = props;
@@ -25,37 +12,6 @@ function ListMap(props) {
   const transition = "color 0.25s";
   const groupBlackColor = { color: "black" };
   const greyColor = "blackAlpha.500";
-
-  const dashboardMenuOptions = [
-    {
-      id: 0,
-      title: "Edit",
-      description: "Change the name or other info of the map.",
-      icon: <EditIcon w="25px" h="25px" />,
-      buttonFunction: () => console.log("Edit"),
-    },
-    {
-      id: 1,
-      title: "Duplicate",
-      description: "Create a new Ecosystem map with the same settings",
-      icon: <CopyIcon w="25px" h="25px" />,
-      buttonFunction: () => console.log("Duplicate"),
-    },
-    {
-      id: 2,
-      title: "Share",
-      description: "Invite others to collaborate on developing the map",
-      icon: <Share size="25px" />,
-      buttonFunction: () => console.log("Share"),
-    },
-    {
-      id: 3,
-      title: "Archive",
-      description: "Move the ecosystem map and mark it as unpublished",
-      icon: <Archive size="25px" />,
-      buttonFunction: () => console.log("Archive"),
-    },
-  ];
 
   return (
     <Box role="group">
@@ -139,35 +95,7 @@ function ListMap(props) {
               alignItems="end"
               paddingLeft={5}
             >
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  size="sm"
-                  variant="greyGhost"
-                  borderColor="blackAlpha.500"
-                  _hover={{ bg: "blackAlpha.200" }}
-                  _active={{ bg: "blackAlpha.300" }}
-                >
-                  <ThreeDotsVertical size="1.5rem" />
-                </MenuButton>
-                <MenuList w="300px">
-                  {dashboardMenuOptions.map((button) => {
-                    return (
-                      <MenuItem key={button.id}>
-                        <HStack>
-                          <Box>{button.icon}</Box>
-                          <VStack paddingLeft="2" spacing="0">
-                            <Text w="100%" fontSize="ms">
-                              {button.title}
-                            </Text>
-                            <Text fontSize="xs">{button.description}</Text>
-                          </VStack>
-                        </HStack>
-                      </MenuItem>
-                    );
-                  })}
-                </MenuList>
-              </Menu>
+              <DashboardMenuOptions />
               <Text
                 color={greyColor}
                 transition={transition}
