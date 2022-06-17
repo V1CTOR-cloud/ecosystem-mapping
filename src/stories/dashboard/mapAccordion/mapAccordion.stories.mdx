@@ -1,0 +1,46 @@
+import { Meta, Story } from "@storybook/addon-docs";
+
+import { withChakra } from "/.storybook/preview";
+import MapAccordion
+  from "../../../components/dashboard/mapAccordion/MapAccordion";
+
+<Meta
+  title="Mapping App/Dashboard/Accordion/Overview"
+  component={MapAccordion}
+  decorators={[withChakra]}
+/>
+
+# Dashboard accordion
+
+Those accordion are meant for the dashboard in order to display the user's ecosystem map.
+
+We will have a quick overview of all the maps available for each category: the user maps, shared with the user and
+the map that has been archived.
+The user will have the possibility to toggle between two views: **grid** and **list** view.
+
+export const Template = (args) => <MapAccordion {...args} />;
+
+
+## Empty
+
+Component that will be displayed when the content of the panel is empty.
+
+<Story id="mapping-app-dashboard-accordion--empty" />
+
+[See the args table of this component](?path=/docs/mapping-app-dashboard-accordion--empty)
+
+## Grid
+
+This is the grid view that display a condensed horizontal view.
+
+<Story id="mapping-app-dashboard-accordion--grid" />
+
+[See the args table of this component](?path=/docs/mapping-app-dashboard-accordion--grid)
+
+## List
+
+This is the list view that display a condensed vertical view.
+
+<Story id="mapping-app-dashboard-accordion--list" />
+
+[See the args table of this component](?path=/docs/mapping-app-dashboard-accordion--list)
