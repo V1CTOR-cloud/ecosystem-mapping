@@ -1,29 +1,29 @@
 import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 import moment from "moment";
 
-import GridMap from "../../components/dashboard/mapView/GridMap";
-import { withChakra } from "../../../.storybook/preview";
+import { withChakra } from "../../../../.storybook/preview";
+import ListMap from "../../../components/dashboard/mapView/ListMap";
 
 <Meta
   title="Mapping App/Dashboard/Map view"
-  component={GridMap}
+  component={ListMap}
   decorators={[withChakra]}
 />
 
-# Grid View
+# List View
 
-export const GridTemplate = (args) => <GridMap {...args} />;
+export const ListTemplate = (args) => <ListMap {...args} />;
 
 <Canvas>
   <Story
-    name="Grid"
+    name="List"
     args={{
       data: {
         id: "",
         mapStatus: "",
         title: "Title",
         owner: {
-          profileName: "Mickaël Benasse",
+          profileName: "Digiole",
         },
         created: moment().format("DD-MM-YYYY"),
         lastModification: moment().format("DD-MM-YYYY"),
@@ -36,15 +36,15 @@ export const GridTemplate = (args) => <GridMap {...args} />;
         },
         industry: {
           mainIndustry: "Information Technology",
-          subIndustry: "",
+          subIndustry: " rze z er rez ",
         },
+        services: []
       },
     }}
   >
-    {GridTemplate.bind({})}
+    {ListTemplate.bind({})}
+    }} />
   </Story>
 </Canvas>
 
-
-<ArgsTable story="Grid" />
-
+<ArgsTable story="List" />
