@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { HStack } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 import SmallLabelLocation from "./SmallLabelLocation";
-import LabelWithTooltip from "../labelWithTooltip/LabelWithTooltip";
-import { AppProvider } from "../../../App";
 
 const initialContinentList = [{ id: 0, name: "Continent" }];
 const initialCountryList = [{ id: 0, name: "Country" }];
@@ -14,10 +12,9 @@ const initialRegionList = [{ id: 0, name: "Region" }];
 const initialCityList = [{ id: 0, name: "City" }];
 
 function LocationComponent(props) {
-  const { initialLocation, onChange } = props;
+  const { initialLocation, onChange, locationsList } = props;
 
   const { t } = useTranslation();
-  const appProvider = useContext(AppProvider);
   const [continentList, setContinentList] = useState(initialContinentList);
   const [countryList, setCountryList] = useState(initialCountryList);
   const [regionList, setRegionList] = useState(initialRegionList);
@@ -64,7 +61,7 @@ function LocationComponent(props) {
   useEffect(() => {
     const tempContinentList = [...initialContinentList];
 
-    appProvider.locations.forEach((country) => {
+    locationsList.forEach((country) => {
       const containsContinent = tempContinentList.some(
         (continent) => continent.name === country.continent
       );
@@ -79,13 +76,13 @@ function LocationComponent(props) {
     });
 
     setContinentList(tempContinentList);
-  }, [appProvider.locations]);
+  }, [locationsList]);
 
   // Populate the list of country (run everyTime we change the country)
   useEffect(() => {
     const tempCountryList = [...initialCountryList];
 
-    appProvider.locations.forEach((country) => {
+    locationsList.forEach((country) => {
       if (country.continent === continent) {
         const containsCountry = tempCountryList.some(
           (country) => country.name === country.country
@@ -103,7 +100,7 @@ function LocationComponent(props) {
     });
 
     setCountryList(tempCountryList);
-  }, [continent, appProvider.locations]);
+  }, [continent, locationsList]);
 
   // Populate the list of region (run everyTime we change the country)
   useEffect(() => {
@@ -195,53 +192,47 @@ function LocationComponent(props) {
   }
 
   return (
-    <>
-      <LabelWithTooltip
-        tooltipText={t("mapping.canvas.form.location.tooltip")}
-        label={t("mapping.canvas.form.location")}
-        tooltipAriaLabel={t("mapping.canvas.form.location")}
+    <HStack justifyContent="space-between">
+      <SmallLabelLocation
+        label={t("common.continent")}
+        items={continentList}
+        item={location.continent}
+        onChange={(region) => handleContinentChange(region)}
       />
-      <HStack justifyContent="space-between">
-        <SmallLabelLocation
-          label={t("common.continent")}
-          items={continentList}
-          item={location.continent}
-          onChange={(region) => handleContinentChange(region)}
-        />
-        <SmallLabelLocation
-          label={t("common.country")}
-          wantScroll={true}
-          isDisabled={location.continent === continentList[0].name}
-          items={countryList}
-          item={location.country}
-          onChange={(country) => handleCountryChange(country)}
-        />
-        <SmallLabelLocation
-          label={t("common.region")}
-          wantScroll={true}
-          isDisabled={
-            location.country === countryList[0].name || regionList.length === 1
-          }
-          items={regionList}
-          item={location.region}
-          onChange={(region) => handleRegionChange(region)}
-        />
-        <SmallLabelLocation
-          label={t("common.city")}
-          wantScroll={true}
-          isDisabled={
-            location.region === regionList[0].name || cityList.length === 1
-          }
-          items={cityList}
-          item={location.city}
-          onChange={(city) => handleCityChange(city)}
-        />
-      </HStack>
-    </>
+      <SmallLabelLocation
+        label={t("common.country")}
+        wantScroll={true}
+        isDisabled={location.continent === continentList[0].name}
+        items={countryList}
+        item={location.country}
+        onChange={(country) => handleCountryChange(country)}
+      />
+      <SmallLabelLocation
+        label={t("common.region")}
+        wantScroll={true}
+        isDisabled={
+          location.country === countryList[0].name || regionList.length === 1
+        }
+        items={regionList}
+        item={location.region}
+        onChange={(region) => handleRegionChange(region)}
+      />
+      <SmallLabelLocation
+        label={t("common.city")}
+        wantScroll={true}
+        isDisabled={
+          location.region === regionList[0].name || cityList.length === 1
+        }
+        items={cityList}
+        item={location.city}
+        onChange={(city) => handleCityChange(city)}
+      />
+    </HStack>
   );
 }
 
 LocationComponent.propTypes = {
+  locationsList: PropTypes.array.isRequired,
   initialLocation: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
 };
