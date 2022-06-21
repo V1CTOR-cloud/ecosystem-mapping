@@ -1,0 +1,111 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import { withChakra } from "../../../../.storybook/preview";
+import { Location } from "/src/service/location";
+import MultiLocationPicker from "../../../components/basic/newLocation/MultiLocationPicker";
+
+<Meta
+  title="Mapping App/Basic/Location/Multiple Locations"
+  component={MultiLocationPicker}
+  decorators={[withChakra]}
+/>
+
+export const Template = (args, { loaded: { locations } }) => <MultiLocationPicker {...args} locationsList={locations} />
+
+# Multiple Location
+
+The component displayed is a multiple location selection, we can then select more than one location.
+
+## Without initials values
+
+<Canvas>
+  <Story
+    name="Without initials values"
+    height="200px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+    args={{
+      initialValues: [{
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      }],
+      onChange: () => {
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Without initials values" />
+
+## With initials values
+
+### With only one value
+
+<Canvas>
+  <Story
+    name="With one initial values"
+    height="200px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+    args={{
+      initialValues: [{
+        continent: "Europe",
+        country: "Finland",
+        region: "Uusimaa",
+        city: null,
+      }],
+      onChange: () => {
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="With one initial values" />
+
+### With multiple values
+
+<Canvas>
+  <Story
+    name="With initials values"
+    height="200px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+    args={{
+      initialValues: [{
+        continent: "Europe",
+        country: "Finland",
+        region: "Uusimaa",
+        city: null,
+      }, {
+        continent: "Europe",
+        country: "France",
+        region: null,
+        city: null,
+      }],
+      onChange: () => {
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="With initials values" />
