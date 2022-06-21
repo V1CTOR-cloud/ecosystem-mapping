@@ -24,11 +24,13 @@ import LabeledMultilineInputComponent from "../../../../basic/inputs/input/multi
 import MenuComponent from "../../../../basic/inputs/menu/MenuComponent";
 import LocationComponent from "../../../../basic/location/LocationComponent";
 import { CanvasProvider } from "../../../../../pages/MapCanvasPage";
+import { AppProvider } from "../../../../../App";
 
 function ServiceTabs(props) {
   const { formValue, applicationTypeButtons, audiences, organisations } = props;
   const { t } = useTranslation();
   const canvasProvider = useContext(CanvasProvider);
+  const appProvider = useContext(AppProvider);
 
   return (
     <Tabs marginTop={6}>
@@ -112,6 +114,7 @@ function ServiceTabs(props) {
             <LocationComponent
               initialLocation={formValue["serviceLocation"]}
               onChange={(location) => (formValue["serviceLocation"] = location)}
+              locationList={appProvider.locations}
             />
           </Box>
           <Box marginTop={6}>
