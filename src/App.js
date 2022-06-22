@@ -60,7 +60,10 @@ function App() {
 
         const formattedLocations = Location.formatLocations(values[0]);
 
-        setData({ locations: formattedLocations, industries: values[1] });
+        setData({
+          locations: formattedLocations,
+          industries: values[1].industries,
+        });
       })
       .catch((error) => console.log(error));
   }, []);
