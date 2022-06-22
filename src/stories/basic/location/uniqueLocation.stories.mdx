@@ -1,0 +1,91 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import { withChakra } from "../../../../.storybook/preview";
+import { Location } from "/src/service/location";
+import UniqueLocation from "../../../components/basic/location/UniqueLocation";
+
+<Meta
+  title="Mapping App/Basic/Location/Unique Location"
+  component={UniqueLocation}
+  decorators={[withChakra]}
+/>
+
+# Unique Location
+
+The component displayed is a unique location selection, we can then select only one location.
+
+## Without initials values
+
+<Canvas>
+  <Story
+    name="Without initial value"
+    height="250px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+    args={{
+      initialValue: {
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      }
+    }}
+  >
+    {(args, { loaded: { locations } }) => <UniqueLocation
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValue={{
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      }}
+    />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Without initial value" />
+
+## With initials values
+
+### With only one value
+
+<Canvas>
+  <Story
+    name="With initial value"
+    height="250px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+    args={{
+      initialValue: {
+        continent: "Europe",
+        country: "Finland",
+        region: "Uusimaa",
+        city: null,
+      }
+    }}
+  >
+    {(args, { loaded: { locations } }) => <UniqueLocation
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValue={{
+        continent: "Europe",
+        country: "Finland",
+        region: "Uusimaa",
+        city: null,
+      }}
+    />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="With initial value" />
