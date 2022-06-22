@@ -2,7 +2,7 @@ import React from "react";
 
 import { Image, Box, Flex } from "@chakra-ui/react";
 
-import imgSource from "../../assets/images/In-HouseFinanceProfessional12.png";
+import imgSource from "../../assets/images/LandingPageImage.png";
 
 const DashboardImages = () => {
   return (
