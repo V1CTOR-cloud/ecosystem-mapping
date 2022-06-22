@@ -26,14 +26,6 @@ The component displayed is a multiple location selection, we can then select mor
         locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
       }),
     ]}
-    args={{
-      initialsValues: [{
-        continent: null,
-        country: null,
-        region: null,
-        city: null,
-      }]
-    }}
   >
     {(args, { loaded: { locations } }) => <MultiLocationPicker
       {...args}
@@ -66,14 +58,6 @@ The component displayed is a multiple location selection, we can then select mor
         locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
       }),
     ]}
-    args={{
-      initialsValues: [{
-        continent: "Europe",
-        country: "Finland",
-        region: "Uusimaa",
-        city: null,
-      }]
-    }}
   >
     {(args, { loaded: { locations } }) => <MultiLocationPicker
       {...args}
@@ -104,19 +88,6 @@ The component displayed is a multiple location selection, we can then select mor
         locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
       }),
     ]}
-    args={{
-      initialsValues: [{
-        continent: "Europe",
-        country: "Finland",
-        region: "Uusimaa",
-        city: null,
-      }, {
-        continent: "Europe",
-        country: "France",
-        region: null,
-        city: null,
-      }]
-    }}
   >
     {(args, { loaded: { locations } }) => <MultiLocationPicker
       {...args}
