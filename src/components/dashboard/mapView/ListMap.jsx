@@ -13,6 +13,10 @@ function ListMap(props) {
   const groupBlackColor = { color: "black" };
   const greyColor = "blackAlpha.500";
 
+  function formatString(variable) {
+    return variable === null ? "" : variable;
+  }
+
   return (
     <Box role="group">
       <Box
@@ -49,13 +53,13 @@ function ListMap(props) {
                 transition={transition}
                 _groupHover={groupBlackColor}
               >
-                {data.location.continent +
+                {formatString(data.location[0].continent) +
                   " " +
-                  data.location.country +
+                  formatString(data.location[0].country) +
                   " " +
-                  data.location.region +
+                  formatString(data.location[0].region) +
                   " " +
-                  data.location.city}
+                  formatString(data.location[0].city)}
               </Text>
               <Text
                 color={greyColor}
@@ -63,7 +67,9 @@ function ListMap(props) {
                 transition={transition}
                 _groupHover={groupBlackColor}
               >
-                {data.industry.mainIndustry + " " + data.industry.subIndustry}
+                {formatString(data.industry[0].mainIndustry) +
+                  " " +
+                  formatString(data.industry[0].subIndustry)}
               </Text>
             </VStack>
             <Spacer />
@@ -87,7 +93,8 @@ function ListMap(props) {
               transition={transition}
               _groupHover={groupBlackColor}
             >
-              Created: {data.created}
+              Created:
+              {" " + moment(data.creation, "YYYY-MM-DD").format("DD-MM-YYYY")}
             </Text>
             <VStack
               h="100%"
@@ -101,7 +108,11 @@ function ListMap(props) {
                 transition={transition}
                 _groupHover={groupBlackColor}
               >
-                Modified: {data.created}
+                Modified:{" "}
+                {" " +
+                  moment(data.lastModification, "YYYY-MM-DD").format(
+                    "DD-MM-YYYY"
+                  )}
               </Text>
             </VStack>
           </HStack>

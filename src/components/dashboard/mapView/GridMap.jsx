@@ -13,6 +13,10 @@ function GridMap(props) {
   const groupBlackColor = { color: "black" };
   const greyColor = "blackAlpha.500";
 
+  function formatString(variable) {
+    return variable === null ? "" : variable;
+  }
+
   return (
     <Box role="group" w="300px" h="275px">
       <Box
@@ -53,7 +57,9 @@ function GridMap(props) {
             transition={transition}
             _groupHover={groupBlackColor}
           >
-            Modified: {data.lastModification}
+            Modified:
+            {" " +
+              moment(data.lastModification, "YYYY-MM-DD").format("DD-MM-YYYY")}
           </Text>
           <Image
             h="100%"
@@ -75,13 +81,13 @@ function GridMap(props) {
             transition={transition}
             _groupHover={groupBlackColor}
           >
-            {data.location.continent +
+            {formatString(data.location[0].continent) +
               " " +
-              data.location.country +
+              formatString(data.location[0].country) +
               " " +
-              data.location.region +
+              formatString(data.location[0].region) +
               " " +
-              data.location.city}
+              formatString(data.location[0].city)}
           </Text>
           <Text
             h="2.8rem"
@@ -93,7 +99,9 @@ function GridMap(props) {
             transition={transition}
             _groupHover={groupBlackColor}
           >
-            {data.industry.mainIndustry + " " + data.industry.subIndustry}
+            {formatString(data.industry[0].mainIndustry) +
+              " " +
+              formatString(data.industry[0].subIndustry)}
           </Text>
         </VStack>
       </Box>
