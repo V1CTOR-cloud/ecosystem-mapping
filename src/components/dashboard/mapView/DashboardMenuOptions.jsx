@@ -29,21 +29,21 @@ function DashboardMenuOptions() {
     {
       id: 1,
       title: "Duplicate",
-      description: "Create a new Ecosystem map with the same settings",
+      description: "Create a new Ecosystem map with the same settings.",
       icon: <CopyIcon w="25px" h="25px" />,
       buttonFunction: () => console.log("Duplicate"),
     },
     {
       id: 2,
       title: "Share",
-      description: "Invite others to collaborate on developing the map",
+      description: "Invite others to collaborate on developing the map.",
       icon: <Share size="25px" />,
       buttonFunction: () => console.log("Share"),
     },
     {
       id: 3,
       title: "Archive",
-      description: "Move the ecosystem map and mark it as unpublished",
+      description: "Move the ecosystem map and mark it as unpublished.",
       icon: <Archive size="25px" />,
       buttonFunction: () => console.log("Archive"),
     },
@@ -59,9 +59,9 @@ function DashboardMenuOptions() {
         _hover={{ bg: "blackAlpha.200" }}
         _active={{ bg: "blackAlpha.300" }}
       >
-        <ThreeDotsVertical size="1.5rem" />
+        <ThreeDotsVertical size="22.5px" />
       </MenuButton>
-      <MenuList w="300px" padding={0}>
+      <MenuList w="300px">
         {menuOptions.map((button, index) => {
           return (
             <MenuItem
@@ -79,7 +79,7 @@ function DashboardMenuOptions() {
                   <Text
                     className="title"
                     w="100%"
-                    fontSize="ms"
+                    fontSize="sm"
                     transition={transition}
                     sx={{
                       ".menuItem:hover &": {
