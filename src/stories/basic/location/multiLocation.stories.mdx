@@ -10,8 +10,6 @@ import MultiLocationPicker from "../../../components/basic/newLocation/MultiLoca
   decorators={[withChakra]}
 />
 
-export const Template = (args, { loaded: { locations } }) => <MultiLocationPicker {...args} locationsList={locations} />
-
 # Multiple Location
 
 The component displayed is a multiple location selection, we can then select more than one location.
@@ -29,17 +27,26 @@ The component displayed is a multiple location selection, we can then select mor
       }),
     ]}
     args={{
-      initialValues: [{
+      initialsValues: [{
         continent: null,
         country: null,
         region: null,
         city: null,
-      }],
-      onChange: () => {
-      },
+      }]
     }}
   >
-    {Template.bind({})}
+    {(args, { loaded: { locations } }) => <MultiLocationPicker
+      {...args}
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValues={[{
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      }]}
+    />}
   </Story>
 </Canvas>
 
@@ -60,17 +67,26 @@ The component displayed is a multiple location selection, we can then select mor
       }),
     ]}
     args={{
-      initialValues: [{
+      initialsValues: [{
         continent: "Europe",
         country: "Finland",
         region: "Uusimaa",
         city: null,
-      }],
-      onChange: () => {
-      },
+      }]
     }}
   >
-    {Template.bind({})}
+    {(args, { loaded: { locations } }) => <MultiLocationPicker
+      {...args}
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValues={[{
+        continent: "Europe",
+        country: "Finland",
+        region: "Uusimaa",
+        city: null,
+      }]}
+    />}
   </Story>
 </Canvas>
 
@@ -89,7 +105,7 @@ The component displayed is a multiple location selection, we can then select mor
       }),
     ]}
     args={{
-      initialValues: [{
+      initialsValues: [{
         continent: "Europe",
         country: "Finland",
         region: "Uusimaa",
@@ -99,12 +115,26 @@ The component displayed is a multiple location selection, we can then select mor
         country: "France",
         region: null,
         city: null,
-      }],
-      onChange: () => {
-      },
+      }]
     }}
   >
-    {Template.bind({})}
+    {(args, { loaded: { locations } }) => <MultiLocationPicker
+      {...args}
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValues={[{
+        continent: "Europe",
+        country: "Finland",
+        region: "Uusimaa",
+        city: null,
+      }, {
+        continent: "Europe",
+        country: "France",
+        region: null,
+        city: null,
+      }]}
+    />}
   </Story>
 </Canvas>
 
