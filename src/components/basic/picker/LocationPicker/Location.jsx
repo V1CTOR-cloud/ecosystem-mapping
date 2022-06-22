@@ -3,8 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { CloseButton, HStack, VStack } from "@chakra-ui/react";
 
-import SmallLabel from "../industry/SmallLabel";
-import SelectComponent from "../inputs/select/SelectComponent";
+import SelectComponent from "../../inputs/select/SelectComponent";
 
 function Location(props) {
   const { locationsState, index, items, onRemoveLocation } = props;
@@ -200,27 +199,31 @@ function Location(props) {
     <VStack align="start">
       {index === 0 && (
         <HStack w="100%">
-          <SmallLabel
+          <SelectComponent
+            isWithLabel={true}
             label={"Continent"}
             items={continentList}
             initialValue={location.continent}
             onChange={(value) => handleContinentChange(value)}
           />
-          <SmallLabel
+          <SelectComponent
+            isWithLabel={true}
             label={"Country"}
             items={countryList}
             initialValue={location.country}
             onChange={(value) => handleCountryChange(value)}
             disabled={continent === null}
           />
-          <SmallLabel
+          <SelectComponent
+            isWithLabel={true}
             label={"Region"}
             items={regionList}
             initialValue={location.region}
             onChange={(value) => handleRegionChange(value)}
             disabled={country === null}
           />
-          <SmallLabel
+          <SelectComponent
+            isWithLabel={true}
             label={"City"}
             items={cityList}
             initialValue={location.city}
@@ -275,7 +278,7 @@ Location.propTypes = {
    */
   onRemoveLocation: PropTypes.func,
   /**
-   * Number that indicate which industry is currently map to get the value and setState it.
+   * Number that indicate which industryPicker is currently map to get the value and setState it.
    */
   index: PropTypes.number.isRequired,
   /**

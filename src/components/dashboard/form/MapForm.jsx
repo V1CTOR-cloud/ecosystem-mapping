@@ -19,8 +19,8 @@ import InputComponent from "../../basic/inputs/input/inputComponent/InputCompone
 import LabelWithTooltip from "../../basic/labelWithTooltip/LabelWithTooltip";
 import LabeledMultilineInputComponent from "../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import { AppProvider } from "../../../App";
-import MultiIndustryPicker from "../../basic/industry/MultiIndustryPicker";
-import MultiLocationPicker from "../../basic/newLocation/MultiLocationPicker";
+import MultiIndustryPicker from "../../basic/picker/industryPicker/MultiIndustryPicker";
+import MultiLocationPicker from "../../basic/picker/LocationPicker/MultiLocationPicker";
 
 function MapForm(props) {
   const { locationsList, industriesList, isOpen, onClose } = props;

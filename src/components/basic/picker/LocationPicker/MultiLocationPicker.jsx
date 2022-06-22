@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Link } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-import LabelWithTooltip from "../labelWithTooltip/LabelWithTooltip";
+import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import Location from "./Location";
 
 function MultiLocationPicker(props) {
