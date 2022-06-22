@@ -2,28 +2,40 @@ import { graphCMSRequest } from "./graphCMS";
 import { Authentication } from "./authentication";
 
 export const Map = {
-
   async getAllUserMaps() {
-    const query = `query MyQuery {
-        ecosystemMaps(where: {cPTUserAccount: {id: "${Authentication.getCurrentUser().id}"}}){
-          id
-          name
-          region
-          country
-          state
-          city
-          industry
-          subIndustry
+    const query = `
+      query getAllUserMaps {
+        ecosystemMaps(where: {owner: {id: "${
+          Authentication.getCurrentUser().id
+        }"}}) {
+          title
+          description
+          mapStatus
+          creation
+          lastModification
+          owner {
+            profileName
+          }
+          location {
+            id
+            continent
+            country
+            region
+            city
+          }
+          industry {
+            id
+            mainIndustry
+            subIndustry
+          }
           services {
             id
           }
         }
       }
-      `;
+    `;
 
-    const { ecosystemMaps } = await graphCMSRequest(query);
-
-    return await ecosystemMaps;
+    return (await graphCMSRequest(query)).ecosystemMaps;
   },
 
   async addMap(data) {
@@ -43,9 +55,9 @@ export const Map = {
         industry: data.industry,
         subIndustry: data.subIndustry,
         cPTUserAccount: {
-          connect: { id: Authentication.getCurrentUser().id }
-        }
-      }
+          connect: { id: Authentication.getCurrentUser().id },
+        },
+      },
     };
 
     const { createEcosystemMap } = await graphCMSRequest(query, variables);
@@ -57,7 +69,7 @@ export const Map = {
 
     const secondaryVariables = {
       ids: [createEcosystemMap.id],
-      to: ["PUBLISHED"]
+      to: ["PUBLISHED"],
     };
 
     await graphCMSRequest(secondaryQuery, secondaryVariables);
@@ -75,7 +87,7 @@ export const Map = {
         }}`;
 
     const variables = {
-      ids: [id]
+      ids: [id],
     };
 
     await graphCMSRequest(query, variables);
@@ -103,8 +115,8 @@ export const Map = {
         state: data.state,
         city: data.city,
         industry: data.industry,
-        subIndustry: data.subIndustry
-      }
+        subIndustry: data.subIndustry,
+      },
     };
 
     const { updateEcosystemMap } = await graphCMSRequest(query, variables);
@@ -116,8 +128,8 @@ export const Map = {
 
     const secondaryVariables = {
       ids: [data.id],
-      to: ["PUBLISHED"]
-    }
+      to: ["PUBLISHED"],
+    };
 
     await graphCMSRequest(secondaryQuery, secondaryVariables);
 
@@ -188,10 +200,10 @@ export const Map = {
     const variables = {
       id: data.id,
       data: {
-        filters: data.filters
-      }
+        filters: data.filters,
+      },
     };
 
     return await graphCMSRequest(query, variables);
-  }
+  },
 };
