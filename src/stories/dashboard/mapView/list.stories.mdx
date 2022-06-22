@@ -1,5 +1,4 @@
 import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
-import moment from "moment";
 
 import { withChakra } from "../../../../.storybook/preview";
 import ListMap from "../../../components/dashboard/mapView/ListMap";
@@ -25,19 +24,19 @@ export const ListTemplate = (args) => <ListMap {...args} />;
         owner: {
           profileName: "Digiole",
         },
-        created: moment().format("DD-MM-YYYY"),
-        lastModification: moment().format("DD-MM-YYYY"),
+        creation: "2022-06-22",
+        lastModification: "2022-06-22",
         image: "",
-        location: {
+        location: [{
           continent: "Europe",
           country: "Finland",
           region: "",
           city: "",
-        },
-        industry: {
+        }],
+        industry: [{
           mainIndustry: "Information Technology",
-          subIndustry: " rze z er rez ",
-        },
+          subIndustry: "",
+        }],
         services: []
       },
     }}
