@@ -1,7 +1,5 @@
 import React from "react";
 
-import moment from "moment";
-
 import ListMap from "../../../components/dashboard/mapView/ListMap";
 import GridMap from "../../../components/dashboard/mapView/GridMap";
 
@@ -20,19 +18,23 @@ export const listArgs = {
             owner: {
               profileName: "Digiole",
             },
-            created: moment().format("DD-MM-YYYY"),
-            lastModification: moment().format("DD-MM-YYYY"),
+            creation: "2022-06-22",
+            lastModification: "2022-06-22",
             image: "",
-            location: {
-              continent: "Europe",
-              country: "Finland",
-              region: "",
-              city: "",
-            },
-            industry: {
-              mainIndustry: "Information Technology",
-              subIndustry: "",
-            },
+            location: [
+              {
+                continent: "Europe",
+                country: "Finland",
+                region: "",
+                city: "",
+              },
+            ],
+            industry: [
+              {
+                mainIndustry: "Information Technology",
+                subIndustry: "",
+              },
+            ],
             services: [],
           }}
         />,
@@ -45,19 +47,23 @@ export const listArgs = {
             owner: {
               profileName: "Digiole",
             },
-            created: moment().format("DD-MM-YYYY"),
-            lastModification: moment().format("DD-MM-YYYY"),
+            creation: "2022-06-22",
+            lastModification: "2022-06-22",
             image: "",
-            location: {
-              continent: "Europe",
-              country: "Finland",
-              region: "",
-              city: "",
-            },
-            industry: {
-              mainIndustry: "Information Technology",
-              subIndustry: "",
-            },
+            location: [
+              {
+                continent: "Europe",
+                country: "Finland",
+                region: "",
+                city: "",
+              },
+            ],
+            industry: [
+              {
+                mainIndustry: "Information Technology",
+                subIndustry: "",
+              },
+            ],
             services: [],
           }}
         />,
@@ -70,19 +76,23 @@ export const listArgs = {
             owner: {
               profileName: "Digiole",
             },
-            created: moment().format("DD-MM-YYYY"),
-            lastModification: moment().format("DD-MM-YYYY"),
+            creation: "2022-06-22",
+            lastModification: "2022-06-22",
             image: "",
-            location: {
-              continent: "Europe",
-              country: "Finland",
-              region: "",
-              city: "",
-            },
-            industry: {
-              mainIndustry: "Information Technology",
-              subIndustry: "",
-            },
+            location: [
+              {
+                continent: "Europe",
+                country: "Finland",
+                region: "",
+                city: "",
+              },
+            ],
+            industry: [
+              {
+                mainIndustry: "Information Technology",
+                subIndustry: "",
+              },
+            ],
             services: [],
           }}
         />,
@@ -106,19 +116,23 @@ export const gridArgs = {
             owner: {
               profileName: "Digiole",
             },
-            created: moment().format("DD-MM-YYYY"),
-            lastModification: moment().format("DD-MM-YYYY"),
+            creation: "2022-06-22",
+            lastModification: "2022-06-22",
             image: "",
-            location: {
-              continent: "Europe",
-              country: "Finland",
-              region: "",
-              city: "",
-            },
-            industry: {
-              mainIndustry: "Information Technology",
-              subIndustry: "",
-            },
+            location: [
+              {
+                continent: "Europe",
+                country: "Finland",
+                region: "",
+                city: "",
+              },
+            ],
+            industry: [
+              {
+                mainIndustry: "Information Technology",
+                subIndustry: "",
+              },
+            ],
             services: [],
           }}
         />,
@@ -131,19 +145,23 @@ export const gridArgs = {
             owner: {
               profileName: "Digiole",
             },
-            created: moment().format("DD-MM-YYYY"),
-            lastModification: moment().format("DD-MM-YYYY"),
+            creation: "2022-06-22",
+            lastModification: "2022-06-22",
             image: "",
-            location: {
-              continent: "Europe",
-              country: "Finland",
-              region: "",
-              city: "",
-            },
-            industry: {
-              mainIndustry: "Digiole",
-              subIndustry: "",
-            },
+            location: [
+              {
+                continent: "Europe",
+                country: "Finland",
+                region: "",
+                city: "",
+              },
+            ],
+            industry: [
+              {
+                mainIndustry: "Digiole",
+                subIndustry: "",
+              },
+            ],
             services: [],
           }}
         />,
@@ -156,19 +174,23 @@ export const gridArgs = {
             owner: {
               profileName: "Digiole",
             },
-            created: moment().format("DD-MM-YYYY"),
-            lastModification: moment().format("DD-MM-YYYY"),
+            creation: "2022-06-22",
+            lastModification: "2022-06-22",
             image: "",
-            location: {
-              continent: "Europe",
-              country: "Finland",
-              region: "",
-              city: "",
-            },
-            industry: {
-              mainIndustry: "Information Technology",
-              subIndustry: "",
-            },
+            location: [
+              {
+                continent: "Europe",
+                country: "Finland",
+                region: "",
+                city: "",
+              },
+            ],
+            industry: [
+              {
+                mainIndustry: "Information Technology",
+                subIndustry: "",
+              },
+            ],
             services: [],
           }}
         />,
