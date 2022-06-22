@@ -9,7 +9,6 @@ import Location from "./Location";
 function MultiLocationPicker(props) {
   const { initialValues, onChange, locationsList } = props;
   const [locations, setLocations] = useState(initialValues);
-  console.log(locationsList);
 
   // Update the formValues everytime we change a field of a location.
   useEffect(() => {
