@@ -38,45 +38,43 @@ export const Map = {
     return (await graphCMSRequest(query)).ecosystemMaps;
   },
 
-  async addMap(data) {
-    const query = `mutation ($data: EcosystemMapCreateInput!) {
+  async createMap(data) {
+    const query = `
+      mutation ($data: EcosystemMapCreateInput!) {
         createEcosystemMap(data: $data) {
           id
+          title
+          description
+          mapStatus
+          creation
+          lastModification
+          owner {
+            profileName
+          }
+          location {
+            id
+            continent
+            country
+            region
+            city
+          }
+          industry {
+            id
+            mainIndustry
+            subIndustry
+          }
+          services {
+            id
+          }
         }
-      }`;
+      }
+    `;
 
     const variables = {
-      data: {
-        name: data.name,
-        region: data.region,
-        country: data.country,
-        state: data.state,
-        city: data.city,
-        industry: data.industry,
-        subIndustry: data.subIndustry,
-        cPTUserAccount: {
-          connect: { id: Authentication.getCurrentUser().id },
-        },
-      },
+      data: data,
     };
 
-    const { createEcosystemMap } = await graphCMSRequest(query, variables);
-
-    const secondaryQuery = `mutation ($ids: [ID!], $to: [Stage!]!) {
-        publishManyEcosystemMapsConnection(where: {id_in: $ids}, to: $to){
-          aggregate{count}
-        }}`;
-
-    const secondaryVariables = {
-      ids: [createEcosystemMap.id],
-      to: ["PUBLISHED"],
-    };
-
-    await graphCMSRequest(secondaryQuery, secondaryVariables);
-
-    sessionStorage.setItem("ecomapid", createEcosystemMap.id);
-
-    return createEcosystemMap;
+    return await graphCMSRequest(query, variables);
   },
 
   async deleteMap(id) {
