@@ -14,13 +14,16 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import moment from "moment";
 
 import InputComponent from "../../basic/inputs/input/inputComponent/InputComponent";
 import LabelWithTooltip from "../../basic/labelWithTooltip/LabelWithTooltip";
 import LabeledMultilineInputComponent from "../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import { AppProvider } from "../../../App";
 import MultiIndustryPicker from "../../basic/picker/industryPicker/MultiIndustryPicker";
-import MultiLocationPicker from "../../basic/picker/LocationPicker/MultiLocationPicker";
+import MultiLocationPicker from "../../basic/picker/locationPicker/MultiLocationPicker";
+import { Authentication } from "../../../service/authentication";
+import { Map as MapClass } from "../../../service/map";
 
 function MapForm(props) {
   const { locationsList, industriesList, isOpen, onClose } = props;
@@ -48,11 +51,31 @@ function MapForm(props) {
   const [isError, setIsError] = useState(false);
 
   function handleCreateMap() {
-    console.log(formValues.title);
     if (formValues.title === "") {
       setIsError(true);
     } else {
       setIsError(false);
+      //TODO Faire en sorte de l'integrer et update la liste dans le dashboard.
+      const data = {
+        title: formValues.title,
+        mapStatus: "Published",
+        description: "",
+        owner: {
+          connect: {
+            id: Authentication.getCurrentUser().id,
+          },
+        },
+        creation: moment(),
+        lastModification: moment(),
+        industry: {
+          create: formValues.industries,
+        },
+        location: {
+          create: formValues.locations,
+        },
+      };
+
+      MapClass.createMap(data).then((value) => console.log(value));
     }
   }
 
