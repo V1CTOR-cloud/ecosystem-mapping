@@ -20,7 +20,7 @@ import LabelWithTooltip from "../../basic/labelWithTooltip/LabelWithTooltip";
 import LabeledMultilineInputComponent from "../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import { AppProvider } from "../../../App";
 import MultiIndustryPicker from "../../basic/industry/MultiIndustryPicker";
-import NewMultiLocationPicker from "../../basic/newLocation/NewMultiLocation";
+import MultiLocationPicker from "../../basic/newLocation/MultiLocationPicker";
 
 function MapForm(props) {
   const { locationsList, industriesList, isOpen, onClose } = props;
@@ -109,7 +109,7 @@ function MapForm(props) {
             />
           </Box>
           <Box paddingBottom={5}>
-            <NewMultiLocationPicker
+            <MultiLocationPicker
               initialValues={formValues.locations}
               onChange={(value) => (formValues.locations = value)}
               locationsList={

@@ -4,7 +4,7 @@ import { Box, Link } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 import LabelWithTooltip from "../labelWithTooltip/LabelWithTooltip";
-import NewLocation from "./NewLocation";
+import Location from "./Location";
 
 function MultiLocationPicker(props) {
   const { initialValues, onChange, locationsList } = props;
@@ -48,11 +48,10 @@ function MultiLocationPicker(props) {
       {locations.map((location, index) => {
         return (
           <Box key={index} marginY={2}>
-            <NewLocation
+            <Location
               locationsState={[locations, setLocations]}
               index={index}
               items={locationsList}
-              isFirst={index === 0}
               onRemoveLocation={() => handleRemoveLocation(index)}
             />
           </Box>
