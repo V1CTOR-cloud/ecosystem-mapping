@@ -5,7 +5,7 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 
 // Pages
 const Home = lazy(() => import("./pages/LandingPage"));
-const MapList = lazy(() => import("./pages/ListMapPage"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Canvas = lazy(() => import("./pages/MapCanvasPage"));
 
 function Routing() {
@@ -17,7 +17,7 @@ function Routing() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} exact />
-          <Route path="/dashboard" element={<MapList />} exact />
+          <Route path="/dashboard" element={<Dashboard />} exact />
           <Route path="/dashboard/:mapId" element={<Canvas />} exact />
           <Route path="*" element={<div>404 Not found</div>} />
         </Routes>
