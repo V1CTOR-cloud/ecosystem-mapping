@@ -22,7 +22,7 @@ function MapAccordion(props) {
         return (
           <AccordionItem key={index} border="none">
             <h2>
-              <AccordionButton>
+              <AccordionButton paddingX={10}>
                 <AccordionIcon marginRight={5} />
                 <Text fontSize="lg">{accordionItem.title}</Text>
               </AccordionButton>
@@ -30,6 +30,7 @@ function MapAccordion(props) {
 
             <AccordionPanel
               paddingTop={5}
+              paddingX={7}
               bg={
                 accordionItem.content.length === 0
                   ? "blackAlpha.100"
