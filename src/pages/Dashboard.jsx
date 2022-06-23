@@ -27,6 +27,7 @@ import { Map as MapClass } from "../service/map";
 import MapAccordion from "../components/dashboard/mapAccordion/MapAccordion";
 import GridMap from "../components/dashboard/mapView/GridMap";
 import ListMap from "../components/dashboard/mapView/ListMap";
+import ToastComponent from "../components/basic/ToastComponent";
 
 function Dashboard() {
   const {
@@ -99,6 +100,34 @@ function Dashboard() {
     setAccordionsItems(tempAccordionItems);
     setIsGrid(isGrid);
   }
+
+  function handleCreateMap(formattedData) {
+    const createMapPromise = new Promise((resolve, reject) => {
+      MapClass.createMap(formattedData)
+        .then((res) => resolve(res))
+        .catch((error) => reject(error));
+    });
+
+    createMapPromise
+      .then((value) => {
+        // Check if we have don't have errors
+        if (value.createEcosystemMap) {
+          const tempUserMaps = [...userMaps];
+
+          tempUserMaps.push(value.createEcosystemMap);
+          setUserMaps(tempUserMaps);
+          handleToggleView(tempUserMaps, true);
+
+          onCloseModal();
+          ToastComponent("New map created.", "success");
+        }
+      })
+      .catch(() =>
+        ToastComponent("An error occurred, please try again.", "error")
+      );
+  }
+
+  console.log(userMaps);
 
   const additionalButtons = (
     <HStack>
@@ -183,7 +212,11 @@ function Dashboard() {
         primaryButton={primaryButton}
         additionalButtons={additionalButtons}
       />
-      <MapForm isOpen={isOpenModal} onClose={onCloseModal} />
+      <MapForm
+        isOpen={isOpenModal}
+        onClose={onCloseModal}
+        onCreateMap={handleCreateMap}
+      />
       <Box paddingY={3}>
         <MapAccordion isGrid={isGrid} accordionItems={accordionsItems} />
       </Box>
