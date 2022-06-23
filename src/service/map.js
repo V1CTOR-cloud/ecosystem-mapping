@@ -8,6 +8,7 @@ export const Map = {
         ecosystemMaps(where: {owner: {id: "${
           Authentication.getCurrentUser().id
         }"}}) {
+          id
           title
           description
           mapStatus
@@ -38,6 +39,7 @@ export const Map = {
     return (await graphCMSRequest(query)).ecosystemMaps;
   },
 
+  // Async function that create a map.
   async createMap(data) {
     const query = `
       mutation ($data: EcosystemMapCreateInput!) {
@@ -132,6 +134,28 @@ export const Map = {
     await graphCMSRequest(secondaryQuery, secondaryVariables);
 
     return updateEcosystemMap;
+  },
+
+  async changeMapStatus(data) {
+    const query = `
+      mutation changeMapStatus($data: EcosystemMapUpdateInput!, $id: ID!) {
+          updateEcosystemMap(
+            where: {id: $id}, data: $data
+          ) {
+            id
+            mapStatus
+          }
+        }
+    `;
+
+    const variables = {
+      id: data.id,
+      data: {
+        mapStatus: data.mapStatus,
+      },
+    };
+
+    return (await graphCMSRequest(query, variables)).updateEcosystemMap;
   },
 
   // Get all the services for a specific map
