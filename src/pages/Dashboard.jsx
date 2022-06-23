@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import {
   Box,
@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/icons";
 import { SortDownAlt } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
 import MapForm from "../components/dashboard/form/MapForm";
@@ -32,7 +33,8 @@ import MapAccordion from "../components/dashboard/mapAccordion/MapAccordion";
 import GridMap from "../components/dashboard/mapView/GridMap";
 import ListMap from "../components/dashboard/mapView/ListMap";
 import ToastComponent from "../components/basic/ToastComponent";
-import moment from "moment";
+
+export const DashboardProvider = createContext({});
 
 function Dashboard() {
   const {
@@ -62,12 +64,9 @@ function Dashboard() {
       content: [],
     },
   ]);
-
-  const primaryButton = (
-    <Button onClick={onOpenModal} leftIcon={<AddIcon />}>
-      New Ecosystem Map
-    </Button>
-  );
+  const providerData = {
+    archiveFunction: (mapData) => handleArchiveMap(mapData),
+  };
 
   // Initial load where we are getting the user maps
   useEffect(() => {
@@ -104,6 +103,37 @@ function Dashboard() {
 
     setAccordionsItems(tempAccordionItems);
     setIsGrid(isGrid);
+  }
+
+  async function handleArchiveMap(mapData) {
+    mapData.mapStatus = "Archived";
+
+    const data = {
+      id: mapData.id,
+      mapStatus: mapData.mapStatus,
+    };
+
+    const changeMapStatusPromise = new Promise((resolve, reject) => {
+      MapClass.changeMapStatus(data)
+        .then((res) => resolve(res))
+        .catch((error) => reject(error));
+    });
+
+    changeMapStatusPromise
+      .then(() => {
+        const tempUserMaps = [...userMaps];
+
+        const index = tempUserMaps.findIndex((map) => map.id === mapData.id);
+        tempUserMaps[index].mapStatus = "Archived";
+
+        handleToggleView(tempUserMaps, isGrid);
+        setUserMaps(tempUserMaps);
+
+        ToastComponent("Map archived", "success");
+      })
+      .catch(() => {
+        ToastComponent("An error occurred, please try again.", "error");
+      });
   }
 
   function handleCreateMap(formattedData) {
@@ -161,6 +191,12 @@ function Dashboard() {
     }
     handleToggleView(userMaps, isGrid);
   }
+
+  const primaryButton = (
+    <Button onClick={onOpenModal} leftIcon={<AddIcon />}>
+      New Ecosystem Map
+    </Button>
+  );
 
   const additionalButtons = (
     <HStack>
@@ -258,21 +294,23 @@ function Dashboard() {
   );
 
   return (
-    <Box w="100vw" h="100vh">
-      <NavigationBar
-        title={"Map Dashboard"}
-        primaryButton={primaryButton}
-        additionalButtons={additionalButtons}
-      />
-      <MapForm
-        isOpen={isOpenModal}
-        onClose={onCloseModal}
-        onCreateMap={handleCreateMap}
-      />
-      <Box paddingY={3}>
-        <MapAccordion isGrid={isGrid} accordionItems={accordionsItems} />
+    <DashboardProvider.Provider value={providerData}>
+      <Box w="100vw" h="100vh">
+        <NavigationBar
+          title={"Map Dashboard"}
+          primaryButton={primaryButton}
+          additionalButtons={additionalButtons}
+        />
+        <MapForm
+          isOpen={isOpenModal}
+          onClose={onCloseModal}
+          onCreateMap={handleCreateMap}
+        />
+        <Box paddingY={3}>
+          <MapAccordion isGrid={isGrid} accordionItems={accordionsItems} />
+        </Box>
       </Box>
-    </Box>
+    </DashboardProvider.Provider>
   );
 }
 
