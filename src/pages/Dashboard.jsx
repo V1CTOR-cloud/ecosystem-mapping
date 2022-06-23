@@ -10,6 +10,10 @@ import {
   InputLeftElement,
   InputGroup,
   InputRightElement,
+  Menu,
+  MenuList,
+  MenuButton,
+  MenuItem,
 } from "@chakra-ui/react";
 import { Grid as GridIcon } from "@styled-icons/bootstrap";
 import {
@@ -28,6 +32,7 @@ import MapAccordion from "../components/dashboard/mapAccordion/MapAccordion";
 import GridMap from "../components/dashboard/mapView/GridMap";
 import ListMap from "../components/dashboard/mapView/ListMap";
 import ToastComponent from "../components/basic/ToastComponent";
+import moment from "moment";
 
 function Dashboard() {
   const {
@@ -127,7 +132,35 @@ function Dashboard() {
       );
   }
 
-  console.log(userMaps);
+  function handleSorting(sortBy) {
+    if (sortBy === "Alphabetical") {
+      userMaps.sort((a, b) => {
+        if (a.title < b.title) {
+          return -1;
+        }
+        if (a.title > b.title) {
+          return 1;
+        }
+        return 0;
+      });
+    } else if (sortBy === "Modification") {
+      userMaps
+        .sort(
+          (a, b) =>
+            moment(a.lastModification, "YYYY-MM-DD") -
+            moment(b.lastModification, "YYYY-MM-DD")
+        )
+        .reverse();
+    } else {
+      userMaps
+        .sort(
+          (a, b) =>
+            moment(a.creation, "YYYY-MM-DD") - moment(b.creation, "YYYY-MM-DD")
+        )
+        .reverse();
+    }
+    handleToggleView(userMaps, isGrid);
+  }
 
   const additionalButtons = (
     <HStack>
@@ -154,18 +187,37 @@ function Dashboard() {
       )}
       {/*Button sort*/}
       <Box paddingRight="1rem">
-        <Button
-          variant="blackGhost"
-          leftIcon={
-            <SortDownAlt
-              size="20"
-              title={t("mapping.navigation.bar.sort.button")}
-            />
-          }
-          onClick={() => {}}
-        >
-          {t("mapping.navigation.bar.sort.button")}
-        </Button>
+        <Menu>
+          <MenuButton
+            as={Button}
+            variant="blackGhost"
+            leftIcon={
+              <SortDownAlt
+                size="20"
+                title={t("mapping.navigation.bar.sort.button")}
+              />
+            }
+          >
+            {t("mapping.navigation.bar.sort.button")}
+          </MenuButton>
+          <MenuList>
+            <MenuItem
+              fontSize="sm"
+              onClick={() => handleSorting("Modification")}
+            >
+              Last modified
+            </MenuItem>
+            <MenuItem fontSize="sm" onClick={() => handleSorting("Creation")}>
+              Last created
+            </MenuItem>
+            <MenuItem
+              fontSize="sm"
+              onClick={() => handleSorting("Alphabetical")}
+            >
+              Alphabetical
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Box>
       {/*Button search*/}
       {!isOpenSearch && (
