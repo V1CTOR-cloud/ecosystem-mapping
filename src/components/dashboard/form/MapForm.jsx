@@ -23,10 +23,9 @@ import { AppProvider } from "../../../App";
 import MultiIndustryPicker from "../../basic/picker/industryPicker/MultiIndustryPicker";
 import MultiLocationPicker from "../../basic/picker/locationPicker/MultiLocationPicker";
 import { Authentication } from "../../../service/authentication";
-import { Map as MapClass } from "../../../service/map";
 
 function MapForm(props) {
-  const { locationsList, industriesList, isOpen, onClose } = props;
+  const { locationsList, industriesList, isOpen, onClose, onCreateMap } = props;
   const cancelRef = useRef();
   const appProvider = useContext(AppProvider);
   const formValues = {
@@ -55,7 +54,6 @@ function MapForm(props) {
       setIsError(true);
     } else {
       setIsError(false);
-      //TODO Faire en sorte de l'integrer et update la liste dans le dashboard.
       const data = {
         title: formValues.title,
         mapStatus: "Published",
@@ -75,7 +73,7 @@ function MapForm(props) {
         },
       };
 
-      MapClass.createMap(data).then((value) => console.log(value));
+      onCreateMap(data);
     }
   }
 
@@ -162,6 +160,12 @@ function MapForm(props) {
 
 export default MapForm;
 
+MapForm.defaultProps = {
+  onCreateMap: (formattedData) => {
+    console.log(formattedData);
+  },
+};
+
 MapForm.propTypes = {
   /**
    * Mainly for storybook, this argument allow to pass a list of locations in the case that the appProvider was not passed.
@@ -171,6 +175,10 @@ MapForm.propTypes = {
    * Mainly for storybook, this argument allow to pass a list of industries in the case that the appProvider was not passed.
    */
   industriesList: PropTypes.array,
+  /**
+   * Function that allow to create a map in the project and update the dashboard at the same time
+   */
+  onCreateMap: PropTypes.func,
   /**
    * Boolean that control the modal to know if he is open or not.
    */
