@@ -53,13 +53,15 @@ function ListMap(props) {
                 transition={transition}
                 _groupHover={groupBlackColor}
               >
-                {formatString(data.location[0].continent) +
-                  " " +
-                  formatString(data.location[0].country) +
-                  " " +
-                  formatString(data.location[0].region) +
-                  " " +
-                  formatString(data.location[0].city)}
+                {data.location[0].continent === null
+                  ? "No location"
+                  : formatString(data.location[0].continent) +
+                    " " +
+                    formatString(data.location[0].country) +
+                    " " +
+                    formatString(data.location[0].region) +
+                    " " +
+                    formatString(data.location[0].city)}
               </Text>
               <Text
                 color={greyColor}
@@ -67,9 +69,11 @@ function ListMap(props) {
                 transition={transition}
                 _groupHover={groupBlackColor}
               >
-                {formatString(data.industry[0].mainIndustry) +
-                  " " +
-                  formatString(data.industry[0].subIndustry)}
+                {data.industry[0].mainIndustry === null
+                  ? "No industry"
+                  : formatString(data.industry[0].mainIndustry) +
+                    " " +
+                    formatString(data.industry[0].subIndustry)}
               </Text>
             </VStack>
             <Spacer />
