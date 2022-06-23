@@ -46,7 +46,6 @@ function MapAccordion(props) {
                 wrap="wrap"
                 w="100%"
                 spacing={0}
-                justify="space-between"
               >
                 {accordionItem.content.length === 0 ? (
                   <EmptyText index={index} />
