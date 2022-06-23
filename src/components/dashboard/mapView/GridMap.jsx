@@ -23,7 +23,7 @@ function GridMap(props) {
         w="100%"
         h="100%"
         borderRadius="base"
-        padding="3"
+        padding={3}
         border="1px solid"
         borderColor={greyColor}
         boxShadow="lg"
@@ -39,7 +39,7 @@ function GridMap(props) {
             >
               {data.title}
             </Text>
-            <DashboardMenuOptions />
+            <DashboardMenuOptions mapData={data} />
           </HStack>
           <Text
             color="blackAlpha.500"

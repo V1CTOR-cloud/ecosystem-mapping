@@ -106,7 +106,7 @@ function ListMap(props) {
               alignItems="end"
               paddingLeft={5}
             >
-              <DashboardMenuOptions />
+              <DashboardMenuOptions mapData={data} />
               <Text
                 color={greyColor}
                 transition={transition}
