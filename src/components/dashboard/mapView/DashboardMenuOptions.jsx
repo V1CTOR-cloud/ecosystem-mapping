@@ -49,7 +49,12 @@ function DashboardMenuOptions(props) {
       title: "Archive",
       description: "Move the ecosystem map and mark it as unpublished.",
       icon: <Archive size="25px" />,
-      buttonFunction: () => dashboardProvider.archiveFunction(mapData),
+      buttonFunction: () => {
+        // Verification for storybook mainly.
+        if (dashboardProvider.archiveFunction) {
+          dashboardProvider.archiveFunction(mapData);
+        }
+      },
     },
   ];
 
