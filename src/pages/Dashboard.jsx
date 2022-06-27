@@ -73,6 +73,8 @@ function Dashboard() {
     archiveFunction: (mapData) => handleArchiveMap(mapData),
     duplicateFunction: (mapData) => handleDuplicateMap(mapData),
     editFunction: (mapData) => handleEditMap(mapData),
+    restoreFunction: (mapData) => handleRestoreMap(mapData),
+    deleteFunction: (mapData) => handleDeleteMap(mapData),
   };
 
   // Initial load where we are getting the user maps
@@ -165,27 +167,7 @@ function Dashboard() {
       mapStatus: mapData.mapStatus,
     };
 
-    const changeMapStatusPromise = new Promise((resolve, reject) => {
-      MapClass.changeMapStatus(data)
-        .then((res) => resolve(res))
-        .catch((error) => reject(error));
-    });
-
-    changeMapStatusPromise
-      .then(() => {
-        const tempUserMaps = [...userMaps];
-
-        const index = tempUserMaps.findIndex((map) => map.id === mapData.id);
-        tempUserMaps[index].mapStatus = "Archived";
-
-        handleToggleView(tempUserMaps, isGrid);
-        setUserMaps(tempUserMaps);
-
-        ToastComponent("Map archived", "success");
-      })
-      .catch(() => {
-        ToastComponent("An error occurred, please try again.", "error");
-      });
+    changeMapStatus(data);
   }
 
   // Function that trigger to open the modal with the value of the selected map.
@@ -195,6 +177,50 @@ function Dashboard() {
       initialFormValues: mapData,
     });
     onOpenModal();
+  }
+
+  // Function that switch a map from archive to published.
+  function handleRestoreMap(mapData) {
+    mapData.mapStatus = "Published";
+
+    const data = {
+      id: mapData.id,
+      mapStatus: mapData.mapStatus,
+    };
+
+    changeMapStatus(data);
+  }
+
+  // Function that delete a map from the database.
+  function handleDeleteMap(mapData) {
+    const deleteMapPromise = new Promise((resolve, reject) => {
+      MapClass.deleteMap(mapData.id)
+        .then((res) => resolve(res))
+        .catch((error) => reject(error));
+    });
+
+    deleteMapPromise
+      .then((value) => {
+        // Check if we have don't have errors
+        if (value.deleteEcosystemMap) {
+          const tempUserMaps = [...userMaps];
+
+          // Get the index to remove the correct object in the array
+          const index = tempUserMaps.findIndex(
+            (userMap) => userMap.id === mapData.id
+          );
+          tempUserMaps.splice(index, 1);
+
+          setUserMaps(tempUserMaps);
+          handleToggleView(tempUserMaps, isGrid);
+
+          onCloseModal();
+          ToastComponent("Map deleted.", "success");
+        }
+      })
+      .catch(() =>
+        ToastComponent("An error occurred, please try again.", "error")
+      );
   }
 
   // Function that handle the creation of the map with the handling or potential errors.
@@ -213,7 +239,7 @@ function Dashboard() {
 
           tempUserMaps.push(value.createEcosystemMap);
           setUserMaps(tempUserMaps);
-          handleToggleView(tempUserMaps, true);
+          handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
           ToastComponent("New map created.", "success");
@@ -224,6 +250,7 @@ function Dashboard() {
       );
   }
 
+  // Function that handle the edition of the map with the handling or potential errors.
   function handleEdit(formattedData) {
     const updateMapPromise = new Promise((resolve, reject) => {
       MapClass.updateMap(formattedData)
@@ -245,7 +272,7 @@ function Dashboard() {
 
           tempUserMaps.push(value.updateEcosystemMap);
           setUserMaps(tempUserMaps);
-          handleToggleView(tempUserMaps, true);
+          handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
           ToastComponent("Map updated.", "success");
@@ -254,6 +281,31 @@ function Dashboard() {
       .catch(() =>
         ToastComponent("An error occurred, please try again.", "error")
       );
+  }
+
+  // Function that either change the map status as archived or published. Then, update the list to see the modifications.
+  function changeMapStatus(data) {
+    const changeMapStatusPromise = new Promise((resolve, reject) => {
+      MapClass.changeMapStatus(data)
+        .then((res) => resolve(res))
+        .catch((error) => reject(error));
+    });
+
+    changeMapStatusPromise
+      .then(() => {
+        const tempUserMaps = [...userMaps];
+
+        const index = tempUserMaps.findIndex((map) => map.id === data.id);
+        tempUserMaps[index].mapStatus = data.mapStatus;
+
+        handleToggleView(tempUserMaps, isGrid);
+        setUserMaps(tempUserMaps);
+
+        ToastComponent("Map updated", "success");
+      })
+      .catch(() => {
+        ToastComponent("An error occurred, please try again.", "error");
+      });
   }
 
   // Function to sort depending on the choice of the user: alphabetically, last modification or last created,

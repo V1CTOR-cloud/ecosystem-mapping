@@ -11,9 +11,10 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { CopyIcon, EditIcon } from "@chakra-ui/icons";
+import { CopyIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Share, ThreeDotsVertical } from "@styled-icons/bootstrap";
 import { Archive } from "@styled-icons/boxicons-regular";
+import { Repeat, Eye } from "@styled-icons/feather";
 import PropTypes from "prop-types";
 import { DashboardProvider } from "../../../pages/Dashboard";
 
@@ -68,6 +69,47 @@ function DashboardMenuOptions(props) {
     },
   ];
 
+  const archiveMenuOptions = [
+    {
+      id: 0,
+      title: "Preview",
+      description:
+        "Preview a screenshot of the map with the published services.",
+      icon: <Eye size="25px" />,
+      buttonFunction: () => {
+        console.log("Preview");
+      },
+    },
+    {
+      id: 1,
+      title: "Restore",
+      description: "Restore map from archive and move it back to dashboard.",
+      icon: <Repeat size="25px" />,
+      buttonFunction: () => {
+        // Verification for storybook mainly.
+        if (dashboardProvider.restoreFunction) {
+          dashboardProvider.restoreFunction(mapData);
+        }
+      },
+    },
+    {
+      id: 2,
+      title: "Delete permanently",
+      description:
+        "Remove the map permanently from the database. This CANNOT be undo.",
+      icon: <DeleteIcon w="25px" h="25px" color="red" />,
+      buttonFunction: () => {
+        // Verification for storybook mainly.
+        if (dashboardProvider.deleteFunction) {
+          dashboardProvider.deleteFunction(mapData);
+        }
+      },
+    },
+  ];
+
+  const listToDisplay =
+    mapData.mapStatus === "Archived" ? archiveMenuOptions : menuOptions;
+
   return (
     <Box>
       <Menu>
@@ -82,16 +124,25 @@ function DashboardMenuOptions(props) {
           <ThreeDotsVertical size="22.5px" />
         </MenuButton>
         <MenuList w="300px">
-          {menuOptions.map((button, index) => {
+          {listToDisplay.map((button, index) => {
             return (
               <MenuItem
                 className="menuItem"
                 key={button.id}
                 _hover={{
-                  backgroundColor: index === 3 ? "red.100" : undefined,
+                  backgroundColor:
+                    index === 3 ||
+                    (mapData.mapStatus === "Archived" && index === 2)
+                      ? "red.100"
+                      : undefined,
                 }}
                 borderTopRadius={index === 0 ? "base" : undefined}
-                borderBottomRadius={index === 3 ? "base" : undefined}
+                borderBottomRadius={
+                  index === 3 ||
+                  (mapData.mapStatus === "Archived" && index === 2)
+                    ? "base"
+                    : undefined
+                }
                 onClick={button.buttonFunction}
               >
                 <HStack>
@@ -104,7 +155,11 @@ function DashboardMenuOptions(props) {
                       transition={transition}
                       sx={{
                         ".menuItem:hover &": {
-                          color: index === 3 ? "red" : "brand.500",
+                          color:
+                            index === 3 ||
+                            (mapData.mapStatus === "Archived" && index === 2)
+                              ? "red"
+                              : "brand.500",
                         },
                       }}
                     >

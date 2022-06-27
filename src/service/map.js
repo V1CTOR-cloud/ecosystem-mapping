@@ -127,17 +127,19 @@ export const Map = {
   },
 
   async deleteMap(id) {
-    const query = `mutation ($ids: [ID!]!) {
-        deleteManyEcosystemMapsConnection(where: {id_in: $ids}) 
-        {
-            aggregate{count}
-        }}`;
+    const query = `
+      mutation deleteMap($id: ID!) {
+        deleteEcosystemMap(where: {id: $id}) {
+          id
+        }
+      }
+    `;
 
     const variables = {
-      ids: [id],
+      id: id,
     };
 
-    await graphCMSRequest(query, variables);
+    return await graphCMSRequest(query, variables);
   },
 
   async editMap(data) {
