@@ -79,6 +79,53 @@ export const Map = {
     return await graphCMSRequest(query, variables);
   },
 
+  async updateMap(data) {
+    const query = `
+      mutation updateMap($data: EcosystemMapUpdateInput!, $id: ID!) {
+        updateEcosystemMap(where: {id: $id}, data: $data) {
+          id
+          title
+          description
+          mapStatus
+          creation
+          lastModification
+          owner {
+            profileName
+          }
+          location {
+            id
+            continent
+            country
+            region
+            city
+          }
+          industry {
+            id
+            mainIndustry
+            subIndustry
+          }
+          services {
+            id
+          }
+        }
+      }
+    `;
+
+    const variables = {
+      id: data.id,
+      data: {
+        title: data.title,
+        mapStatus: data.mapStatus,
+        description: data.description,
+        lastModification: data.lastModification,
+        industry: data.industry,
+        location: data.location,
+      },
+    };
+
+    return await graphCMSRequest(query, variables);
+  },
+
   async deleteMap(id) {
     const query = `mutation ($ids: [ID!]!) {
         deleteManyEcosystemMapsConnection(where: {id_in: $ids}) 
