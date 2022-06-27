@@ -25,29 +25,44 @@ import MultiLocationPicker from "../../basic/picker/locationPicker/MultiLocation
 import { Authentication } from "../../../service/authentication";
 
 function MapForm(props) {
-  const { locationsList, industriesList, isOpen, onClose, onCreateMap } = props;
+  const {
+    locationsList,
+    industriesList,
+    isOpen,
+    onClose,
+    isEdition,
+    initialFormValues,
+    onCreateMap,
+    onEditMap,
+  } = props;
   const cancelRef = useRef();
   const appProvider = useContext(AppProvider);
-  const formValues = {
-    title: "",
-    description: "",
-    locations: [
-      {
-        continent: null,
-        country: null,
-        region: null,
-        city: null,
-      },
-    ],
-
-    industries: [
-      {
-        mainIndustry: null,
-        subIndustry: null,
-      },
-    ],
-  };
   const [isError, setIsError] = useState(false);
+  const formValues = isEdition
+    ? {
+        title: initialFormValues.title,
+        description: initialFormValues.description,
+        locations: initialFormValues.location,
+        industries: initialFormValues.industry,
+      }
+    : {
+        title: "",
+        description: "",
+        locations: [
+          {
+            continent: null,
+            country: null,
+            region: null,
+            city: null,
+          },
+        ],
+        industries: [
+          {
+            mainIndustry: null,
+            subIndustry: null,
+          },
+        ],
+      };
 
   function handleCreateMap() {
     if (formValues.title === "") {
@@ -77,6 +92,69 @@ function MapForm(props) {
     }
   }
 
+  function handleEditMap() {
+    if (formValues.title === "") {
+      setIsError(true);
+    } else {
+      setIsError(false);
+
+      const updateIndustries = [];
+      const updateLocations = [];
+
+      formValues.industries.forEach((industry) => {
+        updateIndustries.push({
+          where: { id: industry.id === undefined ? "undefined" : industry.id },
+          data: {
+            create: {
+              mainIndustry: industry.mainIndustry,
+              subIndustry: industry.subIndustry,
+            },
+            update: {
+              mainIndustry: industry.mainIndustry,
+              subIndustry: industry.subIndustry,
+            },
+          },
+        });
+      });
+
+      formValues.locations.forEach((location) => {
+        updateLocations.push({
+          where: { id: location.id === undefined ? "undefined" : location.id },
+          data: {
+            create: {
+              continent: location.continent,
+              country: location.country,
+              region: location.region,
+              city: location.city,
+            },
+            update: {
+              continent: location.continent,
+              country: location.country,
+              region: location.region,
+              city: location.city,
+            },
+          },
+        });
+      });
+
+      const data = {
+        id: initialFormValues.id,
+        title: formValues.title,
+        mapStatus: "Published",
+        description: formValues.description,
+        lastModification: moment(),
+        industry: {
+          upsert: updateIndustries,
+        },
+        location: {
+          upsert: updateLocations,
+        },
+      };
+
+      onEditMap(data);
+    }
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -89,7 +167,7 @@ function MapForm(props) {
       <ModalContent>
         <ModalHeader>
           <Text fontSize="xl" align="center">
-            New Ecosystem Map
+            {isEdition ? "Edit Ecosystem Map" : "New Ecosystem Map"}
           </Text>
           <Box marginY={3} h="2px" bg="blackAlpha.300" />
         </ModalHeader>
@@ -113,7 +191,7 @@ function MapForm(props) {
                 }
               }}
             />
-            {isError && (
+            {formValues.title === "" && (
               <FormErrorMessage>
                 The title is mandatory, please enter a title.
               </FormErrorMessage>
@@ -151,7 +229,9 @@ function MapForm(props) {
           <Button marginRight={3} variant="greyGhost" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleCreateMap}>Create</Button>
+          <Button onClick={isEdition ? handleEditMap : handleCreateMap}>
+            {isEdition ? "Save" : "Create"}
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
@@ -161,12 +241,17 @@ function MapForm(props) {
 export default MapForm;
 
 MapForm.defaultProps = {
-  onCreateMap: (formattedData) => {
-    console.log(formattedData);
-  },
+  onCreateMap: (formattedData) => console.log(formattedData),
+  onEditMap: (formattedData) => console.log(formattedData),
+  isEdition: false,
+  initialFormValues: {},
 };
 
 MapForm.propTypes = {
+  /**
+   * Boolean that determine if we are in edition mode or creation mode. Trigger the field to be filled or empty.
+   */
+  isEdition: PropTypes.bool,
   /**
    * Mainly for storybook, this argument allow to pass a list of locations in the case that the appProvider was not passed.
    */
@@ -176,15 +261,23 @@ MapForm.propTypes = {
    */
   industriesList: PropTypes.array,
   /**
-   * Function that allow to create a map in the project and update the dashboard at the same time
+   * If we are in edition mode this argument will contain all the values of the different fields.
+   */
+  initialFormValues: PropTypes.object,
+  /**
+   * Function that allow to create a map in the project and update the dashboard at the same time.
    */
   onCreateMap: PropTypes.func,
+  /**
+   * Function that allow to edit a map in the project and update the dashboard at the same time.
+   */
+  onEditMap: PropTypes.func,
   /**
    * Boolean that control the modal to know if he is open or not.
    */
   isOpen: PropTypes.bool.isRequired,
   /**
-   * Function that handle automaticaly the closing of the modal.
+   * Function that handle automatically the closing of the modal.
    */
   onClose: PropTypes.func.isRequired,
 };

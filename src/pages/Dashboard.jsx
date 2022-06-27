@@ -33,6 +33,7 @@ import MapAccordion from "../components/dashboard/mapAccordion/MapAccordion";
 import GridMap from "../components/dashboard/mapView/GridMap";
 import ListMap from "../components/dashboard/mapView/ListMap";
 import ToastComponent from "../components/basic/ToastComponent";
+import { Authentication } from "../service/authentication";
 
 export const DashboardProvider = createContext({});
 
@@ -50,6 +51,10 @@ function Dashboard() {
   const { t } = useTranslation();
   const [isGrid, setIsGrid] = useState(true);
   const [userMaps, setUserMaps] = useState([]);
+  const [edition, setEdition] = useState({
+    isEdition: false,
+    initialFormValues: {},
+  });
   const [accordionsItems, setAccordionsItems] = useState([
     {
       title: "My maps",
@@ -66,6 +71,8 @@ function Dashboard() {
   ]);
   const providerData = {
     archiveFunction: (mapData) => handleArchiveMap(mapData),
+    duplicateFunction: (mapData) => handleDuplicateMap(mapData),
+    editFunction: (mapData) => handleEditMap(mapData),
   };
 
   // Initial load where we are getting the user maps
@@ -105,7 +112,52 @@ function Dashboard() {
     setIsGrid(isGrid);
   }
 
-  async function handleArchiveMap(mapData) {
+  // Function that allow the user to duplicate an existing map.
+  function handleDuplicateMap(mapData) {
+    const locations = [];
+    const industries = [];
+
+    mapData.location.forEach((location) => {
+      locations.push({
+        continent: location.continent,
+        country: location.country,
+        region: location.region,
+        city: location.city,
+      });
+    });
+
+    mapData.industry.forEach((industry) => {
+      industries.push({
+        mainIndustry: industry.mainIndustry,
+        subIndustry: industry.subIndustry,
+      });
+    });
+
+    const formattedData = {
+      title: mapData.title,
+      mapStatus: mapData.mapStatus,
+      description: mapData.description,
+      owner: {
+        connect: {
+          id: Authentication.getCurrentUser().id,
+        },
+      },
+      creation: moment(),
+      lastModification: moment(),
+      industry: {
+        create: industries,
+      },
+      location: {
+        create: locations,
+      },
+    };
+
+    handleCreateMap(formattedData);
+  }
+
+  // Function that allow the user to put a published map into the archived accordion.
+  // It also updates the database and setState the view.
+  function handleArchiveMap(mapData) {
     mapData.mapStatus = "Archived";
 
     const data = {
@@ -136,6 +188,16 @@ function Dashboard() {
       });
   }
 
+  // Function that trigger to open the modal with the value of the selected map.
+  function handleEditMap(mapData) {
+    setEdition({
+      isEdition: true,
+      initialFormValues: mapData,
+    });
+    onOpenModal();
+  }
+
+  // Function that handle the creation of the map with the handling or potential errors.
   function handleCreateMap(formattedData) {
     const createMapPromise = new Promise((resolve, reject) => {
       MapClass.createMap(formattedData)
@@ -162,6 +224,40 @@ function Dashboard() {
       );
   }
 
+  function handleEdit(formattedData) {
+    const updateMapPromise = new Promise((resolve, reject) => {
+      MapClass.updateMap(formattedData)
+        .then((res) => resolve(res))
+        .catch((error) => reject(error));
+    });
+
+    updateMapPromise
+      .then((value) => {
+        // Check if we have don't have errors
+        if (value.updateEcosystemMap) {
+          const tempUserMaps = [...userMaps];
+
+          // Get the index to remove the correct object in the array
+          const index = tempUserMaps.findIndex(
+            (userMap) => userMap.id === formattedData.id
+          );
+          tempUserMaps.splice(index, 1);
+
+          tempUserMaps.push(value.updateEcosystemMap);
+          setUserMaps(tempUserMaps);
+          handleToggleView(tempUserMaps, true);
+
+          onCloseModal();
+          ToastComponent("Map updated.", "success");
+        }
+      })
+      .catch(() =>
+        ToastComponent("An error occurred, please try again.", "error")
+      );
+  }
+
+  // Function to sort depending on the choice of the user: alphabetically, last modification or last created,
+  // it will then setState the page to update the view.
   function handleSorting(sortBy) {
     if (sortBy === "Alphabetical") {
       userMaps.sort((a, b) => {
@@ -193,7 +289,13 @@ function Dashboard() {
   }
 
   const primaryButton = (
-    <Button onClick={onOpenModal} leftIcon={<AddIcon />}>
+    <Button
+      onClick={() => {
+        setEdition({ isEdition: false, initialFormValues: {} });
+        onOpenModal();
+      }}
+      leftIcon={<AddIcon />}
+    >
       New Ecosystem Map
     </Button>
   );
@@ -304,7 +406,10 @@ function Dashboard() {
         <MapForm
           isOpen={isOpenModal}
           onClose={onCloseModal}
+          isEdition={edition.isEdition}
+          initialFormValues={edition.initialFormValues}
           onCreateMap={handleCreateMap}
+          onEditMap={handleEdit}
         />
         <Box paddingY={3}>
           <MapAccordion isGrid={isGrid} accordionItems={accordionsItems} />

@@ -28,14 +28,24 @@ function DashboardMenuOptions(props) {
       title: "Edit",
       description: "Change the name or other info of the map.",
       icon: <EditIcon w="25px" h="25px" />,
-      buttonFunction: () => console.log(mapData),
+      buttonFunction: () => {
+        // Verification for storybook mainly.
+        if (dashboardProvider.editFunction) {
+          dashboardProvider.editFunction(mapData);
+        }
+      },
     },
     {
       id: 1,
       title: "Duplicate",
       description: "Create a new Ecosystem map with the same settings.",
       icon: <CopyIcon w="25px" h="25px" />,
-      buttonFunction: () => console.log("Duplicate"),
+      buttonFunction: () => {
+        // Verification for storybook mainly.
+        if (dashboardProvider.duplicateFunction) {
+          dashboardProvider.duplicateFunction(mapData);
+        }
+      },
     },
     {
       id: 2,
