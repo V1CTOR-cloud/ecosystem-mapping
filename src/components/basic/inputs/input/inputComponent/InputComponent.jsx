@@ -34,4 +34,4 @@ InputComponent.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(InputComponent);
+export default InputComponent;
