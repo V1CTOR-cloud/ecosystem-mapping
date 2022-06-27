@@ -120,6 +120,9 @@ function DashboardMenuOptions(props) {
           borderColor="blackAlpha.500"
           _hover={{ bg: "blackAlpha.200" }}
           _active={{ bg: "blackAlpha.300" }}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           <ThreeDotsVertical size="22.5px" />
         </MenuButton>
@@ -143,7 +146,10 @@ function DashboardMenuOptions(props) {
                     ? "base"
                     : undefined
                 }
-                onClick={button.buttonFunction}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  button.buttonFunction();
+                }}
               >
                 <HStack>
                   <Box>{button.icon}</Box>
