@@ -22,12 +22,18 @@ import LabeledInputComponent from "../../../../basic/inputs/input/inputComponent
 import LabeledBudgetInputComponent from "../../../../basic/inputs/budget/LabeledBudgetInputComponent";
 import LabeledMultilineInputComponent from "../../../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import MenuComponent from "../../../../basic/inputs/menu/MenuComponent";
-import LocationComponent from "../../../../basic/location/LocationComponent";
 import { CanvasProvider } from "../../../../../pages/MapCanvasPage";
 import { AppProvider } from "../../../../../App";
+import UniqueLocationPicker from "../../../../basic/picker/locationPicker/UniqueLocationPicker";
 
 function ServiceTabs(props) {
-  const { formValue, applicationTypeButtons, audiences, organisations } = props;
+  const {
+    formValue,
+    applicationTypeButtons,
+    audiences,
+    organisations,
+    locationsList,
+  } = props;
   const { t } = useTranslation();
   const canvasProvider = useContext(CanvasProvider);
   const appProvider = useContext(AppProvider);
@@ -111,11 +117,18 @@ function ServiceTabs(props) {
             />
           </Box>
           <Box marginTop={6}>
-            <LocationComponent
-              initialLocation={formValue["serviceLocation"]}
-              onChange={(location) => (formValue["serviceLocation"] = location)}
-              locationList={appProvider.locations}
+            <UniqueLocationPicker
+              initialValues={formValue.serviceLocation}
+              onChange={(value) => (formValue.serviceLocation = value)}
+              locationsList={
+                appProvider.locations ? appProvider.locations : locationsList
+              }
             />
+            {/*<LocationComponent*/}
+            {/*  initialLocation={formValue["serviceLocation"]}*/}
+            {/*  onChange={(location) => (formValue["serviceLocation"] = location)}*/}
+            {/*  locationList={appProvider.locations}*/}
+            {/*/>*/}
           </Box>
           <Box marginTop={6}>
             <LabeledMenu
@@ -214,6 +227,10 @@ function ServiceTabs(props) {
 }
 
 ServiceTabs.propTypes = {
+  /**
+   * Mainly for storybook, this argument allow to pass a list of locations in the case that the appProvider was not passed.
+   */
+  locationsList: PropTypes.array,
   formValue: PropTypes.object.isRequired,
   applicationTypeButtons: PropTypes.array.isRequired,
   audiences: PropTypes.array.isRequired,
