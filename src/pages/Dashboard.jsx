@@ -57,15 +57,15 @@ function Dashboard() {
   });
   const [accordionsItems, setAccordionsItems] = useState([
     {
-      title: "My maps",
+      title: t("mapping.dashboard.content.accordion.my.maps"),
       content: [],
     },
     {
-      title: "Shared with me",
+      title: t("mapping.dashboard.content.accordion.shared.maps"),
       content: [],
     },
     {
-      title: "Archived",
+      title: t("mapping.dashboard.content.accordion.archived.maps"),
       content: [],
     },
   ]);
@@ -215,12 +215,10 @@ function Dashboard() {
           handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
-          ToastComponent("Map deleted.", "success");
+          ToastComponent(t("mapping.dashboard.toast.map.deleted"), "success");
         }
       })
-      .catch(() =>
-        ToastComponent("An error occurred, please try again.", "error")
-      );
+      .catch(() => ToastComponent(t("mapping.dashboard.toast.error"), "error"));
   }
 
   // Function that handle the creation of the map with the handling or potential errors.
@@ -242,12 +240,10 @@ function Dashboard() {
           handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
-          ToastComponent("New map created.", "success");
+          ToastComponent(t("mapping.dashboard.toast.map.created"), "success");
         }
       })
-      .catch(() =>
-        ToastComponent("An error occurred, please try again.", "error")
-      );
+      .catch(() => ToastComponent(t("mapping.dashboard.toast.error"), "error"));
   }
 
   // Function that handle the edition of the map with the handling or potential errors.
@@ -275,12 +271,10 @@ function Dashboard() {
           handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
-          ToastComponent("Map updated.", "success");
+          ToastComponent(t("mapping.dashboard.toast.map.updated"), "success");
         }
       })
-      .catch(() =>
-        ToastComponent("An error occurred, please try again.", "error")
-      );
+      .catch(() => ToastComponent(t("mapping.dashboard.toast.error"), "error"));
   }
 
   // Function that either change the map status as archived or published. Then, update the list to see the modifications.
@@ -301,10 +295,10 @@ function Dashboard() {
         handleToggleView(tempUserMaps, isGrid);
         setUserMaps(tempUserMaps);
 
-        ToastComponent("Map updated", "success");
+        ToastComponent(t("mapping.dashboard.toast.map.updated"), "success");
       })
       .catch(() => {
-        ToastComponent("An error occurred, please try again.", "error");
+        ToastComponent(t("mapping.dashboard.toast.error"), "error");
       });
   }
 
@@ -348,7 +342,7 @@ function Dashboard() {
       }}
       leftIcon={<AddIcon />}
     >
-      New Ecosystem Map
+      {t("mapping.navigation.bar.new.map.button")}
     </Button>
   );
 
@@ -362,7 +356,7 @@ function Dashboard() {
           leftIcon={<GridIcon size="20" />}
           onClick={() => handleToggleView(userMaps, true)}
         >
-          {t("mapping.navigation.bar.view.button")}
+          {t("mapping.navigation.bar.view.grid.button")}
         </Button>
       )}
       {isGrid && (
@@ -372,7 +366,7 @@ function Dashboard() {
           leftIcon={<HamburgerIcon w={5} h={5} />}
           onClick={() => handleToggleView(userMaps, false)}
         >
-          List view
+          {t("mapping.navigation.bar.view.list.button")}
         </Button>
       )}
       {/*Button sort*/}
@@ -395,16 +389,16 @@ function Dashboard() {
               fontSize="sm"
               onClick={() => handleSorting("Modification")}
             >
-              Last modified
+              {t("mapping.navigation.bar.sort.last.modification")}
             </MenuItem>
             <MenuItem fontSize="sm" onClick={() => handleSorting("Creation")}>
-              Last created
+              {t("mapping.navigation.bar.sort.last.created")}
             </MenuItem>
             <MenuItem
               fontSize="sm"
               onClick={() => handleSorting("Alphabetical")}
             >
-              Alphabetical
+              {t("mapping.navigation.bar.sort.alphabetically")}
             </MenuItem>
           </MenuList>
         </Menu>
@@ -413,7 +407,7 @@ function Dashboard() {
       {!isOpenSearch && (
         <Box paddingRight="1rem">
           <IconButton
-            variant="ghost"
+            variant="greyGhost"
             marginRight="1rem"
             icon={
               <SearchIcon
@@ -451,7 +445,7 @@ function Dashboard() {
     <DashboardProvider.Provider value={providerData}>
       <Box w="100vw" h="100vh">
         <NavigationBar
-          title={"Map Dashboard"}
+          title={t("mapping.navigation.bar.map.dashboard.title")}
           primaryButton={primaryButton}
           additionalButtons={additionalButtons}
         />

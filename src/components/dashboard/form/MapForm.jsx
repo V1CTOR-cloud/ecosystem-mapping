@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 import InputComponent from "../../basic/inputs/input/inputComponent/InputComponent";
 import LabelWithTooltip from "../../basic/labelWithTooltip/LabelWithTooltip";
@@ -36,6 +37,7 @@ function MapForm(props) {
     onEditMap,
   } = props;
   const cancelRef = useRef();
+  const { t } = useTranslation();
   const appProvider = useContext(AppProvider);
   const [isError, setIsError] = useState(false);
   const formValues = isEdition
@@ -167,21 +169,23 @@ function MapForm(props) {
       <ModalContent>
         <ModalHeader>
           <Text fontSize="xl" align="center">
-            {isEdition ? "Edit Ecosystem Map" : "New Ecosystem Map"}
+            {isEdition
+              ? t("mapping.dashboard.form.title.edition")
+              : t("mapping.dashboard.form.title.creation")}
           </Text>
           <Box marginY={3} h="2px" bg="blackAlpha.300" />
         </ModalHeader>
         <ModalBody>
           <FormControl isInvalid={isError}>
             <LabelWithTooltip
-              label={"Title"}
-              tooltipText={"This will be the name of your ecosystem map"}
-              tooltipAriaLabel={"Title"}
+              label={t("mapping.dashboard.form.title.input")}
+              tooltipText={t("mapping.dashboard.form.title.input.tooltip")}
+              tooltipAriaLabel={t("mapping.dashboard.form.title.input")}
             />
             <InputComponent
               isRequired={true}
               initialValue={formValues.title}
-              placeholder={"Title"}
+              placeholder={t("mapping.dashboard.form.title.input")}
               onChange={(value) => {
                 formValues.title = value;
                 if (value === "") {
@@ -193,17 +197,19 @@ function MapForm(props) {
             />
             {formValues.title === "" && (
               <FormErrorMessage>
-                The title is mandatory, please enter a title.
+                {t("mapping.dashboard.form.title.input.error")}
               </FormErrorMessage>
             )}
           </FormControl>
           <Box paddingY={5}>
             <LabeledMultilineInputComponent
-              label={"Description"}
-              tooltipText={"This will be the description of your ecosystem map"}
-              tooltipAriaLabel={"Description"}
+              label={t("mapping.dashboard.form.description.input")}
+              tooltipText={t(
+                "mapping.dashboard.form.description.input.tooltip"
+              )}
+              tooltipAriaLabel={t("mapping.dashboard.form.description.input")}
               initialValue={formValues.description}
-              placeholder={"Description"}
+              placeholder={t("mapping.dashboard.form.description.input")}
               onChange={(value) => (formValues.description = value)}
             />
           </Box>
@@ -230,7 +236,9 @@ function MapForm(props) {
             Cancel
           </Button>
           <Button onClick={isEdition ? handleEditMap : handleCreateMap}>
-            {isEdition ? "Save" : "Create"}
+            {isEdition
+              ? t("mapping.dashboard.form.save.button")
+              : t("mapping.dashboard.form.create.button")}
           </Button>
         </ModalFooter>
       </ModalContent>

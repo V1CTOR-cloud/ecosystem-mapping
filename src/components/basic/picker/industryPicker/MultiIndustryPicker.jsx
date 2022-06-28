@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 import { Box, Link } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import Industry from "./Industry";
 
 function MultiIndustryPicker(props) {
   const { initialValues, industriesList, onChange } = props;
-
+  const { t } = useTranslation();
   const [industries, setIndustries] = useState(initialValues);
 
   // Update the formValues everytime we change a field of an industryPicker.
@@ -33,9 +34,9 @@ function MultiIndustryPicker(props) {
   return (
     <>
       <LabelWithTooltip
-        label={"Industry"}
-        tooltipText={"Tooltip industryPicker"}
-        tooltipAriaLabel={"Industry"}
+        label={t("mapping.dashboard.form.industry.picker")}
+        tooltipText={t("mapping.dashboard.form.industry.picker.tooltip")}
+        tooltipAriaLabel={t("mapping.dashboard.form.industry.picker")}
       />
       {industries.map((industry, index) => {
         return (
@@ -51,7 +52,7 @@ function MultiIndustryPicker(props) {
         );
       })}
       <Link color="brand.500" fontSize="xs" onClick={handleAddIndustry}>
-        + Add another industry
+        {t("mapping.dashboard.form.industry.picker.add.button")}
       </Link>
     </>
   );

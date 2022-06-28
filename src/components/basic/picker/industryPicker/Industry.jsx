@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 import { CloseButton, HStack, VStack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import SelectComponent from "../../inputs/select/SelectComponent";
 
 function Industry(props) {
   const { industriesState, index, items, onRemoveIndustry } = props;
+  const { t } = useTranslation();
   const [industryList, setIndustryList] = useState([]);
   const industry = industriesState[0][index];
 
@@ -53,14 +55,14 @@ function Industry(props) {
         <HStack w="100%">
           <SelectComponent
             isWithLabel={true}
-            label={"Main industry"}
+            label={t("mapping.dashboard.form.industry.picker.main.industry")}
             items={industryList}
             initialValue={industry.mainIndustry}
             onChange={(value) => handleIndustryChange(true, value)}
           />
           <SelectComponent
             isWithLabel={true}
-            label={"Sub-industry"}
+            label={t("mapping.dashboard.form.industry.picker.sub.industry")}
             items={
               industryList.length !== 0 && industry.mainIndustry != null
                 ? industryList.find(

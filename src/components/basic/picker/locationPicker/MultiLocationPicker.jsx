@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import { Box, Link } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
 import Location from "./Location";
 
 function MultiLocationPicker(props) {
   const { initialValues, onChange, locationsList } = props;
+  const { t } = useTranslation();
   const [locations, setLocations] = useState(initialValues);
 
   // Update the formValues everytime we change a field of a location.
@@ -40,9 +42,9 @@ function MultiLocationPicker(props) {
   return (
     <>
       <LabelWithTooltip
-        label={"Location"}
-        tooltipText={"Tooltip location"}
-        tooltipAriaLabel={"Location"}
+        label={t("mapping.dashboard.form.location.picker")}
+        tooltipText={t("mapping.dashboard.form.location.picker.tooltip")}
+        tooltipAriaLabel={t("mapping.dashboard.form.location.picker")}
       />
       {locations.map((location, index) => {
         return (
@@ -57,7 +59,7 @@ function MultiLocationPicker(props) {
         );
       })}
       <Link color="brand.500" fontSize="xs" onClick={handleAddLocation}>
-        + Add another location
+        {t("mapping.dashboard.form.location.picker.add.button")}
       </Link>
     </>
   );

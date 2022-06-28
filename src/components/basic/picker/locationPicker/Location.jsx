@@ -2,11 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 import { CloseButton, HStack, VStack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import SelectComponent from "../../inputs/select/SelectComponent";
 
 function Location(props) {
   const { locationsState, index, items, onRemoveLocation } = props;
+  const { t } = useTranslation();
   const location = locationsState[0][index];
   const [continentList, setContinentList] = useState([]);
   const [countryList, setCountryList] = useState([]);
@@ -201,14 +203,14 @@ function Location(props) {
         <HStack w="100%">
           <SelectComponent
             isWithLabel={true}
-            label={"Continent"}
+            label={t("mapping.dashboard.form.location.picker.continent")}
             items={continentList}
             initialValue={location.continent}
             onChange={(value) => handleContinentChange(value)}
           />
           <SelectComponent
             isWithLabel={true}
-            label={"Country"}
+            label={t("mapping.dashboard.form.location.picker.country")}
             items={countryList}
             initialValue={location.country}
             onChange={(value) => handleCountryChange(value)}
@@ -216,7 +218,7 @@ function Location(props) {
           />
           <SelectComponent
             isWithLabel={true}
-            label={"Region"}
+            label={t("mapping.dashboard.form.location.picker.region")}
             items={regionList}
             initialValue={location.region}
             onChange={(value) => handleRegionChange(value)}
@@ -224,7 +226,7 @@ function Location(props) {
           />
           <SelectComponent
             isWithLabel={true}
-            label={"City"}
+            label={t("mapping.dashboard.form.location.picker.city")}
             items={cityList}
             initialValue={location.city}
             onChange={(value) => handleCityChange(value)}
