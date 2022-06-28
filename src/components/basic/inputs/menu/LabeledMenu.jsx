@@ -53,10 +53,6 @@ LabeledMenu.propTypes = {
    */
   initialValue: PropTypes.string.isRequired,
   /**
-   * Text displayed if the input is empty. Indicate the kind of data that we want in the field.
-   */
-  placeholder: PropTypes.string.isRequired,
-  /**
    * Function that will update the value of the model with a setState for example.
    */
   onChange: PropTypes.func.isRequired,
