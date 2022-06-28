@@ -166,8 +166,8 @@ function MapCanvasPage() {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Map.getMapServicesAndMapInformation(mapId);
-      setMapTitle(res.ecosystemMap["name"]);
+      let res = await Map.getMapServicesAndInformation(mapId);
+      setMapTitle(res.ecosystemMap.title);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
       setSecondaryFetchedData(sortedData);
