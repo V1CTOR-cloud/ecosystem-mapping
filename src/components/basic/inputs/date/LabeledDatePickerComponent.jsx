@@ -43,12 +43,33 @@ function LabeledDatePickerComponent(props) {
 }
 
 LabeledDatePickerComponent.propTypes = {
+  /**
+   * Text inside the tooltip to help the user understand the meaning of the label.
+   */
   tooltipText: PropTypes.string.isRequired,
+  /**
+   * Text that will be read for the screen readers.
+   */
   tooltipAriaLabel: PropTypes.string.isRequired,
+  /**
+   * Text to indicate to the user what the input corresponding to.
+   */
   label: PropTypes.string.isRequired,
+  /**
+   * Initial value of the start time.
+   */
   serviceStartTime: PropTypes.instanceOf(Date).isRequired,
+  /**
+   * Initial value of the end time.
+   */
   serviceEndTime: PropTypes.instanceOf(Date).isRequired,
+  /**
+   * Function that will update the value of the model for the start time with a setState for example.
+   */
   onChangeStartTime: PropTypes.func.isRequired,
+  /**
+   * Function that will update the value of the model for the end time with a setState for example.
+   */
   onChangeEndTime: PropTypes.func.isRequired,
 };
 

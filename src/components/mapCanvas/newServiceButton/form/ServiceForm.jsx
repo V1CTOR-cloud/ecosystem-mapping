@@ -553,12 +553,10 @@ function ServiceForm(props) {
                     }
                   }}
                 />
-                {isError ? (
+                {isError && (
                   <FormErrorMessage>
                     {t("mapping.canvas.form.service.name.error")}
                   </FormErrorMessage>
-                ) : (
-                  <Box />
                 )}
               </FormControl>
               <ServiceFocusComponent
@@ -648,7 +646,7 @@ ServiceForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   cancelRef: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default ServiceForm;

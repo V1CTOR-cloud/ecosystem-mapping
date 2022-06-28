@@ -18,8 +18,17 @@ function LabelWithTooltip(props) {
 }
 
 LabelWithTooltip.propTypes = {
+  /**
+   * Text to indicate to the user what the element corresponding to.
+   */
   label: PropTypes.string.isRequired,
+  /**
+   * Text inside the tooltip to help the user understand the meaning of the label.
+   */
   tooltipText: PropTypes.string.isRequired,
+  /**
+   * Text that will be read for the screen readers.
+   */
   tooltipAriaLabel: PropTypes.string.isRequired,
 };
 

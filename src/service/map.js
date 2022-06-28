@@ -2,83 +2,144 @@ import { graphCMSRequest } from "./graphCMS";
 import { Authentication } from "./authentication";
 
 export const Map = {
-
   async getAllUserMaps() {
-    const query = `query MyQuery {
-        ecosystemMaps(where: {cPTUserAccount: {id: "${Authentication.getCurrentUser().id}"}}){
+    const query = `
+      query getAllUserMaps {
+        ecosystemMaps(where: {owner: {id: "${
+          Authentication.getCurrentUser().id
+        }"}}) {
           id
-          name
-          region
-          country
-          state
-          city
-          industry
-          subIndustry
+          title
+          description
+          mapStatus
+          creation
+          lastModification
+          owner {
+            profileName
+          }
+          location {
+            id
+            continent
+            country
+            region
+            city
+          }
+          industry {
+            id
+            mainIndustry
+            subIndustry
+          }
           services {
             id
           }
         }
       }
-      `;
+    `;
 
-    const { ecosystemMaps } = await graphCMSRequest(query);
-
-    return await ecosystemMaps;
+    return (await graphCMSRequest(query)).ecosystemMaps;
   },
 
-  async addMap(data) {
-    const query = `mutation ($data: EcosystemMapCreateInput!) {
+  // Async function that create a map.
+  async createMap(data) {
+    const query = `
+      mutation ($data: EcosystemMapCreateInput!) {
         createEcosystemMap(data: $data) {
           id
-        }
-      }`;
-
-    const variables = {
-      data: {
-        name: data.name,
-        region: data.region,
-        country: data.country,
-        state: data.state,
-        city: data.city,
-        industry: data.industry,
-        subIndustry: data.subIndustry,
-        cPTUserAccount: {
-          connect: { id: Authentication.getCurrentUser().id }
+          title
+          description
+          mapStatus
+          creation
+          lastModification
+          owner {
+            profileName
+          }
+          location {
+            id
+            continent
+            country
+            region
+            city
+          }
+          industry {
+            id
+            mainIndustry
+            subIndustry
+          }
+          services {
+            id
+          }
         }
       }
+    `;
+
+    const variables = {
+      data: data,
     };
 
-    const { createEcosystemMap } = await graphCMSRequest(query, variables);
+    return await graphCMSRequest(query, variables);
+  },
 
-    const secondaryQuery = `mutation ($ids: [ID!], $to: [Stage!]!) {
-        publishManyEcosystemMapsConnection(where: {id_in: $ids}, to: $to){
-          aggregate{count}
-        }}`;
+  async updateMap(data) {
+    const query = `
+      mutation updateMap($data: EcosystemMapUpdateInput!, $id: ID!) {
+        updateEcosystemMap(where: {id: $id}, data: $data) {
+          id
+          title
+          description
+          mapStatus
+          creation
+          lastModification
+          owner {
+            profileName
+          }
+          location {
+            id
+            continent
+            country
+            region
+            city
+          }
+          industry {
+            id
+            mainIndustry
+            subIndustry
+          }
+          services {
+            id
+          }
+        }
+      }
+    `;
 
-    const secondaryVariables = {
-      ids: [createEcosystemMap.id],
-      to: ["PUBLISHED"]
+    const variables = {
+      id: data.id,
+      data: {
+        title: data.title,
+        mapStatus: data.mapStatus,
+        description: data.description,
+        lastModification: data.lastModification,
+        industry: data.industry,
+        location: data.location,
+      },
     };
 
-    await graphCMSRequest(secondaryQuery, secondaryVariables);
-
-    sessionStorage.setItem("ecomapid", createEcosystemMap.id);
-
-    return createEcosystemMap;
+    return await graphCMSRequest(query, variables);
   },
 
   async deleteMap(id) {
-    const query = `mutation ($ids: [ID!]!) {
-        deleteManyEcosystemMapsConnection(where: {id_in: $ids}) 
-        {
-            aggregate{count}
-        }}`;
+    const query = `
+      mutation deleteMap($id: ID!) {
+        deleteEcosystemMap(where: {id: $id}) {
+          id
+        }
+      }
+    `;
 
     const variables = {
-      ids: [id]
+      id: id,
     };
 
-    await graphCMSRequest(query, variables);
+    return await graphCMSRequest(query, variables);
   },
 
   async editMap(data) {
@@ -103,8 +164,8 @@ export const Map = {
         state: data.state,
         city: data.city,
         industry: data.industry,
-        subIndustry: data.subIndustry
-      }
+        subIndustry: data.subIndustry,
+      },
     };
 
     const { updateEcosystemMap } = await graphCMSRequest(query, variables);
@@ -116,12 +177,34 @@ export const Map = {
 
     const secondaryVariables = {
       ids: [data.id],
-      to: ["PUBLISHED"]
-    }
+      to: ["PUBLISHED"],
+    };
 
     await graphCMSRequest(secondaryQuery, secondaryVariables);
 
     return updateEcosystemMap;
+  },
+
+  async changeMapStatus(data) {
+    const query = `
+      mutation changeMapStatus($data: EcosystemMapUpdateInput!, $id: ID!) {
+          updateEcosystemMap(
+            where: {id: $id}, data: $data
+          ) {
+            id
+            mapStatus
+          }
+        }
+    `;
+
+    const variables = {
+      id: data.id,
+      data: {
+        mapStatus: data.mapStatus,
+      },
+    };
+
+    return (await graphCMSRequest(query, variables)).updateEcosystemMap;
   },
 
   // Get all the services for a specific map
@@ -188,10 +271,10 @@ export const Map = {
     const variables = {
       id: data.id,
       data: {
-        filters: data.filters
-      }
+        filters: data.filters,
+      },
     };
 
     return await graphCMSRequest(query, variables);
-  }
+  },
 };

@@ -6,10 +6,10 @@ import { Box } from "@chakra-ui/react";
 // import { Authenticator } from "@aws-amplify/ui-react";
 // import { useHistory } from "react-router-dom";
 import "@aws-amplify/ui-react/styles.css";
+import UserAccountMenu from "./UserAccountMenu";
 
 // import Service from "../../service/EcosystemMapServices";
 // // import awsExports from "../../aws-exports";
-import { UserAccountMenu } from "../miscellaneousComponents";
 // import { getCurrentUser } from "../../service/AuthenticationService";
 // import Logo from "../../assets/images/Logo.png";
 

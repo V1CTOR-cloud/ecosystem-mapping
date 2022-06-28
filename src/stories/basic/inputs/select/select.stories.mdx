@@ -1,0 +1,98 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { useState } from "react";
+
+import { withChakra } from "/.storybook/preview"
+import SelectComponent from "../../../../components/basic/inputs/select/SelectComponent";
+
+<Meta
+  title="Mapping App/Basic/Select"
+  component={SelectComponent}
+  decorators={[withChakra]}
+/>
+
+# Select
+
+Component that allows the user to pick a value through a predefined list of items. Used mainly when we have a lot of
+options available for the user (usually more than 4 or 5).
+
+## Simple select
+
+We have only the select field here.
+
+<Canvas>
+  <Story
+    name="Simple select"
+    args={{
+      disabled: false,
+      items: [
+        {
+          id: 0,
+          name: "Item 1",
+        },
+        {
+          id: 1,
+          name: "Item 2",
+        },
+        {
+          id: 2,
+          name: "Item 3",
+        }
+      ]
+    }}
+  >
+    {(args) => {
+      const [picker, setPicker] = useState(null);
+      return <SelectComponent
+        initialValue={picker}
+        onChange={(value) => {
+          setPicker(value);
+        }}
+        {...args}
+      />
+    }}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Simple select" />
+
+## Select with small label
+
+We have the select field with the label.
+
+<Canvas>
+  <Story
+    name="Select with small label"
+    args={{
+      disabled: false,
+      label: "Title",
+      isWithLabel: true,
+      items: [
+        {
+          id: 0,
+          name: "Item 1",
+        },
+        {
+          id: 1,
+          name: "Item 2",
+        },
+        {
+          id: 2,
+          name: "Item 3",
+        }
+      ]
+    }}
+  >
+    {(args) => {
+      const [picker, setPicker] = useState(null);
+      return <SelectComponent
+        initialValue={picker}
+        onChange={(value) => {
+          setPicker(value);
+        }}
+        {...args}
+      />
+    }}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Select with small label" />
