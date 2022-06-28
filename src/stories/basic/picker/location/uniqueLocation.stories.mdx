@@ -2,11 +2,11 @@ import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { withChakra } from "../../../../../.storybook/preview";
 import { Location } from "/src/service/location";
-import UniqueLocation from "../../../../components/basic/location/UniqueLocation";
+import UniqueLocationPicker from "../../../../components/basic/picker/locationPicker/UniqueLocationPicker";
 
 <Meta
   title="Mapping App/Basic/Location/Unique Location"
-  component={UniqueLocation}
+  component={UniqueLocationPicker}
   decorators={[withChakra]}
 />
 
@@ -14,7 +14,7 @@ import UniqueLocation from "../../../../components/basic/location/UniqueLocation
 
 The component displayed is a unique location selection, we can then select only one location.
 
-## Without initials values
+## Without initial value
 
 <Canvas>
   <Story
@@ -26,34 +26,25 @@ The component displayed is a unique location selection, we can then select only 
         locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
       }),
     ]}
-    args={{
-      initialValue: {
-        continent: null,
-        country: null,
-        region: null,
-        city: null,
-      }
-    }}
   >
-    {(args, { loaded: { locations } }) => <UniqueLocation
+    {(args, { loaded: { locations } }) => <UniqueLocationPicker
+      {...args}
       locationsList={locations}
       onChange={() => {
       }}
-      initialValue={{
+      initialValues={[{
         continent: null,
         country: null,
         region: null,
         city: null,
-      }}
+      }]}
     />}
   </Story>
 </Canvas>
 
 <ArgsTable story="Without initial value" />
 
-## With initials values
-
-### With only one value
+## With initial value
 
 <Canvas>
   <Story
@@ -65,25 +56,18 @@ The component displayed is a unique location selection, we can then select only 
         locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
       }),
     ]}
-    args={{
-      initialValue: {
-        continent: "Europe",
-        country: "Finland",
-        region: "Uusimaa",
-        city: null,
-      }
-    }}
   >
-    {(args, { loaded: { locations } }) => <UniqueLocation
+    {(args, { loaded: { locations } }) => <UniqueLocationPicker
+      {...args}
       locationsList={locations}
       onChange={() => {
       }}
-      initialValue={{
+      initialValues={[{
         continent: "Europe",
         country: "Finland",
-        region: "Uusimaa",
+        region: null,
         city: null,
-      }}
+      }]}
     />}
   </Story>
 </Canvas>
