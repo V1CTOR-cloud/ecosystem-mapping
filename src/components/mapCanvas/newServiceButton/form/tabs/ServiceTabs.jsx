@@ -57,17 +57,17 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.owner.organisation")}
             tooltipText={t("mapping.canvas.form.owner.organisation.tooltip")}
             tooltipAriaLabel={t("mapping.canvas.form.owner.organisation")}
-            initialValue={formValue.ownerOrganisation}
+            initialValue={formValue.ownerOrganization}
             items={organisations}
             onChange={(organisation) => {
-              formValue.ownerOrganisation = organisation;
+              formValue.ownerOrganization = organisation;
             }}
           />
           <ApplicationTypeComponent
-            applicationType={formValue.applicationType}
+            applicationType={formValue.serviceApplication}
             applicationTypeButtons={applicationTypeButtons}
             onChange={(applicationType) =>
-              (formValue.applicationType = applicationType)
+              (formValue.serviceApplication = applicationType)
             }
           />
           <Box marginTop={6}>
@@ -97,10 +97,12 @@ function ServiceTabs(props) {
             tooltipText={t("mapping.canvas.form.date.tooltip")}
             label={t("mapping.canvas.form.date")}
             tooltipAriaLabel={t("mapping.canvas.form.date")}
-            serviceStartTime={formValue.serviceStartTime}
-            serviceEndTime={formValue.serviceEndTime}
-            onChangeStartTime={(value) => (formValue.serviceStartTime = value)}
-            onChangeEndTime={(value) => (formValue.serviceEndTime = value)}
+            serviceStartTime={formValue.serviceTime.startTime}
+            serviceEndTime={formValue.serviceTime.endTime}
+            onChangeStartTime={(value) =>
+              (formValue.serviceTime.startTime = value)
+            }
+            onChangeEndTime={(value) => (formValue.serviceTime.endTime = value)}
           />
           <Box marginTop={6}>
             <LabeledInputComponent

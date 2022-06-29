@@ -29,7 +29,7 @@ export const Map = {
             mainIndustry
             subIndustry
           }
-          services {
+          service {
             id
           }
         }
@@ -168,42 +168,51 @@ export const Map = {
   async getMapServicesAndInformation(mapID) {
     const query = ` 
       query MyQuery {
-        services (where: {ecosystemMap: {id:"${mapID}"}}){
+        services (where: {ecosystemMaps_every: {id: "${mapID}"}}){
           id
-          serviceFocus
           serviceName
-          serviceOwner {
-            ... on Organisation {
-              organisationName
-              id
-            }
+          serviceFocus
+          ownerOrganization {
+            profileName
           }
-          serviceStartTime
-          serviceEndTime
-          timezone
-          stage
-          serviceDescription
-          serviceOutcomes
+          serviceApplication
           servicePhaseRange {
             id
-            endPhase
             startPhase
+            endPhase
+          }
+          serviceTime {
+            id
+            startTime
+            endTime
           }
           serviceLink
-          serviceBudget
-          serviceAudience
-          followingService
-          previousService
-          applicationType
           serviceLocation {
             id
-            city
             continent
             country
             region
+            city
+          }
+          serviceAudience
+          serviceBudget {
+            budgetTitle
+            budgetValue
+            budgetCurrency
+            id
+          }
+          serviceDescription
+          serviceOutcomes
+          previousService {
+            id
+            serviceName
+          }
+          followingService {
+            id
+            serviceName
           }
           serviceStatus
-          order
+          serviceOrder
         }
         ecosystemMap(where: {id:"${mapID}"}) {
           title
