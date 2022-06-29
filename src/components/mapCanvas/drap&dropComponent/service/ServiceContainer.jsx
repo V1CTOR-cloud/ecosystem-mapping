@@ -89,15 +89,17 @@ function ServiceContainer(props) {
 
     const newService = {
       serviceName: `Default name: ${createId(4)}`,
-      applicationType: thisService.applicationType,
+      serviceApplication: thisService.serviceApplication,
       serviceFocus: serviceFocus.servicesFocus[0].name.replaceAll(" ", ""),
-      order: thisService.order + 1,
+      serviceOrder: thisService.serviceOrder + 1,
       servicePhaseRange: {
         startPhase: Service.replaceNumberToPhase(newStartPhase),
         endPhase: Service.replaceNumberToPhase(newEndPhase),
       },
-      serviceStartTime: new Date(),
-      serviceEndTime: new Date(),
+      serviceTime: {
+        startTime: new Date(),
+        endTime: new Date(),
+      },
       serviceLocation: {
         continent: null,
         country: null,
@@ -131,8 +133,9 @@ function ServiceContainer(props) {
 
   async function reorderServiceList(serviceClicked, newService) {
     const newServiceIds = Array.from(
-      mapCanvasPageContext.fetchedData[0].rows[serviceClicked.applicationType]
-        .serviceIds
+      mapCanvasPageContext.fetchedData[0].rows[
+        serviceClicked.serviceApplication
+      ].serviceIds
     );
     const newServices = {
       ...mapCanvasPageContext.fetchedData[0].services,
@@ -151,7 +154,7 @@ function ServiceContainer(props) {
     // Creation of a new instance of the row with the new serviceIds and the rest of the data.
     const newRow = {
       ...mapCanvasPageContext.fetchedData[0].rows[
-        serviceClicked.applicationType
+        serviceClicked.serviceApplication
       ],
       serviceIds: newServiceIds,
     };
@@ -178,8 +181,8 @@ function ServiceContainer(props) {
     for (const value of Object.values(services)) {
       if (listIds.includes(value.id)) {
         const data = {
-          order: value.order,
-          applicationType: value.applicationType,
+          serviceOrder: value.serviceOrder,
+          serviceApplication: value.serviceApplication,
         };
 
         await Service.updateServiceOrderAndApplicationType(

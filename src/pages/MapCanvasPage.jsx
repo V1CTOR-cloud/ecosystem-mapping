@@ -29,7 +29,6 @@ import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceFo
 import { FilterAlt } from "@styled-icons/boxicons-regular";
 import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
-import { Organisation } from "../service/organisation";
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
@@ -138,7 +137,7 @@ function MapCanvasPage() {
   const [mapTitle, setMapTitle] = useState("");
   const [fetchedData, setFetchedData] = useState(null);
   const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
-  const [fetchedOrganization, setFetchedOrganization] = useState(null);
+  const [fetchedOrganization] = useState([]);
   const [fetchedFilters, setFetchedFilters] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [heights, setHeights] = useState([180, 180, 180]);
@@ -166,8 +165,8 @@ function MapCanvasPage() {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Map.getMapServicesAndMapInformation(mapId);
-      setMapTitle(res.ecosystemMap["name"]);
+      let res = await Map.getMapServicesAndInformation(mapId);
+      setMapTitle(res.ecosystemMap.title);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
       setSecondaryFetchedData(sortedData);
@@ -176,18 +175,6 @@ function MapCanvasPage() {
       if (res.ecosystemMap["filters"] != null) {
         setFetchedFilters(Object.entries(res.ecosystemMap["filters"]));
       }
-
-      // Get all organisations
-      res = await Organisation.getAllOrganisation();
-      const tempOrganizations = [];
-      // Formatting our organisation to fit for the component LabeledMenu
-      res.organisations.forEach((organisation) =>
-        tempOrganizations.push({
-          id: organisation.id,
-          name: organisation.organisationName,
-        })
-      );
-      setFetchedOrganization(tempOrganizations);
 
       const tempServices = Object.values(sortedData.services);
       tempServices.forEach((thisService) => {
@@ -331,7 +318,7 @@ function MapCanvasPage() {
         };
 
         // Fill the serviceIds for each row
-        switch (service.applicationType) {
+        switch (service.serviceApplication) {
           case market_and_organization:
             tempSecondaryData.rows.Market_and_Organization.serviceIds.push(
               service.id
@@ -499,7 +486,7 @@ function MapCanvasPage() {
           draftData.push(service);
         }
 
-        switch (service.applicationType) {
+        switch (service.serviceApplication) {
           case market_and_organization:
             sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
             break;

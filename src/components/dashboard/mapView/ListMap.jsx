@@ -92,7 +92,7 @@ function ListMap(props) {
               _groupHover={groupBlackColor}
               paddingX={5}
             >
-              {data.services.length} Services
+              {data.service.length} Services
             </Text>
             <Text
               color={greyColor}

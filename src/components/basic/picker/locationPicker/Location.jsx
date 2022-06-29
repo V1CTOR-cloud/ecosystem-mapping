@@ -272,17 +272,18 @@ export default Location;
 
 Location.defaultProps = {
   onRemoveLocation: () => {},
+  index: 0,
 };
 
 Location.propTypes = {
   /**
+   * Number that indicate which locationPicker is currently map to get the value and setState it.
+   */
+  index: PropTypes.number,
+  /**
    * Function that will remove the selected location from the list.
    */
   onRemoveLocation: PropTypes.func,
-  /**
-   * Number that indicate which industryPicker is currently map to get the value and setState it.
-   */
-  index: PropTypes.number.isRequired,
   /**
    * Select field that allow the user to pick through a predefined list of items.
    */

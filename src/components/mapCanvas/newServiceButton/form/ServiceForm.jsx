@@ -55,22 +55,26 @@ function ServiceForm(props) {
   const formValue = {
     serviceName: "",
     serviceFocus: service.servicesFocus[0],
-    ownerOrganisation: organisations[0].name,
-    applicationType: applicationTypeButtons[0],
+    ownerOrganization: organisations[0].name,
+    serviceApplication: applicationTypeButtons[0],
     servicePhaseRange: {
       startPhase: -1.0,
       endPhase: 1.0,
     },
-    serviceStartTime: new Date(),
-    serviceEndTime: new Date(),
+    serviceTime: {
+      startTime: new Date(),
+      endTime: new Date(),
+    },
     serviceLink: "",
     serviceAudience: audiences[0].name,
-    serviceLocation: {
-      continent: null,
-      country: null,
-      region: null,
-      city: null,
-    },
+    serviceLocation: [
+      {
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      },
+    ],
     serviceBudget: [{ budgetTitle: "", budgetValue: "", budgetCurrency: "€" }],
 
     serviceDescription: "",
@@ -82,17 +86,18 @@ function ServiceForm(props) {
   // We set the values of formValue because we are in edition mode.
   // Do not need useEffect since this component is rendered only once
   if (isEditing) {
-    formValue["serviceName"] = serviceWithoutModification.serviceName;
-    formValue["serviceFocus"] = service.servicesFocus.find(
+    formValue.serviceName = serviceWithoutModification.serviceName;
+    formValue.serviceFocus = service.servicesFocus.find(
       (result) =>
         result.name.split(" ").join("") ===
         serviceWithoutModification.serviceFocus
     );
-    formValue["ownerOrganisation"] = serviceWithoutModification.serviceOwner
-      ? organisations[0].name
-      : serviceWithoutModification.serviceOwner[0].organisationName;
-    formValue["applicationType"] = serviceWithoutModification.applicationType;
-    formValue["servicePhaseRange"] = {
+    formValue.ownerOrganization = serviceWithoutModification.ownerOrganization
+      ? serviceWithoutModification.ownerOrganization[0].organisationName
+      : organisations[0].name;
+    formValue.serviceApplication =
+      serviceWithoutModification.serviceApplication;
+    formValue.servicePhaseRange = {
       startPhase: Service.replacePhaseToNumber(
         serviceWithoutModification.servicePhaseRange.startPhase
       ),
@@ -102,29 +107,31 @@ function ServiceForm(props) {
     };
 
     // For the time we convert the data to the timeZone of the user because the data retrieve are in GMT+00:00
-    formValue["serviceStartTime"] = timeZoneConvertor(
-      serviceWithoutModification.serviceStartTime,
+    formValue.serviceTime.startTime = timeZoneConvertor(
+      serviceWithoutModification.serviceTime.startTime,
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
-    formValue["serviceEndTime"] = timeZoneConvertor(
-      serviceWithoutModification.serviceEndTime,
+    formValue.serviceTime.endTime = timeZoneConvertor(
+      serviceWithoutModification.serviceTime.endTime,
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
-    formValue["serviceLocation"] = serviceWithoutModification.serviceLocation
-      ? serviceWithoutModification.serviceLocation
-      : {
-          continent: null,
-          country: null,
-          region: null,
-          city: null,
-        };
-    formValue["serviceLink"] = serviceWithoutModification.serviceLink
+    formValue.serviceLocation = serviceWithoutModification.serviceLocation
+      ? [serviceWithoutModification.serviceLocation]
+      : [
+          {
+            continent: null,
+            country: null,
+            region: null,
+            city: null,
+          },
+        ];
+    formValue.serviceLink = serviceWithoutModification.serviceLink
       ? serviceWithoutModification.serviceLink
       : "";
-    formValue["serviceAudience"] = serviceWithoutModification.serviceAudience
+    formValue.serviceAudience = serviceWithoutModification.serviceAudience
       ? serviceWithoutModification.serviceAudience
       : audiences[0].name;
-    formValue["serviceBudget"] = serviceWithoutModification.serviceBudget
+    formValue.serviceBudget = serviceWithoutModification.serviceBudget
       ? props.serviceWithoutModification.serviceBudget
       : [
           {
@@ -133,11 +140,10 @@ function ServiceForm(props) {
             budgetCurrency: "€",
           },
         ];
-    formValue["serviceDescription"] =
-      serviceWithoutModification.serviceDescription
-        ? serviceWithoutModification.serviceDescription
-        : "";
-    formValue["serviceOutcomes"] = serviceWithoutModification.serviceOutcomes
+    formValue.serviceDescription = serviceWithoutModification.serviceDescription
+      ? serviceWithoutModification.serviceDescription
+      : "";
+    formValue.serviceOutcomes = serviceWithoutModification.serviceOutcomes
       ? serviceWithoutModification.serviceOutcomes
       : "";
 
@@ -146,7 +152,7 @@ function ServiceForm(props) {
         (service) => service.name === serviceWithoutModification.previousService
       );
       if (previousService !== undefined) {
-        formValue["precededService"] = previousService;
+        formValue.precededService = previousService;
       }
     }
 
@@ -155,12 +161,12 @@ function ServiceForm(props) {
         (service) => service.name === serviceWithoutModification.followedService
       );
       if (followingService !== undefined) {
-        formValue["followingService"] = followingService;
+        formValue.followingService = followingService;
       }
     }
 
     // Check if the budget is 0 to replace it with an empty string
-    formValue["serviceBudget"].forEach((budget) => {
+    formValue.serviceBudget.forEach((budget) => {
       budget.budgetValue = budget.budgetValue === 0 ? "" : budget.budgetValue;
     });
   }
@@ -173,58 +179,59 @@ function ServiceForm(props) {
     formatBudget();
 
     let organisationId = null;
-    if (formValue["ownerOrganisation"] !== null) {
+    if (formValue.ownerOrganization !== organisations[0].name) {
       organisationId = propOrganisations.find(
-        (organisation) => formValue["ownerOrganisation"] === organisation.name
+        (organisation) => formValue.ownerOrganisation === organisation.name
       ).id;
     }
 
-    const order = data.rows[formValue["applicationType"]].serviceIds.length;
+    const serviceOrder =
+      data.rows[formValue.serviceApplication].serviceIds.length;
 
     const argument = {
-      serviceName: formValue["serviceName"],
-      serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
+      serviceName: formValue.serviceName,
+      serviceFocus: formValue.serviceFocus.name.replaceAll(" ", ""),
       organisationId: organisationId,
-      applicationType: formValue["applicationType"]
+      serviceApplication: formValue.serviceApplication
         .replaceAll(" ", "_")
         .replace("&", "and"),
-      serviceStartTime: formValue["serviceStartTime"],
-      serviceEndTime: formValue["serviceEndTime"],
-      serviceLink: formValue["serviceLink"],
-      serviceLocation: formValue["serviceLocation"],
-      serviceAudience: formValue["serviceAudience"],
-      serviceBudget: formValue["serviceBudget"],
-      serviceDescription: formValue["serviceDescription"],
-      serviceOutcomes: formValue["serviceOutcomes"],
+      serviceTime: formValue.serviceTime,
+      serviceLink: formValue.serviceLink,
+      serviceLocation: formValue.serviceLocation[0],
+      serviceAudience: formValue.serviceAudience,
+      serviceBudget: formValue.serviceBudget,
+      serviceDescription: formValue.serviceDescription,
+      serviceOutcomes: formValue.serviceOutcomes,
       precededService:
-        formValue["precededService"] === "Select a service"
+        formValue.precededService === "Select a service"
           ? ""
-          : formValue["precededService"],
+          : formValue.precededService,
       followedService:
-        formValue["followedService"] === "Select a service"
+        formValue.followedService === "Select a service"
           ? ""
-          : formValue["followedService"],
+          : formValue.followedService,
 
       servicePhaseRange: {
         startPhase: Service.replaceNumberToPhase(
-          formValue["servicePhaseRange"].startPhase
+          formValue.servicePhaseRange.startPhase
         ),
         endPhase: Service.replaceNumberToPhase(
-          formValue["servicePhaseRange"].endPhase
+          formValue.servicePhaseRange.endPhase
         ),
       },
 
       mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
-      order: order,
+      serviceOrder: serviceOrder,
     };
 
     await createNewService(argument);
   }
 
   // Function that will check if everything is correct to send it to the database to avoid errors
+  // eslint-disable-next-line no-unused-vars
   async function createNewService(data) {
-    if (formValue["serviceName"] === "") {
+    if (formValue.serviceName === "") {
       setIsError(true);
     } else {
       const res = await Service.createService(data);
@@ -257,7 +264,7 @@ function ServiceForm(props) {
 
     // Add the service id to the corresponding row
     const tempRows = data.rows;
-    tempRows[res.createService.applicationType].serviceIds.push(
+    tempRows[res.createService.serviceApplication].serviceIds.push(
       res.createService.id
     );
 
@@ -281,91 +288,94 @@ function ServiceForm(props) {
     formatBudget();
 
     let organisationId = null;
-    if (formValue["ownerOrganisation"] !== null) {
+    if (formValue.ownerOrganization !== organisations[0].name) {
       // Retrieve the organisation id that we selected (modified or not)
       organisationId = propOrganisations.find(
-        (organisation) => formValue["ownerOrganisation"] === organisation.name
+        (organisation) => formValue.ownerOrganization === organisation.name
       ).id;
     }
 
     let organisationIdWithoutModification;
-    if (serviceWithoutModification.serviceOwner.length !== 0) {
+    if (serviceWithoutModification.ownerOrganization !== null) {
       // Retrieve the organisation id that was previously selected to disconnected it.
       organisationIdWithoutModification = propOrganisations.find(
         (organisation) =>
-          serviceWithoutModification.serviceOwner[0].organisationName ===
+          serviceWithoutModification.ownerOrganization[0].ownerOrganization ===
           organisation.name
       ).id;
     }
 
-    let order;
+    let serviceOrder;
 
     // Check if we change of application type (row) if that is the case push the service at the last index, otherwise we are keeping the same.
     if (
-      serviceWithoutModification.applicationType ===
-      formValue["applicationType"].replaceAll(" ", "_").replace("&", "and")
+      serviceWithoutModification.serviceApplication ===
+      formValue.serviceApplication.replaceAll(" ", "_").replace("&", "and")
     ) {
-      // Put the order to 999 to avoid conflict when putting again in draft or published
+      // Put the serviceOrder to 999 to avoid conflict when putting again in draft or published
       if (serviceStatus === "Archived") {
-        order = 999;
+        serviceOrder = 999;
       } else if (serviceWithoutModification.serviceStatus === "Archived") {
-        order = data.rows[formValue["applicationType"]].serviceIds.length;
+        serviceOrder =
+          data.rows[formValue.serviceApplication].serviceIds.length;
       } else {
-        order = serviceWithoutModification.order;
+        serviceOrder = serviceWithoutModification.serviceOrder;
       }
     } else {
-      order = data.rows[formValue["applicationType"]].serviceIds.length;
+      serviceOrder = data.rows[formValue.serviceApplication].serviceIds.length;
     }
 
     const argument = {
       id: serviceWithoutModification.id,
 
       // First tabs
-      serviceName: formValue["serviceName"],
-      applicationType: formValue["applicationType"]
+      serviceName: formValue.serviceName,
+      serviceApplication: formValue.serviceApplication
         .replaceAll(" ", "_")
         .replace("&", "and"),
       organisationId: organisationId,
-      serviceFocus: formValue["serviceFocus"].name.replaceAll(" ", ""),
+      serviceFocus: formValue.serviceFocus.name.replaceAll(" ", ""),
       servicePhaseRange: {
         id: serviceWithoutModification.servicePhaseRange.id,
         startPhase: Service.replaceNumberToPhase(
-          formValue["servicePhaseRange"].startPhase
+          formValue.servicePhaseRange.startPhase
         ),
         endPhase: Service.replaceNumberToPhase(
-          formValue["servicePhaseRange"].endPhase
+          formValue.servicePhaseRange.endPhase
         ),
       },
 
       // Second tabs
-      serviceStartTime: formValue["serviceStartTime"],
-      serviceEndTime: formValue["serviceEndTime"],
-      serviceLink: formValue["serviceLink"],
+      serviceTime: {
+        startTime: formValue.startTime,
+        endTime: formValue.endTime,
+      },
+      serviceLink: formValue.serviceLink,
       serviceLocation: {
-        ...formValue["serviceLocation"],
+        ...formValue.serviceLocation,
         id: serviceWithoutModification.serviceLocation.id,
       },
-      serviceAudience: formValue["serviceAudience"],
-      serviceBudget: formValue["serviceBudget"],
+      serviceAudience: formValue.serviceAudience,
+      serviceBudget: formValue.serviceBudget,
 
       // Third tabs
-      serviceDescription: formValue["serviceDescription"],
-      serviceOutcomes: formValue["serviceOutcomes"],
+      serviceDescription: formValue.serviceDescription,
+      serviceOutcomes: formValue.serviceOutcomes,
       precededService:
-        formValue["precededService"] ===
+        formValue.precededService ===
         t("mapping.canvas.form.service.select.service")
           ? ""
-          : formValue["precededService"],
+          : formValue.precededService,
       followedService:
-        formValue["followedService"] ===
+        formValue.followedService ===
         t("mapping.canvas.form.service.select.service")
           ? ""
-          : formValue["followedService"],
+          : formValue.followedService,
 
       // Others parameters hidden from the user
       mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
-      order: order,
+      serviceOrder: serviceOrder,
 
       // Parameters to be able to filter afterwards
       serviceWithoutModification: serviceWithoutModification,
@@ -376,7 +386,7 @@ function ServiceForm(props) {
   }
 
   async function updateService(data) {
-    if (formValue["serviceName"] === "") {
+    if (formValue.serviceName === "") {
       setIsError(true);
     } else {
       const res = await Service.updateService(data);
@@ -405,34 +415,34 @@ function ServiceForm(props) {
     const tempRows = data.rows;
 
     if (
-      serviceWithoutModification.applicationType ===
-      updateService.applicationType
+      serviceWithoutModification.serviceApplication ===
+      updateService.serviceApplication
     ) {
       if (updateService.serviceStatus === "Archived") {
         // Remove the element in the same row
-        tempRows[updateService.applicationType].serviceIds.splice(
-          serviceWithoutModification.order,
+        tempRows[updateService.serviceApplication].serviceIds.splice(
+          serviceWithoutModification.serviceserviceOrder,
           1
         );
 
         await updateAllServices(tempServices);
       } else {
         // Remove the element in the same row to put it the updated version.
-        tempRows[updateService.applicationType].serviceIds.splice(
-          serviceWithoutModification.order,
+        tempRows[updateService.serviceApplication].serviceIds.splice(
+          serviceWithoutModification.serviceOrder,
           1,
           updateService.id
         );
       }
     } else {
       // Remove the element in the original row.
-      tempRows[serviceWithoutModification.applicationType].serviceIds.splice(
-        serviceWithoutModification.order,
+      tempRows[serviceWithoutModification.serviceApplication].serviceIds.splice(
+        serviceWithoutModification.serviceOrder,
         1
       );
       if (updateService.serviceStatus !== "Archived") {
         // Add it at the last index of the new row.
-        tempRows[updateService.applicationType].serviceIds.push(
+        tempRows[updateService.serviceApplication].serviceIds.push(
           updateService.id
         );
       }
@@ -448,22 +458,22 @@ function ServiceForm(props) {
   }
 
   function updateAllServices(tempServices) {
-    // Update all the others services because their order have changed
+    // Update all the others services because their serviceOrder have changed
     const values = Object.values(tempServices);
     let error;
     for (const service of values) {
       if (
-        service.applicationType ===
-          serviceWithoutModification.applicationType &&
-        service.order > serviceWithoutModification.order
+        service.serviceApplication ===
+          serviceWithoutModification.serviceApplication &&
+        service.serviceOrder > serviceWithoutModification.serviceOrder
       ) {
-        service.order -= 1;
+        service.serviceOrder -= 1;
         const data = {
-          order: service.order,
-          applicationType: service.applicationType,
+          serviceOrder: service.serviceOrder,
+          serviceApplication: service.serviceApplication,
         };
 
-        Service.updateServiceOrderAndApplicationType(
+        Service.updateServiceserviceOrderAndApplicationType(
           service.id,
           data
           // eslint-disable-next-line no-loop-func
@@ -472,7 +482,7 @@ function ServiceForm(props) {
         //Stop the loop if we have an error
         if (error) {
           ToastComponent(
-            t("mapping.canvas.error.service.order.modification"),
+            t("mapping.canvas.error.service.serviceOrder.modification"),
             "error"
           );
           break;
@@ -483,36 +493,36 @@ function ServiceForm(props) {
 
   // Set to null when we have no location selected.
   function formatLocation() {
-    if (formValue["serviceLocation"].continent === "Continent") {
-      formValue["serviceLocation"].continent = null;
+    if (formValue.serviceLocation.continent === "Continent") {
+      formValue.serviceLocation.continent = null;
     }
-    if (formValue["serviceLocation"].country === "Country") {
-      formValue["serviceLocation"].country = null;
+    if (formValue.serviceLocation.country === "Country") {
+      formValue.serviceLocation.country = null;
     }
-    if (formValue["serviceLocation"].region === "Region") {
-      formValue["serviceLocation"].region = null;
+    if (formValue.serviceLocation.region === "Region") {
+      formValue.serviceLocation.region = null;
     }
-    if (formValue["serviceLocation"].city === "City") {
-      formValue["serviceLocation"].city = null;
+    if (formValue.serviceLocation.city === "City") {
+      formValue.serviceLocation.city = null;
     }
   }
 
   // Set to null when we have no audience selected.
   function formatAudience() {
-    if (formValue["serviceAudience"] === "Audience") {
-      formValue["serviceAudience"] = null;
+    if (formValue.serviceAudience === "Audience") {
+      formValue.serviceAudience = null;
     }
   }
 
   // Set to null when we have no organisation selected.
   function formatOrganisation() {
-    if (formValue["ownerOrganisation"] === "Organisation") {
-      formValue["ownerOrganisation"] = null;
+    if (formValue.ownerOrganisation === "Organisation") {
+      formValue.ownerOrganisation = null;
     }
   }
 
   function formatBudget() {
-    formValue["serviceBudget"].forEach((budget) => {
+    formValue.serviceBudget.forEach((budget) => {
       budget.budgetValue =
         budget.budgetValue === "" ? 0 : parseFloat(budget.budgetValue);
     });
@@ -542,10 +552,10 @@ function ServiceForm(props) {
               <FormControl isInvalid={isError}>
                 <InputComponent
                   isRequired={true}
-                  initialValue={formValue["serviceName"]}
+                  initialValue={formValue.serviceName}
                   placeholder={t("mapping.canvas.form.service.name")}
                   onChange={(serviceName) => {
-                    formValue["serviceName"] = serviceName;
+                    formValue.serviceName = serviceName;
                     if (serviceName === "") {
                       setIsError(true);
                     } else {
@@ -560,9 +570,9 @@ function ServiceForm(props) {
                 )}
               </FormControl>
               <ServiceFocusComponent
-                serviceFocus={formValue["serviceFocus"]}
+                serviceFocus={formValue.serviceFocus}
                 onChange={(serviceFocus) =>
-                  (formValue["serviceFocus"] = serviceFocus)
+                  (formValue.serviceFocus = serviceFocus)
                 }
               />
             </HStack>
@@ -604,6 +614,7 @@ function ServiceForm(props) {
               )}
               {isEditing ? (
                 <Button
+                  marginX={5}
                   variant="outline"
                   onClick={async () => {
                     await handleUpdateClick("Draft");
@@ -613,6 +624,7 @@ function ServiceForm(props) {
                 </Button>
               ) : (
                 <Button
+                  marginRight={5}
                   variant="outline"
                   onClick={() => handleDraftOrPublishClick("Draft")}
                 >
@@ -646,7 +658,7 @@ ServiceForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   cancelRef: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 };
 
 export default ServiceForm;
