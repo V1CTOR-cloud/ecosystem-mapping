@@ -65,7 +65,7 @@ export const Map = {
             mainIndustry
             subIndustry
           }
-          services {
+          service {
             id
           }
         }
@@ -104,7 +104,7 @@ export const Map = {
             mainIndustry
             subIndustry
           }
-          services {
+          service {
             id
           }
         }

@@ -51,6 +51,7 @@ function Dashboard() {
   const { t } = useTranslation();
   const [isGrid, setIsGrid] = useState(true);
   const [userMaps, setUserMaps] = useState([]);
+  const [secondaryUserMaps, setSecondaryUserMaps] = useState([]);
   const [edition, setEdition] = useState({
     isEdition: false,
     initialFormValues: {},
@@ -88,6 +89,7 @@ function Dashboard() {
     userMapsPromise.then((value) => {
       handleToggleView(value, true);
       setUserMaps(value);
+      setSecondaryUserMaps(value);
     });
   }, []);
 
@@ -203,16 +205,24 @@ function Dashboard() {
       .then((value) => {
         // Check if we have don't have errors
         if (value.deleteEcosystemMap) {
-          const tempUserMaps = [...userMaps];
+          let tempUserMaps = [...secondaryUserMaps];
 
           // Get the index to remove the correct object in the array
-          const index = tempUserMaps.findIndex(
+          let index = tempUserMaps.findIndex(
             (userMap) => userMap.id === mapData.id
           );
           tempUserMaps.splice(index, 1);
-
-          setUserMaps(tempUserMaps);
+          setSecondaryUserMaps(tempUserMaps);
           handleToggleView(tempUserMaps, isGrid);
+
+          // Do the same for the userMaps
+          tempUserMaps = [...userMaps];
+          // Get the index to remove the correct object in the array
+          index = tempUserMaps.findIndex(
+            (userMap) => userMap.id === mapData.id
+          );
+          tempUserMaps.splice(index, 1);
+          setUserMaps(tempUserMaps);
 
           onCloseModal();
           ToastComponent(t("mapping.dashboard.toast.map.deleted"), "success");
@@ -233,10 +243,14 @@ function Dashboard() {
       .then((value) => {
         // Check if we have don't have errors
         if (value.createEcosystemMap) {
-          const tempUserMaps = [...userMaps];
+          const tempUserMaps = [...secondaryUserMaps];
 
           tempUserMaps.push(value.createEcosystemMap);
-          setUserMaps(tempUserMaps);
+          setUserMaps((previousState) => {
+            previousState.push(value.createEcosystemMap);
+            return previousState;
+          });
+          setSecondaryUserMaps(tempUserMaps);
           handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
@@ -258,17 +272,26 @@ function Dashboard() {
       .then((value) => {
         // Check if we have don't have errors
         if (value.updateEcosystemMap) {
-          const tempUserMaps = [...userMaps];
+          let tempUserMaps = [...secondaryUserMaps];
 
           // Get the index to remove the correct object in the array
-          const index = tempUserMaps.findIndex(
+          let index = tempUserMaps.findIndex(
             (userMap) => userMap.id === formattedData.id
           );
           tempUserMaps.splice(index, 1);
 
           tempUserMaps.push(value.updateEcosystemMap);
-          setUserMaps(tempUserMaps);
+          setSecondaryUserMaps(tempUserMaps);
           handleToggleView(tempUserMaps, isGrid);
+
+          // Do the same for the userMaps
+          tempUserMaps = [...userMaps];
+          index = tempUserMaps.findIndex(
+            (userMap) => userMap.id === formattedData.id
+          );
+          tempUserMaps.splice(index, 1);
+          tempUserMaps.push(value.updateEcosystemMap);
+          setUserMaps(tempUserMaps);
 
           onCloseModal();
           ToastComponent(t("mapping.dashboard.toast.map.updated"), "success");
@@ -287,12 +310,18 @@ function Dashboard() {
 
     changeMapStatusPromise
       .then(() => {
-        const tempUserMaps = [...userMaps];
+        let tempUserMaps = [...secondaryUserMaps];
 
-        const index = tempUserMaps.findIndex((map) => map.id === data.id);
+        let index = tempUserMaps.findIndex((map) => map.id === data.id);
         tempUserMaps[index].mapStatus = data.mapStatus;
 
         handleToggleView(tempUserMaps, isGrid);
+        setSecondaryUserMaps(tempUserMaps);
+
+        // Do the same for the userMaps
+        tempUserMaps = [...userMaps];
+        index = tempUserMaps.findIndex((map) => map.id === data.id);
+        tempUserMaps[index].mapStatus = data.mapStatus;
         setUserMaps(tempUserMaps);
 
         ToastComponent(t("mapping.dashboard.toast.map.updated"), "success");
@@ -306,7 +335,7 @@ function Dashboard() {
   // it will then setState the page to update the view.
   function handleSorting(sortBy) {
     if (sortBy === "Alphabetical") {
-      userMaps.sort((a, b) => {
+      secondaryUserMaps.sort((a, b) => {
         if (a.title < b.title) {
           return -1;
         }
@@ -316,7 +345,7 @@ function Dashboard() {
         return 0;
       });
     } else if (sortBy === "Modification") {
-      userMaps
+      secondaryUserMaps
         .sort(
           (a, b) =>
             moment(a.lastModification, "YYYY-MM-DD") -
@@ -324,13 +353,26 @@ function Dashboard() {
         )
         .reverse();
     } else {
-      userMaps
+      secondaryUserMaps
         .sort(
           (a, b) =>
             moment(a.creation, "YYYY-MM-DD") - moment(b.creation, "YYYY-MM-DD")
         )
         .reverse();
     }
+    handleToggleView(secondaryUserMaps, isGrid);
+  }
+
+  function handleSearchMap(mapTitle) {
+    const resultMaps = userMaps.filter((map) => map.title.includes(mapTitle));
+
+    setSecondaryUserMaps(resultMaps);
+    handleToggleView(resultMaps, isGrid);
+  }
+
+  function handleCloseSearch() {
+    onCloseSearch();
+    setSecondaryUserMaps(userMaps);
     handleToggleView(userMaps, isGrid);
   }
 
@@ -354,7 +396,7 @@ function Dashboard() {
           variant="blackGhost"
           marginRight="1rem"
           leftIcon={<GridIcon size="20" />}
-          onClick={() => handleToggleView(userMaps, true)}
+          onClick={() => handleToggleView(secondaryUserMaps, true)}
         >
           {t("mapping.navigation.bar.view.grid.button")}
         </Button>
@@ -364,7 +406,7 @@ function Dashboard() {
           variant="blackGhost"
           marginRight="1rem"
           leftIcon={<HamburgerIcon w={5} h={5} />}
-          onClick={() => handleToggleView(userMaps, false)}
+          onClick={() => handleToggleView(secondaryUserMaps, false)}
         >
           {t("mapping.navigation.bar.view.list.button")}
         </Button>
@@ -423,7 +465,7 @@ function Dashboard() {
       )}
       {isOpenSearch && (
         <InputGroup w="200px">
-          <InputLeftElement cursor="pointer" onClick={() => {}}>
+          <InputLeftElement>
             <SearchIcon color={isOpenSearch ? "brand.500" : "blackAlpha.700"} />
           </InputLeftElement>
           <Input
@@ -432,8 +474,9 @@ function Dashboard() {
             border={0.5}
             borderColor={"brand.500"}
             _hover={{ borderColor: "brand.500" }}
+            onChange={(e) => handleSearchMap(e.target.value)}
           />
-          <InputRightElement cursor="pointer" onClick={onCloseSearch}>
+          <InputRightElement cursor="pointer" onClick={handleCloseSearch}>
             <CloseIcon color={"blackAlpha.700"} />
           </InputRightElement>
         </InputGroup>
