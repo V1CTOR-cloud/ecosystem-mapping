@@ -199,7 +199,6 @@ export const Service = {
         }
       }`;
 
-    console.log(data.serviceBudget);
     const updateBudgets = [];
     data.serviceBudget.forEach((budget) => {
       updateBudgets.push({

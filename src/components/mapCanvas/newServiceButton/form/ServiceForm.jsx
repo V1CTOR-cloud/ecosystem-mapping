@@ -295,7 +295,6 @@ function ServiceForm(props) {
       ).id;
     }
 
-    console.log(serviceWithoutModification);
     let organisationIdWithoutModification;
     if (serviceWithoutModification.ownerOrganization !== null) {
       // Retrieve the organisation id that was previously selected to disconnected it.
@@ -615,6 +614,7 @@ function ServiceForm(props) {
               )}
               {isEditing ? (
                 <Button
+                  marginX={5}
                   variant="outline"
                   onClick={async () => {
                     await handleUpdateClick("Draft");
@@ -624,6 +624,7 @@ function ServiceForm(props) {
                 </Button>
               ) : (
                 <Button
+                  marginRight={5}
                   variant="outline"
                   onClick={() => handleDraftOrPublishClick("Draft")}
                 >
