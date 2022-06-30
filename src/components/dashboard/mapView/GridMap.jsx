@@ -54,6 +54,9 @@ function GridMap(props) {
               fontSize="xl"
               transition={transition}
               _groupHover={{ color: "brand.500" }}
+              textOverflow="ellipsis"
+              overflow="hidden"
+              whiteSpace="nowrap"
             >
               {data.title}
             </Text>
