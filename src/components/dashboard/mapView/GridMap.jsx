@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Box, HStack, VStack, Text, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
@@ -10,8 +10,9 @@ import { AppProvider } from "../../../App";
 
 function GridMap(props) {
   let navigate;
+  const appProvider = useContext(AppProvider);
   // For storybook
-  if (AppProvider.data !== undefined) {
+  if (appProvider.isApp) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     navigate = useNavigate();
   }
@@ -31,7 +32,7 @@ function GridMap(props) {
       w="300px"
       h="275px"
       onClick={() => {
-        if (AppProvider.data) {
+        if (appProvider.isApp) {
           navigate(`/dashboard/${data.id}`);
         }
       }}

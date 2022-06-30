@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Box, HStack, VStack, Text, Image, Spacer } from "@chakra-ui/react";
 import PropTypes from "prop-types";
@@ -10,9 +10,10 @@ import { AppProvider } from "../../../App";
 
 function ListMap(props) {
   const { data } = props;
+  const appProvider = useContext(AppProvider);
   let navigate;
   // For storybook
-  if (AppProvider.data !== undefined) {
+  if (appProvider.isApp) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     navigate = useNavigate();
   }
@@ -29,7 +30,7 @@ function ListMap(props) {
     <Box
       role="group"
       onClick={() => {
-        if (AppProvider.data !== undefined) {
+        if (appProvider.isApp) {
           navigate(`/dashboard/${data.id}`);
         }
       }}
