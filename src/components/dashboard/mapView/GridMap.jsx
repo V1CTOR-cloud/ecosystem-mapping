@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Box, HStack, VStack, Text, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
@@ -6,9 +6,16 @@ import PropTypes from "prop-types";
 import moment from "moment";
 
 import DashboardMenuOptions from "./DashboardMenuOptions";
+import { AppProvider } from "../../../App";
 
 function GridMap(props) {
-  const navigate = useNavigate();
+  let navigate;
+  const appProvider = useContext(AppProvider);
+  // For storybook
+  if (appProvider.isApp) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    navigate = useNavigate();
+  }
   const { data } = props;
 
   const transition = "color 0.25s";
@@ -24,7 +31,11 @@ function GridMap(props) {
       role="group"
       w="300px"
       h="275px"
-      onClick={() => navigate(`/dashboard/${data.id}`)}
+      onClick={() => {
+        if (appProvider.isApp) {
+          navigate(`/dashboard/${data.id}`);
+        }
+      }}
     >
       <Box
         w="100%"
@@ -43,6 +54,9 @@ function GridMap(props) {
               fontSize="xl"
               transition={transition}
               _groupHover={{ color: "brand.500" }}
+              textOverflow="ellipsis"
+              overflow="hidden"
+              whiteSpace="nowrap"
             >
               {data.title}
             </Text>

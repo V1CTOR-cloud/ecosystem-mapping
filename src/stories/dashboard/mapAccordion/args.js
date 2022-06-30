@@ -35,7 +35,7 @@ export const listArgs = {
                 subIndustry: "",
               },
             ],
-            services: [],
+            service: [],
           }}
         />,
         <ListMap
@@ -64,7 +64,7 @@ export const listArgs = {
                 subIndustry: "",
               },
             ],
-            services: [],
+            service: [],
           }}
         />,
         <ListMap
@@ -93,7 +93,7 @@ export const listArgs = {
                 subIndustry: "",
               },
             ],
-            services: [],
+            service: [],
           }}
         />,
       ],
@@ -133,7 +133,7 @@ export const gridArgs = {
                 subIndustry: "",
               },
             ],
-            services: [],
+            service: [],
           }}
         />,
         <GridMap
@@ -162,7 +162,7 @@ export const gridArgs = {
                 subIndustry: "",
               },
             ],
-            services: [],
+            service: [],
           }}
         />,
         <GridMap
@@ -191,7 +191,7 @@ export const gridArgs = {
                 subIndustry: "",
               },
             ],
-            services: [],
+            service: [],
           }}
         />,
       ],

@@ -63,6 +63,7 @@ function App() {
         setData({
           locations: formattedLocations,
           industries: values[1].industries,
+          isApp: true,
         });
       })
       .catch((error) => console.log(error));

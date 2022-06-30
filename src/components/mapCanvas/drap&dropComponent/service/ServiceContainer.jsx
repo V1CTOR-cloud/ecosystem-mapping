@@ -65,7 +65,7 @@ function ServiceContainer(props) {
     if (res[0] === "Error") {
       ToastComponent(t("mapping.toast.error"), "error");
     } else {
-      ToastComponent(t("mapping.toast.success.service"), "success");
+      ToastComponent(t("mapping.toast.success.service.updated"), "success");
     }
   }
 
@@ -119,7 +119,7 @@ function ServiceContainer(props) {
       // const newData = addServiceToData(res);
       if (newRes === undefined) {
         ToastComponent(
-          t("mapping.toast.success.create.service"),
+          t("mapping.toast.success.service.created"),
           "success",
           5000
         );

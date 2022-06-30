@@ -243,7 +243,7 @@ function ServiceForm(props) {
 
         setData(newData);
         ToastComponent(
-          t("mapping.toast.success.create.service"),
+          t("mapping.toast.success.service.created"),
           "success",
           5000
         );
@@ -396,7 +396,11 @@ function ServiceForm(props) {
         setData(newData);
         onClose();
 
-        ToastComponent(t("mapping.toast.success.service"), "success", 5000);
+        ToastComponent(
+          t("mapping.toast.success.service.updated"),
+          "success",
+          5000
+        );
       } else {
         ToastComponent(res, "error", 5000);
       }
@@ -481,10 +485,7 @@ function ServiceForm(props) {
 
         //Stop the loop if we have an error
         if (error) {
-          ToastComponent(
-            t("mapping.canvas.error.service.serviceOrder.modification"),
-            "error"
-          );
+          ToastComponent(t("mapping.toast.error"), "error");
           break;
         }
       }
