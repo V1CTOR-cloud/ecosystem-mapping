@@ -6,9 +6,15 @@ import PropTypes from "prop-types";
 import moment from "moment";
 
 import DashboardMenuOptions from "./DashboardMenuOptions";
+import { AppProvider } from "../../../App";
 
 function GridMap(props) {
-  const navigate = useNavigate();
+  let navigate;
+  // For storybook
+  if (AppProvider.data !== undefined) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    navigate = useNavigate();
+  }
   const { data } = props;
 
   const transition = "color 0.25s";
@@ -24,7 +30,11 @@ function GridMap(props) {
       role="group"
       w="300px"
       h="275px"
-      onClick={() => navigate(`/dashboard/${data.id}`)}
+      onClick={() => {
+        if (AppProvider.data) {
+          navigate(`/dashboard/${data.id}`);
+        }
+      }}
     >
       <Box
         w="100%"

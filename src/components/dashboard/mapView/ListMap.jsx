@@ -6,10 +6,16 @@ import moment from "moment";
 import { useNavigate } from "react-router";
 
 import DashboardMenuOptions from "./DashboardMenuOptions";
+import { AppProvider } from "../../../App";
 
 function ListMap(props) {
   const { data } = props;
-  const navigate = useNavigate();
+  let navigate;
+  // For storybook
+  if (AppProvider.data !== undefined) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    navigate = useNavigate();
+  }
 
   const transition = "color 0.25s";
   const groupBlackColor = { color: "black" };
@@ -20,7 +26,14 @@ function ListMap(props) {
   }
 
   return (
-    <Box role="group" onClick={() => navigate(`/dashboard/${data.id}`)}>
+    <Box
+      role="group"
+      onClick={() => {
+        if (AppProvider.data !== undefined) {
+          navigate(`/dashboard/${data.id}`);
+        }
+      }}
+    >
       <Box
         w="100%"
         h="150px"
