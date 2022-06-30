@@ -65,7 +65,7 @@ function ContentCanvas(props) {
     if (res) {
       ToastComponent(t("mapping.toast.error"), "error");
     } else {
-      ToastComponent(t("mapping.toast.success.services"), "success");
+      ToastComponent(t("mapping.toast.success.services.updated"), "success");
     }
   }
 

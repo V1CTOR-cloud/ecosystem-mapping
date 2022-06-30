@@ -138,7 +138,7 @@ function Dashboard() {
     });
 
     const formattedData = {
-      title: mapData.title,
+      title: "Copy of " + mapData.title,
       mapStatus: mapData.mapStatus,
       description: mapData.description,
       owner: {
@@ -225,10 +225,10 @@ function Dashboard() {
           setUserMaps(tempUserMaps);
 
           onCloseModal();
-          ToastComponent(t("mapping.dashboard.toast.map.deleted"), "success");
+          ToastComponent(t("mapping.toast.success.map.deleted"), "success");
         }
       })
-      .catch(() => ToastComponent(t("mapping.dashboard.toast.error"), "error"));
+      .catch(() => ToastComponent(t("mapping.toast.error"), "error"));
   }
 
   // Function that handle the creation of the map with the handling or potential errors.
@@ -254,10 +254,10 @@ function Dashboard() {
           handleToggleView(tempUserMaps, isGrid);
 
           onCloseModal();
-          ToastComponent(t("mapping.dashboard.toast.map.created"), "success");
+          ToastComponent(t("mapping.toast.success.map.created"), "success");
         }
       })
-      .catch(() => ToastComponent(t("mapping.dashboard.toast.error"), "error"));
+      .catch(() => ToastComponent(t("mapping.toast.error"), "error"));
   }
 
   // Function that handle the edition of the map with the handling or potential errors.
@@ -294,10 +294,10 @@ function Dashboard() {
           setUserMaps(tempUserMaps);
 
           onCloseModal();
-          ToastComponent(t("mapping.dashboard.toast.map.updated"), "success");
+          ToastComponent(t("mapping.toast.success.map.updated"), "success");
         }
       })
-      .catch(() => ToastComponent(t("mapping.dashboard.toast.error"), "error"));
+      .catch(() => ToastComponent(t("mapping.toast.error"), "error"));
   }
 
   // Function that either change the map status as archived or published. Then, update the list to see the modifications.
@@ -324,10 +324,10 @@ function Dashboard() {
         tempUserMaps[index].mapStatus = data.mapStatus;
         setUserMaps(tempUserMaps);
 
-        ToastComponent(t("mapping.dashboard.toast.map.updated"), "success");
+        ToastComponent(t("mapping.toast.success.map.updated"), "success");
       })
       .catch(() => {
-        ToastComponent(t("mapping.dashboard.toast.error"), "error");
+        ToastComponent(t("mapping.toast.error"), "error");
       });
   }
 
