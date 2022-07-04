@@ -364,7 +364,9 @@ function Dashboard() {
   }
 
   function handleSearchMap(mapTitle) {
-    const resultMaps = userMaps.filter((map) => map.title.includes(mapTitle));
+    const resultMaps = userMaps.filter((map) =>
+      map.title.toLowerCase().includes(mapTitle.toLowerCase())
+    );
 
     setSecondaryUserMaps(resultMaps);
     handleToggleView(resultMaps, isGrid);

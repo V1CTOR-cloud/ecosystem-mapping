@@ -42,12 +42,8 @@ const LandingPage = () => {
             justifySelf="center"
             bg="#EEF4F6.500"
           >
-            <h1 style={headerStyle}>
-              {t("startup.landing.page.content.welcome.message")}
-            </h1>
-            <h1 style={hTagStyle}>
-              {t("startup.landing.page.content.welcome.tagline.text")}
-            </h1>
+            <h1 style={headerStyle}>{t("mapping.landing.content.title")}</h1>
+            <h1 style={hTagStyle}>{t("mapping.landing.content.sub.title")}</h1>
           </Box>
           <Box bg="#EEF4F6.500" flex="1">
             <Image width="70%" ml="auto" src={imgSource} alt="image" />

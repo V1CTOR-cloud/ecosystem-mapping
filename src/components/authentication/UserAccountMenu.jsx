@@ -72,11 +72,11 @@ const UserAccountMenu = (props) => {
         <Box p="15px">
           <MenuItem>
             <NavLink to="/dashboard">
-              {t("startup.landing.page.header.user.profile.menu.list.map.text")}
+              {t("mapping.navigation.bar.login.dashboard")}
             </NavLink>
           </MenuItem>
           <MenuItem onClick={logOut}>
-            {t("startup.landing.page.header.user.profile.logout.text")}
+            {t("mapping.navigation.bar.user.logout")}
           </MenuItem>
         </Box>
       </LogMenuList>
