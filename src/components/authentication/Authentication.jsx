@@ -143,7 +143,7 @@ const Authentication = () => {
   //         <Box align="right">
   //           <Button onClick={onOpen} variant="outline">
   //             <Center>
-  //               <Text>{t("startup.landing.page.login")}</Text>
+  //               <Text>{t("mapping.navigation.bar.login")}</Text>
   //             </Center>
   //           </Button>
   //         </Box>
