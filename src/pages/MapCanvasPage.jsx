@@ -3,13 +3,13 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Flex,
-  HStack,
+  // HStack,
   Text,
   useDisclosure,
-  VStack,
+  // VStack,
   Button,
 } from "@chakra-ui/react";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
 import SideBar from "../components/bar/sideBar/SideBar";
@@ -29,18 +29,6 @@ import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceFo
 import { FilterAlt } from "@styled-icons/boxicons-regular";
 import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
-
-const ArrowDown = styled.div`
-  border-left: 7.5px solid transparent;
-  border-right: 7.5px solid transparent;
-  border-top: 7.5px solid #aaaaaa;
-`;
-
-const ArrowUp = styled.div`
-  border-right: 7.5px solid transparent;
-  border-left: 7.5px solid transparent;
-  border-bottom: 7.5px solid #aaaaaa;
-`;
 
 export const CanvasProvider = createContext(undefined);
 
@@ -147,6 +135,8 @@ function MapCanvasPage() {
   const [draftData] = useState([]);
   const cancelRef = useRef();
   const { mapId } = useParams();
+
+  console.log(window.screen.availHeight);
 
   useEffect(() => {
     const fullHeight =
@@ -551,7 +541,7 @@ function MapCanvasPage() {
         services: services,
       }}
     >
-      <Flex align="start" direction="column" h={containerHeight}>
+      <Flex align="start" direction="column" h="100%">
         <Box w="100%" zIndex={2}>
           <NavigationBar
             title={mapTitle}
@@ -575,7 +565,13 @@ function MapCanvasPage() {
             onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
           />
-          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={3}>
+          <Box
+            h="100%"
+            minHeight="580px"
+            zIndex={0}
+            marginLeft="100px"
+            paddingTop={3}
+          >
             <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
             <ContentCanvas
               isFilterOpen={isOpenFilter}
@@ -585,48 +581,6 @@ function MapCanvasPage() {
               heights={[heights, setHeights]}
               containerHeight={[containerHeight, setContainerHeight]}
             />
-            {data.rowsOrder.map((row, index) => {
-              return (
-                <Box
-                  key={index}
-                  position="absolute"
-                  right="20px"
-                  top={
-                    (isOpenFilter ? 135 : 75) +
-                    12 * 2 +
-                    (index === 0
-                      ? 0
-                      : index === 1
-                      ? heights[0]
-                      : heights[0] + heights[1]) +
-                    +index * 24 +
-                    "px"
-                  }
-                  w="50px"
-                  h={heights[index]}
-                  textAlign="center"
-                >
-                  <HStack position="relative" w="100%" h="100%">
-                    <VStack
-                      bg={"blackAlpha.400"}
-                      w="2px"
-                      h="100%"
-                      justify="space-between"
-                    >
-                      <ArrowDown />
-                      <ArrowUp />
-                    </VStack>
-                    <Text
-                      marginLeft={3}
-                      color={"blackAlpha.400"}
-                      style={{ writingMode: "vertical-lr" }}
-                    >
-                      {row.replaceAll("_", " ").replace("and", "&")}
-                    </Text>
-                  </HStack>
-                </Box>
-              );
-            })}
           </Box>
         </Box>
         {isOpenFormEdition && (

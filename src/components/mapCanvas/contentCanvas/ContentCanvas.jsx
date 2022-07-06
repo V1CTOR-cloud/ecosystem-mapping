@@ -1,14 +1,27 @@
 import React, { useContext } from "react";
 
-import { Box } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 import Row from "../drap&dropComponent/row/Row";
 import ToastComponent from "../../basic/ToastComponent";
 import { Service } from "../../../service/service";
 import { CanvasProvider } from "../../../pages/MapCanvasPage";
+
+const ArrowDown = styled.div`
+  border-left: 7.5px solid transparent;
+  border-right: 7.5px solid transparent;
+  border-top: 7.5px solid #aaaaaa;
+`;
+
+const ArrowUp = styled.div`
+  border-right: 7.5px solid transparent;
+  border-left: 7.5px solid transparent;
+  border-bottom: 7.5px solid #aaaaaa;
+`;
 
 function ContentCanvas(props) {
   const {
@@ -23,7 +36,7 @@ function ContentCanvas(props) {
   const [data, setData] = canvasProvider.fetchedData;
   const { t } = useTranslation();
 
-  const height = (isFilterOpen ? 135 : 75) + 12;
+  // const height = (isFilterOpen ? 135 : 75) + 12;
 
   function setOrder(list, servicesId) {
     list.forEach((value) => {
@@ -178,29 +191,62 @@ function ContentCanvas(props) {
   }
 
   return (
-    <Box
-      h={`calc(100% - ${height}px)`}
-      w="calc(100% - 200px)"
-      position="absolute"
-    >
+    <Box h="calc(100% - 87px)" w="calc(100% - 100px)" position="absolute">
       <DragDropContext onDragEnd={handleDragEnd}>
-        {secondaryData.rowsOrder.map((rowId) => {
+        {secondaryData.rowsOrder.map((rowId, index) => {
           const row = secondaryData.rows[rowId];
           const services = row.serviceIds.map(
             (serviceId) => data.services[serviceId]
           );
 
           return (
-            <Row
+            <Box
               key={row.id}
-              row={row}
-              services={services}
-              handleServiceClick={handleServiceClick}
-              heights={heights}
-              containerHeight={containerHeight}
-              isFilterOpen={isFilterOpen}
-              isFiltersActive={isFiltersActive}
-            />
+              h={
+                index === 0
+                  ? "calc(100% / 3)"
+                  : index === 1
+                  ? "calc(100% / 3 - 10px)"
+                  : "calc(100% / 3 - 20px)"
+              }
+              minHeight="180px"
+              // w="calc(100% - 100px)"
+              display="flex"
+              marginTop={index !== 0 ? "10px" : 0}
+            >
+              <Box w="calc(100% - 100px)">
+                <Row
+                  key={row.id}
+                  row={row}
+                  services={services}
+                  handleServiceClick={handleServiceClick}
+                  heights={heights}
+                  containerHeight={containerHeight}
+                  isFilterOpen={isFilterOpen}
+                  isFiltersActive={isFiltersActive}
+                />
+              </Box>
+              <Box w="50px" h="100%" textAlign="center" marginLeft="15px">
+                <HStack position="relative" w="100%" h="100%">
+                  <VStack
+                    bg={"blackAlpha.400"}
+                    w="2px"
+                    h="100%"
+                    justify="space-between"
+                  >
+                    <ArrowDown />
+                    <ArrowUp />
+                  </VStack>
+                  <Text
+                    marginLeft={3}
+                    color={"blackAlpha.400"}
+                    style={{ writingMode: "vertical-lr" }}
+                  >
+                    {row.id.replaceAll("_", " ").replace("and", "&")}
+                  </Text>
+                </HStack>
+              </Box>
+            </Box>
           );
         })}
       </DragDropContext>

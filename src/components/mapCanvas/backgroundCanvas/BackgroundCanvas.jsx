@@ -32,6 +32,7 @@ function BackgroundCanvas(props) {
   return (
     <Box
       h={`calc(100% - ${height}px)`}
+      minHeight="560px"
       w="calc(100% - 200px)"
       bg={"white"}
       position="absolute"
