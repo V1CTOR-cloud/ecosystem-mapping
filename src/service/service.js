@@ -1,7 +1,11 @@
 import { graphCMSRequest } from "./graphCMS";
 
 export const Service = {
-  // Create a new service
+  /**
+   * Create a new service and post it to the database.
+   * @param data The date to create the new service.
+   * @return {Promise<string|any>} A service object.
+   */
   async createService(data) {
     const query = `mutation ($data: ServiceCreateInput!) {
         createService(data: $data){
@@ -136,7 +140,11 @@ export const Service = {
     }
   },
 
-  // Update an existing service
+  /**
+   * Update a service by its id.
+   * @param data The data to update the service.
+   * @return {Promise<string|any>} A service object.
+   */
   async updateService(data) {
     const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
       updateService(
@@ -290,7 +298,12 @@ export const Service = {
     }
   },
 
-  // Update the order of all the services that change during a reorder.
+  /**
+   * Update a service order and application by its id.
+   * @param serviceId The id of the service to update.
+   * @param data The service order and application to update.
+   * @return {Promise<any>} A service object.
+   */
   async updateServiceOrderAndApplicationType(serviceId, data) {
     const query = `mutation ($data: ServiceUpdateInput!, $id: ID!){
       updateService(
@@ -314,6 +327,11 @@ export const Service = {
     return await graphCMSRequest(query, variables);
   },
 
+  /**
+   * Update the range service by its id.
+   * @param data The range to update the service.
+   * @return {Promise<any>} A service object.
+   */
   async updateRangesPhase(data) {
     const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
