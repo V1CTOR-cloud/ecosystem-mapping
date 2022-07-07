@@ -1,16 +1,17 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import {
   Box,
-  Flex,
   // HStack,
   Text,
   useDisclosure,
   // VStack,
   Button,
+  GridItem,
+  Grid,
 } from "@chakra-ui/react";
-// import styled from "styled-components";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
@@ -25,9 +26,8 @@ import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/Backgroun
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
-import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
+// import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
-import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
 
 export const CanvasProvider = createContext(undefined);
@@ -113,12 +113,12 @@ function MapCanvasPage() {
     onClose: onCloseForm,
   } = useDisclosure();
   const {
-    isOpen: isOpenFormEdition,
+    // isOpen: isOpenFormEdition,
     onOpen: onOpenFormEdition,
-    onClose: onCloseFormEdition,
+    // onClose: onCloseFormEdition,
   } = useDisclosure();
 
-  const [serviceWithoutModification, setServiceWithoutModification] =
+  const [, /*serviceWithoutModification*/ setServiceWithoutModification] =
     useState(null);
   const [services] = useState([]);
   const [filters, setFilters] = useState(initialFilters);
@@ -128,26 +128,11 @@ function MapCanvasPage() {
   const [fetchedOrganization] = useState([]);
   const [fetchedFilters, setFetchedFilters] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [heights, setHeights] = useState([180, 180, 180]);
-  const [containerHeight, setContainerHeight] = useState("0px");
   const [isFiltersActive, setIsFilterActive] = useState(false);
   const [archivedData] = useState([]);
   const [draftData] = useState([]);
-  const cancelRef = useRef();
+  // const cancelRef = useRef();
   const { mapId } = useParams();
-
-  console.log(window.screen.availHeight);
-
-  useEffect(() => {
-    const fullHeight =
-      (isOpenFilter ? 135 : 75) +
-      12 * 7 +
-      heights[0] +
-      heights[1] +
-      heights[2] +
-      4;
-    setContainerHeight(fullHeight);
-  }, [heights, isOpenFilter]);
 
   // Fetch all the data required to display the page with all the information need to be trigger only once.
   useEffect(() => {
@@ -539,25 +524,33 @@ function MapCanvasPage() {
         mapId: mapId,
         fetchedData: [fetchedData, setFetchedData],
         services: services,
+        isFilterOpen: isOpenFilter,
       }}
     >
-      <Flex align="start" direction="column" h="100%">
-        <Box w="100%" zIndex={2}>
-          <NavigationBar
-            title={mapTitle}
-            primaryButton={primaryButton}
-            additionalButtons={additionalButton}
-          />
-        </Box>
-        {isOpenFilter && (
-          <Box zIndex={2} w="100%">
-            <FilterBar
-              filtersState={[filters, setFilters]}
-              handleClearAllFilters={handleClearAllFilters}
+      <Grid bg={"red"} gap={0} minHeight="100vh">
+        <GridItem zIndex={10} position="fixed" w="100%">
+          <Box w="100%" h="75px">
+            <NavigationBar
+              title={mapTitle}
+              primaryButton={primaryButton}
+              additionalButtons={additionalButton}
             />
           </Box>
-        )}
-        <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
+          {isOpenFilter && (
+            <Box w="100%">
+              <FilterBar
+                filtersState={[filters, setFilters]}
+                handleClearAllFilters={handleClearAllFilters}
+              />
+            </Box>
+          )}
+        </GridItem>
+        <GridItem
+          h="100%"
+          position="fixed"
+          zIndex={10}
+          top={isOpenFilter ? "135px" : "75px"}
+        >
           <SideBar
             isFilterOpen={isOpenFilter}
             archivedData={archivedData}
@@ -565,35 +558,24 @@ function MapCanvasPage() {
             onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
           />
-          <Box
-            h="100%"
-            minHeight="580px"
-            zIndex={0}
-            marginLeft="100px"
-            paddingTop={3}
-          >
-            <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
+        </GridItem>
+
+        <GridItem
+          bg="blue"
+          marginLeft="75px"
+          marginTop={isOpenFilter ? "135px" : "75px"}
+        >
+          <BackgroundCanvas />
+          <Box bg="yellow" h="100%">
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
               secondaryData={secondaryFetchedData}
               handleServiceClick={(service) => handleServiceClick(service)}
-              heights={[heights, setHeights]}
-              containerHeight={[containerHeight, setContainerHeight]}
             />
           </Box>
-        </Box>
-        {isOpenFormEdition && (
-          <ServiceForm
-            cancelRef={cancelRef}
-            isEditing={true}
-            isOpen={isOpenFormEdition}
-            onClose={onCloseFormEdition}
-            propOrganisations={fetchedOrganization}
-            serviceWithoutModification={serviceWithoutModification}
-          />
-        )}
-      </Flex>
+        </GridItem>
+      </Grid>
     </CanvasProvider.Provider>
   );
 }

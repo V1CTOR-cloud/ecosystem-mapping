@@ -28,15 +28,12 @@ function ContentCanvas(props) {
     isFilterOpen,
     secondaryData,
     handleServiceClick,
-    heights,
-    containerHeight,
+
     isFiltersActive,
   } = props;
   const canvasProvider = useContext(CanvasProvider);
   const [data, setData] = canvasProvider.fetchedData;
   const { t } = useTranslation();
-
-  // const height = (isFilterOpen ? 135 : 75) + 12;
 
   function setOrder(list, servicesId) {
     list.forEach((value) => {
@@ -191,7 +188,7 @@ function ContentCanvas(props) {
   }
 
   return (
-    <Box h="calc(100% - 87px)" w="calc(100% - 100px)" position="absolute">
+    <Box h="100%" bg="purple.200">
       <DragDropContext onDragEnd={handleDragEnd}>
         {secondaryData.rowsOrder.map((rowId, index) => {
           const row = secondaryData.rows[rowId];
@@ -201,32 +198,50 @@ function ContentCanvas(props) {
 
           return (
             <Box
-              key={row.id}
-              h={
+              bg="blue.200"
+              minHeight={
                 index === 0
-                  ? "calc(100% / 3)"
+                  ? "calc(100%  / 3)"
                   : index === 1
-                  ? "calc(100% / 3 - 10px)"
-                  : "calc(100% / 3 - 20px)"
+                  ? "calc(100%  / 3 - 10px)"
+                  : "calc(100%  / 3 - 20px)"
               }
-              minHeight="180px"
-              // w="calc(100% - 100px)"
+              key={row.id}
               display="flex"
               marginTop={index !== 0 ? "10px" : 0}
             >
-              <Box w="calc(100% - 100px)">
+              <Box
+                minHeight={
+                  index === 0
+                    ? "calc(100%  / 3)"
+                    : index === 1
+                    ? "calc(100%  / 3 - 10px)"
+                    : "calc(100%  / 3 - 20px)"
+                }
+                flexGrow={1}
+              >
                 <Row
                   key={row.id}
                   row={row}
                   services={services}
                   handleServiceClick={handleServiceClick}
-                  heights={heights}
-                  containerHeight={containerHeight}
                   isFilterOpen={isFilterOpen}
                   isFiltersActive={isFiltersActive}
                 />
               </Box>
-              <Box w="50px" h="100%" textAlign="center" marginLeft="15px">
+              <Box
+                bg="blue.100"
+                w="75px"
+                paddingLeft="15px"
+                minHeight={
+                  index === 0
+                    ? "calc(100%  / 3)"
+                    : index === 1
+                    ? "calc(100%  / 3 - 10px)"
+                    : "calc(100%  / 3 - 20px)"
+                }
+                textAlign="center"
+              >
                 <HStack position="relative" w="100%" h="100%">
                   <VStack
                     bg={"blackAlpha.400"}
@@ -257,8 +272,6 @@ function ContentCanvas(props) {
 ContentCanvas.propTypes = {
   isFiltersActive: PropTypes.bool.isRequired,
   isFilterOpen: PropTypes.bool.isRequired,
-  containerHeight: PropTypes.array.isRequired,
-  heights: PropTypes.array.isRequired,
   secondaryData: PropTypes.object.isRequired,
   handleServiceClick: PropTypes.func.isRequired,
 };
