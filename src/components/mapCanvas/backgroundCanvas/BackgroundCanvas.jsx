@@ -2,7 +2,6 @@ import React from "react";
 
 import { Box, HStack } from "@chakra-ui/react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
 const SectionCanvas = styled.div`
   width: 100%;
@@ -22,21 +21,12 @@ const SubSectionCanvas = styled.div`
   display: flex;
 `;
 
-function BackgroundCanvas(props) {
-  const { isFilterOpen } = props;
+function BackgroundCanvas() {
   const sectionCanvas = [1, 2, 3, 4, 5, 6];
   const subSectionCanvas = [1, 2, 3];
 
-  const height = (isFilterOpen ? 135 : 75) + 12;
-
   return (
-    <Box
-      h={`calc(100% - ${height}px)`}
-      minHeight="560px"
-      w="calc(100% - 200px)"
-      bg={"white"}
-      position="absolute"
-    >
+    <Box h="100%" w="calc(100% - 200px)" bg={"white"} position="absolute">
       <HStack h="100%" justify="space-evenly">
         {sectionCanvas.map((canvas) => {
           const isLastSection = canvas === sectionCanvas.length;
@@ -60,9 +50,5 @@ function BackgroundCanvas(props) {
     </Box>
   );
 }
-
-BackgroundCanvas.propTypes = {
-  isFilterOpen: PropTypes.bool.isRequired,
-};
 
 export default BackgroundCanvas;

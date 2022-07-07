@@ -15,24 +15,17 @@ const SideBarContainer = styled.div`
   background-color: white;
   z-index: 100;
   width: 50px;
-  // Height depending of the filter bar: 75px for the navbar and 60px for the filter bar when open
-  height: ${({ isFilterOpen }) =>
-    isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
+  height: 100%;
 
   &:hover {
-    width: 250px
+    width: 250px;
   }
-}`;
+`;
 
 function SideBar(props) {
   const { t } = useTranslation();
-  const {
-    archivedData,
-    onOpenFormEdition,
-    handleServiceClick,
-    isFilterOpen,
-    draftData,
-  } = props;
+  const { archivedData, onOpenFormEdition, handleServiceClick, draftData } =
+    props;
 
   const initialAccordionButtons = [
     {
@@ -118,7 +111,6 @@ function SideBar(props) {
     <SideBarContainer
       onMouseOver={handleOnMouseOver}
       onMouseLeave={handleOnMouseLeave}
-      isFilterOpen={isFilterOpen}
     >
       <Accordion allowToggle>
         {accordionButtons.map((thisAccordionButtons) => (
@@ -134,7 +126,6 @@ function SideBar(props) {
 }
 
 SideBar.propTypes = {
-  isFilterOpen: PropTypes.bool.isRequired,
   archivedData: PropTypes.array.isRequired,
   draftData: PropTypes.array.isRequired,
   onOpenFormEdition: PropTypes.func.isRequired,
