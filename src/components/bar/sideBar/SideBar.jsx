@@ -11,7 +11,6 @@ import PropTypes from "prop-types";
 import AccordionItemComponent from "./AccordionItemComponent";
 
 const SideBarContainer = styled.div`
-  position: absolute;
   background-color: white;
   z-index: 100;
   width: 50px;
