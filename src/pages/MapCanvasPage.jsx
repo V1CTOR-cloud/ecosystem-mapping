@@ -1,8 +1,7 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useRef } from "react";
 
 import {
   Box,
-  // HStack,
   Text,
   useDisclosure,
   // VStack,
@@ -26,7 +25,7 @@ import BackgroundCanvas from "../components/mapCanvas/backgroundCanvas/Backgroun
 import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
-// import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
+import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
 import { FilterAlt } from "@styled-icons/boxicons-regular";
 import { Map } from "../service/map";
 
@@ -113,12 +112,12 @@ function MapCanvasPage() {
     onClose: onCloseForm,
   } = useDisclosure();
   const {
-    // isOpen: isOpenFormEdition,
+    isOpen: isOpenFormEdition,
     onOpen: onOpenFormEdition,
-    // onClose: onCloseFormEdition,
+    onClose: onCloseFormEdition,
   } = useDisclosure();
 
-  const [, /*serviceWithoutModification*/ setServiceWithoutModification] =
+  const [serviceWithoutModification, setServiceWithoutModification] =
     useState(null);
   const [services] = useState([]);
   const [filters, setFilters] = useState(initialFilters);
@@ -131,7 +130,7 @@ function MapCanvasPage() {
   const [isFiltersActive, setIsFilterActive] = useState(false);
   const [archivedData] = useState([]);
   const [draftData] = useState([]);
-  // const cancelRef = useRef();
+  const cancelRef = useRef();
   const { mapId } = useParams();
 
   // Fetch all the data required to display the page with all the information need to be trigger only once.
@@ -527,7 +526,7 @@ function MapCanvasPage() {
         isFilterOpen: isOpenFilter,
       }}
     >
-      <Grid bg={"red"} gap={0} minHeight="100vh">
+      <Grid bg="blackAlpha.200" gap={0} minHeight="100vh">
         <GridItem zIndex={10} position="fixed" w="100%">
           <Box w="100%" h="75px">
             <NavigationBar
@@ -560,13 +559,9 @@ function MapCanvasPage() {
           />
         </GridItem>
 
-        <GridItem
-          bg="blue"
-          marginLeft="75px"
-          marginTop={isOpenFilter ? "135px" : "75px"}
-        >
+        <GridItem marginLeft="75px" marginTop={isOpenFilter ? "135px" : "75px"}>
           <BackgroundCanvas />
-          <Box bg="yellow" h="100%">
+          <Box h="100%">
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
@@ -576,6 +571,16 @@ function MapCanvasPage() {
           </Box>
         </GridItem>
       </Grid>
+      {isOpenFormEdition && (
+        <ServiceForm
+          cancelRef={cancelRef}
+          isEditing={true}
+          isOpen={isOpenFormEdition}
+          onClose={onCloseFormEdition}
+          propOrganisations={fetchedOrganization}
+          serviceWithoutModification={serviceWithoutModification}
+        />
+      )}
     </CanvasProvider.Provider>
   );
 }

@@ -40,7 +40,7 @@ function Row(props) {
               isDraggingOver={snapshot.isDraggingOver}
               id={row.id}
             >
-              <Box h="100%" w="100%">
+              <Box w="100%">
                 {services.map((service, index) => (
                   <Box key={service.id} zIndex={2} position="relative">
                     <ServiceContainer

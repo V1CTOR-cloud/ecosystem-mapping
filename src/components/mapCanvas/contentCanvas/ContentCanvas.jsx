@@ -188,7 +188,7 @@ function ContentCanvas(props) {
   }
 
   return (
-    <Box h="100%" bg="purple.200">
+    <Box h="100%">
       <DragDropContext onDragEnd={handleDragEnd}>
         {secondaryData.rowsOrder.map((rowId, index) => {
           const row = secondaryData.rows[rowId];
@@ -198,28 +198,18 @@ function ContentCanvas(props) {
 
           return (
             <Box
-              bg="blue.200"
               minHeight={
                 index === 0
-                  ? "calc(100%  / 3)"
+                  ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3)`
                   : index === 1
-                  ? "calc(100%  / 3 - 10px)"
-                  : "calc(100%  / 3 - 20px)"
+                  ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3 - 10px)`
+                  : `calc((100vh - ${isFilterOpen ? 135 : 75}px) / 3 - 20px)`
               }
               key={row.id}
               display="flex"
               marginTop={index !== 0 ? "10px" : 0}
             >
-              <Box
-                minHeight={
-                  index === 0
-                    ? "calc(100%  / 3)"
-                    : index === 1
-                    ? "calc(100%  / 3 - 10px)"
-                    : "calc(100%  / 3 - 20px)"
-                }
-                flexGrow={1}
-              >
+              <Box flexGrow={1}>
                 <Row
                   key={row.id}
                   row={row}
@@ -229,19 +219,7 @@ function ContentCanvas(props) {
                   isFiltersActive={isFiltersActive}
                 />
               </Box>
-              <Box
-                bg="blue.100"
-                w="75px"
-                paddingLeft="15px"
-                minHeight={
-                  index === 0
-                    ? "calc(100%  / 3)"
-                    : index === 1
-                    ? "calc(100%  / 3 - 10px)"
-                    : "calc(100%  / 3 - 20px)"
-                }
-                textAlign="center"
-              >
+              <Box w="75px" paddingLeft="15px" textAlign="center">
                 <HStack position="relative" w="100%" h="100%">
                   <VStack
                     bg={"blackAlpha.400"}
