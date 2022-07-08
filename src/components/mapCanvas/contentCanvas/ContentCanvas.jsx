@@ -39,7 +39,7 @@ function ContentCanvas(props) {
     list.forEach((value) => {
       const index = servicesId.findIndex((service) => service === value.id);
       if (index !== -1) {
-        value.order = index;
+        value.serviceOrder = index;
       }
     });
   }
@@ -50,8 +50,8 @@ function ContentCanvas(props) {
     for (const value of Object.values(services)) {
       if (listIds.includes(value.id)) {
         const data = {
-          order: value.order,
-          applicationType: value.applicationType,
+          serviceOrder: value.serviceOrder,
+          serviceApplication: value.serviceApplication,
         };
 
         await Service.updateServiceOrderAndApplicationType(
@@ -159,7 +159,7 @@ function ContentCanvas(props) {
     };
 
     // Modification of the application Type field
-    newServices[draggableId].applicationType = destination.droppableId;
+    newServices[draggableId].serviceApplication = destination.droppableId;
 
     // set each order to his correct index for the start row
     setOrder(Object.values(newServices), startServiceIds);
