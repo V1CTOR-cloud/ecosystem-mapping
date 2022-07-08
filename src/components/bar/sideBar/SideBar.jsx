@@ -15,6 +15,8 @@ const SideBarContainer = styled.div`
   z-index: 100;
   width: 50px;
   height: 100%;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   &:hover {
     width: 250px;
