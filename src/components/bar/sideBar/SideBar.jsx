@@ -4,114 +4,96 @@ import { TableChart } from "@styled-icons/material-outlined";
 import styled from "styled-components";
 import { Draft } from "@styled-icons/remix-line";
 import { Archive } from "@styled-icons/boxicons-regular";
-import { Accordion } from "@chakra-ui/accordion";
+import { Accordion, Button } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-import ButtonComponent from "../../basic/buttons/ButtonComponent";
 import AccordionItemComponent from "./AccordionItemComponent";
-import {
-  blackColor,
-  blueColor,
-  smallPadding,
-  whiteColor,
-} from "../../../helper/constant";
 
 const SideBarContainer = styled.div`
-  position: absolute;
-  background-color: ${whiteColor};
+  background-color: white;
   z-index: 100;
   width: 50px;
-  // Height depending of the filter bar: 75px for the navbar and 60px for the filter bar when open
-  height: ${(props) =>
-    props.isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
+  height: 100%;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   &:hover {
-    width: 250px
+    width: 250px;
   }
-}`;
+`;
 
 function SideBar(props) {
   const { t } = useTranslation();
+  const { archivedData, onOpenFormEdition, handleServiceClick, draftData } =
+    props;
 
-  const initialButtons = [
+  const initialAccordionButtons = [
     {
+      key: 0,
       title: t("mapping.canvas.side.bar.toggle.service.templates"),
-      icon: [
-        <TableChart color={blueColor} />,
-        <TableChart color={blackColor} />,
-      ],
+      icon: <TableChart />,
       children: [
-        <ButtonComponent
+        <Button
           key="Financing"
-          buttonText="Financing"
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => {}}
-          width="100%"
-          padding={`0 ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />,
-        <ButtonComponent
-          key="Business Model"
-          buttonText="Business Model"
-          isPrimary={true}
-          onClick={() => {}}
-          width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />,
+        >
+          Financing
+        </Button>,
+        <Button key="Business Model" w="100%" onClick={() => {}}>
+          Business Model
+        </Button>,
       ],
     },
     {
+      key: 1,
       title: t("mapping.canvas.side.bar.toggle.draft.services"),
-      icon: [<Draft color={blueColor} />, <Draft color={blackColor} />],
+      icon: <Draft />,
       children: [],
     },
     {
+      key: 2,
       title: t("mapping.canvas.side.bar.toggle.archived.services"),
-      icon: [<Archive color={blueColor} />, <Archive color={blackColor} />],
+      icon: <Archive />,
       children: [],
     },
   ];
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [buttons] = useState(initialButtons);
+  const [accordionButtons] = useState(initialAccordionButtons);
 
   // Update the draft buttons and archived buttons at every update or creation of a service
   useEffect(() => {
-    buttons[2].children = [];
-    buttons[1].children = [];
+    accordionButtons[2].children = [];
+    accordionButtons[1].children = [];
 
-    props.archivedData.forEach((service) => {
-      buttons[2].children.push(
-        <ButtonComponent
+    archivedData.forEach((service) => {
+      accordionButtons[2].children.push(
+        <Button
           key={service.id}
-          buttonText={service.serviceName}
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => handleDraftOrArchivedServiceClick(service)}
-          width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />
+        >
+          {service.serviceName}
+        </Button>
       );
     });
 
-    props.draftData.forEach((service) => {
-      buttons[1].children.push(
-        <ButtonComponent
+    draftData.forEach((service) => {
+      accordionButtons[1].children.push(
+        <Button
           key={service.id}
-          buttonText={service.serviceName}
-          isPrimary={true}
+          w="100%"
+          marginBottom="0.5rem"
           onClick={() => handleDraftOrArchivedServiceClick(service)}
-          width="100%"
-          padding={`${smallPadding} ${smallPadding} 0 ${smallPadding}`}
-          borderRadius="50"
-        />
+        >
+          {service.serviceName}
+        </Button>
       );
     });
   });
-
-  function handleClick() {
-    //todo
-  }
 
   function handleOnMouseOver() {
     setIsCollapsed(false);
@@ -122,28 +104,33 @@ function SideBar(props) {
   }
 
   function handleDraftOrArchivedServiceClick(service) {
-    props.onOpenFormEdition();
-    props.handleServiceClick(service);
+    onOpenFormEdition();
+    handleServiceClick(service);
   }
 
   return (
     <SideBarContainer
       onMouseOver={handleOnMouseOver}
       onMouseLeave={handleOnMouseLeave}
-      isFilterOpen={props.isFilterOpen}
     >
       <Accordion allowToggle>
-        {buttons.map((button) => (
+        {accordionButtons.map((thisAccordionButtons) => (
           <AccordionItemComponent
-            key={button.title}
-            onClick={handleClick}
+            key={thisAccordionButtons.key}
             isCollapsed={isCollapsed}
-            button={button}
+            button={thisAccordionButtons}
           />
         ))}
       </Accordion>
     </SideBarContainer>
   );
 }
+
+SideBar.propTypes = {
+  archivedData: PropTypes.array.isRequired,
+  draftData: PropTypes.array.isRequired,
+  onOpenFormEdition: PropTypes.func.isRequired,
+  handleServiceClick: PropTypes.func.isRequired,
+};
 
 export default SideBar;

@@ -1,45 +1,47 @@
 import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, HStack, Button } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
-import {
-  blueColor,
-  greyTextColor,
-  smallPadding,
-  verySmallPadding,
-} from "../../../../../helper/constant";
 import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithTooltip";
-import ButtonComponent from "../../../../basic/buttons/ButtonComponent";
 
 function ApplicationTypeComponent(props) {
+  const { applicationType, onChange, applicationTypeButtons } = props;
   const { t } = useTranslation();
-  const [value, setValue] = useState(props.applicationType);
+  const [value, setValue] = useState(applicationType);
 
   function handleOnChange(applicationType) {
     setValue(applicationType);
-    props.onChange(applicationType);
+    onChange(applicationType);
   }
 
   return (
-    <Box marginTop={smallPadding}>
+    <Box marginTop={3}>
       <LabelWithTooltip
         label={t("mapping.canvas.form.application.type")}
         tooltipAriaLabel={t("mapping.canvas.form.application.type")}
         tooltipText={t("mapping.canvas.form.application.type.tooltip")}
       />
-      <HStack marginTop={verySmallPadding}>
-        {props.applicationTypeButtons.map((buttonText) => {
+      <HStack marginTop={2}>
+        {applicationTypeButtons.map((buttonText) => {
           return (
             <Box key={buttonText}>
-              <ButtonComponent
-                padding={`0 0 0 ${verySmallPadding}`}
-                isWithoutBorder={true}
-                buttonText={buttonText}
-                color={value === buttonText ? blueColor : greyTextColor}
-                isSelected={value === buttonText}
+              <Button
+                marginRight="0.75rem"
+                variant="ghost"
+                bg={value === buttonText ? "brand.50" : undefined}
+                _hover={{
+                  bg: value === buttonText ? "brand.100" : "blackAlpha.200",
+                }}
+                _active={{
+                  bg: value === buttonText ? "brand.200" : "blackAlpha.300",
+                }}
+                color={value === buttonText ? "brand.500" : "blackAlpha.600"}
                 onClick={() => handleOnChange(buttonText)}
-              />
+              >
+                {buttonText}
+              </Button>
             </Box>
           );
         })}
@@ -47,5 +49,11 @@ function ApplicationTypeComponent(props) {
     </Box>
   );
 }
+
+ApplicationTypeComponent.propTypes = {
+  applicationType: PropTypes.string.isRequired,
+  applicationTypeButtons: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default ApplicationTypeComponent;

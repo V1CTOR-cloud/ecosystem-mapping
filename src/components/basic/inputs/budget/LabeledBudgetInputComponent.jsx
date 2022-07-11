@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 
-import { Box, HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, IconButton, Text } from "@chakra-ui/react";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import InputComponent from "../input/inputComponent/InputComponent";
-import IconButtonComponent from "../../buttons/IconButtonComponent";
 import LabelWithTooltip from "../../labelWithTooltip/LabelWithTooltip";
-import {
-  greyColor,
-  smallFontSize,
-  smallPadding,
-  verySmallPadding,
-} from "../../../../helper/constant";
 import NumberInputComponent from "../input/numberInputComponent/NumberInputComponent";
 import MenuComponent from "../menu/MenuComponent";
 
@@ -22,7 +16,9 @@ const currencies = [
 ];
 
 function LabeledBudgetInputComponent(props) {
-  const [budgets, setBudgets] = useState(props.budgets);
+  const { initialBudgets, onChange, label, tooltipText, tooltipAriaLabel } =
+    props;
+  const [budgets, setBudgets] = useState(initialBudgets);
   const { t } = useTranslation();
 
   function handleAddOrRemoveBudget(index) {
@@ -37,62 +33,62 @@ function LabeledBudgetInputComponent(props) {
       tempBudgets.splice(index, 1);
     }
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   function handleBudgetTitleChange(budgetTitle, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].budgetTitle = budgetTitle;
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   function handleBudgetValueChange(budgetValue, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].budgetValue = budgetValue;
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   function handleBudgetCurrencyChange(budgetCurrency, index) {
     const tempBudgets = Array.from(budgets);
     tempBudgets[index].budgetCurrency = budgetCurrency;
     setBudgets(tempBudgets);
-    props.onChange(tempBudgets);
+    onChange(tempBudgets);
   }
 
   return (
     <React.Fragment>
       <LabelWithTooltip
-        label={props.label}
-        tooltipText={props.tooltipText}
-        tooltipAriaLabel={props.tooltipAriaLabel}
+        label={label}
+        tooltipText={tooltipText}
+        tooltipAriaLabel={tooltipAriaLabel}
       />
 
       <HStack>
         <Text
           w="150px"
-          paddingBottom={verySmallPadding}
-          color={greyColor}
-          fontSize={smallFontSize}
+          paddingBottom={2}
+          color={"blackAlpha.700"}
+          fontSize={"xs"}
         >
           Description
         </Text>
         <Text
-          paddingLeft={smallPadding}
-          paddingBottom={verySmallPadding}
-          color={greyColor}
-          fontSize={smallFontSize}
+          paddingLeft={3}
+          paddingBottom={2}
+          color={"blackAlpha.700"}
+          fontSize={"xs"}
         >
           Amount
         </Text>
       </HStack>
       {budgets.map((budget, index) => {
         return (
-          <HStack key={index} paddingBottom={smallPadding}>
+          <HStack key={index} paddingBottom={3}>
             <Box>
               <InputComponent
-                value={budget.budgetTitle}
+                initialValue={budget.budgetTitle}
                 placeholder={t("mapping.canvas.form.budget.title.placeholder")}
                 onChange={(budgetTitle) =>
                   handleBudgetTitleChange(budgetTitle, index)
@@ -100,9 +96,9 @@ function LabeledBudgetInputComponent(props) {
               />
             </Box>
 
-            <Box w="100%" paddingX={smallPadding}>
+            <Box w="100%" paddingX={3}>
               <NumberInputComponent
-                value={budget.budgetValue}
+                initialValue={budget.budgetValue.toString()}
                 placeholder={t("mapping.canvas.form.budget.value.placeholder")}
                 onChange={(budgetValue) =>
                   handleBudgetValueChange(budgetValue, index)
@@ -110,22 +106,22 @@ function LabeledBudgetInputComponent(props) {
               />
             </Box>
             <MenuComponent
-              item={budget.budgetCurrency}
+              initialValue={budget.budgetCurrency}
               items={currencies}
               onChange={(budgetCurrency) =>
                 handleBudgetCurrencyChange(budgetCurrency, index)
               }
             />
-            <Box w="30px" h="30px" paddingLeft={smallPadding}>
-              <IconButtonComponent
-                height="30px"
-                width="15px"
+            <Box w="30px" paddingLeft={3}>
+              <IconButton
+                variant="ghost"
+                aria-label={tooltipAriaLabel}
                 onClick={() => handleAddOrRemoveBudget(index)}
                 icon={
                   index === budgets.length - 1 ? (
-                    <AddIcon color={greyColor} />
+                    <AddIcon color={"blackAlpha.700"} />
                   ) : (
-                    <CloseIcon color={greyColor} />
+                    <CloseIcon color={"blackAlpha.700"} />
                   )
                 }
               />
@@ -136,5 +132,28 @@ function LabeledBudgetInputComponent(props) {
     </React.Fragment>
   );
 }
+
+LabeledBudgetInputComponent.propTypes = {
+  /**
+   * Text inside the tooltip to help the user understand the meaning of the label.
+   */
+  tooltipText: PropTypes.string.isRequired,
+  /**
+   * Text that will be read for the screen readers.
+   */
+  tooltipAriaLabel: PropTypes.string.isRequired,
+  /**
+   * Text to indicate to the user what the input corresponding to.
+   */
+  label: PropTypes.string.isRequired,
+  /**
+   * Array of objects containing all the initial values of the budget.
+   */
+  initialBudgets: PropTypes.array.isRequired,
+  /**
+   * Function that will update the value of the model with a setState for example.
+   */
+  onChange: PropTypes.func.isRequired,
+};
 
 export default React.memo(LabeledBudgetInputComponent);

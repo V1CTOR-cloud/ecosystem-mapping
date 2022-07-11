@@ -1,34 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
-import { HStack, Spacer, Text, Box, useDisclosure } from "@chakra-ui/react";
+import {
+  HStack,
+  Spacer,
+  Text,
+  Box,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Save } from "@styled-icons/boxicons-regular";
 import { Check2Circle } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-import {
-  blueColor,
-  defaultPadding,
-  greyTextColor,
-  smallPadding,
-  verySmallPadding,
-  whiteColor
-} from "../../../../helper/constant";
 import FilterMenuButton from "./filtersButtons/FilterMenuButton";
-import ButtonComponent from "../../../basic/buttons/ButtonComponent";
 import SaveFilterAlertDialog from "./SaveFilterAlertDialog";
 import SavedFilterButton from "./filtersButtons/SavedFilterButton";
 import DeleteFilterAlertDialog from "./DeleteFilterAlertDialog";
 import { Map } from "../../../../service/map";
+import { CanvasProvider } from "../../../../pages/MapCanvasPage";
 
 function FilterBar(props) {
+  const canvasProvider = useContext(CanvasProvider);
+  const { filtersState, handleClearAllFilters } = props;
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenDeleteDialog,
     onOpen: onOpenDeleteDialog,
-    onClose: onCloseDeleteDialog
+    onClose: onCloseDeleteDialog,
   } = useDisclosure();
-  const [filters, setFilters] = useState(props.filtersState[0]);
+  const [filters, setFilters] = useState(filtersState[0]);
   const [isButtonsActive, setIsButtonsActive] = useState(
     filters.some((filter) => filter.selectedFilterCount > 0)
   );
@@ -59,17 +61,21 @@ function FilterBar(props) {
 
   function handleApplyFilter() {
     // Update in the canvas the display of the service every filter changes
-    props.filtersState[1](filters);
+    filtersState[1](filters);
     setIsFilterApplied(true);
 
     // If we apply no filters (default filters) then we are hiding the buttons.
-    if (filters.every((filter) => filter.id === 0 ? true : filter.selectedFilterCount === 0)) {
+    if (
+      filters.every((filter) =>
+        filter.id === 0 ? true : filter.selectedFilterCount === 0
+      )
+    ) {
       setIsButtonsActive(false);
     }
   }
 
-  function handleClearAllFilters() {
-    props.handleClearAllFilters();
+  function handleClearFilters() {
+    handleClearAllFilters();
     setIsButtonsActive(false);
   }
 
@@ -123,14 +129,14 @@ function FilterBar(props) {
         if (savedFilter.name !== name) {
           savedFilters = {
             ...savedFilters,
-            [savedFilter.name]: savedFilter.selectedFilters
+            [savedFilter.name]: savedFilter.selectedFilters,
           };
         }
       });
 
       const data = {
-        id: props.mapId,
-        filters: savedFilters
+        id: canvasProvider.mapId,
+        filters: savedFilters,
       };
 
       const res = await Map.createSavedFilter(data);
@@ -145,7 +151,7 @@ function FilterBar(props) {
 
         tempFilter[0].items.splice(index, 1);
 
-        props.filtersState[1](tempFilter);
+        filtersState[1](tempFilter);
         onCloseDeleteDialog();
       }
     }
@@ -164,17 +170,23 @@ function FilterBar(props) {
   }
 
   return (
-    <HStack paddingY={smallPadding} paddingX={defaultPadding} w="100%" h="60px">
-      <Text color={greyTextColor}>
+    <HStack
+      paddingY={3}
+      paddingX={10}
+      w="100%"
+      h="60px"
+      bg="white"
+      boxShadow="base"
+    >
+      <Text color={"blackAlpha.800"}>
         {t("mapping.navigation.filter.bar.filter.by")}
       </Text>
-      {props.filtersState[0].map((filter, index) => {
+      {filtersState[0].map((filter, index) => {
         if (index === 0) {
           return (
             <SavedFilterButton
               key={filter.name}
-              filter={filter}
-              value={value}
+              propsFilter={filter}
               handleSavedFilterChange={(filter) =>
                 handleSavedFilterChange(filter)
               }
@@ -186,68 +198,62 @@ function FilterBar(props) {
           return (
             <FilterMenuButton
               key={filter.name}
-              filter={filter}
-              savedFilters={props.savedFilters}
+              propFilter={filter}
               handleFilterChange={(filter) => handleFilterChange(filter, index)}
             />
           );
         }
       })}
       {isButtonsActive && !isFilterApplied && (
-        <ButtonComponent
-          buttonText={t("mapping.navigation.bar.apply.filter.button")}
-          isWithoutBorder={true}
-          isSelected={true}
-          icon={<Check2Circle color={blueColor} size={25} />}
+        <Button
+          variant="ghost"
+          rightIcon={<Check2Circle color={"brand.500"} size={25} />}
           onClick={handleApplyFilter}
-        />
+        >
+          {t("mapping.navigation.bar.apply.filter.button")}
+        </Button>
       )}
       <Spacer />
 
       {isButtonsActive && (
-        <Box paddingRight={smallPadding}>
+        <Box paddingRight={3}>
           <Text
             as="u"
             cursor="pointer"
-            color={greyTextColor}
-            onClick={handleClearAllFilters}
+            color={"blackAlpha.800"}
+            onClick={handleClearFilters}
           >
             {t("mapping.navigation.bar.clear.filter.button")}
           </Text>
         </Box>
       )}
       {isButtonsActive && (
-        <Box paddingRight={verySmallPadding}>
-          <ButtonComponent
-            buttonText={
-              isSavedFilterSelected
-                ? t("mapping.navigation.bar.saved.filter.text")
-                : t("mapping.navigation.bar.saved.filter.button")
-            }
-            isPrimary={!isSavedFilterSelected}
-            isWithoutBorder={isSavedFilterSelected}
-            isSelected={isSavedFilterSelected}
-            icon={
+        <Box paddingRight={2}>
+          <Button
+            variant={"solid"}
+            isDisabled={isSavedFilterSelected}
+            rightIcon={
               isSavedFilterSelected ? (
-                <Check2Circle color={blueColor} size={25} />
+                <Check2Circle color={"brand.500"} size={25} />
               ) : (
-                <Save color={whiteColor} size={25} />
+                <Save color={"white"} size={25} />
               )
             }
-            onClick={isSavedFilterSelected ? () => {
-            } : handleSaveFilterClick}
-          />
+            onClick={isSavedFilterSelected ? () => {} : handleSaveFilterClick}
+          >
+            {isSavedFilterSelected
+              ? t("mapping.navigation.bar.saved.filter.text")
+              : t("mapping.navigation.bar.saved.filter.button")}{" "}
+          </Button>
         </Box>
       )}
       <SaveFilterAlertDialog
         isOpen={isOpen}
         onClose={onClose}
-        setFilters={props.filtersState[1]}
+        setFilters={filtersState[1]}
         filters={filters}
-        mapId={props.mapId}
-        savedFilters={props.savedFilters}
         isEditing={isEditing}
-        name={name}
+        name={name ? name : ""}
       />
       <DeleteFilterAlertDialog
         isOpen={isOpenDeleteDialog}
@@ -257,5 +263,10 @@ function FilterBar(props) {
     </HStack>
   );
 }
+
+FilterBar.propTypes = {
+  filtersState: PropTypes.array.isRequired,
+  handleClearAllFilters: PropTypes.func.isRequired,
+};
 
 export default FilterBar;

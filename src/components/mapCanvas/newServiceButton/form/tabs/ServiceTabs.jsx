@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   Box,
@@ -11,38 +11,44 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import LabeledMenu from "../../../../basic/inputs/menu/LabeledMenu";
 import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithTooltip";
 import SliderComponent from "../../../../basic/slider/SliderComponent";
-import {
-  greyColor,
-  mediumPadding,
-  smallFontSize,
-  smallPadding,
-  verySmallPadding,
-} from "../../../../../helper/constant";
 import ApplicationTypeComponent from "../applicationType/ApplicationTypeComponent";
 import LabeledDatePickerComponent from "../../../../basic/inputs/date/LabeledDatePickerComponent";
 import LabeledInputComponent from "../../../../basic/inputs/input/inputComponent/LabeledInputComponent";
 import LabeledBudgetInputComponent from "../../../../basic/inputs/budget/LabeledBudgetInputComponent";
 import LabeledMultilineInputComponent from "../../../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";
 import MenuComponent from "../../../../basic/inputs/menu/MenuComponent";
-import LocationComponent from "../../../../basic/location/LocationComponent";
+import { CanvasProvider } from "../../../../../pages/MapCanvasPage";
+import { AppProvider } from "../../../../../App";
+import UniqueLocationPicker from "../../../../basic/picker/locationPicker/UniqueLocationPicker";
 
 function ServiceTabs(props) {
+  const {
+    formValue,
+    applicationTypeButtons,
+    audiences,
+    organisations,
+    locationsList,
+  } = props;
   const { t } = useTranslation();
+  const canvasProvider = useContext(CanvasProvider);
+  const appProvider = useContext(AppProvider);
+
   return (
-    <Tabs marginTop={mediumPadding}>
+    <Tabs marginTop={6}>
       <TabList>
         <Tab>
-          <Text>Details</Text>
+          <Text>{t("mapping.canvas.form.tabs.general")}</Text>
         </Tab>
         <Tab>
-          <Text>Availability</Text>
+          <Text>{t("mapping.canvas.form.tabs.availability")}</Text>
         </Tab>
         <Tab>
-          <Text>Details</Text>
+          <Text>{t("mapping.canvas.form.tabs.details")}</Text>
         </Tab>
       </TabList>
       <TabPanels>
@@ -51,28 +57,26 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.owner.organisation")}
             tooltipText={t("mapping.canvas.form.owner.organisation.tooltip")}
             tooltipAriaLabel={t("mapping.canvas.form.owner.organisation")}
-            item={props.formValue["ownerOrganisation"]}
-            items={props.organisations}
+            initialValue={formValue.ownerOrganization}
+            items={organisations}
             onChange={(organisation) => {
-              props.formValue["ownerOrganisation"] = organisation;
+              formValue.ownerOrganization = organisation;
             }}
           />
           <ApplicationTypeComponent
-            applicationType={props.formValue["applicationType"]}
-            applicationTypeButtons={props.applicationTypeButtons}
+            applicationType={formValue.serviceApplication}
+            applicationTypeButtons={applicationTypeButtons}
             onChange={(applicationType) =>
-              (props.formValue["applicationType"] = applicationType)
+              (formValue.serviceApplication = applicationType)
             }
           />
-          <Box marginTop={mediumPadding}>
+          <Box marginTop={6}>
             <LabelWithTooltip
               label={t("mapping.canvas.form.phase")}
               tooltipAriaLabel={t("mapping.canvas.form.phase")}
               tooltipText={t("mapping.canvas.form.phase.tooltip")}
             />
-            <SliderComponent
-              servicePhaseRange={props.formValue["servicePhaseRange"]}
-            />
+            <SliderComponent servicePhaseRange={formValue.servicePhaseRange} />
           </Box>
 
           {/*TODO tags component to think about later on*/}
@@ -93,55 +97,49 @@ function ServiceTabs(props) {
             tooltipText={t("mapping.canvas.form.date.tooltip")}
             label={t("mapping.canvas.form.date")}
             tooltipAriaLabel={t("mapping.canvas.form.date")}
-            serviceStartTime={props.formValue["serviceStartTime"]}
-            serviceEndTime={props.formValue["serviceEndTime"]}
+            serviceStartTime={formValue.serviceTime.startTime}
+            serviceEndTime={formValue.serviceTime.endTime}
             onChangeStartTime={(value) =>
-              (props.formValue["serviceStartTime"] = value)
+              (formValue.serviceTime.startTime = value)
             }
-            onChangeEndTime={(value) =>
-              (props.formValue["serviceEndTime"] = value)
-            }
+            onChangeEndTime={(value) => (formValue.serviceTime.endTime = value)}
           />
-          <Box marginTop={mediumPadding}>
+          <Box marginTop={6}>
             <LabeledInputComponent
               tooltipText={t("mapping.canvas.form.link.tooltip")}
               label={t("mapping.canvas.form.link")}
               tooltipAriaLabel={t("mapping.canvas.form.link")}
               placeholder={t("mapping.canvas.form.link.placeholder")}
-              value={props.formValue["serviceLink"]}
-              onChange={(link) => (props.formValue["serviceLink"] = link)}
+              initialValue={formValue.serviceLink}
+              onChange={(link) => (formValue.serviceLink = link)}
             />
           </Box>
-          <Box marginTop={mediumPadding}>
-            <LocationComponent
-              value={props.formValue["serviceLocation"]}
-              locations={props.locations}
-              onChange={(location) =>
-                (props.formValue["serviceLocation"] = location)
+          <Box marginTop={6}>
+            <UniqueLocationPicker
+              initialValues={formValue.serviceLocation}
+              onChange={(value) => (formValue.serviceLocation = value)}
+              locationsList={
+                appProvider.locations ? appProvider.locations : locationsList
               }
             />
           </Box>
-          <Box marginTop={mediumPadding}>
+          <Box marginTop={6}>
             <LabeledMenu
               tooltipText={t("mapping.canvas.form.audience.tooltip")}
               label={t("mapping.canvas.form.audience")}
               tooltipAriaLabel={t("mapping.canvas.form.audience")}
-              item={props.formValue["serviceAudience"]}
-              items={props.audiences}
-              onChange={(audience) =>
-                (props.formValue["serviceAudience"] = audience)
-              }
+              initialValue={formValue.serviceAudience}
+              items={audiences}
+              onChange={(audience) => (formValue.serviceAudience = audience)}
             />
           </Box>
-          <Box marginTop={mediumPadding}>
+          <Box marginTop={6}>
             <LabeledBudgetInputComponent
               label={t("mapping.canvas.form.budget")}
               tooltipText={t("mapping.canvas.form.budget.tooltip")}
               tooltipAriaLabel={t("mapping.canvas.form.budget")}
-              budgets={props.formValue["serviceBudget"]}
-              onChange={(budgets) =>
-                (props.formValue["serviceBudget"] = budgets)
-              }
+              initialBudgets={formValue.serviceBudget}
+              onChange={(budgets) => (formValue.serviceBudget = budgets)}
             />
           </Box>
         </TabPanel>
@@ -151,25 +149,23 @@ function ServiceTabs(props) {
             label={t("mapping.canvas.form.description")}
             tooltipAriaLabel={t("mapping.canvas.form.description")}
             placeholder={t("mapping.canvas.form.description.placeholder")}
-            value={props.formValue["serviceDescription"]}
+            initialValue={formValue.serviceDescription}
             onChange={(description) =>
-              (props.formValue["serviceDescription"] = description)
+              (formValue.serviceDescription = description)
             }
           />
-          <Box paddingTop={smallPadding}>
+          <Box paddingTop={3}>
             <LabeledMultilineInputComponent
               tooltipText={t("mapping.canvas.form.outcomes.tooltip")}
               label={t("mapping.canvas.form.outcomes")}
               tooltipAriaLabel={t("mapping.canvas.form.outcomes")}
               placeholder={t("mapping.canvas.form.outcomes.placeholder")}
-              value={props.formValue["serviceOutcomes"]}
-              onChange={(outcomes) =>
-                (props.formValue["serviceOutcomes"] = outcomes)
-              }
+              initialValue={formValue.serviceOutcomes}
+              onChange={(outcomes) => (formValue.serviceOutcomes = outcomes)}
             />
           </Box>
-          {props.services.length >= 2 ? (
-            <Box paddingTop={smallPadding}>
+          {canvasProvider.services.length >= 2 ? (
+            <Box paddingTop={3}>
               <LabelWithTooltip
                 tooltipText={t("mapping.canvas.form.related.services.tooltip")}
                 label={t("mapping.canvas.form.related.services")}
@@ -178,18 +174,18 @@ function ServiceTabs(props) {
               <HStack>
                 <Text
                   w="calc(100% / 2)"
-                  paddingBottom={verySmallPadding}
-                  color={greyColor}
-                  fontSize={smallFontSize}
+                  paddingBottom={2}
+                  color={"blackAlpha.700"}
+                  fontSize={"xs"}
                 >
                   {t("mapping.canvas.form.related.services.previous")}
                 </Text>
                 <Text
                   w="calc(100% / 2)"
-                  paddingLeft={verySmallPadding}
-                  paddingBottom={verySmallPadding}
-                  color={greyColor}
-                  fontSize={smallFontSize}
+                  paddingLeft={2}
+                  paddingBottom={2}
+                  color={"blackAlpha.700"}
+                  fontSize={"xs"}
                 >
                   {t("mapping.canvas.form.related.services.following")}
                 </Text>
@@ -198,22 +194,18 @@ function ServiceTabs(props) {
                 <Box w="calc(100% / 2)">
                   <MenuComponent
                     width="100%"
-                    item={props.formValue["precededService"]}
-                    items={props.services}
-                    onChange={(value) =>
-                      (props.formValue["precededService"] = value)
-                    }
+                    initialValue={formValue.precededService}
+                    items={canvasProvider.services}
+                    onChange={(value) => (formValue.precededService = value)}
                   />
                 </Box>
-                <Box w={smallPadding} />
+                <Box w={3} />
                 <Box w="calc(100% / 2)">
                   <MenuComponent
                     width="100%"
-                    item={props.formValue["followedService"]}
-                    items={props.services}
-                    onChange={(value) =>
-                      (props.formValue["followedService"] = value)
-                    }
+                    initialValue={formValue.followedService}
+                    items={canvasProvider.services}
+                    onChange={(value) => (formValue.followedService = value)}
                   />
                 </Box>
               </HStack>
@@ -227,8 +219,15 @@ function ServiceTabs(props) {
   );
 }
 
-export default React.memo(ServiceTabs);
-
-Tab.defaultProps = {
-  _focus: { boxShadow: "none" },
+ServiceTabs.propTypes = {
+  /**
+   * Mainly for storybook, this argument allow to pass a list of locations in the case that the appProvider was not passed.
+   */
+  locationsList: PropTypes.array,
+  formValue: PropTypes.object.isRequired,
+  applicationTypeButtons: PropTypes.array.isRequired,
+  audiences: PropTypes.array.isRequired,
+  organisations: PropTypes.array.isRequired,
 };
+
+export default ServiceTabs;

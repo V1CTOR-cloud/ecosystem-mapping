@@ -1,29 +1,38 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
 
 import { Textarea } from "@chakra-ui/react";
-
-import { blueColor, greyColor } from "../../../../../helper/constant";
+import PropTypes from "prop-types";
 
 function MultilineInputComponent(props) {
-  const [value, setValue] = useState(props.value);
+  const { initialValue, onChange, placeholder } = props;
+  const [value, setValue] = useState(initialValue);
 
   function handleOnChange(event) {
     setValue(event.target.value);
-    props.onChange(event.target.value);
+    onChange(event.target.value);
   }
 
   return (
     <Textarea
-      isRequired={props.isRequired}
+      border="2px solid"
+      borderColor="blackAlpha.500"
+      _hover={{
+        borderColor: "brand.300",
+      }}
+      _focus={{
+        borderColor: "brand.500",
+      }}
       value={value}
       onChange={handleOnChange}
-      placeholder={props.placeholder}
-      size="md"
-      border={`2px solid`}
-      focusBorderColor={blueColor}
-      borderColor={greyColor}
+      placeholder={placeholder}
     />
   );
 }
 
-export default memo(MultilineInputComponent);
+MultilineInputComponent.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  initialValue: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+export default MultilineInputComponent;

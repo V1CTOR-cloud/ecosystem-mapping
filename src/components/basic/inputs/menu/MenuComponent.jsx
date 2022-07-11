@@ -1,47 +1,76 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-import {Button, MenuButton, MenuItem, MenuList, Menu, Box} from "@chakra-ui/react";
-import {ChevronDownIcon} from "@chakra-ui/icons";
+import {
+  Button,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Menu,
+  Box,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import PropTypes from "prop-types";
 
 function MenuComponent(props) {
-    const [value, setValue] = useState(props.item);
+  const { initialValue, onChange, width, isDisabled, wantScroll, items } =
+    props;
+  const [value, setValue] = useState(initialValue);
 
-    useEffect(() => {
-        setValue(props.item);
-    }, [props.item]);
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
-    function handleOnChange(event) {
-        setValue(event.target.lastChild.data);
-        props.onChange(event.target.lastChild.data);
-    }
+  function handleOnChange(event) {
+    setValue(event.target.lastChild.data);
+    onChange(event.target.lastChild.data);
+  }
 
-    return (
-        <Box>
-            <Menu isLazy>
-                <MenuButton
-                    w={props.width ? props.width : undefined}
-                    as={Button}
-                    rightIcon={<ChevronDownIcon/>}
-                    isDisabled={props.isDisabled ? props.isDisabled : false}
-                >
-                    {value}
-                </MenuButton>
-                <MenuList h={props.wantScroll ? "300px" : "auto"} overflowY="scroll">
-                    {props.items.map((item) => {
-                        return (
-                            <MenuItem key={item.id} onClick={(event) => handleOnChange(event)}>
-                                {item.name}
-                            </MenuItem>
-                        );
-                    })}
-                </MenuList>
-            </Menu>
-        </Box>
-    );
+  return (
+    <Box>
+      <Menu isLazy>
+        <MenuButton
+          variant="outline"
+          color="black"
+          borderColor="blackAlpha.500"
+          _hover={{ bg: "blackAlpha.200" }}
+          _active={{ bg: "blackAlpha.300" }}
+          w={width ? width : undefined}
+          as={Button}
+          rightIcon={<ChevronDownIcon />}
+          isDisabled={isDisabled}
+        >
+          {value}
+        </MenuButton>
+        <MenuList h={wantScroll ? "300px" : "auto"} overflowY="scroll">
+          {items.map((item) => {
+            return (
+              <MenuItem
+                key={item.id}
+                onClick={(event) => handleOnChange(event)}
+              >
+                {item.name}
+              </MenuItem>
+            );
+          })}
+        </MenuList>
+      </Menu>
+    </Box>
+  );
 }
 
 MenuComponent.defaultProps = {
-    wantScroll: false,
+  wantScroll: false,
+  isDisabled: false,
+  width: undefined,
 };
 
-export default React.memo(MenuComponent);
+MenuComponent.propTypes = {
+  wantScroll: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  width: PropTypes.string,
+  initialValue: PropTypes.string.isRequired,
+  items: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+export default MenuComponent;

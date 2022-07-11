@@ -26,31 +26,33 @@ const NavigationBarLandingPage = () => {
         <Box w="80%" m="15px">
           <Breadcrumb separator="" pt="5" pb="5">
             <BreadcrumbItem ml="0">
-              <Text style={headerStyle}>Ecosystem Mapping</Text>
+              <Text style={headerStyle}>
+                {t("mapping.landing.navigation.title")}
+              </Text>
             </BreadcrumbItem>
             <BreadcrumbItem>
               <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.about")}
+                {t("mapping.landing.navigation.about")}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.learn")}
+                {t("mapping.landing.navigation.learn")}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.connect")}
+                {t("mapping.landing.navigation.connect")}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.scale")}
+                {t("mapping.landing.navigation.scale")}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.contact")}
+                {t("mapping.landing.navigation.contact")}
               </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
