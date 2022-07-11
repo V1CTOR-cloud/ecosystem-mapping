@@ -50,7 +50,7 @@ export const Map = {
    */
   async createMap(data) {
     const query = `
-      mutation ($data: EcosystemMapCreateInput!) {
+      mutation createMap($data: EcosystemMapCreateInput!) {
         createEcosystemMap(data: $data) {
           id
           title
@@ -140,12 +140,15 @@ export const Map = {
   },
 
   /**
-   * Delete a map and post it to the database.
+   * Delete a map and all services related to this map.
    * @param id The id of the map to delete.
    */
   async deleteMap(id) {
     const query = `
-      mutation deleteMap($id: ID!) {
+      mutation deleteMapAndRelatedServices($id: ID!) {
+        deleteManyServices(where: {ecosystemMaps_every: {id: $id}}) {
+          count
+        }
         deleteEcosystemMap(where: {id: $id}) {
           id
         }
@@ -193,7 +196,7 @@ export const Map = {
    */
   async getMapById(id) {
     const query = ` 
-      query MyQuery {
+      query getMapById {
         services (where: {ecosystemMaps_every: {id: "${id}"}}){
           id
           serviceName
@@ -256,7 +259,7 @@ export const Map = {
    * @return {Object} The filter updated are returned.
    */
   async createSavedFilter(data) {
-    const query = `mutation ($data: EcosystemMapUpdateInput!, $id: ID!) {
+    const query = `mutation createSavedFilter($data: EcosystemMapUpdateInput!, $id: ID!) {
         updateEcosystemMap(
           where: {id: $id}, data: $data
         ) {
