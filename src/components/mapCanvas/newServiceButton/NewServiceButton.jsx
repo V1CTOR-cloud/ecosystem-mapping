@@ -1,51 +1,41 @@
 import React, { useRef } from "react";
 
 import { AddIcon } from "@chakra-ui/icons";
+import { Button } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-import ButtonComponent from "../../basic/buttons/ButtonComponent";
-import {
-  mediumPadding,
-  verySmallPadding,
-  whiteColor,
-} from "../../../helper/constant";
 import ServiceForm from "./form/ServiceForm";
 
 function NewServiceButton(props) {
+  const { onOpen, isOpen, onClose, organisations } = props;
   const cancelRef = useRef();
   const { t } = useTranslation();
 
   return (
     <React.Fragment>
-      <ButtonComponent
-        isPrimary={true}
-        padding={`0 0 0 ${mediumPadding}`}
-        buttonText={t("mapping.navigation.bar.new.service.button")}
-        icon={
-          <AddIcon
-            marginRight={verySmallPadding}
-            color={whiteColor}
-            w="15px"
-            h="15px"
-          />
-        }
-        onClick={props.onOpen}
-      />
+      <Button
+        leftIcon={<AddIcon marginRight={2} color={"white"} w="15px" h="15px" />}
+        onClick={onOpen}
+      >
+        {t("mapping.navigation.bar.new.service.button")}
+      </Button>
       <ServiceForm
         isEditing={false}
-        isOpen={props.isOpen}
-        onClose={props.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
         cancelRef={cancelRef}
-        isError={props.isError}
-        fetchedData={props.fetchedData}
-        organisations={props.organisations}
-        audiences={props.audiences}
-        services={props.services}
-        locations={props.locations}
-        mapId={props.mapId}
+        propOrganisations={organisations}
       />
     </React.Fragment>
   );
 }
+
+NewServiceButton.propTypes = {
+  organisations: PropTypes.array,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
+};
 
 export default NewServiceButton;

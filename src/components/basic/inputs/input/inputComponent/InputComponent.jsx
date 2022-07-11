@@ -1,27 +1,24 @@
 import React, { useState } from "react";
 
 import { Input } from "@chakra-ui/react";
-
-import { blueColor, greyColor } from "../../../../../helper/constant";
+import PropTypes from "prop-types";
 
 function InputComponent(props) {
-  const [value, setValue] = useState(props.value);
+  const { initialValue, onChange, isRequired, placeholder } = props;
+  const [value, setValue] = useState(initialValue);
 
   function handleOnChange(event) {
     setValue(event.target.value);
-    props.onChange(event.target.value);
+    onChange(event.target.value);
   }
 
   return (
     <Input
-      isRequired={props.isRequired}
+      variant="outline"
+      isRequired={isRequired}
       value={value}
       onChange={(event) => handleOnChange(event)}
-      placeholder={props.placeholder}
-      size="md"
-      border={`2px solid`}
-      focusBorderColor={blueColor}
-      borderColor={greyColor}
+      placeholder={placeholder}
     />
   );
 }
@@ -30,4 +27,11 @@ InputComponent.defaultProps = {
   isRequired: false,
 };
 
-export default React.memo(InputComponent);
+InputComponent.propTypes = {
+  isRequired: PropTypes.bool,
+  initialValue: PropTypes.string,
+  placeholder: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+export default InputComponent;

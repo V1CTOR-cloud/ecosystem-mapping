@@ -1,0 +1,26 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import { emptyArgs } from "./args";
+import MapAccordion from "../../../components/dashboard/mapAccordion/MapAccordion";
+import { withChakra } from "../../../../.storybook/preview";
+
+<Meta
+  title="Mapping App/Dashboard/Accordion"
+  component={MapAccordion}
+  decorators={[withChakra]}
+/>
+
+export const Template = (args) => <MapAccordion {...args} />;
+
+# Empty
+<Canvas>
+  <Story
+    name="Empty"
+    args={emptyArgs}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+
+<ArgsTable story="Empty" />

@@ -1,0 +1,50 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import GridMap from "../../../components/dashboard/mapView/GridMap";
+import { withChakra } from "../../../../.storybook/preview";
+
+<Meta
+  title="Mapping App/Dashboard/Map view"
+  component={GridMap}
+  decorators={[withChakra]}
+/>
+
+# Grid View
+
+export const GridTemplate = (args) => <GridMap {...args} />;
+
+<Canvas>
+  <Story
+    name="Grid"
+    args={{
+      data: {
+        id: "",
+        mapStatus: "",
+        title: "Title",
+        owner: {
+          profileName: "Digiole",
+        },
+        creation: "2022-06-22",
+        lastModification: "2022-06-22",
+        image: "",
+        location: [{
+          continent: "Europe",
+          country: "Finland",
+          region: "",
+          city: "",
+        }],
+        industry: [{
+          mainIndustry: "Information Technology",
+          subIndustry: "",
+        }],
+        service: [],
+    },
+    }}
+  >
+    {GridTemplate.bind({})}
+  </Story>
+</Canvas>
+
+
+<ArgsTable story="Grid" />
+

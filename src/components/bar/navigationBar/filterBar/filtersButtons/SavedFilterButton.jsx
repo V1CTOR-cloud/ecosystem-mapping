@@ -10,29 +10,22 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-import {
-  blueColor,
-  borderRadius,
-  defaultFontFamily,
-  defaultFontSize,
-  greyColor,
-  greyTextColor,
-  mediumPadding,
-  smallPadding,
-  verySmallPadding,
-  whiteActiveColor,
-  whiteColor,
-  whiteHoverColor,
-} from "../../../../../helper/constant";
 import InputComponent from "../../../../basic/inputs/input/inputComponent/InputComponent";
 import { CheckIcon, EditIcon } from "@chakra-ui/icons";
 
 // Menu that open when we click on one of the filter. It displays all the possibilities to reduce the number of items displayed on the canvas
 function SavedFilterButton(props) {
+  const {
+    propsFilter,
+    handleSavedFilterChange,
+    handleEditSavedFilter,
+    handleOpenDeleteAlertDialog,
+  } = props;
   const { t } = useTranslation();
-  const [filter] = useState(props.filter);
-  const [secondaryFilter, setSecondaryFilter] = useState(props.filter);
+  const [filter] = useState(propsFilter);
+  const [secondaryFilter, setSecondaryFilter] = useState(propsFilter);
   const [value, setValue] = useState("");
 
   function handleInputChange(input) {
@@ -52,21 +45,21 @@ function SavedFilterButton(props) {
 
     setValue(filterName);
 
-    props.handleSavedFilterChange(selectedSavedFilter);
+    handleSavedFilterChange(selectedSavedFilter);
   }
 
   return (
     //  Wrap into a box because we have a warning in the console about margin error.
-    <Box paddingX={verySmallPadding}>
+    <Box paddingX={2}>
       <Menu closeOnSelect={false} margin="0px">
         <MenuButton
-          paddingX={smallPadding}
-          paddingY={verySmallPadding}
-          borderRadius={borderRadius}
-          _hover={{ bg: whiteHoverColor }}
+          paddingX={3}
+          paddingY={2}
+          borderRadius={"base"}
+          _hover={{ bg: "gray.100" }}
           _focus={{ boxShadow: "none" }}
         >
-          <Text whiteSpace="nowrap" color={greyTextColor}>
+          <Text whiteSpace="nowrap" color={"blackAlpha.600"}>
             {filter.name}
           </Text>
         </MenuButton>
@@ -74,7 +67,7 @@ function SavedFilterButton(props) {
           h={secondaryFilter.items.length >= 11 ? "400px" : "auto"}
           overflowY="scroll"
         >
-          <Box paddingX={smallPadding} paddingBottom={smallPadding}>
+          <Box paddingX={3} paddingBottom={3}>
             <InputComponent
               value={""}
               placeholder={
@@ -91,12 +84,12 @@ function SavedFilterButton(props) {
             <Box
               key={item.name}
               _hover={{
-                bg: whiteHoverColor,
+                bg: "gray.100",
               }}
-              borderRadius={borderRadius}
-              bg={item.name === value ? whiteActiveColor : whiteColor}
-              paddingX={mediumPadding}
-              paddingY={verySmallPadding}
+              borderRadius={"base"}
+              bg={item.name === value ? "gray.200" : "white"}
+              paddingX={6}
+              paddingY={2}
               cursor="pointer"
             >
               <HStack>
@@ -105,16 +98,10 @@ function SavedFilterButton(props) {
                   h="12.5px"
                   visibility={item.name === value ? "visible" : "hidden"}
                 />
-                <Box
-                  w="200px"
-                  paddingLeft={smallPadding}
-                  paddingRight={smallPadding}
-                >
+                <Box w="200px" paddingLeft={3} paddingRight={3}>
                   <Text
                     w="100%"
                     value={item.name}
-                    fontFamily={defaultFontFamily}
-                    fontSize={defaultFontSize}
                     onClick={() => {
                       handleItemClick(item.name);
                     }}
@@ -125,25 +112,25 @@ function SavedFilterButton(props) {
                   </Text>
                 </Box>
                 <EditIcon
-                  color={greyColor}
+                  color={"blackAlpha.700"}
                   _hover={{
-                    color: blueColor,
+                    color: "brand.500",
                   }}
                   onClick={() => {
-                    props.handleEditSavedFilter(item.name);
+                    handleEditSavedFilter(item.name);
                   }}
                   cursor="pointer"
                 />
-                <Box paddingLeft={verySmallPadding}>
+                <Box paddingLeft={2}>
                   <CloseButton
                     w="17.5px"
                     h="17.5px"
                     padding="8px"
                     size="sm"
                     border="2px solid"
-                    borderColor={greyColor}
+                    borderColor={"blackAlpha.700"}
                     borderRadius="100%"
-                    color={greyColor}
+                    color={"blackAlpha.700"}
                     _focus={{
                       boxShadow: "none",
                     }}
@@ -152,7 +139,7 @@ function SavedFilterButton(props) {
                       color: "red",
                     }}
                     onClick={() => {
-                      props.handleOpenDeleteAlertDialog(item.name);
+                      handleOpenDeleteAlertDialog(item.name);
                     }}
                   />
                 </Box>
@@ -164,5 +151,12 @@ function SavedFilterButton(props) {
     </Box>
   );
 }
+
+SavedFilterButton.propTypes = {
+  propsFilter: PropTypes.object.isRequired,
+  handleSavedFilterChange: PropTypes.func.isRequired,
+  handleEditSavedFilter: PropTypes.func.isRequired,
+  handleOpenDeleteAlertDialog: PropTypes.func.isRequired,
+};
 
 export default SavedFilterButton;
