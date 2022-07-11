@@ -32,8 +32,11 @@ function AccordionItemComponent(props) {
               borderBottom="solid 3px"
               borderColor={isSelected ? "brand.500" : "blackAlpha.400"}
               _focus={{ bg: "brand.50" }}
+              overflowX="hidden"
+              overflowY="scroll"
+              height="50px"
             >
-              {isCollapsed && (
+              <HStack>
                 <Icon
                   height="2rem"
                   width="2rem"
@@ -41,31 +44,24 @@ function AccordionItemComponent(props) {
                 >
                   {button.icon}
                 </Icon>
-              )}
-              {!isCollapsed && (
-                <HStack>
-                  <Icon
-                    height="2rem"
-                    width="2rem"
-                    color={isSelected ? "brand.500" : "black"}
-                  >
-                    {button.icon}
-                  </Icon>
-                  <Text
-                    paddingLeft={3}
-                    color={isSelected ? "brand.500" : "black"}
-                  >
-                    {button.title}
-                  </Text>
-                </HStack>
-              )}
+                <Text
+                  paddingLeft={3}
+                  color={isSelected ? "brand.500" : "black"}
+                >
+                  {button.title}
+                </Text>
+              </HStack>
             </AccordionButton>
             {isExpanded && (
-              <AccordionPanel>
+              <AccordionPanel
+                w="250px"
+                h={button.children.length > 6 ? "300px" : undefined}
+                overflowY="scroll"
+              >
                 {button.children.length !== 0 ? (
                   button.children
                 ) : (
-                  <Box w="100%" h="100%" align="center" paddingTop={3}>
+                  <Box h="100%" align="center" paddingTop={3}>
                     <Text>
                       {t("mapping.canvas.side.bar.toggle.no.element")}
                     </Text>

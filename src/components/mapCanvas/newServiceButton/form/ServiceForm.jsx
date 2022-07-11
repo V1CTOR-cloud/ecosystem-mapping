@@ -393,6 +393,7 @@ function ServiceForm(props) {
       // Check if we update the service
       if (res.updateService) {
         const newData = await updateServiceToData(res.updateService);
+        console.log(newData);
         setData(newData);
         onClose();
 
@@ -425,7 +426,7 @@ function ServiceForm(props) {
       if (updateService.serviceStatus === "Archived") {
         // Remove the element in the same row
         tempRows[updateService.serviceApplication].serviceIds.splice(
-          serviceWithoutModification.serviceserviceOrder,
+          serviceWithoutModification.serviceOrder,
           1
         );
 
@@ -477,7 +478,7 @@ function ServiceForm(props) {
           serviceApplication: service.serviceApplication,
         };
 
-        Service.updateServiceserviceOrderAndApplicationType(
+        Service.updateServiceOrderAndApplicationType(
           service.id,
           data
           // eslint-disable-next-line no-loop-func

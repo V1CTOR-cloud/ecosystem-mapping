@@ -1,35 +1,45 @@
 import React, { useContext } from "react";
 
-import { Box } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 import Row from "../drap&dropComponent/row/Row";
 import ToastComponent from "../../basic/ToastComponent";
 import { Service } from "../../../service/service";
 import { CanvasProvider } from "../../../pages/MapCanvasPage";
 
+const ArrowDown = styled.div`
+  border-left: 7.5px solid transparent;
+  border-right: 7.5px solid transparent;
+  border-top: 7.5px solid #aaaaaa;
+`;
+
+const ArrowUp = styled.div`
+  border-right: 7.5px solid transparent;
+  border-left: 7.5px solid transparent;
+  border-bottom: 7.5px solid #aaaaaa;
+`;
+
 function ContentCanvas(props) {
   const {
     isFilterOpen,
     secondaryData,
     handleServiceClick,
-    heights,
-    containerHeight,
+
     isFiltersActive,
   } = props;
   const canvasProvider = useContext(CanvasProvider);
   const [data, setData] = canvasProvider.fetchedData;
   const { t } = useTranslation();
 
-  const height = (isFilterOpen ? 135 : 75) + 12;
-
   function setOrder(list, servicesId) {
     list.forEach((value) => {
       const index = servicesId.findIndex((service) => service === value.id);
       if (index !== -1) {
-        value.order = index;
+        value.serviceOrder = index;
       }
     });
   }
@@ -40,8 +50,8 @@ function ContentCanvas(props) {
     for (const value of Object.values(services)) {
       if (listIds.includes(value.id)) {
         const data = {
-          order: value.order,
-          applicationType: value.applicationType,
+          serviceOrder: value.serviceOrder,
+          serviceApplication: value.serviceApplication,
         };
 
         await Service.updateServiceOrderAndApplicationType(
@@ -149,7 +159,7 @@ function ContentCanvas(props) {
     };
 
     // Modification of the application Type field
-    newServices[draggableId].applicationType = destination.droppableId;
+    newServices[draggableId].serviceApplication = destination.droppableId;
 
     // set each order to his correct index for the start row
     setOrder(Object.values(newServices), startServiceIds);
@@ -178,29 +188,58 @@ function ContentCanvas(props) {
   }
 
   return (
-    <Box
-      h={`calc(100% - ${height}px)`}
-      w="calc(100% - 200px)"
-      position="absolute"
-    >
+    <Box h="100%">
       <DragDropContext onDragEnd={handleDragEnd}>
-        {secondaryData.rowsOrder.map((rowId) => {
+        {secondaryData.rowsOrder.map((rowId, index) => {
           const row = secondaryData.rows[rowId];
           const services = row.serviceIds.map(
             (serviceId) => data.services[serviceId]
           );
 
           return (
-            <Row
+            <Box
+              minHeight={
+                index === 0
+                  ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3)`
+                  : index === 1
+                  ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3 - 10px)`
+                  : `calc((100vh - ${isFilterOpen ? 135 : 75}px) / 3 - 20px)`
+              }
               key={row.id}
-              row={row}
-              services={services}
-              handleServiceClick={handleServiceClick}
-              heights={heights}
-              containerHeight={containerHeight}
-              isFilterOpen={isFilterOpen}
-              isFiltersActive={isFiltersActive}
-            />
+              display="flex"
+              marginTop={index !== 0 ? "10px" : 0}
+            >
+              <Box flexGrow={1}>
+                <Row
+                  key={row.id}
+                  row={row}
+                  services={services}
+                  handleServiceClick={handleServiceClick}
+                  isFilterOpen={isFilterOpen}
+                  isFiltersActive={isFiltersActive}
+                />
+              </Box>
+              <Box w="75px" paddingLeft="15px" textAlign="center">
+                <HStack position="relative" w="100%" h="100%">
+                  <VStack
+                    bg={"blackAlpha.400"}
+                    w="2px"
+                    h="100%"
+                    justify="space-between"
+                  >
+                    <ArrowDown />
+                    <ArrowUp />
+                  </VStack>
+                  <Text
+                    marginLeft={3}
+                    color={"blackAlpha.400"}
+                    style={{ writingMode: "vertical-lr" }}
+                  >
+                    {row.id.replaceAll("_", " ").replace("and", "&")}
+                  </Text>
+                </HStack>
+              </Box>
+            </Box>
           );
         })}
       </DragDropContext>
@@ -211,8 +250,6 @@ function ContentCanvas(props) {
 ContentCanvas.propTypes = {
   isFiltersActive: PropTypes.bool.isRequired,
   isFilterOpen: PropTypes.bool.isRequired,
-  containerHeight: PropTypes.array.isRequired,
-  heights: PropTypes.array.isRequired,
   secondaryData: PropTypes.object.isRequired,
   handleServiceClick: PropTypes.func.isRequired,
 };

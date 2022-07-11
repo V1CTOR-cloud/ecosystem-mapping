@@ -2,6 +2,10 @@ import { graphCMSRequest } from "./graphCMS";
 import { Authentication } from "./authentication";
 
 export const Map = {
+  /**
+   * Get all the maps linked to the connected user.
+   * @return {array} An array of object.
+   */
   async getAllUserMaps() {
     const query = `
       query getAllUserMaps {
@@ -39,7 +43,11 @@ export const Map = {
     return (await graphCMSRequest(query)).ecosystemMaps;
   },
 
-  // Async function that create a map.
+  /**
+   * Create a new map and post it to the database.
+   * @param data The date to create the new map.
+   * @return {Object} A map object.
+   */
   async createMap(data) {
     const query = `
       mutation ($data: EcosystemMapCreateInput!) {
@@ -79,6 +87,11 @@ export const Map = {
     return await graphCMSRequest(query, variables);
   },
 
+  /**
+   * Update a map and post it to the database.
+   * @param data The data to update the map.
+   * @return {Object} A map object.
+   */
   async updateMap(data) {
     const query = `
       mutation updateMap($data: EcosystemMapUpdateInput!, $id: ID!) {
@@ -126,6 +139,10 @@ export const Map = {
     return await graphCMSRequest(query, variables);
   },
 
+  /**
+   * Delete a map and post it to the database.
+   * @param id The id of the map to delete.
+   */
   async deleteMap(id) {
     const query = `
       mutation deleteMap($id: ID!) {
@@ -142,6 +159,11 @@ export const Map = {
     return await graphCMSRequest(query, variables);
   },
 
+  /**
+   * Change the status of a map.
+   * @param data The date to change the status.
+   * @return {Object} Id and the map status are returned.
+   */
   async changeMapStatus(data) {
     const query = `
       mutation changeMapStatus($data: EcosystemMapUpdateInput!, $id: ID!) {
@@ -164,11 +186,15 @@ export const Map = {
     return (await graphCMSRequest(query, variables)).updateEcosystemMap;
   },
 
-  // Get all the services for a specific map
-  async getMapServicesAndInformation(mapID) {
+  /**
+   *  Get a map by its id.
+   * @param id The id of the map to get.
+   * @return {Object} A map object.
+   */
+  async getMapById(id) {
     const query = ` 
       query MyQuery {
-        services (where: {ecosystemMaps_every: {id: "${mapID}"}}){
+        services (where: {ecosystemMaps_every: {id: "${id}"}}){
           id
           serviceName
           serviceFocus
@@ -214,7 +240,7 @@ export const Map = {
           serviceStatus
           serviceOrder
         }
-        ecosystemMap(where: {id:"${mapID}"}) {
+        ecosystemMap(where: {id:"${id}"}) {
           title
           filters
         }
@@ -224,7 +250,11 @@ export const Map = {
     return await graphCMSRequest(query);
   },
 
-  // Create or update the filters that are linked to each map
+  /**
+   * Update the filters of a map.
+   * @param data The id and filter of the map to update.
+   * @return {Object} The filter updated are returned.
+   */
   async createSavedFilter(data) {
     const query = `mutation ($data: EcosystemMapUpdateInput!, $id: ID!) {
         updateEcosystemMap(

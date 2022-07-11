@@ -15,7 +15,6 @@ import serviceFocus from "../../../../assets/servicesFocus.json";
 import { Service } from "../../../../service/service";
 
 const ServiceLineContainer = styled.div`
-  padding-bottom: ${3};
   display: flex;
   height: 40px;
   width: 100%;
