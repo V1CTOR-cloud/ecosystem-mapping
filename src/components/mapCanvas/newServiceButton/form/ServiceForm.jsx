@@ -45,7 +45,7 @@ function ServiceForm(props) {
   const services = canvasProvider.services;
   const applicationTypeButtons = [
     market,
-    market_and_organization,
+    market_and_organization.replaceAll("_", " "),
     organization,
   ];
   const { t } = useTranslation();
@@ -96,7 +96,7 @@ function ServiceForm(props) {
       ? serviceWithoutModification.ownerOrganization[0].organisationName
       : organisations[0].name;
     formValue.serviceApplication =
-      serviceWithoutModification.serviceApplication;
+      serviceWithoutModification.serviceApplication.replaceAll("_", " ");
     formValue.servicePhaseRange = {
       startPhase: Service.replacePhaseToNumber(
         serviceWithoutModification.servicePhaseRange.startPhase
