@@ -7,7 +7,7 @@ export const Service = {
    * @return {Promise<string|any>} A service object.
    */
   async createService(data) {
-    const query = `mutation ($data: ServiceCreateInput!) {
+    const query = `mutation createService($data: ServiceCreateInput!) {
         createService(data: $data){
           id
           serviceName
@@ -146,7 +146,7 @@ export const Service = {
    * @return {Promise<string|any>} A service object.
    */
   async updateService(data) {
-    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
+    const query = `mutation updateService($data: ServiceUpdateInput!, $id: ID!) {
       updateService(
         where: {id: $id},
         data: $data
@@ -305,7 +305,7 @@ export const Service = {
    * @return {Promise<any>} A service object.
    */
   async updateServiceOrderAndApplicationType(serviceId, data) {
-    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!){
+    const query = `mutation updateServiceOrderAndApplication($data: ServiceUpdateInput!, $id: ID!){
       updateService(
         where: {id: $id}
         data: $data
@@ -333,7 +333,7 @@ export const Service = {
    * @return {Promise<any>} A service object.
    */
   async updateRangesPhase(data) {
-    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
+    const query = `mutation updateRangesPhase($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
           serviceName
           servicePhaseRange {
