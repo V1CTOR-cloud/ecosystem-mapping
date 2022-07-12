@@ -4,13 +4,13 @@ import {
   Box,
   Text,
   useDisclosure,
-  // VStack,
   Button,
   GridItem,
   Grid,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FilterAlt } from "@styled-icons/boxicons-regular";
 
 import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
@@ -26,7 +26,6 @@ import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
-import { FilterAlt } from "@styled-icons/boxicons-regular";
 import { Map } from "../service/map";
 
 export const CanvasProvider = createContext(undefined);
@@ -165,7 +164,7 @@ function MapCanvasPage() {
   // Update the secondary list at each new service or service update
   // In addition we update the sidebar
   useEffect(() => {
-    setSecondaryFetchedData(fetchedData);
+    setSecondaryFetchedData(structuredClone(fetchedData));
 
     if (isDataLoaded) {
       const servicesArray = Object.values(fetchedData.services);
@@ -193,7 +192,7 @@ function MapCanvasPage() {
     if (isDataLoaded && bool) {
       const services = [];
       // Clone the object
-      const tempSecondaryData = { ...fetchedData };
+      const tempSecondaryData = structuredClone(fetchedData);
       tempSecondaryData.services = {};
       // We clear each rows because we want to add instead of removing each element
       Object.values(tempSecondaryData.rows).forEach((row) => {
@@ -308,7 +307,7 @@ function MapCanvasPage() {
 
       setSecondaryFetchedData(tempSecondaryData);
     } else {
-      setSecondaryFetchedData(fetchedData);
+      setSecondaryFetchedData({ ...fetchedData });
     }
   }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
