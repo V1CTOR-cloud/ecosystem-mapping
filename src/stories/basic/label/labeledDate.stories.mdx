@@ -1,0 +1,31 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "/.storybook/preview";
+import LabeledDatePickerComponent from "../../../components/basic/picker/datePicker/LabeledDatePickerComponent";
+
+<Meta
+  title="Mapping App/Basic/Label"
+  component={LabeledDatePickerComponent}
+  decorators={[withChakra]}
+/>
+
+# Label with tooltip
+
+<Canvas>
+  <Story
+    name="Date picker with tooltip"
+    args={{
+      label: "Label",
+      tooltipText: "Tooltip",
+      tooltipAriaLabel: "Label",
+      serviceStartTime: new Date(),
+      serviceEndTime: new Date(),
+      onChangeStartTime: () => {},
+      onChangeEndTime: () => {},
+    }}
+  >
+    {(args) => <LabeledDatePickerComponent {...args} />
+    }
+  </Story>
+</Canvas>
+
+<ArgsTable story="Date picker with tooltip" />
