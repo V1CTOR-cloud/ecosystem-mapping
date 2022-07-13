@@ -156,4 +156,4 @@ LabeledBudgetInputComponent.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(LabeledBudgetInputComponent);
+export default LabeledBudgetInputComponent;
