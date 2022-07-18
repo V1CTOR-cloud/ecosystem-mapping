@@ -10,7 +10,7 @@ import { market_and_organization } from "../../../../helper/constant";
 
 const RowContainer = styled.div`
   background: ${({ isDraggingOver }) =>
-    isDraggingOver ? "#BFBFBF" : "transparent"};
+          isDraggingOver ? "#BFBFBF" : "transparent"};
   transition: background-color 0.1s ease-in-out;
   flex-grow: 1;
   min-height: 100%;
@@ -41,16 +41,19 @@ function Row(props) {
               id={row.id}
             >
               <Box w="100%">
-                {services.map((service, index) => (
-                  <Box key={service.id} zIndex={2} position="relative">
-                    <ServiceContainer
-                      service={service}
-                      index={index}
-                      handleServiceClick={handleServiceClick}
-                      isFilterActive={isFiltersActive}
-                    />
-                  </Box>
-                ))}
+                {services.map((service, index) => {
+                  // Display only the service that have the property isVisible to true.
+                  if (service.isVisible) {
+                    return <Box key={service.id} zIndex={2} position="relative">
+                      <ServiceContainer
+                        service={service}
+                        index={index}
+                        handleServiceClick={handleServiceClick}
+                        isFilterActive={isFiltersActive}
+                      />
+                    </Box>;
+                  } else return null;
+                })}
                 {provided.placeholder}
                 {row.id === market_and_organization && (
                   <Box
@@ -102,7 +105,7 @@ Row.propTypes = {
   isFiltersActive: PropTypes.bool.isRequired,
   services: PropTypes.array.isRequired,
   row: PropTypes.object.isRequired,
-  handleServiceClick: PropTypes.func.isRequired,
+  handleServiceClick: PropTypes.func.isRequired
 };
 
 export default Row;
