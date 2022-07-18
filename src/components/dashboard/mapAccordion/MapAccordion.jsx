@@ -8,7 +8,7 @@ import {
   AccordionIcon,
   Text,
   Box,
-  Stack,
+  Stack
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import EmptyText from "./EmptyText";
@@ -49,18 +49,22 @@ function MapAccordion(props) {
               >
                 {accordionItem.content.length === 0 ? (
                   <EmptyText index={index} />
-                ) : (
-                  accordionItem.content.map((item, index) => {
-                    return (
-                      <Box
-                        key={index}
-                        padding={isGrid ? "0 0 2rem 0.75rem" : "0"}
-                      >
-                        {item}
-                      </Box>
-                    );
-                  })
-                )}
+                ) : accordionItem.content.every((item) => !item.props.data.isVisible) ?
+                  <Text textAlign="center" w="100%">No result</Text> : (
+                    accordionItem.content.map((item, index) => {
+                      if (item.props.data.isVisible) {
+                        return (
+                          <Box
+                            key={index}
+                            padding={isGrid ? "0 0 2rem 0.75rem" : "0"}
+                          >
+                            {item}
+                          </Box>
+                        );
+                      }
+                      return null;
+                    })
+                  )}
               </Stack>
             </AccordionPanel>
           </AccordionItem>
@@ -73,7 +77,7 @@ function MapAccordion(props) {
 export default MapAccordion;
 
 MapAccordion.defaultProps = {
-  isGrid: false,
+  isGrid: false
 };
 
 MapAccordion.propTypes = {
@@ -87,5 +91,5 @@ MapAccordion.propTypes = {
   /**
    * Array of object that define the content of the accordion.
    */
-  accordionItems: PropTypes.array.isRequired,
+  accordionItems: PropTypes.array.isRequired
 };
