@@ -1,0 +1,103 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../.storybook/preview";
+import ToastComponent from "../../../components/basic/ToastComponent";
+
+<Meta
+  title="Mapping App/Basic/Toasts"
+  component={ToastComponent}
+  decorators={[withChakra]}
+  argTypes={{
+    text: {
+      description: 'Message that will be displayed inside the toast.',
+    },
+    status: {
+      description: 'Status that will determine which color it will have.',
+      table: {
+        type: {
+          summary: 'Shows options to the variant',
+          detail: "'success'\n'error'\n'warning'\n'info'"
+        },
+      },
+    },
+    duration: {
+      description: 'Duration during which the toast will stay visible.',
+      table: {
+        defaultValue: {
+          summary: '2000'
+        },
+      },
+    }
+  }}
+/>
+
+# Toast
+
+Toast based on the Chakra-UI library. We have different possibilities to warn the user depending on the use case: success, error etc.
+
+## Success
+
+<Canvas>
+  <Story
+    name="Success"
+    args={{
+      text: "This is a success message.",
+      status: "success",
+      duration: 10000,
+    }}
+  >
+    {(args) => ToastComponent(args.text, args.status, args.duration)}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Success" />
+
+## Error
+
+<Canvas>
+  <Story
+    name="Error"
+    args={{
+      text: "This is an error message",
+      status: "error",
+      duration: 10000,
+    }}
+  >
+    {(args) => ToastComponent(args.text, args.status, args.duration)}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Error" />
+
+## Warning
+
+<Canvas>
+  <Story
+    name="Warning"
+    args={{
+      text: "This is a warning message",
+      status: "warning",
+      duration: 10000,
+    }}
+  >
+    {(args) => ToastComponent(args.text, args.status, args.duration)}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Warning" />
+
+## Information
+
+<Canvas>
+  <Story
+    name="Information"
+    args={{
+      text: "This is an information message",
+      status: "info",
+      duration: 10000,
+    }}
+  >
+    {(args) => ToastComponent(args.text, args.status, args.duration)}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Information" />

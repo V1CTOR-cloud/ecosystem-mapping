@@ -86,6 +86,8 @@ function ServiceContainer(props) {
     const newEndPhase =
       getEventData(e).value + 2 >= 4 ? 4 : getEventData(e).value + 2;
 
+
+    console.log(thisService);
     const newService = {
       serviceName: `Default name: ${createId(4)}`,
       serviceApplication: thisService.serviceApplication,
@@ -113,6 +115,7 @@ function ServiceContainer(props) {
     const res = await Service.createService(newService);
     // Check if we created the service
     if (res.createService) {
+      res.createService.isVisible = true;
       const newRes = await reorderServiceList(thisService, res.createService);
 
       // const newData = addServiceToData(res);
@@ -142,7 +145,7 @@ function ServiceContainer(props) {
     };
 
     // Add the element at the correct index
-    newServiceIds.splice(serviceClicked.order + 1, 0, newService.id);
+    newServiceIds.splice(serviceClicked.serviceOrder + 1, 0, newService.id);
 
     // Create iterable from the object
     const values = Object.values(newServices);
@@ -204,7 +207,7 @@ function ServiceContainer(props) {
     list.forEach((value) => {
       const index = servicesId.findIndex((service) => service === value.id);
       if (index !== -1) {
-        value.order = index;
+        value.serviceOrder = index;
       }
     });
   }

@@ -16,7 +16,7 @@ const sliderStyle = {
   // Give the slider some width
   position: "relative",
   width: "100%",
-  height: 25,
+  height: 25
 };
 
 const railStyle = {
@@ -26,7 +26,7 @@ const railStyle = {
   zIndex: 1,
   marginTop: marginTop,
   borderRadius: "40px",
-  backgroundColor: "#AAAAAA",
+  backgroundColor: "#AAAAAA"
 };
 
 function SliderComponent(props) {
@@ -43,7 +43,7 @@ function SliderComponent(props) {
     7 / 3,
     8 / 3,
     10 / 3,
-    11 / 3,
+    11 / 3
   ];
 
   const ticks = [-2, -1, 0, 1, 2, 3, 4];
@@ -98,7 +98,7 @@ function SliderComponent(props) {
                   index={index}
                   phase={[
                     servicePhaseRange.startPhase,
-                    servicePhaseRange.endPhase,
+                    servicePhaseRange.endPhase
                   ]}
                 />
               ))}
@@ -114,7 +114,7 @@ function SliderComponent(props) {
                   tick={tick}
                   phase={[
                     servicePhaseRange.startPhase,
-                    servicePhaseRange.endPhase,
+                    servicePhaseRange.endPhase
                   ]}
                 />
               ))}
@@ -135,8 +135,18 @@ function SliderComponent(props) {
   );
 }
 
+SliderComponent.defaultProps = {
+  servicePhaseRange: {
+    startPhase: -1,
+    endPhase: 1
+  }
+};
+
 SliderComponent.propTypes = {
-  servicePhaseRange: PropTypes.object.isRequired,
+  /**
+   * The initial range of the slider.
+   */
+  servicePhaseRange: PropTypes.object
 };
 
 export default SliderComponent;

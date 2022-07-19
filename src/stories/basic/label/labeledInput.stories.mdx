@@ -1,0 +1,30 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "/.storybook/preview";
+import LabeledInputComponent from "../../../components/basic/inputs/input/inputComponent/LabeledInputComponent";
+
+<Meta
+  title="Mapping App/Basic/Label"
+  component={LabeledInputComponent}
+  decorators={[withChakra]}
+/>
+
+# Label with tooltip
+
+<Canvas>
+  <Story
+    name="Input with tooltip"
+    args={{
+      label: "Label",
+      tooltipText: "Tooltip",
+      tooltipAriaLabel: "Label",
+      initialValue: "",
+      placeholder: "Placeholder",
+      onChange: () => {},
+    }}
+  >
+    {(args) => <LabeledInputComponent {...args} />
+    }
+  </Story>
+</Canvas>
+
+<ArgsTable story="Input with tooltip" />

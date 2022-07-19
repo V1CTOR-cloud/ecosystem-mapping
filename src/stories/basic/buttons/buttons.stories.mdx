@@ -1,0 +1,95 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../.storybook/preview";
+import { Button } from "@chakra-ui/react";
+
+<Meta
+  title="Mapping App/Basic/Buttons"
+  component={Button}
+  decorators={[withChakra]}
+  argTypes={{
+    text: {
+      description: 'Text that will be displayed inside the button.',
+    },
+    variant: {
+      description: 'Variant that will determine which color and shape the button will have.',
+      table: {
+        type: {
+          summary: 'Shows options to the variant',
+          detail: "'outline'\n'ghost'\n'greyGhost'\n'blackGhost'"
+        },
+      },
+    },
+  }}
+/>
+
+# Buttons
+
+Button component based on the Chakra-UI. We have added a few custom theme to have our own look.
+We can pass all the props of the Chakra-UI Button component.
+
+## Classic
+
+<Canvas>
+  <Story
+    name="Classic"
+    args={{
+      text: "Classic Button"
+    }}
+  >
+    {(args) => <Button>{args.text}</Button>}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Classic" />
+
+The buttons under are all variant of the classic button.
+
+## Outline
+<Canvas>
+  <Story
+    name="Outline"
+    args={{
+      text: "Outline Button",
+      variant: "outline",
+    }}
+  >
+    {(args) => <Button variant="outline">{args.text}</Button>}
+  </Story>
+</Canvas>
+
+## Ghost
+### Classic Chakra-UI ghost
+<Canvas>
+  <Story
+    name="Ghost"
+    args={{
+      text: "Ghost Button"
+    }}
+  >
+    {(args) => <Button variant="ghost">{args.text}</Button>}
+  </Story>
+</Canvas>
+
+### Grey custom ghost
+<Canvas>
+  <Story
+    name="GreyGhost"
+    args={{
+      text: "Grey Ghost Button"
+    }}
+  >
+    {(args) => <Button variant="greyGhost">{args.text}</Button>}
+  </Story>
+</Canvas>
+
+### Black custom ghost
+<Canvas>
+  <Story
+    name="BlackGhost"
+    args={{
+      text: "Black Ghost Button"
+    }}
+  >
+    {(args) => <Button variant="blackGhost">{args.text}</Button>}
+  </Story>
+</Canvas>
