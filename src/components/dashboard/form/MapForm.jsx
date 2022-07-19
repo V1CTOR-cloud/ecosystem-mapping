@@ -62,7 +62,6 @@ function MapForm(props) {
 
   useLayoutEffect(() => {
     if (isEdition) {
-      console.log("edition");
       setFormValues({
         title: initialFormValues.title,
         description: initialFormValues.description,
@@ -71,8 +70,6 @@ function MapForm(props) {
       });
     }
   }, [isEdition, initialFormValues]);
-
-  console.log(formValues);
 
   function handleCreateMap() {
     if (formValues.title === "") {
