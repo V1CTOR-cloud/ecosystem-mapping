@@ -15,7 +15,7 @@ function MultiLocationPicker(props) {
   // Update the formValues everytime we change a field of a location.
   useEffect(() => {
     onChange(locations);
-  }, [locations, onChange]);
+  }, [locations]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Add industry at the last index of the array.
   function handleAddLocation() {

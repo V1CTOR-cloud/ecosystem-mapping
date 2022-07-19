@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useLayoutEffect, useContext, useState } from "react";
 
 import {
   Text,
@@ -36,35 +36,43 @@ function MapForm(props) {
     onCreateMap,
     onEditMap,
   } = props;
-  const cancelRef = useRef();
+  const emptyValues = {
+    title: "",
+    description: "",
+    locations: [
+      {
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      },
+    ],
+    industries: [
+      {
+        mainIndustry: null,
+        subIndustry: null,
+      },
+    ],
+  };
+
   const { t } = useTranslation();
   const appProvider = useContext(AppProvider);
   const [isError, setIsError] = useState(false);
-  const formValues = isEdition
-    ? {
+  const [formValues, setFormValues] = useState(structuredClone(emptyValues));
+
+  useLayoutEffect(() => {
+    if (isEdition) {
+      console.log("edition");
+      setFormValues({
         title: initialFormValues.title,
         description: initialFormValues.description,
         locations: initialFormValues.location,
         industries: initialFormValues.industry,
-      }
-    : {
-        title: "",
-        description: "",
-        locations: [
-          {
-            continent: null,
-            country: null,
-            region: null,
-            city: null,
-          },
-        ],
-        industries: [
-          {
-            mainIndustry: null,
-            subIndustry: null,
-          },
-        ],
-      };
+      });
+    }
+  }, [isEdition, initialFormValues]);
+
+  console.log(formValues);
 
   function handleCreateMap() {
     if (formValues.title === "") {
@@ -91,6 +99,8 @@ function MapForm(props) {
       };
 
       onCreateMap(data);
+
+      setFormValues(structuredClone(emptyValues));
     }
   }
 
@@ -154,6 +164,8 @@ function MapForm(props) {
       };
 
       onEditMap(data);
+
+      setFormValues(structuredClone(emptyValues));
     }
   }
 
@@ -162,7 +174,6 @@ function MapForm(props) {
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      leastDestructiveRef={cancelRef}
       closeOnOverlayClick={false}
     >
       <ModalOverlay />
@@ -187,12 +198,10 @@ function MapForm(props) {
               initialValue={formValues.title}
               placeholder={t("mapping.dashboard.form.title.input")}
               onChange={(value) => {
-                formValues.title = value;
-                if (value === "") {
-                  setIsError(true);
-                } else {
-                  setIsError(false);
-                }
+                setFormValues((previousState) => {
+                  return { ...previousState, title: value };
+                });
+                setIsError(value === "");
               }}
             />
             {formValues.title === "" && (
@@ -210,13 +219,21 @@ function MapForm(props) {
               tooltipAriaLabel={t("mapping.dashboard.form.description.input")}
               initialValue={formValues.description}
               placeholder={t("mapping.dashboard.form.description.input")}
-              onChange={(value) => (formValues.description = value)}
+              onChange={(value) =>
+                setFormValues((previousState) => {
+                  return { ...previousState, description: value };
+                })
+              }
             />
           </Box>
           <Box paddingBottom={5}>
             <MultiLocationPicker
               initialValues={formValues.locations}
-              onChange={(value) => (formValues.locations = value)}
+              onChange={(value) =>
+                setFormValues((previousState) => {
+                  return { ...previousState, locations: value };
+                })
+              }
               locationsList={
                 appProvider.locations ? appProvider.locations : locationsList
               }
@@ -224,15 +241,25 @@ function MapForm(props) {
           </Box>
           <MultiIndustryPicker
             initialValues={formValues.industries}
-            onChange={(value) => (formValues.industries = value)}
+            onChange={(value) =>
+              setFormValues((previousState) => {
+                return { ...previousState, industries: value };
+              })
+            }
             industriesList={
               appProvider.industries ? appProvider.industries : industriesList
             }
           />
         </ModalBody>
-
         <ModalFooter>
-          <Button marginRight={3} variant="greyGhost" onClick={onClose}>
+          <Button
+            marginRight={3}
+            variant="greyGhost"
+            onClick={() => {
+              setFormValues({ ...emptyValues });
+              onClose();
+            }}
+          >
             Cancel
           </Button>
           <Button onClick={isEdition ? handleEditMap : handleCreateMap}>
