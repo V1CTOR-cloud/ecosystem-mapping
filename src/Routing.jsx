@@ -20,7 +20,7 @@ function Routing() {
           <Route path="/" element={<Home />} exact />
           <Route path="/dashboard" element={<Dashboard />} exact />
           <Route path="/dashboard/:mapId" element={<Canvas />} exact />
-          <Route path="*" element={<PageNotFound />} />
+          <Route path="/pageNotFound" element={<PageNotFound />} />
         </Routes>
       </Router>
     </Suspense>
