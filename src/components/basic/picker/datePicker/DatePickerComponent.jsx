@@ -23,8 +23,18 @@ function DatePickerComponent(props) {
   );
 }
 
+DatePickerComponent.defaultProps= {
+  initialDate: new Date(),
+}
+
 DatePickerComponent.propTypes = {
-  initialDate: PropTypes.instanceOf(Date).isRequired,
+  /**
+   * The initial date to be displayed, by default it is the current date.
+   */
+  initialDate: PropTypes.instanceOf(Date),
+  /**
+   * Function to be called when the date is changed.
+   */
   handleDateChange: PropTypes.func.isRequired,
 };
 

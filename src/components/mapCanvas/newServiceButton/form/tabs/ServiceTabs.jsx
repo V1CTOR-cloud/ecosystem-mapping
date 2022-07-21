@@ -17,7 +17,7 @@ import LabeledMenu from "../../../../basic/inputs/menu/LabeledMenu";
 import LabelWithTooltip from "../../../../basic/labelWithTooltip/LabelWithTooltip";
 import SliderComponent from "../../../../basic/slider/SliderComponent";
 import ApplicationTypeComponent from "../applicationType/ApplicationTypeComponent";
-import LabeledDatePickerComponent from "../../../../basic/inputs/date/LabeledDatePickerComponent";
+import LabeledDatePickerComponent from "../../../../basic/picker/datePicker/LabeledDatePickerComponent";
 import LabeledInputComponent from "../../../../basic/inputs/input/inputComponent/LabeledInputComponent";
 import LabeledBudgetInputComponent from "../../../../basic/inputs/budget/LabeledBudgetInputComponent";
 import LabeledMultilineInputComponent from "../../../../basic/inputs/input/multilineInputComponent/LabeledMultilineInputComponent";

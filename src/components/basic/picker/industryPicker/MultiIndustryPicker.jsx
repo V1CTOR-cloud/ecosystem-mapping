@@ -15,7 +15,7 @@ function MultiIndustryPicker(props) {
   // Update the formValues everytime we change a field of an industryPicker.
   useEffect(() => {
     onChange(industries);
-  }, [industries, onChange]);
+  }, [industries]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Add industryPicker at the last index of the array.
   function handleAddIndustry() {

@@ -1,0 +1,26 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../../.storybook/preview";
+import NumberInputComponent from "../../../../components/basic/inputs/input/numberInputComponent/NumberInputComponent";
+
+<Meta
+  title="Mapping App/Basic/Input/Input"
+  component={NumberInputComponent}
+  decorators={[withChakra]}
+/>
+
+# Number input
+
+<Canvas>
+  <Story
+    name="Number input"
+    args={{
+      initialValue: "50",
+      placeholder: "Placeholder",
+      onChange: ()=>{},
+    }}
+  >
+    {(args) => <NumberInputComponent {...args} />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Number input" />

@@ -1,0 +1,38 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "/.storybook/preview";
+import MenuComponent from "../../../components/basic/inputs/menu/MenuComponent";
+
+<Meta
+  title="Mapping App/Basic/Menu"
+  component={MenuComponent}
+  decorators={[withChakra]}
+/>
+
+# Menu
+
+Component that displays a menu. Useful for displaying a list of options for example a list of sorting, filtering, etc.
+
+<Canvas>
+  <Story
+    name="Menu"
+    args={{
+      items: [
+        { name: "Item 1", id: "item-1" },
+        { name: "Item 2", id: "item-2" },
+        { name: "Item 3", id: "item-3" },
+        { name: "Item 4", id: "item-4" },
+        { name: "Item 5", id: "item-5" },
+      ],
+      wantScroll: false,
+      isDisabled: false,
+      initialValue: "Item 1",
+      onChange: () => {
+      }
+    }}
+  >
+    {(args) => <MenuComponent {...args} />
+    }
+  </Story>
+</Canvas>
+
+<ArgsTable story="Menu" />

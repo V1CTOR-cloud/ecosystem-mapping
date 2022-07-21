@@ -26,9 +26,7 @@ const ArrowUp = styled.div`
 function ContentCanvas(props) {
   const {
     isFilterOpen,
-    secondaryData,
     handleServiceClick,
-
     isFiltersActive,
   } = props;
   const canvasProvider = useContext(CanvasProvider);
@@ -190,8 +188,8 @@ function ContentCanvas(props) {
   return (
     <Box h="100%">
       <DragDropContext onDragEnd={handleDragEnd}>
-        {secondaryData.rowsOrder.map((rowId, index) => {
-          const row = secondaryData.rows[rowId];
+        {data.rowsOrder.map((rowId, index) => {
+          const row = data.rows[rowId];
           const services = row.serviceIds.map(
             (serviceId) => data.services[serviceId]
           );
@@ -250,7 +248,6 @@ function ContentCanvas(props) {
 ContentCanvas.propTypes = {
   isFiltersActive: PropTypes.bool.isRequired,
   isFilterOpen: PropTypes.bool.isRequired,
-  secondaryData: PropTypes.object.isRequired,
   handleServiceClick: PropTypes.func.isRequired,
 };
 

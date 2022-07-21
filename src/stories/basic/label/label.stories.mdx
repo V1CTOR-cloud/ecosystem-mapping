@@ -1,0 +1,27 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "/.storybook/preview";
+import LabelWithTooltip from "../../../components/basic/labelWithTooltip/LabelWithTooltip";
+
+<Meta
+  title="Mapping App/Basic/Label"
+  component={LabelWithTooltip}
+  decorators={[withChakra]}
+/>
+
+# Label with tooltip
+
+<Canvas>
+  <Story
+    name="Label with tooltip"
+    args={{
+      label: "Label",
+      tooltipText: "Tooltip",
+      tooltipAriaLabel: "Label",
+    }}
+  >
+    {(args) => <LabelWithTooltip {...args} />
+    }
+  </Story>
+</Canvas>
+
+<ArgsTable story="Label with tooltip" />

@@ -1,0 +1,36 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "/.storybook/preview";
+import LabeledSelect from "../../../components/basic/inputs/select/LabeledSelect";
+
+<Meta
+  title="Mapping App/Basic/Label"
+  component={LabeledSelect}
+  decorators={[withChakra]}
+/>
+
+# Label with tooltip
+
+<Canvas>
+  <Story
+    name="Select with tooltip"
+    args={{
+      label: "Label",
+      tooltipText: "Tooltip",
+      tooltipAriaLabel: "Label",
+      initialValue: "Item 2",
+      items: [
+        { name: "Item 1", id: "item-1" },
+        { name: "Item 2", id: "item-2" },
+        { name: "Item 3", id: "item-3" },
+        { name: "Item 4", id: "item-4" },
+        { name: "Item 5", id: "item-5" },
+      ],
+      onChange: () => {},
+    }}
+  >
+    {(args) => <LabeledSelect {...args} />
+    }
+  </Story>
+</Canvas>
+
+<ArgsTable story="Select with tooltip" />
