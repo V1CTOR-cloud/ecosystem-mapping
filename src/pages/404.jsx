@@ -15,7 +15,7 @@ export default function PageNotFound() {
       justifyContent="center"
       alignItems="center"
     >
-      <Text fontSize="4xl">404 | This page would not be found.</Text>
+      <Text fontSize="4xl">404 | This page could not be found.</Text>
       <Button onClick={() => navigate(`/`)} marginTop={10}>
         Go to home
       </Button>
