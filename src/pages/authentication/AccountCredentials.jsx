@@ -4,7 +4,7 @@ import styled from "styled-components";
 import CirclepassLogo from '../../assets/images/CirclepassLogo.png';
 import SignIn from './SignIn';
 // import AccountCredentials from './AccountCredentials';
-import VerificationCompleted from './VerificationCompleted';
+// import VerificationCompleted from './VerificationCompleted';
 // import EmailConfrimation from './EmailConfrimation';
 
 const LeftSideWrapper = styled.section `
@@ -43,42 +43,6 @@ const CirclepassLogoWrapper = styled.section`
     width: 200px;
     justify-content: center;
     height: 56.58px;
-`
-
-// const AuthWrapper = styled.section`
-// width: 75px;
-// height: 24px;
-
-// font-family: 'Lucida Sans';
-// font-style: normal;
-// font-weight: 400;
-// font-size: 16px;
-// line-height: 24px;
-// display: flex;
-// align-items: center;
-// letter-spacing: 0.02em;
-// color: #2A69AC;
-// opacity: 0.5;
-// flex: none;
-// order: 0;
-// flex-grow: 0;
-// `
-
-const TextWrapper = styled.section`
-
-font-family: 'Lucida Sans';
-font-style: normal;
-font-size: 14px;
-color: #001011;
-flex: none;
-order: 0;
-align-self: stretch;
-flex-grow: 0;
-width: 564px;
-height: 40px;
-font-weight: 400;
-line-height: 20px;
-letter-spacing: 0.02em;
 `
 
 const FooterWrapper = styled.section`
@@ -121,33 +85,6 @@ align-self: stretch;
 flex-grow: 0;
 `
 
-const TitleOfSteps = styled.section`
-width: 165px;
-height: 20px;
-
-
-/* Circle Pass (+Teams)/text/md */
-
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-/* identical to box height, or 143% */
-
-letter-spacing: 0.02em;
-
-/* Circle Pass/CP Dark BG */
-
-color: #001011;
-
-
-/* Inside auto layout */
-
-display:flex;
-order: 1;
-align-self: stretch;
-flex-grow: 0;`
 
 export class AccountCredentials extends Component {
   render() {
@@ -181,9 +118,9 @@ export class AccountCredentials extends Component {
                             <TabPanel>
                             <Container maxW='container.lg' marginTop='35px'>
             <Box>
-                <TextWrapper>
+                {/* <TextWrapper>
                 Fill in your personal information and account credentials to setup your account 
-                </TextWrapper>
+                </TextWrapper> */}
                 <Box >
                   <Text>Full Name</Text>
                   
@@ -245,17 +182,11 @@ export class AccountCredentials extends Component {
             </Container>
             <Box bottom={'30px'} position='absolute'>
             <FooterWrapper>
-                <TextWrapper>
+                {/* <TextWrapper>
                 Fill your personal information to copmlete your account
-                </TextWrapper>
+                </TextWrapper> */}
             <TabStepsWrapper >
             <Tabs >
-                <TabList >
-                    <Tab alignItems={'flex-start'} flexDirection={'column'} fontSize={'12px'} color={'#00A0E9'} lineHeight={'16px'} fontFamily={'Lucida Sans Unicode'}>STEP 1 <TitleOfSteps>Contact Details</TitleOfSteps>                    </Tab>
-                    <Tab alignItems={'flex-start'} flexDirection={'column'} fontSize={'12px'} color={'#00A0E9'} lineHeight={'16px'} fontFamily={'Lucida Sans Unicode'}>STEP 2 <TitleOfSteps>Email Verification</TitleOfSteps></Tab>
-                    <Tab alignItems={'flex-start'} flexDirection={'column'} fontSize={'12px'} color={'#00A0E9'} lineHeight={'16px'} fontFamily={'Lucida Sans Unicode'}>STEP 3 <TitleOfSteps>Account Credentials</TitleOfSteps></Tab>
-                    <Tab alignItems={'flex-start'} flexDirection={'column'} fontSize={'12px'} color={'#00A0E9'} lineHeight={'16px'} fontFamily={'Lucida Sans Unicode'}>STEP 4 <TitleOfSteps>Completed</TitleOfSteps></Tab>
-                </TabList>
                 <TabPanels>
                     <TabPanel>
                         {/* <ContactDetails /> */}
@@ -267,7 +198,7 @@ export class AccountCredentials extends Component {
                         {/* <AccountCredentials /> */}
                     </TabPanel>
                     <TabPanel>
-                        <VerificationCompleted/>
+                        {/* <VerificationCompleted/> */}
                     </TabPanel>
                 </TabPanels>
             </Tabs>

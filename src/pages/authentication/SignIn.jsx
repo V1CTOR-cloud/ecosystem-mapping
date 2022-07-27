@@ -1,146 +1,20 @@
 import React, { Component } from 'react';
 import { Container } from '@chakra-ui/react';
-import styled from "styled-components";
-import {  Box, Flex,  Checkbox, Button, InputGroup, Input, Stack, InputLeftElement } from '@chakra-ui/react';
+import {  Box, Text, Flex,  Checkbox, Button, InputGroup, Input, Stack,Link, InputLeftElement } from '@chakra-ui/react';
 import {Tag, Unlock} from '@styled-icons/bootstrap';
-
-const ForgotMyUsername = styled.section`
-    width: 274px;
-height: 20px;
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-display: flex;
-align-items: center;
-text-align: center;
-letter-spacing: 0.02em;
-
-
-color: #2A69AC;
-flex: none;
-order: 0;
-flex-grow: 1;
-`
-
-const FooterText = styled.section`
-width: 564px;
-height: 20px;
-justify-content: center;
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-display: flex;
-align-items: center;
-text-align: center;
-letter-spacing: 0.02em;
-color: #001011;
-flex: none;
-order: 0;
-flex-grow: 0;
-`
-
-const RememberMe = styled.section`
-    width: 204px;
-height: 20px;
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-letter-spacing: 0.02em;
-color: #001011;
-flex: none;
-order: 1;
-flex-grow: 0;
-top:10px;
-`
-
-const SignInWrapper = styled.section `
-    width: 59px;
-height: 24px;
-
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 600;
-font-size: 16px;
-line-height: 24px;
-letter-spacing: 0.02em;
-color: #FFFFFF;
-flex: none;
-order: 0;
-flex-grow: 0;
-`
-
-const FormFieldWrapper = styled.section`
-width: 564px;
-height: 20px;
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-letter-spacing: 0.02em;
-margin-top:24px;
-/* margin-left:40px; */
-color: #001011;
-flex: none;
-order: 0;
-align-self: stretch;
-flex-grow: 0;
-`
-const Username = styled.section`
-width: 564px;
-height: 24px;
-
-margin-top:24px;
-/* margin-left:40px; */
-font-family: 'Lucida Sans';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 24px;
-letter-spacing: 0.02em;
-color: #001011;
-
-flex: none;
-order: 0;
-align-self: stretch;
-flex-grow: 0;
-`
-
-const Explanation = styled.section`
-width: 564px;
-height: 16px;
-font-family: 'Lucida Sans Unicode';
-font-style: normal;
-font-weight: 400;
-font-size: 12px;
-line-height: 16px;
-letter-spacing: 0.01em;
-color: #718096;
-margin-top: 8px;
-flex: none;
-order: 2;
-align-self: stretch;
-flex-grow: 0;
-`
 
 export class SignIn extends Component {
   render() {
     return (
         <Container maxW='container.lg' marginTop='35px'>
-             <FormFieldWrapper>
+             <Text alignSelf={'stretch'} fontSize='14px' color='#001011' width={'564px'} height={'40px'} order="0">
         Sign in with your CirclePass account to access our apps and services
-    </FormFieldWrapper>
+    </Text>
     <Box>
-        <Box>
-        <Username color='#001011' size='16px' lineHeight='24px'>
+        <Box marginTop='20px'>
+        <Text color='#001011' size='16px' lineHeight='24px'>
             Username
-        </Username>
+        </Text>
             <InputGroup>
                 <InputLeftElement
                 pointerEvents='none'
@@ -151,14 +25,14 @@ export class SignIn extends Component {
         </InputLeftElement>
             <Input  width='90%'  bgColor='#ffffff' type='Username' placeholder='    Username' />
         </InputGroup>
-        <Explanation>
+        <Text  marginTop='7px' fontSize='12px' letter-spacing='0.01em' color="#718096">
             Enter the username you have registered with
-        </Explanation>
+        </Text>
         </Box>
-        <Box>
-        <Username color='#001011' size='16px' lineHeight='24px'>
+        <Box marginTop='20px'>
+        <Text color='#001011' size='16px' lineHeight='24px'>
             Password
-        </Username>
+        </Text>
         <InputGroup>
         <InputLeftElement
             pointerEvents='none'
@@ -169,15 +43,15 @@ export class SignIn extends Component {
         </InputLeftElement>
             <Input width='90%'  bgColor='#ffffff' type='Password' placeholder='    Password' />
         </InputGroup>
-        <Explanation>
+        <Text   marginTop='7px' fontSize='12px' letter-spacing='0.01em' color='#718096'>
             Enter the password you have registered with
-        </Explanation>
+        </Text>
        </Box>
        <Stack marginTop='15px'>
-        <Checkbox colorScheme='blue' defaultChecked>
-            <RememberMe>
+        <Checkbox marginTop={'10px'} colorScheme='blue' defaultChecked>
+            <Text fontSize={'14px'} width='204px' height='20px'>
                 Remember my on this device
-            </RememberMe>
+            </Text>
         </Checkbox>
         </Stack>
         <Stack display='flex' justifyContent='center' spacing={4} direction='row' align='center'>
@@ -195,20 +69,21 @@ export class SignIn extends Component {
             background= '#00A0E9' 
             border-radius='6px'
             >
-            <SignInWrapper>
+           
                 Sign in
-            </SignInWrapper>
             </Button>
         </Stack>
         {/* Some changes to be done... */}
         <Box bottom={'30px'} position='absolute'
         marginTop={'230px'} marginLeft={'150px'}
         >
-            <FooterText>
+            <Text fontSize={'14px'} width={'564px'} height={'20px'}>
             Having a problem signing in?
-            </FooterText>
-            <Flex  marginLeft={'85px'} marginTop={'10px'} flexDirection={'row'}>
-                <ForgotMyUsername>Forgot my username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reset my password</ForgotMyUsername>                                            
+            </Text>
+            <Flex  flexDirection='row' display='flex'>
+                <Link color='#2A69AC' fontSize='14px' width={'274px'} height='20px'>Forgot my username</Link>
+
+                <Link color='#2A69AC' fontSize='14px' width={'274px'} height='20px'>Reset my passord</Link>                                        
             </Flex>
         </Box>
     </Box>
