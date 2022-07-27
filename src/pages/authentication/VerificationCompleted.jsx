@@ -1,11 +1,7 @@
-import React, { Component } from 'react'
+import React from "react";
 
-export class VerificationCompleted extends Component {
-  render() {
-    return (
-      <p>VerificationCompleted</p>
-    )
-  }
+function VerificationCompleted() {
+  return <p>VerificationCompleted</p>;
 }
 
-export default VerificationCompleted
+export default VerificationCompleted;

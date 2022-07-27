@@ -1,11 +1,7 @@
-import React, { Component } from 'react'
+import React from "react";
 
-export class EmailConfrimation extends Component {
-  render() {
-    return (
-      <div>EmailConfrimation</div>
-    )
-  }
+function EmailConfrimation() {
+  return <div>EmailConfrimation</div>;
 }
 
-export default EmailConfrimation
+export default EmailConfrimation;
