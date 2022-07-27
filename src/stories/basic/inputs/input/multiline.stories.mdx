@@ -1,0 +1,26 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../../.storybook/preview";
+import MultilineInputComponent from "../../../../components/basic/inputs/input/multilineInputComponent/MultilineInputComponent";
+
+<Meta
+  title="Mapping App/Basic/Input/Input"
+  component={MultilineInputComponent}
+  decorators={[withChakra]}
+/>
+
+# Multiline input
+
+<Canvas>
+  <Story
+    name="Multiline input"
+    args={{
+      initialValue: "Initial value",
+      placeholder: "Placeholder",
+      onChange: ()=>{},
+    }}
+  >
+    {(args) => <MultilineInputComponent {...args} />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Multiline input" />

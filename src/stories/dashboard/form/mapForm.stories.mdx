@@ -1,0 +1,47 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { Button, useDisclosure } from "@chakra-ui/react";
+
+import { withChakra } from "../../../../.storybook/preview";
+import MapForm from "../../../components/dashboard/form/MapForm";
+import { Location } from "/src/service/location";
+import { Industry } from "../../../service/industry";
+
+<Meta
+  title="Mapping App/Dashboard/Map form"
+  component={MapForm}
+  decorators={[withChakra]}
+/>
+
+# Map form
+
+This component allows the user to create a new ecosystem map through a form. the forms open thanks to a button
+that control it. Inside it, we can fill different information about the map: title description, locations or even the
+industries concerned.
+
+We have only the **title that is required** in order to create a map, all the others fields are optional.
+
+<Canvas>
+  <Story
+    name="Form"
+    height="800px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+        industries: await ((await Industry.getAllIndustries()).data.industries),
+      }),
+    ]}
+  >
+    {(args, { loaded: { locations, industries } }) => {
+      const { isOpen, onOpen, onClose } = useDisclosure();
+      return (
+        <>
+          <Button onClick={onOpen}>Create a new map</Button>
+          <MapForm {...args} locationsList={locations} industriesList={industries} isOpen={isOpen} onClose={onClose} />
+        </>
+      );
+    }}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Form" />

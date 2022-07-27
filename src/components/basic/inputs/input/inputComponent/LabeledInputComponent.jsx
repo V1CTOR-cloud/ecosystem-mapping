@@ -33,12 +33,30 @@ function LabeledInputComponent(props) {
 }
 
 LabeledInputComponent.propTypes = {
+  /**
+   * Text inside the tooltip to help the user understand the meaning of the label.
+   */
   tooltipText: PropTypes.string.isRequired,
+  /**
+   * Text that will be read for the screen readers.
+   */
   tooltipAriaLabel: PropTypes.string.isRequired,
+  /**
+   * Text to indicate to the user what the input corresponding to.
+   */
   label: PropTypes.string.isRequired,
+  /**
+   * Initial value of the field. Useful when we are in edition mode.
+   */
   initialValue: PropTypes.string.isRequired,
+  /**
+   * Text displayed if the input is empty. Indicate the kind of data that we want in the field.
+   */
   placeholder: PropTypes.string.isRequired,
+  /**
+   * Function that will update the value of the model with a setState for example.
+   */
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(LabeledInputComponent);
+export default LabeledInputComponent;

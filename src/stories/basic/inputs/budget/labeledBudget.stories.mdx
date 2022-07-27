@@ -1,0 +1,88 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../../.storybook/preview";
+import LabeledBudgetInputComponent from "../../../../components/basic/inputs/budget/LabeledBudgetInputComponent";
+
+<Meta
+  title="Mapping App/Basic/Input/Budget"
+  component={LabeledBudgetInputComponent}
+  decorators={[withChakra]}
+/>
+
+# Budget input
+
+Input that allows the user to enter a budget which include a title (food for example), an amount and a currency.
+We can add or remove any budget lines by clicking on the "+" and "-" buttons.
+
+## Without initial value
+
+Here the component is the default behavior. We are not passing any initial value to the component.
+
+<Canvas>
+  <Story
+    name="Without initial value"
+    args={{
+      label: "Budget",
+      tooltipText: "Tooltip text of budget",
+      tooltipAriaLabel: "Budget",
+      initialBudgets: [{ budgetValue: 0, budgetCurrency: "€", budgetTitle: "" }],
+      onChange: () => {
+      }
+    }}
+  >
+    {(args) => <LabeledBudgetInputComponent {...args} />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Without initial value" />
+
+## With one initial value
+
+<Canvas>
+  <Story
+    name="With one initial value"
+    args={{
+      label: "Budget",
+      tooltipText: "Tooltip text of budget",
+      tooltipAriaLabel: "Budget",
+      initialBudgets: [{ budgetValue: 10, budgetCurrency: "€", budgetTitle: "Title" }],
+      onChange: () => {
+      }
+    }}
+  >
+    {(args) => <LabeledBudgetInputComponent {...args} />}
+  </Story>
+</Canvas>
+
+## With multiple initials values
+
+<Canvas>
+  <Story
+    name="With multiple initials values"
+    args={{
+      label: "Budget",
+      tooltipText: "Tooltip text of budget",
+      tooltipAriaLabel: "Budget",
+      initialBudgets: [
+        {
+          budgetValue: 10,
+          budgetCurrency: "€",
+          budgetTitle: "Title",
+        },
+        {
+          budgetValue: 33,
+          budgetCurrency: "€",
+          budgetTitle: "Weekly food",
+        },
+        {
+          budgetValue: 560,
+          budgetCurrency: "$",
+          budgetTitle: "Transport",
+        },
+      ],
+      onChange: () => {
+      }
+    }}
+  >
+    {(args) => <LabeledBudgetInputComponent {...args} />}
+  </Story>
+</Canvas>

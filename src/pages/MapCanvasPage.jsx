@@ -1,16 +1,16 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useState, useRef } from "react";
 
 import {
   Box,
-  Flex,
-  HStack,
   Text,
   useDisclosure,
-  VStack,
   Button,
+  GridItem,
+  Grid,
 } from "@chakra-ui/react";
-import styled from "styled-components";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { FilterAlt } from "@styled-icons/boxicons-regular";
 
 import SideBar from "../components/bar/sideBar/SideBar";
 import NavigationBar from "../components/bar/navigationBar/NavigationBar";
@@ -26,22 +26,7 @@ import ContentCanvas from "../components/mapCanvas/contentCanvas/ContentCanvas";
 import NewServiceButton from "../components/mapCanvas/newServiceButton/NewServiceButton";
 import service from "../assets/servicesFocus.json";
 import ServiceForm from "../components/mapCanvas/newServiceButton/form/ServiceForm";
-import { FilterAlt } from "@styled-icons/boxicons-regular";
-import { useTranslation } from "react-i18next";
 import { Map } from "../service/map";
-import { Organisation } from "../service/organisation";
-
-const ArrowDown = styled.div`
-  border-left: 7.5px solid transparent;
-  border-right: 7.5px solid transparent;
-  border-top: 7.5px solid #aaaaaa;
-`;
-
-const ArrowUp = styled.div`
-  border-right: 7.5px solid transparent;
-  border-left: 7.5px solid transparent;
-  border-bottom: 7.5px solid #aaaaaa;
-`;
 
 export const CanvasProvider = createContext(undefined);
 
@@ -137,28 +122,14 @@ function MapCanvasPage() {
   const [filters, setFilters] = useState(initialFilters);
   const [mapTitle, setMapTitle] = useState("");
   const [fetchedData, setFetchedData] = useState(null);
-  const [secondaryFetchedData, setSecondaryFetchedData] = useState(null);
-  const [fetchedOrganization, setFetchedOrganization] = useState(null);
+  const [fetchedOrganization] = useState([]);
   const [fetchedFilters, setFetchedFilters] = useState(null);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [heights, setHeights] = useState([180, 180, 180]);
-  const [containerHeight, setContainerHeight] = useState("0px");
   const [isFiltersActive, setIsFilterActive] = useState(false);
   const [archivedData] = useState([]);
   const [draftData] = useState([]);
   const cancelRef = useRef();
   const { mapId } = useParams();
-
-  useEffect(() => {
-    const fullHeight =
-      (isOpenFilter ? 135 : 75) +
-      12 * 7 +
-      heights[0] +
-      heights[1] +
-      heights[2] +
-      4;
-    setContainerHeight(fullHeight);
-  }, [heights, isOpenFilter]);
 
   // Fetch all the data required to display the page with all the information need to be trigger only once.
   useEffect(() => {
@@ -166,28 +137,15 @@ function MapCanvasPage() {
       // Get the name of the
 
       // Get all services before displaying the page.
-      let res = await Map.getMapServicesAndMapInformation(mapId);
-      setMapTitle(res.ecosystemMap["name"]);
+      let res = await Map.getMapById(mapId);
+      setMapTitle(res.ecosystemMap.title);
       const sortedData = sortServices(res);
       setFetchedData(sortedData);
-      setSecondaryFetchedData(sortedData);
 
       // Get all savedFilters by the user
       if (res.ecosystemMap["filters"] != null) {
         setFetchedFilters(Object.entries(res.ecosystemMap["filters"]));
       }
-
-      // Get all organisations
-      res = await Organisation.getAllOrganisation();
-      const tempOrganizations = [];
-      // Formatting our organisation to fit for the component LabeledMenu
-      res.organisations.forEach((organisation) =>
-        tempOrganizations.push({
-          id: organisation.id,
-          name: organisation.organisationName,
-        })
-      );
-      setFetchedOrganization(tempOrganizations);
 
       const tempServices = Object.values(sortedData.services);
       tempServices.forEach((thisService) => {
@@ -201,11 +159,9 @@ function MapCanvasPage() {
     fetchData().then(() => setIsDataLoaded(true));
   }, [mapId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Update the secondary list at each new service or service update
+  // Update the draft and archived lists at each new service or service update
   // In addition we update the sidebar
   useEffect(() => {
-    setSecondaryFetchedData(fetchedData);
-
     if (isDataLoaded) {
       const servicesArray = Object.values(fetchedData.services);
       // Clear all the sidebar lists
@@ -221,7 +177,7 @@ function MapCanvasPage() {
     }
   }, [archivedData, draftData, fetchedData, isDataLoaded]);
 
-  // Each modification in the filters, we update our secondaryList to display the right data
+  // Each modification in the filters, we update our data.
   useEffect(() => {
     const bool = filters.some(
       (filter, index) =>
@@ -230,16 +186,10 @@ function MapCanvasPage() {
     setIsFilterActive(bool);
 
     if (isDataLoaded && bool) {
-      const services = [];
-      // Clone the object
-      const tempSecondaryData = { ...fetchedData };
-      tempSecondaryData.services = {};
-      // We clear each rows because we want to add instead of removing each element
-      Object.values(tempSecondaryData.rows).forEach((row) => {
-        row.serviceIds = [];
-      });
+      // Deep copy the data to change the isVisible property.
+      const tempData = structuredClone(fetchedData);
 
-      Object.values(fetchedData.services).forEach((service) => {
+      Object.values(tempData.services).forEach((service) => {
         const filterBool = [true, false, false, false, false, false, false];
 
         filters.forEach((filter, index) => {
@@ -310,45 +260,23 @@ function MapCanvasPage() {
           }
         });
 
-        // Check if the item required all filter to be added to the canvas
-        if (filterBool.every(Boolean)) {
-          services.push(service);
-        }
+        // Check if the item required all filter to be visible to the canvas
+        service.isVisible = filterBool.every((bool) => bool);
       });
 
-      // Sort by order
-      const sortedServices = services.sort((a, b) => {
-        return a.order - b.order;
+      setFetchedData(tempData);
+
+    } else  if (isDataLoaded && !bool) {
+      const tempData = structuredClone(fetchedData);
+
+      // Reset the isVisible property to true for all services
+      Object.values(tempData.services).forEach((service) => {
+        service.isVisible= true;
       });
 
-      // Fill the new data to the correct model
-
-      sortedServices.forEach((service) => {
-        // Fill the services
-        tempSecondaryData.services = {
-          ...tempSecondaryData.services,
-          [service.id]: service,
-        };
-
-        // Fill the serviceIds for each row
-        switch (service.applicationType) {
-          case market_and_organization:
-            tempSecondaryData.rows.Market_and_Organization.serviceIds.push(
-              service.id
-            );
-            break;
-          case market:
-            tempSecondaryData.rows.Market.serviceIds.push(service.id);
-            break;
-          default:
-            tempSecondaryData.rows.Organization.serviceIds.push(service.id);
-        }
-      });
-
-      setSecondaryFetchedData(tempSecondaryData);
-    } else {
-      setSecondaryFetchedData(fetchedData);
+      setFetchedData(tempData);
     }
+
   }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // We populate each filter once the data is fully loaded
@@ -468,7 +396,7 @@ function MapCanvasPage() {
     initialFilters[5].items = tempAudience;
     initialFilters[6].items = tempBudget;
     setFilters(initialFilters);
-  }, [isDataLoaded, fetchedData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isDataLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function isLocationExistInList(location, list) {
     const checkLocationExist = list.find(
@@ -485,11 +413,12 @@ function MapCanvasPage() {
 
     // Sort by order
     fetchedData.services.sort((a, b) => {
-      return a.order - b.order;
+      return a.serviceOrder - b.serviceOrder;
     });
 
     // Add each service to the data.services
     fetchedData.services.forEach((service) => {
+      service.isVisible = true;
       if (service.serviceStatus === "Archived") {
         archivedData.push(service);
       } else {
@@ -499,7 +428,7 @@ function MapCanvasPage() {
           draftData.push(service);
         }
 
-        switch (service.applicationType) {
+        switch (service.serviceApplication) {
           case market_and_organization:
             sortedData.rows.Market_and_Organization.serviceIds.push(service.id);
             break;
@@ -562,25 +491,33 @@ function MapCanvasPage() {
         mapId: mapId,
         fetchedData: [fetchedData, setFetchedData],
         services: services,
+        isFilterOpen: isOpenFilter,
       }}
     >
-      <Flex align="start" direction="column" h={containerHeight}>
-        <Box w="100%" zIndex={2}>
-          <NavigationBar
-            title={mapTitle}
-            primaryButton={primaryButton}
-            additionalButtons={additionalButton}
-          />
-        </Box>
-        {isOpenFilter && (
-          <Box zIndex={2} w="100%">
-            <FilterBar
-              filtersState={[filters, setFilters]}
-              handleClearAllFilters={handleClearAllFilters}
+      <Grid bg="blackAlpha.200" gap={0} minHeight="100vh">
+        <GridItem zIndex={10} position="fixed" w="100%">
+          <Box w="100%" h="75px">
+            <NavigationBar
+              title={mapTitle}
+              primaryButton={primaryButton}
+              additionalButtons={additionalButton}
             />
           </Box>
-        )}
-        <Box w="100%" flex="max-content" align="start" bg="#EEEEEE" zIndex={1}>
+          {isOpenFilter && (
+            <Box w="100%">
+              <FilterBar
+                filtersState={[filters, setFilters]}
+                handleClearAllFilters={handleClearAllFilters}
+              />
+            </Box>
+          )}
+        </GridItem>
+        <GridItem
+          h="100%"
+          position="fixed"
+          zIndex={10}
+          top={isOpenFilter ? "135px" : "75px"}
+        >
           <SideBar
             isFilterOpen={isOpenFilter}
             archivedData={archivedData}
@@ -588,71 +525,29 @@ function MapCanvasPage() {
             onOpenFormEdition={onOpenFormEdition}
             handleServiceClick={(service) => handleServiceClick(service)}
           />
-          <Box h="100%" zIndex={0} marginLeft="100px" paddingTop={3}>
-            <BackgroundCanvas isFilterOpen={isOpenFilter} heights={heights} />
+        </GridItem>
+
+        <GridItem marginLeft="75px" marginTop={isOpenFilter ? "135px" : "75px"}>
+          <BackgroundCanvas />
+          <Box h="100%">
             <ContentCanvas
               isFilterOpen={isOpenFilter}
               isFiltersActive={isFiltersActive}
-              secondaryData={secondaryFetchedData}
               handleServiceClick={(service) => handleServiceClick(service)}
-              heights={[heights, setHeights]}
-              containerHeight={[containerHeight, setContainerHeight]}
             />
-            {data.rowsOrder.map((row, index) => {
-              return (
-                <Box
-                  key={index}
-                  position="absolute"
-                  right="20px"
-                  top={
-                    (isOpenFilter ? 135 : 75) +
-                    12 * 2 +
-                    (index === 0
-                      ? 0
-                      : index === 1
-                      ? heights[0]
-                      : heights[0] + heights[1]) +
-                    +index * 24 +
-                    "px"
-                  }
-                  w="50px"
-                  h={heights[index]}
-                  textAlign="center"
-                >
-                  <HStack position="relative" w="100%" h="100%">
-                    <VStack
-                      bg={"blackAlpha.400"}
-                      w="2px"
-                      h="100%"
-                      justify="space-between"
-                    >
-                      <ArrowDown />
-                      <ArrowUp />
-                    </VStack>
-                    <Text
-                      marginLeft={3}
-                      color={"blackAlpha.400"}
-                      style={{ writingMode: "vertical-lr" }}
-                    >
-                      {row.replaceAll("_", " ").replace("and", "&")}
-                    </Text>
-                  </HStack>
-                </Box>
-              );
-            })}
           </Box>
-        </Box>
-        {isOpenFormEdition && (
-          <ServiceForm
-            cancelRef={cancelRef}
-            isEditing={true}
-            isOpen={isOpenFormEdition}
-            onClose={onCloseFormEdition}
-            propOrganisations={fetchedOrganization}
-            serviceWithoutModification={serviceWithoutModification}
-          />
-        )}
-      </Flex>
+        </GridItem>
+      </Grid>
+      {isOpenFormEdition && (
+        <ServiceForm
+          cancelRef={cancelRef}
+          isEditing={true}
+          isOpen={isOpenFormEdition}
+          onClose={onCloseFormEdition}
+          propOrganisations={fetchedOrganization}
+          serviceWithoutModification={serviceWithoutModification}
+        />
+      )}
     </CanvasProvider.Provider>
   );
 }

@@ -1,0 +1,28 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../../.storybook/preview";
+import DatePickerComponent from "../../../../components/basic/picker/datePicker/DatePickerComponent";
+
+<Meta
+  title="Mapping App/Basic/Picker/Date"
+  component={DatePickerComponent}
+  decorators={[withChakra]}
+/>
+
+# Date picker
+
+Picker that allows the user to select a date with a time.
+Specifically useful for the service where we can have a start and end date with time.
+
+<Canvas>
+  <Story
+    name="Date picker"
+    args={{
+      initialDate: new Date(),
+      handleDateChange: () => {}
+    }}
+  >
+    {(args) => <DatePickerComponent {...args} />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Date picker" />

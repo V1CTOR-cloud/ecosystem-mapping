@@ -24,9 +24,18 @@ function NumberInputComponent(props) {
 }
 
 NumberInputComponent.propTypes = {
-  initialValue: PropTypes.string.isRequired,
+  /**
+   * Initial value of the input.
+   */
+  initialValue: PropTypes.string,
+  /**
+   * Text displayed if the input is empty to indicate the user what to type.
+   */
   placeholder: PropTypes.string.isRequired,
+  /**
+   * Function to be called when the value of the input is changed.
+   */
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(NumberInputComponent);
+export default NumberInputComponent;

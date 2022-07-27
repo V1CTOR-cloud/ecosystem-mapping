@@ -1,23 +1,25 @@
 import { graphCMSRequest } from "./graphCMS";
 
 export const Service = {
-
-  // Create a new service
+  /**
+   * Create a new service and post it to the database.
+   * @param data The date to create the new service.
+   * @return {Promise<string|any>} A service object.
+   */
   async createService(data) {
-    const query = `mutation ($data: ServiceCreateInput!) {
+    const query = `mutation createService($data: ServiceCreateInput!) {
         createService(data: $data){
-        id
-        serviceName
+          id
+          serviceName
           serviceFocus
-          serviceOwner {
-            ... on Organisation {
-              organisationName
-              id
-            }
+          ownerOrganization {
+            profileName
           }
-          applicationType
-          serviceStartTime
-          serviceEndTime
+          serviceApplication
+          serviceTime {
+            startTime
+            endTime
+          }
           serviceLink
           serviceLocation {
             id
@@ -26,19 +28,30 @@ export const Service = {
             region
             city
           }
-          serviceBudget
+          serviceBudget {
+            id
+            budgetValue
+            budgetTitle
+            budgetCurrency
+          }
           serviceAudience
           serviceDescription
           serviceStatus
           serviceOutcomes
-          previousService
-          followingService
+          previousService {
+            id
+            serviceName
+          }
+          followingService {
+            id
+            serviceName
+          }
           servicePhaseRange {
             id
             endPhase
             startPhase
           }
-          order
+          serviceOrder
         }
       }`;
 
@@ -46,48 +59,72 @@ export const Service = {
       data: {
         serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
-        serviceOwner:
-          data.organisationId === null
-            ? null
-            : {
-              connect: [{ Organisation: { id: data.organisationId } }]
-            },
-        applicationType: data.applicationType,
-        serviceStartTime: data.serviceStartTime,
-        serviceEndTime: data.serviceEndTime,
+        // ownerOrganization:
+        //   data.organisationId === null
+        //     ? null
+        //     : {
+        //         connect: [{ Organisation: { id: data.organisationId } }],
+        //       },
+        serviceApplication: data.serviceApplication,
+        serviceTime: {
+          create: {
+            startTime: data.serviceTime.startTime,
+            endTime: data.serviceTime.endTime,
+          },
+        },
         serviceLink: data.serviceLink,
         serviceLocation: {
           create: {
             continent: data.serviceLocation.continent,
             country: data.serviceLocation.country,
             region: data.serviceLocation.region,
-            city: data.serviceLocation.city
-          }
+            city: data.serviceLocation.city,
+          },
         },
-        serviceBudget: data.serviceBudget,
+        serviceBudget: {
+          create: data.serviceBudget,
+        },
         serviceAudience: data.serviceAudience,
         serviceDescription: data.serviceDescription,
         serviceOutcomes: data.serviceOutcomes,
-        previousService: data.precededService,
-        followingService: data.followedService,
+        // previousService: {
+        //   connect: [
+        //     {
+        //       id: data.previousService,
+        //     },
+        //   ],
+        // },
+        // followingService: {
+        //   connect: [
+        //     {
+        //       id: data.followingService,
+        //     },
+        //   ],
+        // },
         servicePhaseRange: {
           create: {
             startPhase: data.servicePhaseRange.startPhase,
-            endPhase: data.servicePhaseRange.endPhase
-          }
+            endPhase: data.servicePhaseRange.endPhase,
+          },
         },
-        order: data.order,
+        serviceOrder: data.serviceOrder,
 
-        ecosystemMap: { connect: { id: data.mapId } },
-        serviceStatus: data.serviceStatus
-      }
+        ecosystemMaps: {
+          connect: [
+            {
+              id: data.mapId,
+            },
+          ],
+        },
+        serviceStatus: data.serviceStatus,
+      },
     };
 
     const secondaryQuery = `
       query MyQuery {
-        services(where: {serviceName: "${data.serviceName}", AND: {ecosystemMap: {id: "${data.mapId}"}}}) {
+        services(where: {serviceName: "${data.serviceName}", AND: {ecosystemMaps_every: {id: "${data.mapId}"}}}) {
           id
-          ecosystemMap {
+          ecosystemMaps {
             id
           }
         }
@@ -103,9 +140,13 @@ export const Service = {
     }
   },
 
-  // Update an existing service
+  /**
+   * Update a service by its id.
+   * @param data The data to update the service.
+   * @return {Promise<string|any>} A service object.
+   */
   async updateService(data) {
-    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
+    const query = `mutation updateService($data: ServiceUpdateInput!, $id: ID!) {
       updateService(
         where: {id: $id},
         data: $data
@@ -113,14 +154,14 @@ export const Service = {
             id
             serviceName
             serviceFocus
-            serviceOwner {
-              ... on Organisation {
-              organisationName
-              }
+            ownerOrganization {
+              profileName
             }
-            applicationType
-            serviceStartTime
-            serviceEndTime
+            serviceApplication
+            serviceTime {
+              startTime
+              endTime
+            }
             serviceLink
             serviceLocation {
                 id
@@ -129,59 +170,70 @@ export const Service = {
                 region
                 city
             }
-            serviceBudget
+            serviceBudget {
+              id
+              budgetValue
+              budgetTitle
+              budgetCurrency
+            }
             serviceAudience
             serviceDescription
             serviceOutcomes
             serviceStatus
-            previousService
-            followingService
+            previousService {
+              id
+              serviceName
+            }
+            followingService {
+              id
+              serviceName
+            }
             servicePhaseRange {
               id
               endPhase
               startPhase
             }
-            order
+            serviceOrder
         }
     }`;
 
     const secondaryQuery = `
       query MyQuery {
-        services(where: {serviceName: "${data.serviceName}", AND: {ecosystemMap: {id: "${data.mapId}"}}}) {
+        services(where: {serviceName: "${data.serviceName}", AND: {ecosystemMaps_every: {id: "${data.mapId}"}}}) {
           id
-          ecosystemMap {
+          ecosystemMaps {
             id
           }
         }
       }`;
 
-    let serviceOwner;
-    if (data.organisationId === null) {
-      serviceOwner = null;
-    } else if (data.organisationIdWithoutModification === data.organisationId) {
-      serviceOwner = {};
-    } else {
-      serviceOwner = {
-        disconnect: [
-          {
-            Organisation: {
-              id: data.organisationIdWithoutModification
-            }
-          }
-        ],
-        connect: [{ Organisation: { where: { id: data.organisationId } } }]
-      };
-    }
+    const updateBudgets = [];
+    data.serviceBudget.forEach((budget) => {
+      updateBudgets.push({
+        where: { id: budget.id === undefined ? "undefined" : budget.id },
+        data: {
+          create: {
+            budgetCurrency: budget.budgetCurrency,
+            budgetTitle: budget.budgetTitle,
+            budgetValue: budget.budgetValue,
+          },
+          update: {
+            budgetCurrency: budget.budgetCurrency,
+            budgetTitle: budget.budgetTitle,
+            budgetValue: budget.budgetValue,
+          },
+        },
+      });
+    });
 
     const variables = {
       id: data.id,
       data: {
         serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
-        serviceOwner: serviceOwner,
-        applicationType: data.applicationType,
-        serviceStartTime: data.serviceStartTime,
-        serviceEndTime: data.serviceEndTime,
+        //ownerOrganization: serviceOwner,
+        serviceApplication: data.serviceApplication,
+        serviceTime: data.serviceTime,
         serviceLink: data.serviceLink,
         serviceLocation: {
           update: {
@@ -190,38 +242,51 @@ export const Service = {
               continent: data.serviceLocation.continent,
               country: data.serviceLocation.country,
               region: data.serviceLocation.region,
-              city: data.serviceLocation.city
-            }
-          }
+              city: data.serviceLocation.city,
+            },
+          },
         },
-        serviceBudget: data.serviceBudget,
+        serviceBudget: {
+          upsert: updateBudgets,
+        },
         serviceAudience: data.serviceAudience,
         serviceDescription: data.serviceDescription,
         serviceOutcomes: data.serviceOutcomes,
-        previousService: data.precededService,
-        followingService: data.followedService,
+        // previousService: {
+        //   connect: [
+        //     {
+        //       id: data.previousService,
+        //     },
+        //   ],
+        // },
+        // followingService: {
+        //   connect: [
+        //     {
+        //       id: data.followingService,
+        //     },
+        //   ],
+        // },
         servicePhaseRange: {
           update: {
             where: { id: data.servicePhaseRange.id },
             data: {
               startPhase: data.servicePhaseRange.startPhase,
-              endPhase: data.servicePhaseRange.endPhase
-            }
-          }
+              endPhase: data.servicePhaseRange.endPhase,
+            },
+          },
         },
-        order: data.order,
 
-        ecosystemMap: { connect: { id: data.mapId } },
-        serviceStatus: data.serviceStatus
-      }
+        serviceOrder: data.serviceOrder,
+        serviceStatus: data.serviceStatus,
+      },
     };
 
     const res =
       data.serviceWithoutModification.serviceName !== data.serviceName
         ? await graphCMSRequest(secondaryQuery)
         : {
-          services: []
-        };
+            services: [],
+          };
     // Check if we have the name of the service already taken.
     if (res.services.length !== 0) {
       return "A service with the same name exist. Please change the service name to be unique.";
@@ -233,32 +298,42 @@ export const Service = {
     }
   },
 
-  // Update the order of all the services that change during a reorder.
+  /**
+   * Update a service order and application by its id.
+   * @param serviceId The id of the service to update.
+   * @param data The service order and application to update.
+   * @return {Promise<any>} A service object.
+   */
   async updateServiceOrderAndApplicationType(serviceId, data) {
-    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!){
+    const query = `mutation updateServiceOrderAndApplication($data: ServiceUpdateInput!, $id: ID!){
       updateService(
         where: {id: $id}
         data: $data
       ) {
         serviceName
-        order
-        applicationType
+        serviceOrder
+        serviceApplication
       }
     }`;
 
     const variables = {
       id: serviceId,
       data: {
-        order: data.order,
-        applicationType: data.applicationType
-      }
+        serviceOrder: data.serviceOrder,
+        serviceApplication: data.serviceApplication,
+      },
     };
 
     return await graphCMSRequest(query, variables);
   },
 
+  /**
+   * Update the range service by its id.
+   * @param data The range to update the service.
+   * @return {Promise<any>} A service object.
+   */
   async updateRangesPhase(data) {
-    const query = `mutation ($data: ServiceUpdateInput!, $id: ID!) {
+    const query = `mutation updateRangesPhase($data: ServiceUpdateInput!, $id: ID!) {
         updateService(where: {id: $id}, data: $data){
           serviceName
           servicePhaseRange {
@@ -277,11 +352,11 @@ export const Service = {
             where: { id: data.servicePhaseRange.id },
             data: {
               startPhase: data.servicePhaseRange.startPhase,
-              endPhase: data.servicePhaseRange.endPhase
-            }
-          }
-        }
-      }
+              endPhase: data.servicePhaseRange.endPhase,
+            },
+          },
+        },
+      },
     };
 
     return await graphCMSRequest(query, variables);
@@ -417,5 +492,5 @@ export const Service = {
         break;
     }
     return newPhase;
-  }
+  },
 };

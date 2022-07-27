@@ -1,0 +1,75 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import { withChakra } from "../../../../../.storybook/preview";
+import { Location } from "/src/service/location";
+import UniqueLocationPicker from "../../../../components/basic/picker/locationPicker/UniqueLocationPicker";
+
+<Meta
+  title="Mapping App/Basic/Picker/Location/Unique Location"
+  component={UniqueLocationPicker}
+  decorators={[withChakra]}
+/>
+
+# Unique Location
+
+The component displayed is a unique location selection, we can then select only one location.
+
+## Without initial value
+
+<Canvas>
+  <Story
+    name="Without initial value"
+    height="250px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+  >
+    {(args, { loaded: { locations } }) => <UniqueLocationPicker
+      {...args}
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValues={[{
+        continent: null,
+        country: null,
+        region: null,
+        city: null,
+      }]}
+    />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Without initial value" />
+
+## With initial value
+
+<Canvas>
+  <Story
+    name="With initial value"
+    height="250px"
+    inline={false}
+    loaders={[
+      async () => ({
+        locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+      }),
+    ]}
+  >
+    {(args, { loaded: { locations } }) => <UniqueLocationPicker
+      {...args}
+      locationsList={locations}
+      onChange={() => {
+      }}
+      initialValues={[{
+        continent: "Europe",
+        country: "Finland",
+        region: null,
+        city: null,
+      }]}
+    />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="With initial value" />

@@ -1,0 +1,75 @@
+import { Meta, Story } from "@storybook/addon-docs";
+
+import { withChakra } from "../../../../../.storybook/preview";
+import { Location } from "/src/service/location";
+import MultiLocationPicker from "../../../../components/basic/picker/locationPicker/MultiLocationPicker";
+
+<Meta
+  title="Mapping App/Basic/Picker/Industry/Overview"
+  component={MultiLocationPicker}
+  decorators={[withChakra]}
+/>
+
+# Industry
+
+Component that allows the user to pick an industry that includes a main industry and a sub-industry through a
+predefined selection.
+
+Depending on the case, we can allow the user to select multiple industry or not. If this is the case, then he can add
+and remove as much as he wants.
+
+
+## Multiple industry
+
+The component displayed is a multiple industry selection, we can then select more than one industry.
+
+### With no initials values
+
+We do not have any initials values, we are in the case where we are in a creation mode in a form.
+
+<Story
+  id="mapping-app-basic-picker-industry-multiple-industry--without-initials-values"
+  height="200px"
+  inline={false}
+  loaders={[
+    async () => ({
+      locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+    }),
+  ]}
+/>
+
+[See the args table of this component](?path=/docs/mapping-app-basic-picker-industry-multiple-industry--without-initials-values)
+
+### With one initial values
+
+We have one initial values, we are in the case where we are in an edition mode in a form.
+
+<Story
+  id="mapping-app-basic-picker-industry-multiple-industry--with-one-initial-values"
+  height="200px"
+  inline={false}
+  loaders={[
+    async () => ({
+      locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+    }),
+  ]}
+/>
+
+[See the args table of this component](?path=/docs/mapping-app-basic-picker-industry-multiple-industry--with-one-initial-values)
+
+### With multiple initials values
+
+We have multiples initial values, we are in the case where we are in an edition mode in a form.
+
+<Story
+  id="mapping-app-basic-picker-industry-multiple-industry--with-initials-values"
+  height="200px"
+  inline={false}
+  loaders={[
+    async () => ({
+      locations: await (Location.formatLocations((await Location.getAllLocations()).data)),
+    }),
+  ]}
+/>
+
+[See the args table of this component](?path=/docs/mapping-app-basic-picker-industry-multiple-industry--with-initials-values)

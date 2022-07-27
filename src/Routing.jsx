@@ -5,8 +5,9 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 
 // Pages
 const Home = lazy(() => import("./pages/LandingPage"));
-const MapList = lazy(() => import("./pages/ListMapPage"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Canvas = lazy(() => import("./pages/MapCanvasPage"));
+const PageNotFound = lazy(() => import("./pages/404"));
 const Auth = lazy(()=>import("./pages/authentication/Auth"));
 const ContactDetails = lazy(()=>import("./pages/authentication/ContactDetails"));
 const EmailVerification = lazy(()=>import("./pages/authentication/EmailVerification"));
@@ -22,9 +23,9 @@ function Routing() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} exact />
-          <Route path="/dashboard" element={<MapList />} exact />
+          <Route path="/dashboard" element={<Dashboard />} exact />
           <Route path="/dashboard/:mapId" element={<Canvas />} exact />
-          <Route path="/dashboard/:mapId" element={<Canvas />} exact />
+          <Route path="/*" element={<PageNotFound />} />
           <Route path="/authentication" element={<Auth />} exact />
           <Route path="/contactdetails" element={<ContactDetails />} exact />
           <Route path="/emailverification" element={<EmailVerification/>} exact />

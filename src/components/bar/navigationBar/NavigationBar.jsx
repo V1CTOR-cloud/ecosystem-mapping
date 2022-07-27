@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 
 import Authentication from "../../authentication/Authentication";
 import { blueColor } from "../../../helper/constant";
+import { NavLink } from "react-router-dom";
 
 const DividerLine = styled.div`
   background-color: #000000;
@@ -31,11 +32,19 @@ function NavigationBar(props) {
 
   return (
     <React.Fragment>
-      <HStack height="75px" justify="space-between" paddingX={10} shadow="base">
+      <HStack
+        height="75px"
+        justify="space-between"
+        paddingX={10}
+        shadow="base"
+        bg="white"
+      >
         <HStack>
-          <Circle border={"2px"} borderColor={"brand.500"} padding="4px">
-            <BlueHome size="22.5" title="Home" />
-          </Circle>
+          <NavLink to="/dashboard">
+            <Circle border={"2px"} borderColor={"brand.500"} padding="4px">
+              <BlueHome size="22.5" title="Home" />
+            </Circle>
+          </NavLink>
           <MyDivider />
           <Text fontSize={"xl"}>{title}</Text>
         </HStack>

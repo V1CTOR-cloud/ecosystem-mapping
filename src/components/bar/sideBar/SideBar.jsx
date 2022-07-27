@@ -11,28 +11,22 @@ import PropTypes from "prop-types";
 import AccordionItemComponent from "./AccordionItemComponent";
 
 const SideBarContainer = styled.div`
-  position: absolute;
   background-color: white;
   z-index: 100;
   width: 50px;
-  // Height depending of the filter bar: 75px for the navbar and 60px for the filter bar when open
-  height: ${({ isFilterOpen }) =>
-    isFilterOpen ? "calc(100% - 135px)" : "calc(100% - 75px)"};
+  height: 100%;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   &:hover {
-    width: 250px
+    width: 250px;
   }
-}`;
+`;
 
 function SideBar(props) {
   const { t } = useTranslation();
-  const {
-    archivedData,
-    onOpenFormEdition,
-    handleServiceClick,
-    isFilterOpen,
-    draftData,
-  } = props;
+  const { archivedData, onOpenFormEdition, handleServiceClick, draftData } =
+    props;
 
   const initialAccordionButtons = [
     {
@@ -118,7 +112,6 @@ function SideBar(props) {
     <SideBarContainer
       onMouseOver={handleOnMouseOver}
       onMouseLeave={handleOnMouseLeave}
-      isFilterOpen={isFilterOpen}
     >
       <Accordion allowToggle>
         {accordionButtons.map((thisAccordionButtons) => (
@@ -134,7 +127,6 @@ function SideBar(props) {
 }
 
 SideBar.propTypes = {
-  isFilterOpen: PropTypes.bool.isRequired,
   archivedData: PropTypes.array.isRequired,
   draftData: PropTypes.array.isRequired,
   onOpenFormEdition: PropTypes.func.isRequired,

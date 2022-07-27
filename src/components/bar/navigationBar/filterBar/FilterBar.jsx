@@ -170,7 +170,14 @@ function FilterBar(props) {
   }
 
   return (
-    <HStack paddingY={3} paddingX={10} w="100%" h="60px">
+    <HStack
+      paddingY={3}
+      paddingX={10}
+      w="100%"
+      h="60px"
+      bg="white"
+      boxShadow="base"
+    >
       <Text color={"blackAlpha.800"}>
         {t("mapping.navigation.filter.bar.filter.by")}
       </Text>

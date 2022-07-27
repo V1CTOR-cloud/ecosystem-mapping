@@ -1,0 +1,29 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { withChakra } from "../../../../.storybook/preview";
+import SliderComponent from "../../../components/basic/slider/SliderComponent";
+
+<Meta
+  title="Mapping App/Basic/Slider"
+  component={SliderComponent}
+  decorators={[withChakra]}
+/>
+
+# Slider
+
+Slider that allow the user the pick a range of development phases.
+
+<Canvas>
+  <Story
+    name="Slider"
+    args={{
+      servicePhaseRange: {
+        startPhase: -1,
+        endPhase: 1,
+      }
+    }}
+  >
+    {(args) => <SliderComponent servicePhaseRange={args.servicePhaseRange} />}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Slider" />

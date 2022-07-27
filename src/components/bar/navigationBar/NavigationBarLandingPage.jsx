@@ -4,7 +4,6 @@ import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   Flex,
   Text,
 } from "@chakra-ui/react";
@@ -26,32 +25,9 @@ const NavigationBarLandingPage = () => {
         <Box w="80%" m="15px">
           <Breadcrumb separator="" pt="5" pb="5">
             <BreadcrumbItem ml="0">
-              <Text style={headerStyle}>Ecosystem Mapping</Text>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.about")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.learn")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.connect")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.scale")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("startup.landing.page.header.contact")}
-              </BreadcrumbLink>
+              <Text style={headerStyle}>
+                {t("mapping.landing.navigation.title")}
+              </Text>
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>

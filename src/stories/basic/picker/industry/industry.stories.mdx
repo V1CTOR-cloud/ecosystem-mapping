@@ -1,0 +1,88 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+import { useState } from "react";
+
+import { withChakra } from "../../../../../.storybook/preview";
+import { Industry as IndustryClass } from "/src/service/industry";
+import Industry from "../../../../components/basic/picker/industryPicker/Industry";
+
+<Meta
+  title="Mapping App/Basic/Picker/Industry/Industry"
+  component={Industry}
+  decorators={[withChakra]}
+/>
+
+# Industry
+
+This component is the core of MultiIndustryPicker component. This is the display of only one line of
+industry. It can be the first line in this case we display the smalls titles (Main Industry, Sub-Industry) otherwise
+we simply display the fields without the smalls titles.
+
+## Industry with titles (First of the line)
+
+<Canvas>
+  <Story
+    name="With titles"
+    height="250px"
+    inline={false}
+    loaders={[
+      async () => ({
+        industries: await ((await IndustryClass.getAllIndustries()).data.industries),
+      }),
+    ]}
+    args={{
+      index: 0,
+    }}
+  >
+    {(args, { loaded: { industries } }) => {
+      const [industry, setIndustry] = useState([{
+        mainIndustry: null,
+        subIndustry: null,
+      }]);
+      return <Industry
+        industriesState={[industry, setIndustry]}
+        items={industries}
+        {...args}
+      />
+    }}
+  </Story>
+</Canvas>
+
+<ArgsTable story="With titles" />
+
+## Location without titles (No the first of the line)
+
+As you can see in the canvas, we have a cross that appear at the end of the line. This is to remove the location because
+in theory, this will be the second or more, meaning that we should have at least one location before this one.
+
+<Canvas>
+  <Story
+    name="Without titles"
+    height="250px"
+    inline={false}
+    loaders={[
+      async () => ({
+        industries: await ((await IndustryClass.getAllIndustries()).data.industries),
+      }),
+    ]}
+    args={{
+      index: 1,
+    }}
+  >
+    {(args, { loaded: { industries } }) => {
+      const [industry, setIndustry] = useState([{
+        mainIndustry: null,
+        subIndustry: null,
+      }, {
+        mainIndustry: null,
+        subIndustry: null,
+      }]);
+      return <Industry
+        industriesState={[industry, setIndustry]}
+        items={industries}
+        {...args}
+      />
+    }}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Without titles" />

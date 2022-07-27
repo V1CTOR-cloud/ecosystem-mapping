@@ -134,11 +134,26 @@ function LabeledBudgetInputComponent(props) {
 }
 
 LabeledBudgetInputComponent.propTypes = {
-  label: PropTypes.string.isRequired,
+  /**
+   * Text inside the tooltip to help the user understand the meaning of the label.
+   */
   tooltipText: PropTypes.string.isRequired,
+  /**
+   * Text that will be read for the screen readers.
+   */
   tooltipAriaLabel: PropTypes.string.isRequired,
+  /**
+   * Text to indicate to the user what the input corresponding to.
+   */
+  label: PropTypes.string.isRequired,
+  /**
+   * Array of objects containing all the initial values of the budget.
+   */
   initialBudgets: PropTypes.array.isRequired,
+  /**
+   * Function that will update the value of the model with a setState for example.
+   */
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(LabeledBudgetInputComponent);
+export default LabeledBudgetInputComponent;

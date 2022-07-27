@@ -15,7 +15,6 @@ import serviceFocus from "../../../../assets/servicesFocus.json";
 import { Service } from "../../../../service/service";
 
 const ServiceLineContainer = styled.div`
-  padding-bottom: ${3};
   display: flex;
   height: 40px;
   width: 100%;
@@ -65,7 +64,7 @@ function ServiceContainer(props) {
     if (res[0] === "Error") {
       ToastComponent(t("mapping.toast.error"), "error");
     } else {
-      ToastComponent(t("mapping.toast.success.service"), "success");
+      ToastComponent(t("mapping.toast.success.service.updated"), "success");
     }
   }
 
@@ -87,17 +86,21 @@ function ServiceContainer(props) {
     const newEndPhase =
       getEventData(e).value + 2 >= 4 ? 4 : getEventData(e).value + 2;
 
+
+    console.log(thisService);
     const newService = {
       serviceName: `Default name: ${createId(4)}`,
-      applicationType: thisService.applicationType,
+      serviceApplication: thisService.serviceApplication,
       serviceFocus: serviceFocus.servicesFocus[0].name.replaceAll(" ", ""),
-      order: thisService.order + 1,
+      serviceOrder: thisService.serviceOrder + 1,
       servicePhaseRange: {
         startPhase: Service.replaceNumberToPhase(newStartPhase),
         endPhase: Service.replaceNumberToPhase(newEndPhase),
       },
-      serviceStartTime: new Date(),
-      serviceEndTime: new Date(),
+      serviceTime: {
+        startTime: new Date(),
+        endTime: new Date(),
+      },
       serviceLocation: {
         continent: null,
         country: null,
@@ -112,12 +115,13 @@ function ServiceContainer(props) {
     const res = await Service.createService(newService);
     // Check if we created the service
     if (res.createService) {
+      res.createService.isVisible = true;
       const newRes = await reorderServiceList(thisService, res.createService);
 
       // const newData = addServiceToData(res);
       if (newRes === undefined) {
         ToastComponent(
-          t("mapping.toast.success.create.service"),
+          t("mapping.toast.success.service.created"),
           "success",
           5000
         );
@@ -131,8 +135,9 @@ function ServiceContainer(props) {
 
   async function reorderServiceList(serviceClicked, newService) {
     const newServiceIds = Array.from(
-      mapCanvasPageContext.fetchedData[0].rows[serviceClicked.applicationType]
-        .serviceIds
+      mapCanvasPageContext.fetchedData[0].rows[
+        serviceClicked.serviceApplication
+      ].serviceIds
     );
     const newServices = {
       ...mapCanvasPageContext.fetchedData[0].services,
@@ -140,7 +145,7 @@ function ServiceContainer(props) {
     };
 
     // Add the element at the correct index
-    newServiceIds.splice(serviceClicked.order + 1, 0, newService.id);
+    newServiceIds.splice(serviceClicked.serviceOrder + 1, 0, newService.id);
 
     // Create iterable from the object
     const values = Object.values(newServices);
@@ -151,7 +156,7 @@ function ServiceContainer(props) {
     // Creation of a new instance of the row with the new serviceIds and the rest of the data.
     const newRow = {
       ...mapCanvasPageContext.fetchedData[0].rows[
-        serviceClicked.applicationType
+        serviceClicked.serviceApplication
       ],
       serviceIds: newServiceIds,
     };
@@ -178,8 +183,8 @@ function ServiceContainer(props) {
     for (const value of Object.values(services)) {
       if (listIds.includes(value.id)) {
         const data = {
-          order: value.order,
-          applicationType: value.applicationType,
+          serviceOrder: value.serviceOrder,
+          serviceApplication: value.serviceApplication,
         };
 
         await Service.updateServiceOrderAndApplicationType(
@@ -202,7 +207,7 @@ function ServiceContainer(props) {
     list.forEach((value) => {
       const index = servicesId.findIndex((service) => service === value.id);
       if (index !== -1) {
-        value.order = index;
+        value.serviceOrder = index;
       }
     });
   }

@@ -28,10 +28,22 @@ InputComponent.defaultProps = {
 };
 
 InputComponent.propTypes = {
+  /**
+   * Determine if the field is mandatory, if this is the case, then we should wrap this component with a formControl tag.
+   */
   isRequired: PropTypes.bool,
+  /**
+   * Initial value of the input.
+   */
   initialValue: PropTypes.string,
+  /**
+   * Text displayed if the input is empty to indicate the user what to type.
+   */
   placeholder: PropTypes.string.isRequired,
+  /**
+   * Function to be called when the value of the input is changed.
+   */
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(InputComponent);
+export default InputComponent;

@@ -1,12 +1,34 @@
 import React from "react";
 
-import { Box, Flex, Grid, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Box, Flex, Grid, SimpleGrid, VStack, Image } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import NavigationBarLandingPage from "../components/bar/navigationBar/NavigationBarLandingPage";
-import DashboardImages from "../components/miscellaneousComponents/DashboardImages";
-import AddMapModal from "components/miscellaneousComponents/AddMapModal";
+import imgSource from "../assets/images/LandingPageImage.png";
+
+const headerStyle = {
+  fontFamily: "Ubuntu",
+  fontSize: "64px",
+  fontStyle: "normal",
+  fontWeight: "500",
+  lineHeight: "90px",
+  letterSpacing: "0em",
+  textAlign: "left",
+};
+
+const hTagStyle = {
+  fontFamily: "Ubuntu",
+  fontSize: "20px",
+  fontStyle: "normal",
+  fontWeight: "400",
+  lineHeight: "28px",
+  letterSpacing: "0em",
+  textAlign: "left",
+  mt: "24px",
+};
 
 const LandingPage = () => {
+  const { t } = useTranslation();
   return (
     <Box className="wrapper">
       <VStack spacing={8} align="start">
@@ -20,10 +42,11 @@ const LandingPage = () => {
             justifySelf="center"
             bg="#EEF4F6.500"
           >
-            <AddMapModal isAdd={false} isEdit={false} />
+            <h1 style={headerStyle}>{t("mapping.landing.content.title")}</h1>
+            <h1 style={hTagStyle}>{t("mapping.landing.content.sub.title")}</h1>
           </Box>
           <Box bg="#EEF4F6.500" flex="1">
-            <DashboardImages />
+            <Image width="70%" ml="auto" src={imgSource} alt="image" />
           </Box>
         </Flex>
         <SimpleGrid>

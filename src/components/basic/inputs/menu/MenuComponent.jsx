@@ -65,11 +65,29 @@ MenuComponent.defaultProps = {
 };
 
 MenuComponent.propTypes = {
+  /**
+   * Value that set (when menu is open) the list scrollable
+   */
   wantScroll: PropTypes.bool,
+  /**
+   * Set the button unreachable or not.
+   */
   isDisabled: PropTypes.bool,
+  /**
+   * Set the width of the button.
+   */
   width: PropTypes.string,
+  /**
+   * Initial value of the menu.
+   */
   initialValue: PropTypes.string.isRequired,
+  /**
+   * List of items to display in the menu.
+   */
   items: PropTypes.array.isRequired,
+  /**
+   * Function to call when the value of the menu changes.
+   */
   onChange: PropTypes.func.isRequired,
 };
 
