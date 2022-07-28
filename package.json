@@ -15,6 +15,7 @@
     "@storybook/addon-docs": "^6.5.9",
     "@styled-icons/bootstrap": "^10.34.0",
     "@styled-icons/boxicons-regular": "^10.38.0",
+    "@styled-icons/boxicons-solid": "^10.38.0",
     "@styled-icons/fa-regular": "^10.34.0",
     "@styled-icons/feather": "^10.34.0",
     "@styled-icons/material-outlined": "^10.34.0",
