@@ -1,97 +1,61 @@
 import React from "react";
 
 import {
-  GridItem,
   Box,
-  Flex,
-  Grid,
+  HStack,
   Image,
+  Flex,
   Tab,
   Tabs,
   TabPanel,
   TabPanels,
   TabList,
+  Center,
 } from "@chakra-ui/react";
-import styled from "styled-components";
 
-import CirclepassLogo from "../../assets/images/CirclepassLogo.png";
-import Register from "./Register";
+import circlePassLogo from "../../assets/images/CirclepassLogo.png";
+// import Register from "./Register";
 import SignIn from "./SignIn";
-
-const LeftSideWrapper = styled.section`
-  display: flex;
-  width: 50%;
-  background-color: #f4f1f4;
-  padding: 32px 16px 16px;
-  gap: 16px;
-  justify-content: center;
-  top: 32px;
-`;
-const RightSideWrapper = styled.section`
-  background-color: #3372f0;
-  width: 50%;
-`;
-
-const CirclepassLogoWrapper = styled.section`
-  display: flex;
-  width: 200px;
-  justify-content: center;
-  height: 56.58px;
-`;
+import { useTranslation } from "react-i18next";
 
 function Auth() {
+  const { t } = useTranslation();
+
   return (
-    <>
-      <Flex flexDirection="row">
-        <LeftSideWrapper>
-          <Grid
-            templateAreas={`"header header"
-                "nav main"
-                "nav footer"`}
-            gridTemplateRows={"90px 1fr 30px"}
-          >
-            <GridItem
-              pl="2"
-              area={"header"}
-              display="flex"
-              justifyContent="center"
-            >
-              <CirclepassLogoWrapper>
-                <Image src={CirclepassLogo} />
-              </CirclepassLogoWrapper>
-            </GridItem>
-            <Box>
-              <GridItem pl="2" area={"main"}>
-                <Tabs>
-                  <TabList>
-                    <Tab
-                      size="16px"
-                      fontFamily="Lucida Sans"
-                      lineHeight="24px"
-                      w="22.5vw"
-                    >
-                      REGISTER
-                    </Tab>
-                    <Tab size="16px" lineHeight="24px" w="22.5vw">
-                      SIGN IN
-                    </Tab>
-                  </TabList>
-                  <TabPanels>
-                    <TabPanel>
-                      <Register />
-                    </TabPanel>
-                    <TabPanel>
-                      <SignIn />
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
-              </GridItem>
-            </Box>
-          </Grid>
-        </LeftSideWrapper>
-        <RightSideWrapper />
+    <HStack w="100%" spacing={0}>
+      <Flex w="50%" h="100%" paddingY={5} flexDirection="column">
+        <Center>
+          <Image w="250px" objectFit="scale-down" src={circlePassLogo} />
+        </Center>
+        <Box flex="1">
+          <Tabs h="100%">
+            <TabList>
+              <Tab
+                w="100%"
+                color="blackAlpha.500"
+                _selected={{ color: "brand.500", borderColor: "brand.500" }}
+              >
+                {t("common.authentication.register")}
+              </Tab>
+              <Tab
+                w="100%"
+                color="blackAlpha.500"
+                _selected={{ color: "brand.500", borderColor: "brand.500" }}
+              >
+                {t("common.authentication.sign.in.upper.case")}
+              </Tab>
+            </TabList>
+            <TabPanels h="95%">
+              <TabPanel>{/*<Register />*/}</TabPanel>
+              <TabPanel h="100%">
+                <SignIn />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
       </Flex>
-    </>
+      <Box w="50%" h="100%" bg="brand.500" />
+    </HStack>
   );
 }
 
