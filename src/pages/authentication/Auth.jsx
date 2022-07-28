@@ -12,11 +12,11 @@ import {
   TabList,
   Center,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import circlePassLogo from "../../assets/images/CirclepassLogo.png";
-// import Register from "./Register";
 import SignIn from "./SignIn";
-import { useTranslation } from "react-i18next";
+import Steps from "./registerSteps/Steps";
 
 function Auth() {
   const { t } = useTranslation();
@@ -46,7 +46,9 @@ function Auth() {
               </Tab>
             </TabList>
             <TabPanels h="95%">
-              <TabPanel>{/*<Register />*/}</TabPanel>
+              <TabPanel h="100%">
+                <Steps />
+              </TabPanel>
               <TabPanel h="100%">
                 <SignIn />
               </TabPanel>
