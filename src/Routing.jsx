@@ -8,11 +8,7 @@ const Home = lazy(() => import("./pages/LandingPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Canvas = lazy(() => import("./pages/MapCanvasPage"));
 const PageNotFound = lazy(() => import("./pages/404"));
-const Auth = lazy(()=>import("./pages/authentication/Auth"));
-const ContactDetails = lazy(()=>import("./pages/authentication/ContactDetails"));
-const EmailVerification = lazy(()=>import("./pages/authentication/EmailVerification"));
-const AccountCredentials = lazy(()=>import("./pages/authentication/AccountCredentials"));
-
+const Auth = lazy(() => import("./pages/authentication/Auth"));
 
 function Routing() {
   // TODO once the auth is ready check if the user is connected
@@ -27,9 +23,6 @@ function Routing() {
           <Route path="/dashboard/:mapId" element={<Canvas />} exact />
           <Route path="/*" element={<PageNotFound />} />
           <Route path="/authentication" element={<Auth />} exact />
-          <Route path="/contactdetails" element={<ContactDetails />} exact />
-          <Route path="/emailverification" element={<EmailVerification/>} exact />
-          <Route path="/credentials" element={<AccountCredentials/>} exact />
           <Route path="*" element={<div>404 Not found</div>} />
         </Routes>
       </Router>
