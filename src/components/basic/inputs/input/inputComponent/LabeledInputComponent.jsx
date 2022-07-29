@@ -59,4 +59,4 @@ LabeledInputComponent.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(LabeledInputComponent);
+export default LabeledInputComponent;

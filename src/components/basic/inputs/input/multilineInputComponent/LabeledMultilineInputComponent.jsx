@@ -59,4 +59,4 @@ LabeledMultilineInputComponent.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default React.memo(LabeledMultilineInputComponent);
+export default LabeledMultilineInputComponent;

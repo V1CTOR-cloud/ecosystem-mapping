@@ -4,7 +4,6 @@ import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   Flex,
   Text,
 } from "@chakra-ui/react";
@@ -29,31 +28,6 @@ const NavigationBarLandingPage = () => {
               <Text style={headerStyle}>
                 {t("mapping.landing.navigation.title")}
               </Text>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("mapping.landing.navigation.about")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("mapping.landing.navigation.learn")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("mapping.landing.navigation.connect")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("mapping.landing.navigation.scale")}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink mt="5px" href="#">
-                {t("mapping.landing.navigation.contact")}
-              </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>

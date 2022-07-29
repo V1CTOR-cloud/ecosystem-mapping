@@ -11,7 +11,7 @@ export const Industry = {
   getAllIndustries() {
     return axios({
       method: "get",
-      url: `https://regionselectbucket.s3.ap-south-1.amazonaws.com/industries.json`,
+      url: `https://cdn.jsdelivr.net/gh/ecosystemos/common-data-objects@main/industries/industries.json`,
     });
   },
 };

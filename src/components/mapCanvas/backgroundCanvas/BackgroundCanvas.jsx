@@ -20,7 +20,6 @@ const SubSectionCanvas = styled.div`
   border-right: ${({ isLastSubSection }) =>
     isLastSubSection ? "none" : "1px dashed"};
   border-right-color: #c5d6fc;
-  display: flex;
 `;
 
 function BackgroundCanvas() {
@@ -35,13 +34,13 @@ function BackgroundCanvas() {
       bg="white"
       position="absolute"
     >
-      <HStack h="100%" justify="space-evenly">
+      <HStack h="100%" spacing={0}>
         {sectionCanvas.map((canvas, index) => {
           const isLastSection = canvas === sectionCanvas.length;
 
           return (
             <SectionCanvas
-              key={canvas}
+              key={index}
               isLastSection={isLastSection}
               index={index}
             >

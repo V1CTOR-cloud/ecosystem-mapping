@@ -11,7 +11,7 @@ export const Location = {
   getAllLocations() {
     return axios({
       method: "get",
-      url: `https://regionselectbucket.s3.ap-south-1.amazonaws.com/regionselection.json`,
+      url: `https://cdn.jsdelivr.net/gh/ecosystemos/common-data-objects@main/locations/locations.json`,
     });
   },
 
