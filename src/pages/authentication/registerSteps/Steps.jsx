@@ -9,32 +9,35 @@ import {
   TabPanel,
   VStack,
 } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { blueColor } from "../../../helper/constant";
 import ContactDetails from "./steps/ContactDetails";
 import EmailVerification from "./steps/EmailVerification";
+import AccountCredentials from "./steps/AccountCredentials";
+import Completed from "./steps/Completed";
 
 function Steps() {
+  const { t } = useTranslation();
+
   return (
     <Tabs isFitted h="100%">
       <TabPanels h="92.5%">
         <TabPanel h="100%" paddingBottom={8} paddingLeft={0}>
           <ContactDetails />
-          <Text>Provide your contact details to create a new account.</Text>
+          <Text>{t("common.authentication.register.steps.1.text")}</Text>
         </TabPanel>
         <TabPanel h="100%" paddingBottom={8} paddingLeft={0}>
           <EmailVerification />
-          <Text>
-            Verify your email address to continue to create a new account.
-          </Text>
+          <Text>{t("common.authentication.register.steps.2.text")}</Text>
         </TabPanel>
         <TabPanel h="100%" paddingBottom={8} paddingLeft={0}>
-          <p>three!</p>
-          <Text>Fill your personal information to complete your account.</Text>
+          <AccountCredentials />
+          <Text>{t("common.authentication.register.steps.3.text")}</Text>
         </TabPanel>
         <TabPanel h="100%" paddingBottom={8} paddingLeft={0}>
-          <p>four!</p>
-          <Text>Account created, you can login with your credentials.</Text>
+          <Completed />
+          <Text>{t("common.authentication.register.steps.4.text")}</Text>
         </TabPanel>
       </TabPanels>
       <TabList borderTop="2px solid #e2e8f0" borderBottom="none">
@@ -48,8 +51,8 @@ function Steps() {
           }}
         >
           <VStack spacing={0} align="start" w="100%">
-            <Text>STEP 1</Text>
-            <Text>Contact Details</Text>
+            <Text>{t("common.authentication.register.steps.1")}</Text>
+            <Text>{t("common.authentication.register.steps.1.details")}</Text>
           </VStack>
         </Tab>
         <Tab
@@ -62,8 +65,8 @@ function Steps() {
           }}
         >
           <VStack spacing={0} align="start">
-            <Text>STEP 2</Text>
-            <Text>Email Verification</Text>
+            <Text>{t("common.authentication.register.steps.2")}</Text>
+            <Text>{t("common.authentication.register.steps.2.details")}</Text>
           </VStack>
         </Tab>
         <Tab
@@ -76,8 +79,8 @@ function Steps() {
           }}
         >
           <VStack spacing={0} align="start">
-            <Text>STEP 3</Text>
-            <Text>Account Credentials</Text>
+            <Text>{t("common.authentication.register.steps.3")}</Text>
+            <Text>{t("common.authentication.register.steps.3.details")}</Text>
           </VStack>
         </Tab>
         <Tab
@@ -90,8 +93,8 @@ function Steps() {
           }}
         >
           <VStack spacing={0} align="start">
-            <Text>STEP 4</Text>
-            <Text>Completed</Text>
+            <Text>{t("common.authentication.register.steps.4")}</Text>
+            <Text>{t("common.authentication.register.steps.4.details")}</Text>
           </VStack>
         </Tab>
       </TabList>
