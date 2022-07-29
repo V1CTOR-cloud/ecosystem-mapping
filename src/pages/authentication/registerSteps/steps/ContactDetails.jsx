@@ -10,29 +10,34 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { Tag } from "@styled-icons/bootstrap";
+import { useTranslation } from "react-i18next";
 
 function ContactDetails() {
+  const { t } = useTranslation();
   return (
     <Flex marginX={5} flexDirection="column" h="100%">
-      <Text>
-        Create a CirclePass account to start using our apps and services
-      </Text>
+      <Text>{t("common.authentication.register.steps.1.content.title")}</Text>
       <Text marginY={4}>
-        Fill in your primary email address which will be used as the main
-        address for communication and notifications.
+        {t("common.authentication.register.steps.1.content.subtitle")}
       </Text>
-      <Text fontSize="md">Email Address</Text>
+      <Text fontSize="md">
+        {t("common.authentication.register.steps.1.content.email.input.label")}
+      </Text>
       <InputGroup marginY={2}>
-        <InputLeftElement pointerEvents="none">
+        <InputLeftElement>
           <Tag size="20" color="#A3A3A3" />
         </InputLeftElement>
-        <Input placeholder="name@example.com" />
+        <Input
+          placeholder={t(
+            "common.authentication.register.steps.1.content.email.input.placeholder"
+          )}
+        />
       </InputGroup>
       <Text color="blackAlpha.500">
-        Enter your email address, a confirmation code will be sent.
+        {t("common.authentication.register.steps.1.content.email.input.helper")}
       </Text>
       <Center marginTop={4}>
-        <Button>Submit</Button>
+        <Button>{t("common.submit")}</Button>
       </Center>
     </Flex>
   );
