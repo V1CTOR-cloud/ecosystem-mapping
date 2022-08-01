@@ -48,7 +48,9 @@
     "react-scripts": "5.0.1",
     "sass": "^1.52.2",
     "styled-components": "^5.3.5",
-    "yup": "^0.32.11"
+    "validator": "^13.7.0",
+    "yup": "^0.32.11",
+    "zustand": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
