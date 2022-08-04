@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 
 import {
   InputGroup,
@@ -17,12 +17,29 @@ import {
 import { Key } from "@styled-icons/boxicons-solid";
 import { useTranslation } from "react-i18next";
 import isNumeric from "validator/es/lib/isNumeric";
+import { Field, Form, Formik } from "formik";
 
 import { useStore } from "../../../../models/userStore";
+import { TabsContext } from "../Steps";
+import { EmailCodeVerification } from "../../../../service/cognitoAuth";
 
 function EmailVerification() {
+  const tabsContext = useContext(TabsContext);
   const { t } = useTranslation();
   const state = useStore();
+
+  function validateConfirmationCode(value) {
+    return !isNumeric(value) || value.length !== 6;
+  }
+
+  async function onSubmit(values) {
+    const res = await EmailCodeVerification(values);
+
+    // The account was created, we pass to the next steps
+    if (res) {
+      tabsContext[1](2);
+    }
+  }
 
   return (
     <Flex marginX={5} flexDirection="column" h="100%">
@@ -32,60 +49,68 @@ function EmailVerification() {
         <span style={{ color: "#98CE00" }}> {state.email}</span>
         {t("common.authentication.register.steps.2.content.subtitle.2")}
       </Text>
-      <VerificationCodeInput />
-      <Center marginTop={4}>
-        <Button>
-          {t("common.authentication.register.steps.2.content.button")}
-        </Button>
-      </Center>
+      <Formik
+        initialValues={{ code: "" }}
+        onSubmit={(values) => onSubmit(values)}
+      >
+        {() => (
+          <Form>
+            <Field name="code" validate={validateConfirmationCode}>
+              {({ field, form }) => {
+                const isButtonDisable =
+                  form.values.code === "" ||
+                  !isNumeric(form.values.code) ||
+                  form.values.code.length !== 6;
+
+                return (
+                  <>
+                    <FormControl isRequired isInvalid={form.errors.code}>
+                      <FormLabel>
+                        {t(
+                          "common.authentication.register.steps.2.content.verification.code.input.label"
+                        )}
+                      </FormLabel>
+                      <InputGroup marginY={2}>
+                        <InputLeftElement>
+                          <Key size="20" color="#A3A3A3" />
+                        </InputLeftElement>
+                        <Input
+                          {...field}
+                          placeholder={t(
+                            "common.authentication.register.steps.2.content.verification.code.input.placeholder"
+                          )}
+                        />
+                      </InputGroup>
+                      {form.errors.code ? (
+                        <FormErrorMessage>
+                          Please enter a 6-digits code sent at your email
+                          address.
+                        </FormErrorMessage>
+                      ) : (
+                        <FormHelperText color="blackAlpha.500">
+                          {t(
+                            "common.authentication.register.steps.2.content.verification.code.input.helper"
+                          )}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                    <Center marginTop={4}>
+                      <Button type="submit" isDisabled={isButtonDisable}>
+                        {t(
+                          "common.authentication.register.steps.2.content.button"
+                        )}
+                      </Button>
+                    </Center>
+                  </>
+                );
+              }}
+            </Field>
+          </Form>
+        )}
+      </Formik>
       <Spacer />
     </Flex>
   );
 }
 
 export default EmailVerification;
-
-function VerificationCodeInput() {
-  const [verificationCode, setVerificationCode] = useState("");
-  const { t } = useTranslation();
-  let isInvalid =
-    (!isNumeric(verificationCode) || verificationCode.length !== 6) &&
-    verificationCode !== "";
-
-  function handleInputChange(e) {
-    setVerificationCode(e.target.value);
-  }
-
-  return (
-    <FormControl isRequired isInvalid={isInvalid}>
-      <FormLabel>
-        {t(
-          "common.authentication.register.steps.2.content.verification.code.input.label"
-        )}
-      </FormLabel>
-      <InputGroup marginY={2}>
-        <InputLeftElement>
-          <Key size="20" color="grey" />
-        </InputLeftElement>
-        <Input
-          value={verificationCode}
-          onChange={handleInputChange}
-          placeholder={t(
-            "common.authentication.register.steps.2.content.verification.code.input.placeholder"
-          )}
-        />
-      </InputGroup>
-      {isInvalid ? (
-        <FormErrorMessage>
-          Please enter a 6-digits code sent at your email address.
-        </FormErrorMessage>
-      ) : (
-        <FormHelperText color="blackAlpha.500">
-          {t(
-            "common.authentication.register.steps.2.content.verification.code.input.helper"
-          )}
-        </FormHelperText>
-      )}
-    </FormControl>
-  );
-}

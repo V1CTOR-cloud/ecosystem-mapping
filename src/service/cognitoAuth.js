@@ -12,8 +12,17 @@ const poolData = {
 };
 
 const userPool = new CognitoUserPool(poolData);
+let cognitoUser;
 
 // Create a new user in AWS Cognito.
+// Create dummy data for first name, last name, username and password for later update them.
+/**
+ * Create a new user in AWS Cognito.
+ * Create dummy data for first name, last name, username and password for later update them.
+ * @param values {Object} - The form values from the formik component, here only the email.
+ * @param state - The Zustand state of the userStore.
+ * @return {Promise<Boolean>} - True if the user was created, otherwise a toast is displayed.
+ */
 export async function EmailCreation(values, state) {
   const attributes = [
     new AmazonCognitoIdentity.CognitoUserAttribute({
@@ -38,9 +47,26 @@ export async function EmailCreation(values, state) {
         return;
       }
 
-      const cognitoUser = result.user;
+      cognitoUser = result.user;
       state.updateEmail(values.email);
-      console.log("User", cognitoUser);
+      resolve(true);
+    });
+  });
+}
+
+/**
+ * Verify the code sent to the user by email and set the account to confirmed in Cognito if correct.
+ * @param values - The form values from the formik component, here only the code.
+ * @return {Promise<Boolean>} - True if the code is correct, otherwise a toast is displayed.
+ */
+export function EmailCodeVerification(values) {
+  return new Promise((resolve, reject) => {
+    cognitoUser.confirmRegistration(values.code, true, (err) => {
+      if (err) {
+        ToastComponent(err.message, "error", 10000);
+        reject(err);
+        return;
+      }
       resolve(true);
     });
   });
