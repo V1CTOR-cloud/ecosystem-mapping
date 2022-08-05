@@ -21,7 +21,7 @@ import { Field, Form, Formik } from "formik";
 
 import { useStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
-import { EmailCodeVerification } from "../../../../service/cognitoAuth";
+import { emailCodeVerification, signIn } from "../../../../service/cognitoAuth";
 
 function EmailVerification() {
   const tabsContext = useContext(TabsContext);
@@ -33,10 +33,14 @@ function EmailVerification() {
   }
 
   async function onSubmit(values) {
-    const res = await EmailCodeVerification(values);
+    await emailCodeVerification(values);
+
+    const res = await signIn({ username: state.username });
+
+    console.log(res);
 
     // The account was created, we pass to the next steps
-    if (res) {
+    if (res === true) {
       tabsContext[1](2);
     }
   }
