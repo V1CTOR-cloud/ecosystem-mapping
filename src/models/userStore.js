@@ -12,9 +12,9 @@ export const userStore = () =>
       email: "",
       username: "",
 
-      updateEmail: (email) => set({ email: email }),
-      updateFirstName: (firstName) => set({ firstName: firstName }),
-      updateLastName: (lastName) => set({ lastName: lastName }),
-      updateUsername: (username) => set({ username: username }),
+      updateEmail: (email) => set((state) => ({ email: email })),
+      updateName: (firstName) => set((state) => ({ firstName: firstName })),
+      updateUsername: (username) => set((state) => ({ username: username })),
+      updateLastName: (lastName) => set((state) => ({ lastName: lastName })),
     }))
   );
