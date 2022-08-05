@@ -1,19 +1,6 @@
 import React, { useContext } from "react";
 
-import {
-  InputGroup,
-  Button,
-  InputLeftElement,
-  Input,
-  Flex,
-  Text,
-  Center,
-  Spacer,
-  FormHelperText,
-  FormLabel,
-  FormControl,
-  FormErrorMessage,
-} from "@chakra-ui/react";
+import { Button, Flex, Text, Center, Spacer } from "@chakra-ui/react";
 import { Key } from "@styled-icons/boxicons-solid";
 import { useTranslation } from "react-i18next";
 import isNumeric from "validator/es/lib/isNumeric";
@@ -22,11 +9,13 @@ import { Field, Form, Formik } from "formik";
 import { useStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
 import { emailCodeVerification, signIn } from "../../../../service/cognitoAuth";
+import AuthInput from "../../../../components/authentication/AuthInput";
 
 function EmailVerification() {
   const tabsContext = useContext(TabsContext);
   const { t } = useTranslation();
-  const state = useStore();
+  const username = useStore((state) => state.username);
+  const email = useStore((state) => state.email);
 
   function validateConfirmationCode(value) {
     return !isNumeric(value) || value.length !== 6;
@@ -35,7 +24,7 @@ function EmailVerification() {
   async function onSubmit(values) {
     await emailCodeVerification(values);
 
-    const res = await signIn({ username: state.username });
+    const res = await signIn({ username: username });
 
     console.log(res);
 
@@ -50,7 +39,7 @@ function EmailVerification() {
       <Text>{t("common.authentication.register.steps.1.content.title")}</Text>
       <Text marginY={5}>
         {t("common.authentication.register.steps.2.content.subtitle.1")}
-        <span style={{ color: "#98CE00" }}> {state.email}</span>
+        <span style={{ color: "#98CE00" }}> {email}</span>
         {t("common.authentication.register.steps.2.content.subtitle.2")}
       </Text>
       <Formik
@@ -68,36 +57,6 @@ function EmailVerification() {
 
                 return (
                   <>
-                    <FormControl isRequired isInvalid={form.errors.code}>
-                      <FormLabel>
-                        {t(
-                          "common.authentication.register.steps.2.content.verification.code.input.label"
-                        )}
-                      </FormLabel>
-                      <InputGroup marginY={2}>
-                        <InputLeftElement>
-                          <Key size="20" color="#A3A3A3" />
-                        </InputLeftElement>
-                        <Input
-                          {...field}
-                          placeholder={t(
-                            "common.authentication.register.steps.2.content.verification.code.input.placeholder"
-                          )}
-                        />
-                      </InputGroup>
-                      {form.errors.code ? (
-                        <FormErrorMessage>
-                          Please enter a 6-digits code sent at your email
-                          address.
-                        </FormErrorMessage>
-                      ) : (
-                        <FormHelperText color="blackAlpha.500">
-                          {t(
-                            "common.authentication.register.steps.2.content.verification.code.input.helper"
-                          )}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
                     <Center marginTop={4}>
                       <Button type="submit" isDisabled={isButtonDisable}>
                         {t(
@@ -105,6 +64,23 @@ function EmailVerification() {
                         )}
                       </Button>
                     </Center>
+                    <AuthInput
+                      field={field}
+                      helper={t(
+                        "common.authentication.register.steps.2.content.verification.code.input.helper"
+                      )}
+                      label={t(
+                        "common.authentication.register.steps.2.content.verification.code.input.label"
+                      )}
+                      placeholder={t(
+                        "common.authentication.register.steps.2.content.verification.code.input.placeholder"
+                      )}
+                      error={
+                        "Please enter a 6-digits code sent at your email address."
+                      }
+                      validation={form.errors.code}
+                      icon={<Key size="20" color="#A3A3A3" />}
+                    />
                   </>
                 );
               }}
