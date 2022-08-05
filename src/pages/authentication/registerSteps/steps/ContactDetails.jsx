@@ -16,7 +16,8 @@ import { Unlock } from "@styled-icons/feather";
 
 function ContactDetails() {
   const tabsContext = useContext(TabsContext);
-  const state = useStore();
+  const updateEmail = useStore((state) => state.updateEmail);
+  const updateUsername = useStore((state) => state.updateUsername);
   const { t } = useTranslation();
 
   function validateEmail(value) {
@@ -32,10 +33,10 @@ function ContactDetails() {
   }
 
   async function onSubmit(values) {
-    const res = await accountCreation(values, state);
+    const res = await accountCreation(values, updateEmail, updateUsername);
 
     // The account was created, we pass to the next steps
-    if (res) {
+    if (res === true) {
       tabsContext[1](1);
     }
   }
@@ -67,7 +68,6 @@ function ContactDetails() {
                   return (
                     <AuthInput
                       field={field}
-                      form={form}
                       helper={t(
                         "common.authentication.register.steps.3.content.username.input.helper"
                       )}
@@ -92,7 +92,6 @@ function ContactDetails() {
                     return (
                       <AuthInput
                         field={field}
-                        form={form}
                         helper={t(
                           "common.authentication.register.steps.1.content.email.input.helper"
                         )}
@@ -117,7 +116,6 @@ function ContactDetails() {
                   return (
                     <AuthInput
                       field={field}
-                      form={form}
                       helper={t(
                         "common.authentication.register.steps.3.content.password.input.helper"
                       )}
