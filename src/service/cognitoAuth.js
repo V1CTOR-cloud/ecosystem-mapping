@@ -1,19 +1,8 @@
-import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
-import { CognitoUserPool } from "amazon-cognito-identity-js";
+import { Auth } from "aws-amplify";
 import uuid from "react-uuid";
 
 import ToastComponent from "../components/basic/ToastComponent";
 
-const { REACT_APP_COGNITO_USER_POOLS_ID, REACT_APP_COGNITO_CLIENT_ID } =
-  process.env;
-
-const poolData = {
-  UserPoolId: REACT_APP_COGNITO_USER_POOLS_ID,
-  ClientId: REACT_APP_COGNITO_CLIENT_ID,
-};
-
-const userPool = new CognitoUserPool(poolData);
-let cognitoUser;
 let password = "";
 
 /**
@@ -25,126 +14,117 @@ let password = "";
  * @return {Promise<Boolean>} - True if the user was created, otherwise a toast is displayed.
  */
 export async function accountCreation(values, updateEmail, updateUsername) {
-  const attributes = [
-    new AmazonCognitoIdentity.CognitoUserAttribute({
-      Name: "email",
-      Value: values.email,
-    }),
-    new AmazonCognitoIdentity.CognitoUserAttribute({
-      Name: "given_name",
-      Value: uuid(),
-    }),
-    new AmazonCognitoIdentity.CognitoUserAttribute({
-      Name: "family_name",
-      Value: uuid(),
-    }),
-  ];
+  const attributes = {
+    username: values.username,
+    password: values.password,
+    attributes: {
+      email: values.email,
+      family_name: uuid(),
+      given_name: uuid(),
+    },
+  };
 
   password = values.password;
 
   return new Promise((resolve, reject) => {
-    userPool.signUp(
-      values.username,
-      values.password,
-      attributes,
-      null,
-      (err, result) => {
-        if (err) {
-          ToastComponent(err.message, "error", 10000);
-          reject(err);
-          return;
-        }
-
-        // Update variables in the userStore and cognitoUser also.
-        cognitoUser = result.user;
+    Auth.signUp(attributes)
+      .then(() => {
         updateEmail(values.email);
         updateUsername(values.username);
         resolve(true);
-      }
-    );
+      })
+      .catch((err) => {
+        ToastComponent(err.message, "error", 10000);
+        reject(err);
+      });
   });
 }
 
 /**
  * Verify the code sent to the user by email and set the account to confirmed in Cognito if correct.
  * @param values - The form values from the formik component, here only the code.
+ * @param username - The username of the user.
  * @return {Promise<Boolean>} - True if the code is correct, otherwise a toast is displayed.
  */
-export function emailCodeVerification(values) {
+export function emailCodeVerification(values, username) {
   return new Promise((resolve, reject) => {
-    cognitoUser.confirmRegistration(values.code, true, (err) => {
-      if (err) {
+    Auth.confirmSignUp(username, values.code)
+      .then(() => {
+        resolve(true);
+      })
+      .catch((err) => {
         ToastComponent(err.message, "error", 10000);
         reject(err);
-        return;
-      }
-      resolve(true);
-    });
+      });
   });
 }
 
 /**
  * Update the family name and given name of the user.
  * @param values The form values from the formik component (firstName and lastName).
+ * @param updateFirstName - Function to update the first name of the user with zustand.
+ * @param updateLastName - Function to update the last name of the user with zustand.
  * @return {Promise<unknown>} - True if the user was updated, otherwise a toast is displayed.
  */
-export function updateUserInfo(values) {
-  const attributes = [
-    new AmazonCognitoIdentity.CognitoUserAttribute({
-      Name: "given_name",
-      Value: values.firstName,
-    }),
-    new AmazonCognitoIdentity.CognitoUserAttribute({
-      Name: "family_name",
-      Value: values.lastName,
-    }),
-  ];
+export async function updateUserInfo(values, updateFirstName, updateLastName) {
+  const user = await Auth.currentAuthenticatedUser().catch((err) =>
+    ToastComponent(err.message, "error", 10000)
+  );
+
+  const attributes = {
+    family_name: values.lastName,
+    given_name: values.firstName,
+  };
 
   return new Promise((resolve, reject) => {
-    cognitoUser.updateAttributes(attributes, function (err, result) {
-      if (err) {
-        alert(err.message || JSON.stringify(err));
+    Auth.updateUserAttributes(user, attributes)
+      .then(() => {
+        updateFirstName(values.firstName);
+        updateLastName(values.lastName);
+        resolve(true);
+      })
+      .catch((err) => {
+        ToastComponent(err.message, "error", 10000);
         reject(err);
-        return;
-      }
-      resolve(true);
-    });
+      });
   });
 }
 
 /**
  * Sign in the user with the username and password.
  * @param values The form values from the formik component (username and password).
+ * @param updateIsLoggedIn - Function to update the isLoggedIn property with zustand.
  * @return {Promise<unknown>} - True if the user was signed in, otherwise a toast is displayed.
  */
-export function signIn(values) {
-  const authenticationData = {
-    Username: values.username,
-    Password: values.password ? values.password : password,
-  };
-
-  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(
-    authenticationData
-  );
-
-  const userData = {
-    Username: values.username,
-    Pool: userPool,
-  };
-
-  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
+export function signIn(values, updateIsLoggedIn) {
   return new Promise((resolve, reject) => {
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: function (result) {
-        console.log("success", result);
+    Auth.signIn(values.username, values.password ? values.password : password)
+      .then(() => {
+        updateIsLoggedIn(true);
         resolve(true);
-      },
-
-      onFailure: function (err) {
+      })
+      .catch((err) => {
         ToastComponent(err.message, "error", 10000);
         reject(err);
-      },
-    });
+      });
+  });
+}
+
+/**
+ * Sign out the user.
+ * @param updateIsLoggedIn - Function to update the isLoggedIn property with zustand.
+ * @return {Promise<unknown>} - True if the user was signed out, otherwise a toast is displayed.
+ */
+export function signOut(updateIsLoggedIn) {
+  return new Promise((resolve, reject) => {
+    Auth.signOut()
+      .then(() => {
+        updateIsLoggedIn(false);
+        resolve(true);
+      })
+      .catch((err) => {
+        ToastComponent(err.message, "error", 10000);
+        reject(err);
+      });
   });
 }
