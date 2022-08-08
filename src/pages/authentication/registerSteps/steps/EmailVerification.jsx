@@ -16,17 +16,15 @@ function EmailVerification() {
   const { t } = useTranslation();
   const username = useStore((state) => state.username);
   const email = useStore((state) => state.email);
+  const updateIsLoggedIn = useStore((state) => state.updateIsLoggedIn);
 
   function validateConfirmationCode(value) {
     return !isNumeric(value) || value.length !== 6;
   }
 
   async function onSubmit(values) {
-    await emailCodeVerification(values);
-
-    const res = await signIn({ username: username });
-
-    console.log(res);
+    await emailCodeVerification(values, username);
+    const res = await signIn({ username: username }, updateIsLoggedIn);
 
     // The account was created, we pass to the next steps
     if (res === true) {
@@ -57,13 +55,6 @@ function EmailVerification() {
 
                 return (
                   <>
-                    <Center marginTop={4}>
-                      <Button type="submit" isDisabled={isButtonDisable}>
-                        {t(
-                          "common.authentication.register.steps.2.content.button"
-                        )}
-                      </Button>
-                    </Center>
                     <AuthInput
                       field={field}
                       helper={t(
@@ -81,6 +72,13 @@ function EmailVerification() {
                       validation={form.errors.code}
                       icon={<Key size="20" color="#A3A3A3" />}
                     />
+                    <Center marginTop={4}>
+                      <Button type="submit" isDisabled={isButtonDisable}>
+                        {t(
+                          "common.authentication.register.steps.2.content.button"
+                        )}
+                      </Button>
+                    </Center>
                   </>
                 );
               }}
