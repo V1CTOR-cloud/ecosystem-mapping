@@ -17,7 +17,7 @@ import { Field, Form, Formik } from "formik";
 import isStrongPassword from "validator/es/lib/isStrongPassword";
 import { useNavigate } from "react-router";
 
-import { getUserAttributes, signIn } from "../../service/cognitoAuth";
+import { signIn } from "../../service/cognitoAuth";
 import AuthInput from "../../components/authentication/AuthInput";
 import { useStore as userStore } from "../../models/userStore";
 
@@ -32,14 +32,12 @@ function SignIn() {
 
   async function onSubmit(values) {
     const res = await signIn(values, updateIsLoggedIn);
-    const user = await getUserAttributes();
-    updateLastName(user.family_name);
-    updateFirstName(user.given_name);
-    updateEmail(user.email);
-    updateUsername(values.username);
+    updateLastName(res.user.attributes.family_name);
+    updateFirstName(res.user.attributes.given_name);
+    updateEmail(res.user.attributes.email);
+    updateUsername(res.user.username);
 
-    console.log(user);
-    if (res === true) {
+    if (res.value === true) {
       navigate("/dashboard/");
     }
   }

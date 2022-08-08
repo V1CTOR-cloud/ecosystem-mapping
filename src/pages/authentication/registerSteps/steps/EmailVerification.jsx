@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import isNumeric from "validator/es/lib/isNumeric";
 import { Field, Form, Formik } from "formik";
 
-import { useStore } from "../../../../models/userStore";
+import { useStore as userStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
 import { emailCodeVerification, signIn } from "../../../../service/cognitoAuth";
 import AuthInput from "../../../../components/authentication/AuthInput";
@@ -14,9 +14,10 @@ import AuthInput from "../../../../components/authentication/AuthInput";
 function EmailVerification() {
   const tabsContext = useContext(TabsContext);
   const { t } = useTranslation();
-  const username = useStore((state) => state.username);
-  const email = useStore((state) => state.email);
-  const updateIsLoggedIn = useStore((state) => state.updateIsLoggedIn);
+
+  const username = userStore((state) => state.username);
+  const email = userStore((state) => state.email);
+  const updateIsLoggedIn = userStore((state) => state.updateIsLoggedIn);
 
   function validateConfirmationCode(value) {
     return !isNumeric(value) || value.length !== 6;
@@ -27,7 +28,7 @@ function EmailVerification() {
     const res = await signIn({ username: username }, updateIsLoggedIn);
 
     // The account was created, we pass to the next steps
-    if (res === true) {
+    if (res.value === true) {
       tabsContext[1](2);
     }
   }
