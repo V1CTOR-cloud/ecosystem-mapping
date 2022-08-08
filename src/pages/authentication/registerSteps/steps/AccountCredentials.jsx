@@ -16,14 +16,17 @@ import { Field, Form, Formik } from "formik";
 import { TabsContext } from "../Steps";
 import { updateUserInfo } from "../../../../service/cognitoAuth";
 import AuthInput from "../../../../components/authentication/AuthInput";
+import { useStore } from "../../../../models/userStore";
 
 function AccountCredentials() {
   const tabsContext = useContext(TabsContext);
+  const updateFirstName = useStore((state) => state.updateFirstName);
+  const updateLastName = useStore((state) => state.updateLastName);
   const { t } = useTranslation();
 
   async function onSubmit(values) {
-    const res = updateUserInfo(values);
-    console.log(res);
+    const res = await updateUserInfo(values, updateFirstName, updateLastName);
+
     // The account was created, we pass to the next steps
     if (res === true) {
       tabsContext[1](3);
