@@ -99,9 +99,10 @@ export async function updateUserInfo(values, updateFirstName, updateLastName) {
 export function signIn(values, updateIsLoggedIn) {
   return new Promise((resolve, reject) => {
     Auth.signIn(values.username, values.password ? values.password : password)
-      .then(() => {
+      .then((res) => {
         updateIsLoggedIn(true);
-        resolve(true);
+        password = "";
+        resolve({ value: true, user: res });
       })
       .catch((err) => {
         ToastComponent(err.message, "error", 10000);
