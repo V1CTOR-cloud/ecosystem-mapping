@@ -15,16 +15,33 @@ import { Tag, Unlock } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import isStrongPassword from "validator/es/lib/isStrongPassword";
-import { signIn } from "../../service/cognitoAuth";
+import { useNavigate } from "react-router";
+
+import { getUserAttributes, signIn } from "../../service/cognitoAuth";
 import AuthInput from "../../components/authentication/AuthInput";
+import { useStore as userStore } from "../../models/userStore";
 
 function SignIn() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
+  const updateIsLoggedIn = userStore((state) => state.updateIsLoggedIn);
+  const updateFirstName = userStore((state) => state.updateFirstName);
+  const updateLastName = userStore((state) => state.updateLastName);
+  const updateUsername = userStore((state) => state.updateUsername);
+  const updateEmail = userStore((state) => state.updateEmail);
 
   async function onSubmit(values) {
-    const res = await signIn(values);
+    const res = await signIn(values, updateIsLoggedIn);
+    const user = await getUserAttributes();
+    updateLastName(user.family_name);
+    updateFirstName(user.given_name);
+    updateEmail(user.email);
+    updateUsername(values.username);
 
-    console.log(res);
+    console.log(user);
+    if (res === true) {
+      navigate("/dashboard/");
+    }
   }
 
   function validateUsername(value) {
