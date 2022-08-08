@@ -8,7 +8,7 @@ import { Tag } from "@styled-icons/bootstrap";
 import { Email } from "@styled-icons/material-outlined";
 
 import { accountCreation } from "../../../../service/cognitoAuth";
-import { useStore } from "../../../../models/userStore";
+import { useStore as userStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
 import AuthInput from "../../../../components/authentication/AuthInput";
 import isStrongPassword from "validator/es/lib/isStrongPassword";
@@ -16,8 +16,8 @@ import { Unlock } from "@styled-icons/feather";
 
 function ContactDetails() {
   const tabsContext = useContext(TabsContext);
-  const updateEmail = useStore((state) => state.updateEmail);
-  const updateUsername = useStore((state) => state.updateUsername);
+  const updateEmail = userStore((state) => state.updateEmail);
+  const updateUsername = userStore((state) => state.updateUsername);
   const { t } = useTranslation();
 
   function validateEmail(value) {

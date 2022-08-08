@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Text, Flex, Center } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 

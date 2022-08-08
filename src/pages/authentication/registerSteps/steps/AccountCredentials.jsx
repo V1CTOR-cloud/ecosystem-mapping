@@ -12,16 +12,19 @@ import {
 import { useTranslation } from "react-i18next";
 import { Person } from "@styled-icons/bootstrap";
 import { Field, Form, Formik } from "formik";
+import { useNavigate } from "react-router";
 
 import { TabsContext } from "../Steps";
 import { updateUserInfo } from "../../../../service/cognitoAuth";
 import AuthInput from "../../../../components/authentication/AuthInput";
-import { useStore } from "../../../../models/userStore";
+import { useStore as userStore } from "../../../../models/userStore";
 
 function AccountCredentials() {
+  const navigate = useNavigate();
   const tabsContext = useContext(TabsContext);
-  const updateFirstName = useStore((state) => state.updateFirstName);
-  const updateLastName = useStore((state) => state.updateLastName);
+  const updateFirstName = userStore((state) => state.updateFirstName);
+  const updateLastName = userStore((state) => state.updateLastName);
+  const isLoggedIn = userStore((state) => state.isLoggedIn);
   const { t } = useTranslation();
 
   async function onSubmit(values) {
@@ -29,6 +32,12 @@ function AccountCredentials() {
 
     // The account was created, we pass to the next steps
     if (res === true) {
+      if (isLoggedIn) {
+        setTimeout(() => {
+          navigate("/dashboard/");
+        }, 2500);
+      }
+
       tabsContext[1](3);
     }
   }
