@@ -7,10 +7,13 @@ import moment from "moment";
 
 import DashboardMenuOptions from "./DashboardMenuOptions";
 import { AppProvider } from "../../../App";
+import { useStore as userStore } from "../../../models/userStore";
 
 function GridMap(props) {
   let navigate;
   const appProvider = useContext(AppProvider);
+  const firstName = userStore((state) => state.firstName);
+  const lastName = userStore((state) => state.lastName);
   // For storybook
   if (appProvider.isApp) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -68,7 +71,8 @@ function GridMap(props) {
             transition={transition}
             _groupHover={groupBlackColor}
           >
-            {data.owner.profileName}
+            {/*This will need to change when the sharing of map will be available*/}
+            {firstName + " " + lastName}
           </Text>
           <Text
             w="100%"
@@ -141,9 +145,7 @@ GridMap.defaultProps = {
     id: "",
     mapStatus: "",
     title: "",
-    owner: {
-      profileName: "",
-    },
+    owner: "",
     created: moment().format("DD-MM-YYYY"),
     lastModification: moment().format("DD-MM-YYYY"),
     image: "",
