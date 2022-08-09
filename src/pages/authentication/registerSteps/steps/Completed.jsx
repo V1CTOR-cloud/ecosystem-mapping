@@ -9,7 +9,7 @@ function Completed() {
   return (
     <Flex marginX={5} flexDirection="column" h="100%">
       <Text fontSize="xl" color="#98CE00">
-        {t("common.authentication.register.steps.4.content.title")}{" "}
+        {t("common.authentication.register.steps.4.content.title")}
       </Text>
       <Text marginY={4}>
         {t("common.authentication.register.steps.4.content.subtitle")}

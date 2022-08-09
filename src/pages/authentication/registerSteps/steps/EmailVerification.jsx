@@ -8,7 +8,6 @@ import { Field, Form, Formik } from "formik";
 
 import { useStore as userStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
-import { emailCodeVerification, signIn } from "../../../../service/cognitoAuth";
 import AuthInput from "../../../../components/authentication/AuthInput";
 
 function EmailVerification() {
@@ -17,20 +16,24 @@ function EmailVerification() {
 
   const username = userStore((state) => state.username);
   const email = userStore((state) => state.email);
-  const updateIsLoggedIn = userStore((state) => state.updateIsLoggedIn);
+  const signIn = userStore((state) => state.signIn);
+  const emailCodeVerification = userStore(
+    (state) => state.emailCodeVerification
+  );
 
   function validateConfirmationCode(value) {
     return !isNumeric(value) || value.length !== 6;
   }
 
   async function onSubmit(values) {
-    await emailCodeVerification(values, username);
-    const res = await signIn({ username: username }, updateIsLoggedIn);
+    await emailCodeVerification(values);
 
-    // The account was created, we pass to the next steps
-    if (res.value === true) {
-      tabsContext[1](2);
-    }
+    signIn({ username: username }, true).then((res) => {
+      // The account was created, we pass to the next steps
+      if (res === true) {
+        tabsContext[1](2);
+      }
+    });
   }
 
   return (

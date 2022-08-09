@@ -17,7 +17,6 @@ import { Field, Form, Formik } from "formik";
 import isStrongPassword from "validator/es/lib/isStrongPassword";
 import { useNavigate } from "react-router";
 
-import { signIn } from "../../service/cognitoAuth";
 import AuthInput from "../../components/authentication/AuthInput";
 import { useStore as userStore } from "../../models/userStore";
 import ToastComponent from "../../components/basic/ToastComponent";
@@ -25,22 +24,15 @@ import ToastComponent from "../../components/basic/ToastComponent";
 function SignIn() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const updateIsLoggedIn = userStore((state) => state.updateIsLoggedIn);
-  const updateFirstName = userStore((state) => state.updateFirstName);
-  const updateLastName = userStore((state) => state.updateLastName);
-  const updateUsername = userStore((state) => state.updateUsername);
-  const updateEmail = userStore((state) => state.updateEmail);
+  const signIn = userStore((state) => state.signIn);
 
-  async function onSubmit(values) {
-    const res = await signIn(values, updateIsLoggedIn);
-    updateLastName(res.user.attributes.family_name);
-    updateFirstName(res.user.attributes.given_name);
-    updateEmail(res.user.attributes.email);
-    updateUsername(res.user.username);
-
-    if (res.value === true) {
-      navigate("/dashboard/");
-    }
+  // Sign in and if it was successful, we redirect to the dashboard.
+  function onSubmit(values) {
+    signIn(values, false).then((res) => {
+      if (res === true) {
+        navigate("/dashboard/");
+      }
+    });
   }
 
   function validateUsername(value) {
