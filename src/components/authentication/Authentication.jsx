@@ -14,13 +14,13 @@ const Authentication = () => {
   const navigate = useNavigate();
 
   // Sign out first, then we force the redirection to the authentication page.
-  const handleLogOut = async () => {
+  function handleLogOut() {
     logOut().then(() => {
       if (isLoggedIn === false) {
         navigate("/authentication");
       }
     });
-  };
+  }
 
   // User is connected, we give him the menu
   if (isLoggedIn) {
