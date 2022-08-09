@@ -35,22 +35,22 @@ function Auth() {
                 color="blackAlpha.500"
                 _selected={{ color: "brand.500", borderColor: "brand.500" }}
               >
-                {t("common.authentication.register")}
+                {t("common.authentication.sign.in.upper.case")}
               </Tab>
               <Tab
                 w="100%"
                 color="blackAlpha.500"
                 _selected={{ color: "brand.500", borderColor: "brand.500" }}
               >
-                {t("common.authentication.sign.in.upper.case")}
+                {t("common.authentication.register")}
               </Tab>
             </TabList>
             <TabPanels h="95%">
               <TabPanel h="100%">
-                <Steps />
+                <SignIn />
               </TabPanel>
               <TabPanel h="100%">
-                <SignIn />
+                <Steps />
               </TabPanel>
             </TabPanels>
           </Tabs>
