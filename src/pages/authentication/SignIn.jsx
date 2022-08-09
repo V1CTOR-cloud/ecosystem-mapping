@@ -20,6 +20,7 @@ import { useNavigate } from "react-router";
 import { signIn } from "../../service/cognitoAuth";
 import AuthInput from "../../components/authentication/AuthInput";
 import { useStore as userStore } from "../../models/userStore";
+import ToastComponent from "../../components/basic/ToastComponent";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -113,6 +114,11 @@ function SignIn() {
                   }}
                 </Field>
               </Box>
+              <HStack marginTop={4}>
+                <Checkbox defaultChecked>
+                  <Text>{t("common.authentication.sign.in.remember.me")}</Text>
+                </Checkbox>
+              </HStack>
               <Center marginTop={5}>
                 <Button type="submit" isDisabled={isButtonDisabled}>
                   {t("common.authentication.sign.in")}
@@ -122,26 +128,27 @@ function SignIn() {
           );
         }}
       </Formik>
-
-      <HStack marginTop={4}>
-        <Checkbox defaultChecked>
-          <Text>{t("common.authentication.sign.in.remember.me")}</Text>
-        </Checkbox>
-      </HStack>
-
       <Spacer />
       <Center flexDirection="column">
         <Text paddingBottom={2}>
           {t("common.authentication.sign.in.problem")}
         </Text>
         <HStack>
-          <Link color="brand.500" fontSize="md">
+          <Link
+            color="brand.500"
+            fontSize="md"
+            onClick={() => ToastComponent("Not available for now!", "warning")}
+          >
             {t("common.authentication.sign.in.forgot.username")}
           </Link>
           <Box paddingX={10}>
             <Box w="1px" h="20px" bg="brand.500" />
           </Box>
-          <Link color="brand.500" fontSize="md">
+          <Link
+            color="brand.500"
+            fontSize="md"
+            onClick={() => ToastComponent("Not available for now!", "warning")}
+          >
             {t("common.authentication.sign.in.forgot.password")}
           </Link>
         </HStack>
