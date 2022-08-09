@@ -18,6 +18,7 @@ import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import logo from "../../assets/images/Logo.png";
+import { useStore as userStore } from "../../models/userStore";
 
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
@@ -31,8 +32,10 @@ const LogMenuList = chakra(MenuList, {
 });
 
 const UserAccountMenu = (props) => {
-  const { user, logOut } = props;
+  const { logOut } = props;
   const { t } = useTranslation();
+  const firstName = userStore((state) => state.firstName);
+  const lastName = userStore((state) => state.lastName);
 
   return (
     <Menu>
@@ -59,11 +62,11 @@ const UserAccountMenu = (props) => {
             ml="20px"
             borderRadius="50%"
             width="50px"
-            src={user.profileImage.url}
+            src={logo}
             alt="image"
           />
           <Text m="auto" ml="15px">
-            {user.firstName + " " + user.lastName}
+            {firstName + " " + lastName}
           </Text>
         </Flex>
         <Box p="15px">
@@ -82,7 +85,9 @@ const UserAccountMenu = (props) => {
 };
 
 UserAccountMenu.propTypes = {
-  user: PropTypes.object.isRequired,
+  /**
+   * Function to log out the user.
+   */
   logOut: PropTypes.func.isRequired,
 };
 
