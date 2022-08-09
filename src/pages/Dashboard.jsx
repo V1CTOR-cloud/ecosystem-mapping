@@ -38,7 +38,7 @@ import { useStore as userStore } from "../models/userStore";
 export const DashboardProvider = createContext({});
 
 function Dashboard() {
-  const username = userStore((state) => state.username);
+  const userId = userStore((state) => state.id);
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
@@ -81,7 +81,7 @@ function Dashboard() {
   // Initial load where we are getting the user maps
   useEffect(() => {
     const userMapsPromise = new Promise((resolve, reject) => {
-      MapClass.getMapsByOwner(username)
+      MapClass.getMapsByOwner(userId)
         .then((res) => resolve(res))
         .catch((error) => reject(error));
     });
@@ -141,7 +141,7 @@ function Dashboard() {
       title: "Copy of " + mapData.title,
       mapStatus: mapData.mapStatus,
       description: mapData.description,
-      owner: username,
+      owner: userId,
       creation: moment(),
       lastModification: moment(),
       industry: {
