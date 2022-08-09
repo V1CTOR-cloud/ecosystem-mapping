@@ -113,14 +113,14 @@ export function signIn(values, updateIsLoggedIn) {
 
 /**
  * Sign out the user.
- * @param updateIsLoggedIn - Function to update the isLoggedIn property with zustand.
+ * @param clearUser - Function to clear all user property with zustand.
  * @return {Promise<unknown>} - True if the user was signed out, otherwise a toast is displayed.
  */
-export function signOut(updateIsLoggedIn) {
+export function signOut(clearUser) {
   return new Promise((resolve, reject) => {
     Auth.signOut()
       .then(() => {
-        updateIsLoggedIn(false);
+        clearUser();
         resolve(true);
       })
       .catch((err) => {
