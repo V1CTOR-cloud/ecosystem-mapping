@@ -17,6 +17,8 @@ import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 
+import logo from "../../assets/images/Logo.png";
+
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
     width: "320px",
@@ -48,12 +50,7 @@ const UserAccountMenu = (props) => {
         }}
       >
         <HStack>
-          <Image
-            borderRadius="50%"
-            width="40px"
-            src={user.profileImage.url}
-            alt="image"
-          />
+          <Image borderRadius="50%" width="40px" src={logo} alt="image" />
         </HStack>
       </MenuButton>
       <LogMenuList>
