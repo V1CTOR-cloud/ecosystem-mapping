@@ -13,14 +13,14 @@ import {
   Menu,
   MenuList,
   MenuButton,
-  MenuItem
+  MenuItem,
 } from "@chakra-ui/react";
 import { Grid as GridIcon } from "@styled-icons/bootstrap";
 import {
   AddIcon,
   CloseIcon,
   HamburgerIcon,
-  SearchIcon
+  SearchIcon,
 } from "@chakra-ui/icons";
 import { SortDownAlt } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
@@ -33,60 +33,61 @@ import MapAccordion from "../components/dashboard/mapAccordion/MapAccordion";
 import GridMap from "../components/dashboard/mapView/GridMap";
 import ListMap from "../components/dashboard/mapView/ListMap";
 import ToastComponent from "../components/basic/ToastComponent";
-import { Authentication } from "../service/authentication";
+import { useStore as userStore } from "../models/userStore";
 
 export const DashboardProvider = createContext({});
 
 function Dashboard() {
+  const username = userStore((state) => state.username);
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
-    onClose: onCloseModal
+    onClose: onCloseModal,
   } = useDisclosure();
   const {
     isOpen: isOpenSearch,
     onOpen: onOpenSearch,
-    onClose: onCloseSearch
+    onClose: onCloseSearch,
   } = useDisclosure();
   const { t } = useTranslation();
   const [isGrid, setIsGrid] = useState(true);
   const [userMaps, setUserMaps] = useState([]);
   const [edition, setEdition] = useState({
     isEdition: false,
-    initialFormValues: {}
+    initialFormValues: {},
   });
   const [accordionsItems, setAccordionsItems] = useState([
     {
       title: t("mapping.dashboard.content.accordion.my.maps"),
-      content: []
+      content: [],
     },
     {
       title: t("mapping.dashboard.content.accordion.shared.maps"),
-      content: []
+      content: [],
     },
     {
       title: t("mapping.dashboard.content.accordion.archived.maps"),
-      content: []
-    }
+      content: [],
+    },
   ]);
   const providerData = {
     archiveFunction: (mapData) => handleArchiveMap(mapData),
     duplicateFunction: (mapData) => handleDuplicateMap(mapData),
     editFunction: (mapData) => handleEditMap(mapData),
     restoreFunction: (mapData) => handleRestoreMap(mapData),
-    deleteFunction: (mapData) => handleDeleteMap(mapData)
+    deleteFunction: (mapData) => handleDeleteMap(mapData),
   };
 
   // Initial load where we are getting the user maps
   useEffect(() => {
     const userMapsPromise = new Promise((resolve, reject) => {
-      MapClass.getAllUserMaps()
+      MapClass.getMapsByOwner(username)
         .then((res) => resolve(res))
         .catch((error) => reject(error));
     });
 
     userMapsPromise.then((value) => {
-      value.forEach((map) => map.isVisible = true);
+      value.forEach((map) => (map.isVisible = true));
       handleToggleView(value, true);
       setUserMaps(value);
     });
@@ -125,14 +126,14 @@ function Dashboard() {
         continent: location.continent,
         country: location.country,
         region: location.region,
-        city: location.city
+        city: location.city,
       });
     });
 
     mapData.industry.forEach((industry) => {
       industries.push({
         mainIndustry: industry.mainIndustry,
-        subIndustry: industry.subIndustry
+        subIndustry: industry.subIndustry,
       });
     });
 
@@ -140,19 +141,15 @@ function Dashboard() {
       title: "Copy of " + mapData.title,
       mapStatus: mapData.mapStatus,
       description: mapData.description,
-      owner: {
-        connect: {
-          id: Authentication.getCurrentUser().id
-        }
-      },
+      owner: username,
       creation: moment(),
       lastModification: moment(),
       industry: {
-        create: industries
+        create: industries,
       },
       location: {
-        create: locations
-      }
+        create: locations,
+      },
     };
 
     handleCreateMap(formattedData);
@@ -165,7 +162,7 @@ function Dashboard() {
 
     const data = {
       id: mapData.id,
-      mapStatus: mapData.mapStatus
+      mapStatus: mapData.mapStatus,
     };
 
     changeMapStatus(data);
@@ -175,7 +172,7 @@ function Dashboard() {
   function handleEditMap(mapData) {
     setEdition({
       isEdition: true,
-      initialFormValues: mapData
+      initialFormValues: mapData,
     });
     onOpenModal();
   }
@@ -186,7 +183,7 @@ function Dashboard() {
 
     const data = {
       id: mapData.id,
-      mapStatus: mapData.mapStatus
+      mapStatus: mapData.mapStatus,
     };
 
     changeMapStatus(data);
@@ -337,10 +334,9 @@ function Dashboard() {
 
   function handleSearchMap(mapTitle) {
     const resultMaps = userMaps.map((map) => {
-        map.isVisible = map.title.toLowerCase().includes(mapTitle.toLowerCase());
-        return map;
-      }
-    );
+      map.isVisible = map.title.toLowerCase().includes(mapTitle.toLowerCase());
+      return map;
+    });
 
     setUserMaps(resultMaps);
     handleToggleView(resultMaps, isGrid);
@@ -350,7 +346,7 @@ function Dashboard() {
     onCloseSearch();
     setUserMaps((previousState) => {
       const updatedUserMaps = [...previousState];
-      updatedUserMaps.forEach((map)=> map.isVisible = true);
+      updatedUserMaps.forEach((map) => (map.isVisible = true));
       return updatedUserMaps;
     });
     handleToggleView(userMaps, isGrid);

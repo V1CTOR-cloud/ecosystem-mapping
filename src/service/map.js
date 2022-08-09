@@ -1,26 +1,21 @@
 import { graphCMSRequest } from "./graphCMS";
-import { Authentication } from "./authentication";
 
 export const Map = {
   /**
    * Get all the maps linked to the connected user.
    * @return {array} An array of object.
    */
-  async getAllUserMaps() {
+  async getMapsByOwner(ownerId) {
     const query = `
       query getAllUserMaps {
-        ecosystemMaps(where: {owner: {id: "${
-          Authentication.getCurrentUser().id
-        }"}}) {
+        ecosystemMaps(where: {owner: "${ownerId}"}) {
           id
           title
           description
           mapStatus
           creation
           lastModification
-          owner {
-            profileName
-          }
+          owner
           location {
             id
             continent
@@ -58,9 +53,7 @@ export const Map = {
           mapStatus
           creation
           lastModification
-          owner {
-            profileName
-          }
+          owner
           location {
             id
             continent
@@ -102,9 +95,7 @@ export const Map = {
           mapStatus
           creation
           lastModification
-          owner {
-            profileName
-          }
+          owner
           location {
             id
             continent
@@ -201,9 +192,7 @@ export const Map = {
           id
           serviceName
           serviceFocus
-          ownerOrganization {
-            profileName
-          }
+          owner
           serviceApplication
           servicePhaseRange {
             id

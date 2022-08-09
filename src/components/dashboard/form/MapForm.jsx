@@ -23,7 +23,7 @@ import LabeledMultilineInputComponent from "../../basic/inputs/input/multilineIn
 import { AppProvider } from "../../../App";
 import MultiIndustryPicker from "../../basic/picker/industryPicker/MultiIndustryPicker";
 import MultiLocationPicker from "../../basic/picker/locationPicker/MultiLocationPicker";
-import { Authentication } from "../../../service/authentication";
+import { useStore as userStore } from "../../../models/userStore";
 
 function MapForm(props) {
   const {
@@ -36,6 +36,7 @@ function MapForm(props) {
     onCreateMap,
     onEditMap,
   } = props;
+  const username = userStore((state) => state.username);
   const emptyValues = {
     title: "",
     description: "",
@@ -80,11 +81,7 @@ function MapForm(props) {
         title: formValues.title,
         mapStatus: "Published",
         description: "",
-        owner: {
-          connect: {
-            id: Authentication.getCurrentUser().id,
-          },
-        },
+        owner: username,
         creation: moment(),
         lastModification: moment(),
         industry: {
