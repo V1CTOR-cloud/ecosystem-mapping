@@ -5,7 +5,6 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import axios from "axios";
 import Amplify from "aws-amplify";
-import awsconfig from "./aws-exports";
 
 import "./assets/css/Style.scss";
 import Routing from "./Routing";
@@ -13,8 +12,9 @@ import { theme } from "./theme/theme";
 import { Location } from "./service/location";
 import { Industry } from "./service/industry";
 import { UserProvider } from "./models/userStore";
+import { awsConfiguration } from "./aws-configuration";
 
-Amplify.configure(awsconfig);
+Amplify.configure(awsConfiguration);
 
 export const AppProvider = createContext({});
 
