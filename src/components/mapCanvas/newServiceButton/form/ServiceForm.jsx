@@ -11,7 +11,7 @@ import {
   FormErrorMessage,
   HStack,
   Spacer,
-  Button
+  Button,
 } from "@chakra-ui/react";
 import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,7 @@ import {
   audienceList,
   market,
   market_and_organization,
-  organization
+  organization,
 } from "../../../../helper/constant";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
 import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
@@ -38,7 +38,7 @@ function ServiceForm(props) {
     isOpen,
     serviceWithoutModification,
     onClose,
-    cancelRef
+    cancelRef,
   } = props;
   const canvasProvider = useContext(CanvasProvider);
   const [data, setData] = canvasProvider.fetchedData;
@@ -46,7 +46,7 @@ function ServiceForm(props) {
   const applicationTypeButtons = [
     market,
     market_and_organization.replaceAll("_", " "),
-    organization
+    organization,
   ];
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
@@ -59,11 +59,11 @@ function ServiceForm(props) {
     serviceApplication: applicationTypeButtons[0],
     servicePhaseRange: {
       startPhase: -1.0,
-      endPhase: 1.0
+      endPhase: 1.0,
     },
     serviceTime: {
       startTime: new Date(),
-      endTime: new Date()
+      endTime: new Date(),
     },
     serviceLink: "",
     serviceAudience: audiences[0].name,
@@ -72,15 +72,15 @@ function ServiceForm(props) {
         continent: null,
         country: null,
         region: null,
-        city: null
-      }
+        city: null,
+      },
     ],
     serviceBudget: [{ budgetTitle: "", budgetValue: "", budgetCurrency: "€" }],
 
     serviceDescription: "",
     serviceOutcomes: "",
     precededService: t("mapping.canvas.form.service.select.service"),
-    followedService: t("mapping.canvas.form.service.select.service")
+    followedService: t("mapping.canvas.form.service.select.service"),
   };
 
   // We set the values of formValue because we are in edition mode.
@@ -103,7 +103,7 @@ function ServiceForm(props) {
       ),
       endPhase: Service.replacePhaseToNumber(
         serviceWithoutModification.servicePhaseRange.endPhase
-      )
+      ),
     };
 
     // For the time we convert the data to the timeZone of the user because the data retrieve are in GMT+00:00
@@ -118,13 +118,13 @@ function ServiceForm(props) {
     formValue.serviceLocation = serviceWithoutModification.serviceLocation
       ? [serviceWithoutModification.serviceLocation]
       : [
-        {
-          continent: null,
-          country: null,
-          region: null,
-          city: null
-        }
-      ];
+          {
+            continent: null,
+            country: null,
+            region: null,
+            city: null,
+          },
+        ];
     formValue.serviceLink = serviceWithoutModification.serviceLink
       ? serviceWithoutModification.serviceLink
       : "";
@@ -134,12 +134,12 @@ function ServiceForm(props) {
     formValue.serviceBudget = serviceWithoutModification.serviceBudget
       ? props.serviceWithoutModification.serviceBudget
       : [
-        {
-          budgetTitle: "",
-          budgetValue: "",
-          budgetCurrency: "€"
-        }
-      ];
+          {
+            budgetTitle: "",
+            budgetValue: "",
+            budgetCurrency: "€",
+          },
+        ];
     formValue.serviceDescription = serviceWithoutModification.serviceDescription
       ? serviceWithoutModification.serviceDescription
       : "";
@@ -179,14 +179,16 @@ function ServiceForm(props) {
     formatBudget();
 
     let organisationId = null;
-    if (formValue.ownerOrganization !== organisations[0].name) {
-      organisationId = propOrganisations.find(
-        (organisation) => formValue.ownerOrganisation === organisation.name
-      ).id;
-    }
+    // OwnerOrganization in comments because we haven't device yet how to implement it.
+    // if (formValue.ownerOrganization !== organisations[0].name) {
+    //   organisationId = propOrganisations.find(
+    //     (organisation) => formValue.ownerOrganisation === organisation.name
+    //   ).id;
+    // }
 
     const serviceOrder =
-      data.rows[formValue.serviceApplication.replaceAll(" ", "_")].serviceIds.length;
+      data.rows[formValue.serviceApplication.replaceAll(" ", "_")].serviceIds
+        .length;
 
     const argument = {
       serviceName: formValue.serviceName,
@@ -217,12 +219,12 @@ function ServiceForm(props) {
         ),
         endPhase: Service.replaceNumberToPhase(
           formValue.servicePhaseRange.endPhase
-        )
+        ),
       },
 
       mapId: canvasProvider.mapId,
       serviceStatus: serviceStatus,
-      serviceOrder: serviceOrder
+      serviceOrder: serviceOrder,
     };
 
     await createNewService(argument);
@@ -258,8 +260,8 @@ function ServiceForm(props) {
     // Format the list of services to correspond to the model of fetchedData
     const tempServices = Object.assign(data.services, {
       [res.createService.id]: {
-        ...res.createService
-      }
+        ...res.createService,
+      },
     });
 
     // Add the service id to the corresponding row
@@ -270,14 +272,14 @@ function ServiceForm(props) {
 
     services.push({
       id: res.createService.id,
-      name: res.serviceName
+      name: res.serviceName,
     });
 
     // Create new object to setState the fetchedData
     return {
       rowsOrder: data.rowsOrder,
       services: tempServices,
-      rows: tempRows
+      rows: tempRows,
     };
   }
 
@@ -288,22 +290,22 @@ function ServiceForm(props) {
     formatBudget();
 
     let organisationId = null;
-    if (formValue.ownerOrganization !== organisations[0].name) {
-      // Retrieve the organisation id that we selected (modified or not)
-      organisationId = propOrganisations.find(
-        (organisation) => formValue.ownerOrganization === organisation.name
-      ).id;
-    }
+    // if (formValue.ownerOrganization !== organisations[0].name) {
+    //   // Retrieve the organisation id that we selected (modified or not)
+    //   organisationId = propOrganisations.find(
+    //     (organisation) => formValue.ownerOrganization === organisation.name
+    //   ).id;
+    // }
 
     let organisationIdWithoutModification;
-    if (serviceWithoutModification.ownerOrganization !== null) {
-      // Retrieve the organisation id that was previously selected to disconnected it.
-      organisationIdWithoutModification = propOrganisations.find(
-        (organisation) =>
-          serviceWithoutModification.ownerOrganization[0].ownerOrganization ===
-          organisation.name
-      ).id;
-    }
+    // if (serviceWithoutModification.ownerOrganization !== null) {
+    //   // Retrieve the organisation id that was previously selected to disconnected it.
+    //   organisationIdWithoutModification = propOrganisations.find(
+    //     (organisation) =>
+    //       serviceWithoutModification.ownerOrganization[0].ownerOrganization ===
+    //       organisation.name
+    //   ).id;
+    // }
 
     let serviceOrder;
 
@@ -342,18 +344,18 @@ function ServiceForm(props) {
         ),
         endPhase: Service.replaceNumberToPhase(
           formValue.servicePhaseRange.endPhase
-        )
+        ),
       },
 
       // Second tabs
       serviceTime: {
         startTime: formValue.startTime,
-        endTime: formValue.endTime
+        endTime: formValue.endTime,
       },
       serviceLink: formValue.serviceLink,
       serviceLocation: {
         ...formValue.serviceLocation,
-        id: serviceWithoutModification.serviceLocation.id
+        id: serviceWithoutModification.serviceLocation.id,
       },
       serviceAudience: formValue.serviceAudience,
       serviceBudget: formValue.serviceBudget,
@@ -379,7 +381,7 @@ function ServiceForm(props) {
 
       // Parameters to be able to filter afterwards
       serviceWithoutModification: serviceWithoutModification,
-      organisationIdWithoutModification: organisationIdWithoutModification
+      organisationIdWithoutModification: organisationIdWithoutModification,
     };
 
     await updateService(argument);
@@ -412,8 +414,8 @@ function ServiceForm(props) {
     // Format the list of services to correspond to the model of fetchedData
     const tempServices = Object.assign(data.services, {
       [updatedService.id]: {
-        ...updatedService
-      }
+        ...updatedService,
+      },
     });
 
     // Add the service id to the corresponding row
@@ -458,7 +460,7 @@ function ServiceForm(props) {
     return {
       rowsOrder: data.rowsOrder,
       services: tempServices,
-      rows: tempRows
+      rows: tempRows,
     };
   }
 
@@ -469,13 +471,13 @@ function ServiceForm(props) {
     for (const service of values) {
       if (
         service.serviceApplication ===
-        serviceWithoutModification.serviceApplication &&
+          serviceWithoutModification.serviceApplication &&
         service.serviceOrder > serviceWithoutModification.serviceOrder
       ) {
         service.serviceOrder -= 1;
         const data = {
           serviceOrder: service.serviceOrder,
-          serviceApplication: service.serviceApplication
+          serviceApplication: service.serviceApplication,
         };
 
         Service.updateServiceOrderAndApplicationType(
@@ -660,7 +662,7 @@ ServiceForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   isEditing: PropTypes.bool.isRequired,
   cancelRef: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
 };
 
 export default ServiceForm;
