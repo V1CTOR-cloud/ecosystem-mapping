@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 
 import { Text, Flex, Button, Center, Box } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
-import isEmail from "validator/lib/isEmail";
 import { Field, Form, Formik } from "formik";
 import { Tag } from "@styled-icons/bootstrap";
 import { Email } from "@styled-icons/material-outlined";
@@ -10,25 +9,20 @@ import { Email } from "@styled-icons/material-outlined";
 import { useStore as userStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
 import AuthInput from "../../../../components/authentication/AuthInput";
-import isStrongPassword from "validator/es/lib/isStrongPassword";
 import { Unlock } from "@styled-icons/feather";
+import {
+  isEmailInvalid,
+  isPasswordInvalid,
+  isUsernameInvalid,
+  validateEmail,
+  validatePassword,
+  validateUsername,
+} from "../../../../helper/constant";
 
 function ContactDetails() {
   const tabsContext = useContext(TabsContext);
   const createAccount = userStore((state) => state.createAccount);
   const { t } = useTranslation();
-
-  function validateEmail(value) {
-    return !isEmail(value) && value !== "";
-  }
-
-  function validateUsername(value) {
-    return value.length <= 5 && value !== "";
-  }
-
-  function validatePassword(value) {
-    return !isStrongPassword(value) && value !== "";
-  }
 
   async function onSubmit(values) {
     createAccount(values).then((res) => {
@@ -50,14 +44,10 @@ function ContactDetails() {
         onSubmit={(values) => onSubmit(values)}
       >
         {({ values }) => {
-          const isUsernameInvalid =
-            values.username === "" || values.username.length <= 5;
-          const isEmailInvalid = values.email === "" || !isEmail(values.email);
-          const isPasswordInvalid =
-            values.password === "" || !isStrongPassword(values.password);
-
           const isButtonDisable =
-            isEmailInvalid || isUsernameInvalid || isPasswordInvalid;
+            isEmailInvalid(values.email) ||
+            isUsernameInvalid(values.username) ||
+            isPasswordInvalid(values.password);
 
           return (
             <Form>

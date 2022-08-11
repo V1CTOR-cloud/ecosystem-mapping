@@ -17,6 +17,7 @@ import { TabsContext } from "../Steps";
 import AuthInput from "../../../../components/authentication/AuthInput";
 import { useStore as userStore } from "../../../../models/userStore";
 import { useNavigate } from "react-router";
+import { isNamesInvalid, validateNames } from "../../../../helper/constant";
 
 function AccountCredentials() {
   const navigate = useNavigate();
@@ -40,14 +41,6 @@ function AccountCredentials() {
     });
   }
 
-  function validateFirstName(value) {
-    return value.length <= 2 && value !== "";
-  }
-
-  function validateLastName(value) {
-    return value.length <= 2 && value !== "";
-  }
-
   function validateTermsAndConditions(value) {
     return value === false;
   }
@@ -58,15 +51,12 @@ function AccountCredentials() {
    * @return {boolean} True if the button needs to be disabled, false otherwise.
    */
   function isButtonDisabled(values) {
-    // Store every validation field in a variable
-    const isCheckBoxInvalid = !values.checkbox;
-    const isLastNameInvalid =
-      values.lastName === "" || values.lastName.length <= 2;
-    const isFirstNameInvalid =
-      values.firstName === "" || values.firstName.length <= 2;
-
     // Check if all the fields are valid
-    return isFirstNameInvalid || isLastNameInvalid || isCheckBoxInvalid;
+    return (
+      isNamesInvalid(values.firstName) ||
+      isNamesInvalid(values.lastName) ||
+      !values.checkbox
+    );
   }
 
   return (
@@ -88,7 +78,7 @@ function AccountCredentials() {
           return (
             <Form>
               <HStack marginY={1}>
-                <Field name="firstName" validate={validateFirstName}>
+                <Field name="firstName" validate={validateNames}>
                   {({ field, form }) => (
                     <AuthInput
                       field={field}
@@ -109,7 +99,7 @@ function AccountCredentials() {
                     />
                   )}
                 </Field>
-                <Field name="lastName" validate={validateLastName}>
+                <Field name="lastName" validate={validateNames}>
                   {({ field, form }) => (
                     <AuthInput
                       field={field}

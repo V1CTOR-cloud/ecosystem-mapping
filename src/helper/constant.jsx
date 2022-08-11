@@ -1,5 +1,6 @@
 import isStrongPassword from "validator/es/lib/isStrongPassword";
 import isNumeric from "validator/es/lib/isNumeric";
+import isEmail from "validator/lib/isEmail";
 
 // COLORS
 
@@ -41,4 +42,20 @@ export function validateUsername(value) {
 
 export function isUsernameInvalid(value) {
   return value.length <= 5 || value === "";
+}
+
+export function validateEmail(value) {
+  return !isEmail(value) && value !== "";
+}
+
+export function isEmailInvalid(value) {
+  return value === "" || !isEmail(value);
+}
+
+export function validateNames(value) {
+  return value.length <= 2 && value !== "";
+}
+
+export function isNamesInvalid(value) {
+  return value === "" || value <= 2;
 }

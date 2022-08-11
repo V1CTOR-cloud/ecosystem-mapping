@@ -14,13 +14,18 @@ import {
 import { Tag, Unlock } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
-import isStrongPassword from "validator/es/lib/isStrongPassword";
 import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
 
 import AuthInput from "../../components/authentication/AuthInput";
 import { useStore as userStore } from "../../models/userStore";
 import ToastComponent from "../../components/basic/ToastComponent";
+import {
+  isPasswordInvalid,
+  isUsernameInvalid,
+  validatePassword,
+  validateUsername,
+} from "../../helper/constant";
 
 function SignIn({ setIndex }) {
   const navigate = useNavigate();
@@ -34,14 +39,6 @@ function SignIn({ setIndex }) {
         navigate("/dashboard/");
       }
     });
-  }
-
-  function validateUsername(value) {
-    return value.length <= 5 && value !== "";
-  }
-
-  function validatePassword(value) {
-    return !isStrongPassword(value) && value !== "";
   }
 
   return (
@@ -58,10 +55,9 @@ function SignIn({ setIndex }) {
       >
         {({ values }) => {
           const isButtonDisabled =
-            values.password === "" ||
-            !isStrongPassword(values.password) ||
-            values.username === "" ||
-            values.username.length <= 5;
+            isPasswordInvalid(values.password) ||
+            isUsernameInvalid(values.username);
+
           return (
             <Form>
               <Field name="username" validate={validateUsername}>
