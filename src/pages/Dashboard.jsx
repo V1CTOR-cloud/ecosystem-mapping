@@ -91,7 +91,7 @@ function Dashboard() {
       handleToggleView(value, true);
       setUserMaps(value);
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Function that switch between the list and grid view.
   function handleToggleView(list, isGrid) {
@@ -305,10 +305,10 @@ function Dashboard() {
   function handleSorting(sortBy) {
     if (sortBy === "Alphabetical") {
       userMaps.sort((a, b) => {
-        if (a.title < b.title) {
+        if (a.title.toLowerCase() < b.title.toLowerCase()) {
           return -1;
         }
-        if (a.title > b.title) {
+        if (a.title.toLowerCase() > b.title.toLowerCase()) {
           return 1;
         }
         return 0;
