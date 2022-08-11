@@ -16,12 +16,13 @@ import { useTranslation } from "react-i18next";
 import { Field, Form, Formik } from "formik";
 import isStrongPassword from "validator/es/lib/isStrongPassword";
 import { useNavigate } from "react-router";
+import PropTypes from "prop-types";
 
 import AuthInput from "../../components/authentication/AuthInput";
 import { useStore as userStore } from "../../models/userStore";
 import ToastComponent from "../../components/basic/ToastComponent";
 
-function SignIn() {
+function SignIn({ setIndex }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const signIn = userStore((state) => state.signIn);
@@ -136,11 +137,7 @@ function SignIn() {
           <Box paddingX={10}>
             <Box w="1px" h="20px" bg="brand.500" />
           </Box>
-          <Link
-            color="brand.500"
-            fontSize="md"
-            onClick={() => ToastComponent("Not available for now!", "warning")}
-          >
+          <Link color="brand.500" fontSize="md" onClick={() => setIndex(1)}>
             {t("common.authentication.sign.in.forgot.password")}
           </Link>
         </HStack>
@@ -150,3 +147,7 @@ function SignIn() {
 }
 
 export default SignIn;
+
+SignIn.propTypes = {
+  setIndex: PropTypes.func.isRequired,
+};
