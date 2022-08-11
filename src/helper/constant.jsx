@@ -1,4 +1,9 @@
-// // COLORS
+import isStrongPassword from "validator/es/lib/isStrongPassword";
+import isNumeric from "validator/es/lib/isNumeric";
+import isEmail from "validator/lib/isEmail";
+
+// COLORS
+
 export const blueColor = "#0753F8";
 
 // STRINGS
@@ -13,3 +18,44 @@ export const audienceList = [
   { id: 3, name: "Co Founders" },
   { id: 4, name: "New Founders" },
 ];
+
+// FUNCTIONS
+export function validatePassword(value) {
+  return !isStrongPassword(value) && value !== "";
+}
+
+export function isPasswordInvalid(value) {
+  return value === "" || !isStrongPassword(value);
+}
+
+export function validateConfirmationCode(value) {
+  return !isNumeric(value) || value.length !== 6;
+}
+
+export function isCodeInvalid(value) {
+  return value === "" || !isNumeric(value) || value.length !== 6;
+}
+
+export function validateUsername(value) {
+  return value.length <= 5 && value !== "";
+}
+
+export function isUsernameInvalid(value) {
+  return value.length <= 5 || value === "";
+}
+
+export function validateEmail(value) {
+  return !isEmail(value) && value !== "";
+}
+
+export function isEmailInvalid(value) {
+  return value === "" || !isEmail(value);
+}
+
+export function validateNames(value) {
+  return value.length <= 2 && value !== "";
+}
+
+export function isNamesInvalid(value) {
+  return value === "" || value <= 2;
+}

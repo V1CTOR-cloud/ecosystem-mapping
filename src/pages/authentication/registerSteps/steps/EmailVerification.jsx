@@ -3,12 +3,15 @@ import React, { useContext } from "react";
 import { Button, Flex, Text, Center, Spacer } from "@chakra-ui/react";
 import { Key } from "@styled-icons/boxicons-solid";
 import { useTranslation } from "react-i18next";
-import isNumeric from "validator/es/lib/isNumeric";
 import { Field, Form, Formik } from "formik";
 
 import { useStore as userStore } from "../../../../models/userStore";
 import { TabsContext } from "../Steps";
 import AuthInput from "../../../../components/authentication/AuthInput";
+import {
+  isCodeInvalid,
+  validateConfirmationCode,
+} from "../../../../helper/constant";
 
 function EmailVerification() {
   const tabsContext = useContext(TabsContext);
@@ -20,10 +23,6 @@ function EmailVerification() {
   const emailCodeVerification = userStore(
     (state) => state.emailCodeVerification
   );
-
-  function validateConfirmationCode(value) {
-    return !isNumeric(value) || value.length !== 6;
-  }
 
   async function onSubmit(values) {
     await emailCodeVerification(values);
@@ -52,10 +51,7 @@ function EmailVerification() {
           <Form>
             <Field name="code" validate={validateConfirmationCode}>
               {({ field, form }) => {
-                const isButtonDisable =
-                  form.values.code === "" ||
-                  !isNumeric(form.values.code) ||
-                  form.values.code.length !== 6;
+                const isButtonDisable = isCodeInvalid(form.values.code);
 
                 return (
                   <>

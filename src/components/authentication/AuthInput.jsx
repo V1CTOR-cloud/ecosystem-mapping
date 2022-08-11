@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   FormControl,
@@ -8,8 +8,10 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function AuthInput({
   field,
@@ -21,12 +23,39 @@ function AuthInput({
   type,
   icon,
 }) {
+  const [isShown, setIsShown] = useState(false);
+  const inputType =
+    type === "password" && !isShown
+      ? "password"
+      : type === "password" && isShown
+      ? "text"
+      : type;
+
   return (
     <FormControl isRequired isInvalid={validation}>
       <FormLabel>{label}</FormLabel>
       <InputGroup marginY={1}>
         <InputLeftElement>{icon}</InputLeftElement>
-        <Input type={type} {...field} placeholder={placeholder} />
+        <Input type={inputType} {...field} placeholder={placeholder} />
+        {type === "password" && (
+          <InputRightElement width="4.5rem">
+            {isShown === true ? (
+              <ViewOffIcon
+                color="blackAlpha.700"
+                h="1.75rem"
+                size="sm"
+                onClick={() => setIsShown((previousState) => !previousState)}
+              />
+            ) : (
+              <ViewIcon
+                color="blackAlpha.700"
+                h="1.75rem"
+                size="sm"
+                onClick={() => setIsShown((previousState) => !previousState)}
+              />
+            )}
+          </InputRightElement>
+        )}
       </InputGroup>
       {validation ? (
         <FormErrorMessage>{error}</FormErrorMessage>
@@ -36,6 +65,7 @@ function AuthInput({
     </FormControl>
   );
 }
+
 AuthInput.defaultProps = {
   type: "text",
 };

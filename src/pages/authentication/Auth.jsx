@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Box,
@@ -17,9 +17,11 @@ import { useTranslation } from "react-i18next";
 import circlePassLogo from "../../assets/images/CirclepassLogo.png";
 import SignIn from "./SignIn";
 import Steps from "./registerSteps/Steps";
+import ForgotPassword from "./forgotPassword/ForgotPassword";
 
 function Auth() {
   const { t } = useTranslation();
+  const [signInIndex, setSignInIndex] = useState(0);
 
   return (
     <HStack w="100%" spacing={0}>
@@ -47,7 +49,11 @@ function Auth() {
             </TabList>
             <TabPanels h="95%">
               <TabPanel h="100%">
-                <SignIn />
+                {signInIndex === 0 && <SignIn setIndex={setSignInIndex} />}
+                {signInIndex === 1 && (
+                  <ForgotPassword setIndex={setSignInIndex} />
+                )}
+                {signInIndex === 2 && <div />}
               </TabPanel>
               <TabPanel h="100%">
                 <Steps />

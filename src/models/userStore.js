@@ -157,6 +157,46 @@ export const UserProvider = ({ children }) => {
                   ToastComponent(err.message, "error", 10000);
                 }
               },
+
+              /**
+               * Send code to the user email to verify the identity.
+               * @param values - The form values from the formik component, here only the username.
+               * @return {Promise<Boolean>} - True if the user was updated, otherwise a toast is displayed.
+               */
+              forgotPasswordUsernameInformation: async (values) => {
+                try {
+                  // Send confirmation code to user's email
+                  await Auth.forgotPassword(values.username);
+
+                  set((state) => ({
+                    username: values.username,
+                  }));
+
+                  return true;
+                } catch (err) {
+                  ToastComponent(err.message, "error", 10000);
+                }
+              },
+
+              /**
+               * Update the password of the user in AWS Cognito.
+               * @param values - The form values from the formik component, here only the code and the new password.
+               * @return {Promise<boolean>} - True if the user was updated, otherwise a toast is displayed.
+               */
+              forgotPasswordCodeVerification: async (values) => {
+                try {
+                  // Verify the code sent to the user by email and set the account to confirmed in Cognito if correct.
+                  await Auth.forgotPasswordSubmit(
+                    get().username,
+                    values.code,
+                    values.password
+                  );
+
+                  return true;
+                } catch (err) {
+                  ToastComponent(err.message, "error", 10000);
+                }
+              },
             }))
           )
         )
