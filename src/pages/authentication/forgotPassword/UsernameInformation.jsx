@@ -28,11 +28,10 @@ export default function UsernameInformation({ setIndex }) {
   return (
     <>
       <Text marginY={2.5} fontSize="xl">
-        Reset Password
+        {t("common.authentication.forgot.password.reset.title")}
       </Text>
       <Text marginBottom={2.5}>
-        Please fill below the username you have registered with and we will send
-        you an email to reset your password
+        {t("common.authentication.forgot.password.reset.description")}
       </Text>
       <Formik
         initialValues={{
@@ -65,7 +64,7 @@ export default function UsernameInformation({ setIndex }) {
               </Field>
               <Center marginTop={5}>
                 <Button type="submit" isDisabled={isButtonDisabled}>
-                  Reset password
+                  {t("common.confirm")}
                 </Button>
               </Center>
             </Form>

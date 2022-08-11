@@ -2,12 +2,14 @@ import React, { useState } from "react";
 
 import { Center, Flex, Link, Spacer } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import UsernameInformation from "./UsernameInformation";
 import CodeSend from "./CodeSend";
 import ResetPassword from "./ResetPassword";
 
 function ForgotPassword({ setIndex }) {
+  const { t } = useTranslation();
   const [contentIndex, setContentIndex] = useState(0);
 
   return (
@@ -18,7 +20,7 @@ function ForgotPassword({ setIndex }) {
       <Spacer />
       <Center flexDirection="column">
         <Link color="brand.500" fontSize="md" onClick={() => setIndex(0)}>
-          Back to login
+          {t("common.authentication.forgot.password.back.login")}
         </Link>
       </Center>
     </Flex>

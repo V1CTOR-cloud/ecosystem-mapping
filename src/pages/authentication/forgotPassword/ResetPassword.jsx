@@ -28,7 +28,11 @@ export default function ResetPassword({ setIndex }) {
     forgotPasswordCodeVerification(values).then((res) => {
       if (res === true) {
         setIndex(0);
-        ToastComponent("Your password has been reset", "success", 5000);
+        ToastComponent(
+          t("common.authentication.forgot.password.toast.success"),
+          "success",
+          5000
+        );
       }
     });
   }
@@ -36,7 +40,7 @@ export default function ResetPassword({ setIndex }) {
   return (
     <>
       <Text marginY={2.5} fontSize="xl">
-        Reset Password
+        {t("common.authentication.forgot.password.reset.title")}
       </Text>
       <Formik
         initialValues={{
@@ -103,7 +107,9 @@ export default function ResetPassword({ setIndex }) {
               </Box>
               <Center marginTop={5}>
                 <Button type="submit" isDisabled={isButtonDisabled}>
-                  Reset password
+                  {t(
+                    "common.authentication.forgot.password.button.reset.password"
+                  )}
                 </Button>
               </Center>
             </Form>
