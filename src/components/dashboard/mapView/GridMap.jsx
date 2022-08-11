@@ -31,6 +31,7 @@ function GridMap(props) {
 
   return (
     <Box
+      cursor="pointer"
       role="group"
       w="300px"
       h="275px"

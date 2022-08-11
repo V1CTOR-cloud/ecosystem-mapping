@@ -31,6 +31,7 @@ function ListMap(props) {
 
   return (
     <Box
+      cursor="pointer"
       role="group"
       onClick={() => {
         if (appProvider.isApp) {
