@@ -192,9 +192,6 @@ export const Map = {
           id
           serviceName
           serviceFocus
-          ownerOrganization {
-            id
-          }
           serviceApplication
           servicePhaseRange {
             id
