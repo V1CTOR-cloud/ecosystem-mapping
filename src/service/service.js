@@ -12,9 +12,6 @@ export const Service = {
           id
           serviceName
           serviceFocus
-          ownerOrganization {
-            profileName
-          }
           serviceApplication
           serviceTime {
             startTime
@@ -59,12 +56,6 @@ export const Service = {
       data: {
         serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
-        // ownerOrganization:
-        //   data.organisationId === null
-        //     ? null
-        //     : {
-        //         connect: [{ Organisation: { id: data.organisationId } }],
-        //       },
         serviceApplication: data.serviceApplication,
         serviceTime: {
           create: {
@@ -154,9 +145,6 @@ export const Service = {
             id
             serviceName
             serviceFocus
-            ownerOrganization {
-              profileName
-            }
             serviceApplication
             serviceTime {
               startTime
@@ -231,7 +219,6 @@ export const Service = {
       data: {
         serviceName: data.serviceName,
         serviceFocus: data.serviceFocus,
-        //ownerOrganization: serviceOwner,
         serviceApplication: data.serviceApplication,
         serviceTime: data.serviceTime,
         serviceLink: data.serviceLink,
@@ -252,6 +239,7 @@ export const Service = {
         serviceAudience: data.serviceAudience,
         serviceDescription: data.serviceDescription,
         serviceOutcomes: data.serviceOutcomes,
+        // Section to add when we will have decided how to design the selection of multiple services
         // previousService: {
         //   connect: [
         //     {

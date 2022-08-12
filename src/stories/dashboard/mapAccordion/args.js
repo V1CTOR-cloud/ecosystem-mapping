@@ -15,9 +15,7 @@ export const listArgs = {
             id: "",
             mapStatus: "",
             title: "Title",
-            owner: {
-              profileName: "Digiole",
-            },
+            owner: "",
             creation: "2022-06-22",
             lastModification: "2022-06-22",
             image: "",
@@ -35,8 +33,8 @@ export const listArgs = {
                 subIndustry: "",
               },
             ],
-            service: [],        isVisible: true,
-
+            service: [],
+            isVisible: true,
           }}
         />,
         <ListMap
@@ -45,9 +43,7 @@ export const listArgs = {
             id: "",
             mapStatus: "",
             title: "Title",
-            owner: {
-              profileName: "Digiole",
-            },
+            owner: "",
             creation: "2022-06-22",
             lastModification: "2022-06-22",
             image: "",
@@ -65,8 +61,8 @@ export const listArgs = {
                 subIndustry: "",
               },
             ],
-            service: [],        isVisible: true,
-
+            service: [],
+            isVisible: true,
           }}
         />,
         <ListMap
@@ -75,9 +71,7 @@ export const listArgs = {
             id: "",
             mapStatus: "",
             title: "Title",
-            owner: {
-              profileName: "Digiole",
-            },
+            owner: "",
             creation: "2022-06-22",
             lastModification: "2022-06-22",
             image: "",
@@ -95,8 +89,8 @@ export const listArgs = {
                 subIndustry: "",
               },
             ],
-            service: [],        isVisible: true,
-
+            service: [],
+            isVisible: true,
           }}
         />,
       ],
@@ -116,9 +110,7 @@ export const gridArgs = {
             id: "",
             mapStatus: "",
             title: "Title",
-            owner: {
-              profileName: "Digiole",
-            },
+            owner: "",
             creation: "2022-06-22",
             lastModification: "2022-06-22",
             image: "",
@@ -136,8 +128,8 @@ export const gridArgs = {
                 subIndustry: "",
               },
             ],
-            service: [],        isVisible: true,
-
+            service: [],
+            isVisible: true,
           }}
         />,
         <GridMap
@@ -146,9 +138,7 @@ export const gridArgs = {
             id: "",
             mapStatus: "",
             title: "Title",
-            owner: {
-              profileName: "Digiole",
-            },
+            owner: "",
             creation: "2022-06-22",
             lastModification: "2022-06-22",
             image: "",
@@ -166,8 +156,8 @@ export const gridArgs = {
                 subIndustry: "",
               },
             ],
-            service: [],        isVisible: true,
-
+            service: [],
+            isVisible: true,
           }}
         />,
         <GridMap
@@ -176,9 +166,7 @@ export const gridArgs = {
             id: "",
             mapStatus: "",
             title: "Title",
-            owner: {
-              profileName: "Digiole",
-            },
+            owner: "",
             creation: "2022-06-22",
             lastModification: "2022-06-22",
             image: "",
@@ -196,8 +184,8 @@ export const gridArgs = {
                 subIndustry: "",
               },
             ],
-            service: [],        isVisible: true,
-
+            service: [],
+            isVisible: true,
           }}
         />,
       ],

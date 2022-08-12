@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import {
   Box,
   Button,
   chakra,
+  Circle,
   Flex,
   HStack,
-  Image,
   Menu,
   MenuButton,
   MenuItem,
@@ -16,6 +16,9 @@ import {
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
+
+// import logo from "../../assets/images/Logo.png";
+import { useStore as userStore } from "../../models/userStore";
 
 const LogMenuList = chakra(MenuList, {
   baseStyle: {
@@ -29,8 +32,30 @@ const LogMenuList = chakra(MenuList, {
 });
 
 const UserAccountMenu = (props) => {
-  const { user, logOut } = props;
+  const { logOut } = props;
   const { t } = useTranslation();
+  const firstName = userStore((state) => state.firstName);
+  const lastName = userStore((state) => state.lastName);
+  let backgroundColor = useRef(getRandomColor());
+  const initials = `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
+
+  function getRandomColor() {
+    const colorList = [
+      "#3E442B",
+      "#2176ff",
+      "#31393C",
+      "#B08EA2",
+      "#6D435A",
+      "#352D39",
+      "#FF6978",
+      "#419D78",
+      "#679436",
+      "#FE654F",
+      "#A23E48",
+    ];
+
+    return colorList[Math.floor(Math.random() * colorList.length)];
+  }
 
   return (
     <Menu>
@@ -48,25 +73,31 @@ const UserAccountMenu = (props) => {
         }}
       >
         <HStack>
-          <Image
-            borderRadius="50%"
-            width="40px"
-            src={user.profileImage.url}
-            alt="image"
-          />
+          {/* Change and put the user picture if he has one*/}
+          {/*<Image borderRadius="50%" width="40px" src={logo} alt="image" />*/}
+          <Circle size="45px" bg={backgroundColor.current}>
+            <Text fontWeight="bold" fontSize="md">
+              {initials}
+            </Text>
+          </Circle>
         </HStack>
       </MenuButton>
       <LogMenuList>
         <Flex mt="15px">
-          <Image
+          {/*<Image
             ml="20px"
             borderRadius="50%"
             width="50px"
-            src={user.profileImage.url}
+            src={logo}
             alt="image"
-          />
+          />*/}
+          <Circle ml={7} size="45px" bg={backgroundColor.current}>
+            <Text fontWeight="bold" fontSize="md" color="white">
+              {initials}
+            </Text>
+          </Circle>
           <Text m="auto" ml="15px">
-            {user.firstName + " " + user.lastName}
+            {firstName + " " + lastName}
           </Text>
         </Flex>
         <Box p="15px">
@@ -85,7 +116,9 @@ const UserAccountMenu = (props) => {
 };
 
 UserAccountMenu.propTypes = {
-  user: PropTypes.object.isRequired,
+  /**
+   * Function to log out the user.
+   */
   logOut: PropTypes.func.isRequired,
 };
 

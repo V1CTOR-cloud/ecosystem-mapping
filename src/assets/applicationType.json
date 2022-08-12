@@ -1,8 +1,0 @@
-{
-    "AppType": [
-        { "id": 1, "name": "Market" },
-        { "id": 2, "name": "Organisation"},
-        { "id": 3, "name": "Market_and_Organisation"}
-    ]
-    
-}

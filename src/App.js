@@ -4,12 +4,17 @@ import { Box, ChakraProvider, Grid, Text } from "@chakra-ui/react";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import axios from "axios";
+import Amplify from "aws-amplify";
 
 import "./assets/css/Style.scss";
 import Routing from "./Routing";
 import { theme } from "./theme/theme";
 import { Location } from "./service/location";
 import { Industry } from "./service/industry";
+import { UserProvider } from "./models/userStore";
+import { awsConfiguration } from "./aws-configuration";
+
+Amplify.configure(awsConfiguration);
 
 export const AppProvider = createContext({});
 
@@ -72,11 +77,13 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <AppProvider.Provider value={data}>
-        <Box fontSize="xl">
-          <Grid minH="100vh">
-            {data ? <Routing /> : <Text>Loading...</Text>}
-          </Grid>
-        </Box>
+        <UserProvider>
+          <Box fontSize="xl">
+            <Grid minH="100vh">
+              {data ? <Routing /> : <Text>Loading...</Text>}
+            </Grid>
+          </Box>
+        </UserProvider>
       </AppProvider.Provider>
     </ChakraProvider>
   );

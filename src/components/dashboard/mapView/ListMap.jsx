@@ -7,11 +7,14 @@ import { useNavigate } from "react-router";
 
 import DashboardMenuOptions from "./DashboardMenuOptions";
 import { AppProvider } from "../../../App";
+import { useStore as userStore } from "../../../models/userStore";
 
 function ListMap(props) {
   const { data } = props;
   const appProvider = useContext(AppProvider);
   let navigate;
+  const firstName = userStore((state) => state.firstName);
+  const lastName = userStore((state) => state.lastName);
   // For storybook
   if (appProvider.isApp) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -28,6 +31,7 @@ function ListMap(props) {
 
   return (
     <Box
+      cursor="pointer"
       role="group"
       onClick={() => {
         if (appProvider.isApp) {
@@ -98,7 +102,8 @@ function ListMap(props) {
               transition={transition}
               _groupHover={groupBlackColor}
             >
-              Owner: {data.owner.profileName}
+              {/*This will need to change when the sharing of map will be available*/}
+              Owner: {firstName + " " + lastName}
             </Text>
             <Text
               color={greyColor}
@@ -149,9 +154,7 @@ ListMap.defaultProps = {
     id: "",
     mapStatus: "",
     title: "",
-    owner: {
-      profileName: "",
-    },
+    owner: "",
     created: moment().format("DD-MM-YYYY"),
     lastModification: moment().format("DD-MM-YYYY"),
     image: "",
