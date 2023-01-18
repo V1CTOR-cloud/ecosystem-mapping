@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useLayoutEffect, useState } from "react";
 
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -10,6 +10,9 @@ import Row from "../drap&dropComponent/row/Row";
 import ToastComponent from "../../basic/ToastComponent";
 import { Service } from "../../../service/service";
 import { CanvasProvider } from "../../../pages/MapCanvasPage";
+
+import BackgroundCanvas from "../backgroundCanvas/BackgroundCanvas";
+
 
 const ArrowDown = styled.div`
   border-left: 7.5px solid transparent;
@@ -32,6 +35,23 @@ function ContentCanvas(props) {
   const canvasProvider = useContext(CanvasProvider);
   const [data, setData] = canvasProvider.fetchedData;
   const { t } = useTranslation();
+  const containerCanvas = useRef();
+
+
+  const [width, height] = useWindowSize();
+  function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize([window.innerWidth, window.innerHeight]);
+        //console.log("RESISE ", containerCanvas.current.clientWidth)
+      }
+      window.addEventListener("resize", updateSize);
+      updateSize();
+      return () => window.removeEventListener("resize", updateSize);
+    }, []);
+    return size;
+  }
 
   function setOrder(list, servicesId) {
     list.forEach((value) => {
@@ -186,61 +206,73 @@ function ContentCanvas(props) {
   }
 
   return (
-    <Box h="100%">
-      <DragDropContext onDragEnd={handleDragEnd}>
-        {data.rowsOrder.map((rowId, index) => {
-          const row = data.rows[rowId];
-          const services = row.serviceIds.map(
-            (serviceId) => data.services[serviceId]
-          );
+    <Box h="100%" paddingLeft={"35px"} paddingRight={"20px"} bg={"white"}>
 
-          return (
-            <Box
-              minHeight={
-                index === 0
-                  ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3)`
-                  : index === 1
-                  ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3 - 10px)`
-                  : `calc((100vh - ${isFilterOpen ? 135 : 75}px) / 3 - 20px)`
-              }
-              key={row.id}
-              display="flex"
-              marginTop={index !== 0 ? "10px" : 0}
-            >
-              <Box flexGrow={1}>
-                <Row
-                  key={row.id}
-                  row={row}
-                  services={services}
-                  handleServiceClick={handleServiceClick}
-                  isFilterOpen={isFilterOpen}
-                  isFiltersActive={isFiltersActive}
-                />
+      <Box h="100%" w={"100%"} ref={containerCanvas} paddingLeft={"35px"} paddingTop={5} paddingBottom={5}>
+
+        <DragDropContext onDragEnd={handleDragEnd}>
+          {data.rowsOrder.map((rowId, index) => {
+            const row = data.rows[rowId];
+            const services = row.serviceIds.map(
+              (serviceId) => data.services[serviceId]
+            );
+
+            return (
+              <Box
+                minHeight={
+                  index === 0
+                    ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3)`
+                    : index === 1
+                      ? `calc((100vh - ${isFilterOpen ? 135 : 75}px)  / 3 - 10px)`
+                      : `calc((100vh - ${isFilterOpen ? 135 : 75}px) / 3 - 20px)`
+                }
+                key={row.id}
+                display="flex"
+                flexDirection={"row"}
+                marginTop={index !== 0 ? "10px" : 0}
+
+              >
+                <Box flexGrow={1} paddingRight={"94px"}>
+                  {containerCanvas.current &&
+                    <Row
+                      parentRef={containerCanvas}
+                      key={row.id}
+                      row={row}
+                      services={services}
+                      handleServiceClick={handleServiceClick}
+                      isFilterOpen={isFilterOpen}
+                      isFiltersActive={isFiltersActive}
+                    />
+                  }
+                </Box>
+                <Box w="75px" paddingLeft="15px" textAlign="center">
+                  <HStack position="relative" w="100%" h="100%">
+                    <VStack
+                      bg={"blackAlpha.400"}
+                      w="2px"
+                      h="100%"
+                      justify="space-between"
+                    >
+                      <ArrowDown />
+                      <ArrowUp />
+                    </VStack>
+                    <Text
+                      marginLeft={3}
+                      color={"blackAlpha.400"}
+                      style={{ writingMode: "vertical-lr" }}
+                    >
+                      {row.id.replaceAll("_", " ").replace("and", "&")}
+                    </Text>
+                  </HStack>
+                </Box>
               </Box>
-              <Box w="75px" paddingLeft="15px" textAlign="center">
-                <HStack position="relative" w="100%" h="100%">
-                  <VStack
-                    bg={"blackAlpha.400"}
-                    w="2px"
-                    h="100%"
-                    justify="space-between"
-                  >
-                    <ArrowDown />
-                    <ArrowUp />
-                  </VStack>
-                  <Text
-                    marginLeft={3}
-                    color={"blackAlpha.400"}
-                    style={{ writingMode: "vertical-lr" }}
-                  >
-                    {row.id.replaceAll("_", " ").replace("and", "&")}
-                  </Text>
-                </HStack>
-              </Box>
-            </Box>
-          );
-        })}
-      </DragDropContext>
+            );
+          })}
+        </DragDropContext>
+        {containerCanvas.current &&
+          <BackgroundCanvas parentRef={containerCanvas} />
+        }
+      </Box>
     </Box>
   );
 }

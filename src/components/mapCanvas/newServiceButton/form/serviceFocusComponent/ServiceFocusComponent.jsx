@@ -20,6 +20,7 @@ function ServiceFocusComponent(props) {
   const [value, setValue] = useState(serviceFocus);
 
   function handleOnChange(serviceFocus) {
+    //console.log("CHANGE ", serviceFocus)
     setValue(serviceFocus);
     onChange(serviceFocus);
   }
@@ -35,8 +36,19 @@ function ServiceFocusComponent(props) {
           borderColor="blackAlpha.500"
           _hover={{ bg: "blackAlpha.200" }}
           _active={{ bg: "blackAlpha.300" }}
+          w="90%"
         >
-          <Box w="15px" h="15px" bg={value.color} borderRadius="50%" />
+          <HStack>
+            <Box
+              h="15px"
+              w="15px"
+              bg={value.name.length > 0 ? value.color : "default"}
+              borderRadius="50%"
+              marginRight={3}
+            />
+            <Text>{value.name}</Text>
+          </HStack>
+
         </MenuButton>
         {/* Keep Zindex >= 4 to not have the slider above the menu that have an index of 3*/}
         <MenuList zIndex={4}>
@@ -50,7 +62,7 @@ function ServiceFocusComponent(props) {
                   <Box
                     h="15px"
                     w="15px"
-                    bg={serviceFocus.color}
+                    bg={serviceFocus.name.length > 0 ? serviceFocus.color : "default"}
                     borderRadius="50%"
                     marginRight={3}
                   />

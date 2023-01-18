@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import { Box } from "@chakra-ui/react";
 
 function NameTick(props) {
-  const { index, tick } = props;
+  const { index, tick, count } = props;
   let phaseName;
+  //console.log("TICK ", index, tick);
 
   switch (index) {
     case 0:
@@ -32,7 +33,7 @@ function NameTick(props) {
     <React.Fragment>
       <Box
         position="absolute"
-        marginTop="-30px"
+        marginTop="-45px"
         marginLeft={index === 4 || index === 0 ? -17.5 : -25}
         fontSize="10px"
         color="blackAlpha.500"
@@ -44,13 +45,13 @@ function NameTick(props) {
         <Box
           position="absolute"
           color="blackAlpha.500"
-          marginTop="-15px"
-          marginLeft={`${-(100 / tick.length) / 2}%`}
+          marginTop="-30px"
+          marginLeft={`${-(100 / count) / 2}%`}
           textAlign="center"
-          width={`${100 / tick.length}%`}
+          width={`${100 / count}%`}
           left={`${tick.percent}%`}
         >
-          {tick.value - 0.5}
+          {tick.value}
         </Box>
       ) : (
         <div />
@@ -61,6 +62,7 @@ function NameTick(props) {
 
 NameTick.propTypes = {
   index: PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
   tick: PropTypes.object.isRequired,
 };
 

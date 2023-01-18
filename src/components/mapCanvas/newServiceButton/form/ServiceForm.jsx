@@ -17,6 +17,7 @@ import { Archive } from "@styled-icons/bootstrap";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
+
 import {
   audienceList,
   market,
@@ -24,7 +25,7 @@ import {
   organization,
 } from "../../../../helper/constant";
 import InputComponent from "../../../basic/inputs/input/inputComponent/InputComponent";
-import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
+//import ServiceFocusComponent from "./serviceFocusComponent/ServiceFocusComponent";
 import ServiceTabs from "./tabs/ServiceTabs";
 import service from "../../../../assets/servicesFocus.json";
 import ToastComponent from "../../../basic/ToastComponent";
@@ -50,7 +51,8 @@ function ServiceForm(props) {
   ];
   const { t } = useTranslation();
   const [isError, setIsError] = useState(false);
-  const organisations = [{ id: 0, name: "Organisation" }, ...propOrganisations];
+  //const organisations = [{ id: 0, name: "Organisation" }, ...propOrganisations];
+  const organisations = [{ id: 0, name: "" }, ...propOrganisations];
   const audiences = [{ id: 0, name: "Audience" }, ...audienceList];
   const formValue = {
     serviceName: "",
@@ -118,13 +120,13 @@ function ServiceForm(props) {
     formValue.serviceLocation = serviceWithoutModification.serviceLocation
       ? [serviceWithoutModification.serviceLocation]
       : [
-          {
-            continent: null,
-            country: null,
-            region: null,
-            city: null,
-          },
-        ];
+        {
+          continent: null,
+          country: null,
+          region: null,
+          city: null,
+        },
+      ];
     formValue.serviceLink = serviceWithoutModification.serviceLink
       ? serviceWithoutModification.serviceLink
       : "";
@@ -134,12 +136,12 @@ function ServiceForm(props) {
     formValue.serviceBudget = serviceWithoutModification.serviceBudget
       ? props.serviceWithoutModification.serviceBudget
       : [
-          {
-            budgetTitle: "",
-            budgetValue: "",
-            budgetCurrency: "€",
-          },
-        ];
+        {
+          budgetTitle: "",
+          budgetValue: "",
+          budgetCurrency: "€",
+        },
+      ];
     formValue.serviceDescription = serviceWithoutModification.serviceDescription
       ? serviceWithoutModification.serviceDescription
       : "";
@@ -365,12 +367,12 @@ function ServiceForm(props) {
       serviceOutcomes: formValue.serviceOutcomes,
       precededService:
         formValue.precededService ===
-        t("mapping.canvas.form.service.select.service")
+          t("mapping.canvas.form.service.select.service")
           ? ""
           : formValue.precededService,
       followedService:
         formValue.followedService ===
-        t("mapping.canvas.form.service.select.service")
+          t("mapping.canvas.form.service.select.service")
           ? ""
           : formValue.followedService,
 
@@ -471,7 +473,7 @@ function ServiceForm(props) {
     for (const service of values) {
       if (
         service.serviceApplication ===
-          serviceWithoutModification.serviceApplication &&
+        serviceWithoutModification.serviceApplication &&
         service.serviceOrder > serviceWithoutModification.serviceOrder
       ) {
         service.serviceOrder -= 1;
@@ -573,12 +575,14 @@ function ServiceForm(props) {
                   </FormErrorMessage>
                 )}
               </FormControl>
+              {/* 
               <ServiceFocusComponent
                 serviceFocus={formValue.serviceFocus}
                 onChange={(serviceFocus) =>
                   (formValue.serviceFocus = serviceFocus)
                 }
               />
+              */}
             </HStack>
             <Box zIndex={10}>
               <ServiceTabs

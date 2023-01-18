@@ -156,7 +156,7 @@ function ServiceContainer(props) {
     // Creation of a new instance of the row with the new serviceIds and the rest of the data.
     const newRow = {
       ...mapCanvasPageContext.fetchedData[0].rows[
-        serviceClicked.serviceApplication
+      serviceClicked.serviceApplication
       ],
       serviceIds: newServiceIds,
     };
@@ -237,7 +237,7 @@ function ServiceContainer(props) {
         >
           <Slider
             rootStyle={sliderStyle}
-            domain={[-2, 4]}
+            domain={[-2, 3]}
             step={1 / 3}
             values={
               // Convert all the string to numeric value

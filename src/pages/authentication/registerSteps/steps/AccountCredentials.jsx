@@ -23,7 +23,8 @@ function AccountCredentials() {
   const navigate = useNavigate();
   const tabsContext = useContext(TabsContext);
   const updateUserInfo = userStore((state) => state.updateUserInfo);
-  const updateIsLoggedIn = userStore((state) => state.updateIsLoggedIn);
+  const setIsAuthenticated = userStore((state) => state.setIsAuthenticated);
+  //const updateIsLoggedIn = userStore((state) => state.updateIsLoggedIn);
   const { t } = useTranslation();
 
   async function onSubmit(values) {
@@ -32,8 +33,9 @@ function AccountCredentials() {
       if (res === true) {
         // Set a timeout to let the time going to the step 4 and then update the isLoggedIn to true and redirect.
         setTimeout(() => {
-          updateIsLoggedIn(true);
-          navigate("/dashboard/");
+          //updateIsLoggedIn(true);
+          setIsAuthenticated(true);
+          navigate("/dashboard/", { replace: true });
         }, 5000);
 
         tabsContext[1](3);

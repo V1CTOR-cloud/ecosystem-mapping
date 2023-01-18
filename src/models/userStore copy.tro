@@ -2,91 +2,38 @@ import React from "react";
 
 import createContext from "zustand/context";
 import create from "zustand";
-
+import { devtools, persist } from "zustand/middleware";
 import PropTypes from "prop-types";
+import { Auth } from "aws-amplify";
 import uuid from "react-uuid";
 
 import ToastComponent from "../components/basic/ToastComponent";
 
-import {  Auth } from "aws-amplify";
-
-import config from "../config";
-
 export const { Provider, useStore } = createContext();
-
-
-
-let AUTHConfig = {
-  // To get the aws credentials, you need to configure
-  // the Auth module with your Cognito Federated Identity Pool
-  mandatorySignIn: false,
-  userPoolId: config.cognito.USER_POOL_ID,
-  identityPoolId: config.cognito.IDENTITY_POOL_ID,
-  userPoolWebClientId: config.cognito.APP_CLIENT_ID,
-  region: config.auth_region,
-  identityPoolRegion: config.main_region,
-};
-Auth.configure(AUTHConfig);
 
 let password = "";
 
 // Provider that will contain all the information of the user, in addition of all the function to update it.
 export const UserProvider = ({ children }) => {
-  const initUser={
-    id: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    username: ""
-  }
   return (
     <Provider
       createStore={() =>
-        create((set, get) => ({
-              user:initUser,
-              //isLoggedIn: false,
+        create(
+          devtools(
+            persist((set, get) => ({
+              id: "",
+              firstName: "",
+              lastName: "",
+              email: "",
+              username: "",
+              isLoggedIn: false,
 
-             isAuthenticated:false,
-
-             setIsAuthenticated:(bool) =>
-             set({ isAuthenticated: bool }),
-
-             isLoggedIn: async() => {
-              try {
-              const currentSession = await Auth.currentSession();
-
-              console.log("APP AUTH ", currentSession, Auth._config);
-             
-              if (currentSession) {
-                console.log("SESSION OK")
-                const token = currentSession.getIdToken().payload;
-                console.log("TOKEN ",token);
-                const currentUser = {
-                  id: token["cognito:username"],
-                  email:token['email'],
-                  firstName:token['given_name'],
-                  lastName:token['family_name'],
-                  username:token['preferred_username']
-                };
-                set({ isAuthenticated: true,user:currentUser });
-                return Promise.resolve(true);
-              } else {
-                console.log("SESSION ERROR");
-                return Promise.resolve(false);
-              }
-            
-            } catch (e) {
-              if (typeof e === "string" && e === "No current user") {
-                console.log("SESSION EXPIRED OR NOT FOUND...");
-                return Promise.resolve(false);
-              }  
-              console.log("ERROR ...",e);
-              return Promise.resolve(false);
-            }
-             
-            
-             },
-              
+              /**
+               * Function to set the isLoggedIn state.
+               * @param bool - Boolean value that will be set to the isLoggedIn state.
+               */
+              updateIsLoggedIn: (bool) =>
+                set((state) => ({ isLoggedIn: bool })),
 
               /**
                * Log out the user and clear the user properties.
@@ -96,18 +43,14 @@ export const UserProvider = ({ children }) => {
                 try {
                   await Auth.signOut();
                   // Set the user properties to default values (empty).
-                  //set({ schema: currentSchema });
-                  set({ isAuthenticated:false,user: initUser });
-                  /*
                   set((state) => ({
                     id: "",
                     firstName: "",
                     lastName: "",
                     email: "",
                     username: "",
-                    //isLoggedIn: false,
+                    isLoggedIn: false,
                   }));
-                  */
                 } catch (err) {
                   ToastComponent(err.message, "error", 10000);
                 }
@@ -122,34 +65,24 @@ export const UserProvider = ({ children }) => {
               createAccount: async (values) => {
                 try {
                   const attributes = {
-                    username: uuid(),
+                    username: values.username,
                     password: values.password,
                     attributes: {
                       email: values.email,
-                      family_name: "",
-                      given_name: "",
+                      family_name: uuid(),
+                      given_name: uuid(),
                     },
                   };
                   password = values.password;
 
                   const res = await Auth.signUp(attributes);
 
-                  console.log("SIGN UP ",res);
-                  set((state) => ({user:{...state.user,
-                    id: res.user.username,
-                    email: values.email,
-                    username: values.username,
-                    }}));
-                  
-                    
-                  /*
                   // Set the user properties to new ones.
                   set((state) => ({
                     id: res.userSub,
                     email: values.email,
                     username: values.username,
                   }));
-                  */
 
                   return true;
                 } catch (err) {
@@ -163,41 +96,25 @@ export const UserProvider = ({ children }) => {
                * @param isRegistration - True if the user is registering, false if the user is logging in.
                * @return {Promise<boolean>} - True if the user was signed in, otherwise a toast is displayed.
                */
-              signIn: async (values, isRegistration=false) => {
-                console.log("SIGN IN VALUES ",values);
-
+              signIn: async (values, isRegistration) => {
                 try {
                   const res = await Auth.signIn(
-                    isRegistration?get().user.id:values.username,
-                    isRegistration ? password:values.password 
+                    values.username,
+                    values.password ? values.password : password
                   );
-                  console.log("SIGN IN ",res);  
-                  password = "";
-                  let user={
-                    id: res.username,
-                    firstName: res.attributes.given_name,
-                    lastName: res.attributes.family_name,
-                    email: res.attributes.email,
-                    username: isRegistration?get().user.username:res.attributes.preferred_username,
-                  }
-                  if (!isRegistration) {
-                    user.isAuthenticated=true
-                  }
 
-                  set({ user: user });
-                  console.log("SIGN IN OK",user);
-                  /*  
+                  password = "";
+
                   set((state) => ({
                     id: res.attributes.sub,
                     firstName: res.attributes.given_name,
                     lastName: res.attributes.family_name,
                     email: res.attributes.email,
                     username: res.username,
-                    //isLoggedIn: !isRegistration,
+                    isLoggedIn: !isRegistration,
                   }));
-                  */
 
-                  return Promise.resolve(true);
+                  return true;
                 } catch (err) {
                   ToastComponent(err.message, "error", 10000);
                 }
@@ -209,9 +126,8 @@ export const UserProvider = ({ children }) => {
                * @return {Promise<void>} If error a toast is displayed.
                */
               emailCodeVerification: async (values) => {
-                console.log("VERIFY ",get().user);
                 try {
-                  await Auth.confirmSignUp(get().user.id, values.code);
+                  await Auth.confirmSignUp(get().username, values.code);
                 } catch (err) {
                   ToastComponent(err.message, "error", 10000);
                 }
@@ -222,28 +138,20 @@ export const UserProvider = ({ children }) => {
                * @return {Promise<boolean>} - True if the user was updated, otherwise a toast is displayed.
                */
               updateUserInfo: async (values) => {
-                console.log("UPDATE ",values,get().user);
                 try {
                   const user = await Auth.currentAuthenticatedUser();
                   const attributes = {
                     family_name: values.lastName,
                     given_name: values.firstName,
-                    preferred_username:get().user.username,
                   };
 
                   await Auth.updateUserAttributes(user, attributes);
 
-
-                  set((state) => ({user:{...state.user,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    }}));
-                    /*
                   set((state) => ({
                     firstName: values.firstName,
                     lastName: values.lastName,
                   }));
-*/
+
                   return true;
                 } catch (err) {
                   ToastComponent(err.message, "error", 10000);
@@ -260,15 +168,10 @@ export const UserProvider = ({ children }) => {
                   // Send confirmation code to user's email
                   await Auth.forgotPassword(values.username);
 
-
-                  set((state) => ({user:{...state.user,
-                    username: values.username,
-                    }}));
-                    /*
                   set((state) => ({
                     username: values.username,
                   }));
-                  */
+
                   return true;
                 } catch (err) {
                   ToastComponent(err.message, "error", 10000);
@@ -295,7 +198,8 @@ export const UserProvider = ({ children }) => {
                 }
               },
             }))
-         
+          )
+        )
       }
     >
       {children}

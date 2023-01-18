@@ -1,5 +1,5 @@
 {
-  "name": "startup-commons",
+  "name": "ecosystem-mappings",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -41,8 +41,6 @@
     "react-flatpickr": "^3.10.12",
     "react-i18next": "^11.17.0",
     "react-icons": "^4.4.0",
-    "react-iframe": "^1.8.0",
-    "react-redux": "^8.0.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
@@ -57,47 +55,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "./node_modules/.bin/eslint",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "chromatic": "npx chromatic --project-token=ddda7b10495f"
-  },
-  "eslintConfig": {
-    "extends": "react-app",
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      },
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      },
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      },
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
+    "chromatic": "npx chromatic --project-token=ddda7b10495f",
+    "deploy": "aws s3 sync build/ s3://beta-mapping --region eu-west-1 --profile circlepass"
   },
   "browserslist": {
     "production": [
@@ -113,7 +76,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",
-    "@babel/eslint-parser": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.9",
     "@chakra-ui/storybook-addon": "^4.0.1",
     "@storybook/addon-actions": "^6.5.8",
     "@storybook/addon-essentials": "^6.5.8",

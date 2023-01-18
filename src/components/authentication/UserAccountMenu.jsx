@@ -34,10 +34,15 @@ const LogMenuList = chakra(MenuList, {
 const UserAccountMenu = (props) => {
   const { logOut } = props;
   const { t } = useTranslation();
-  const firstName = userStore((state) => state.firstName);
-  const lastName = userStore((state) => state.lastName);
+  const user = userStore((state) => state.user);
+  //const firstName = userStore((state) => state.firstName);
+  //const lastName = userStore((state) => state.lastName);
   let backgroundColor = useRef(getRandomColor());
-  const initials = `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
+  //const initials = `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
+  let initials = "";
+  if (user.firstName !== "" && user.lastName !== "") {
+    initials = `${user.firstName[0].toUpperCase()}${user.lastName[0].toUpperCase()}`;
+  }
 
   function getRandomColor() {
     const colorList = [
@@ -97,7 +102,7 @@ const UserAccountMenu = (props) => {
             </Text>
           </Circle>
           <Text m="auto" ml="15px">
-            {firstName + " " + lastName}
+            {user.firstName + " " + user.lastName}
           </Text>
         </Flex>
         <Box p="15px">

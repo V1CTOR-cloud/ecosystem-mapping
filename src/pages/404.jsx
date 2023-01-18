@@ -16,7 +16,7 @@ export default function PageNotFound() {
       alignItems="center"
     >
       <Text fontSize="4xl">404 | This page could not be found.</Text>
-      <Button onClick={() => navigate(`/`)} marginTop={10}>
+      <Button onClick={() => navigate(`/`, { replace: true })} marginTop={10}>
         Go to home
       </Button>
     </Box>

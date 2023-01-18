@@ -38,11 +38,11 @@ function SideBar(props) {
           key="Financing"
           w="100%"
           marginBottom="0.5rem"
-          onClick={() => {}}
+          onClick={() => { }}
         >
           Financing
         </Button>,
-        <Button key="Business Model" w="100%" onClick={() => {}}>
+        <Button key="Business Model" w="100%" onClick={() => { }}>
           Business Model
         </Button>,
       ],
@@ -114,13 +114,18 @@ function SideBar(props) {
       onMouseLeave={handleOnMouseLeave}
     >
       <Accordion allowToggle>
-        {accordionButtons.map((thisAccordionButtons) => (
-          <AccordionItemComponent
-            key={thisAccordionButtons.key}
-            isCollapsed={isCollapsed}
-            button={thisAccordionButtons}
-          />
-        ))}
+        {accordionButtons.map((thisAccordionButtons, i) => {
+          // just ignore 0 element fow now
+          if (i === 0) return null;
+          return (
+
+            <AccordionItemComponent
+              key={thisAccordionButtons.key}
+              isCollapsed={isCollapsed}
+              button={thisAccordionButtons}
+            />
+          )
+        })}
       </Accordion>
     </SideBarContainer>
   );

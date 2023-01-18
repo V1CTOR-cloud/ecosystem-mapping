@@ -41,20 +41,36 @@ function SliderComponent(props) {
     4 / 3,
     5 / 3,
     7 / 3,
+    8 / 3
+  ];
+  /*
+  const smallTicks = [
+    -5 / 3,
+    -4 / 3,
+    -2 / 3,
+    -1 / 3,
+    1 / 3,
+    2 / 3,
+    4 / 3,
+    5 / 3,
+    7 / 3,
     8 / 3,
     10 / 3,
     11 / 3
   ];
+  */
 
-  const ticks = [-2, -1, 0, 1, 2, 3, 4];
+  //const ticks = [-2, -1, 0, 1, 2, 3, 4];
+  const ticks = [-2, -1, 0, 1, 2, 3];
 
-  const namesTicks = [-1.5, -0.5, 0.5, 1.5, 2.5, 3.5];
+  //const namesTicks = [-1.5, -0.5, 0.5, 1.5, 2.5, 3.5];
+  const namesTicks = [-2, -1, 0, 1, 2, 3];
 
   return (
-    <Box marginTop={10}>
+    <Box marginTop={10} paddingTop={5} paddingLeft={17}>
       <Slider
         rootStyle={sliderStyle}
-        domain={[-2, 4]}
+        domain={[-2, 3]}
         step={1 / 3}
         mode={2}
         values={[servicePhaseRange.startPhase, servicePhaseRange.endPhase]}
@@ -125,7 +141,7 @@ function SliderComponent(props) {
           {({ ticks }) => (
             <div className="slider-ticks">
               {ticks.map((tick, index) => (
-                <NameTick key={tick.id} tick={tick} index={index} />
+                <NameTick key={tick.id} tick={tick} index={index} count={ticks.length} />
               ))}
             </div>
           )}

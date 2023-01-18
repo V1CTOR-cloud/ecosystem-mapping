@@ -12,8 +12,9 @@ import { useStore as userStore } from "../../../models/userStore";
 function GridMap(props) {
   let navigate;
   const appProvider = useContext(AppProvider);
-  const firstName = userStore((state) => state.firstName);
-  const lastName = userStore((state) => state.lastName);
+  const user = userStore((state) => state.user);
+  const firstName = user.firstName;
+  const lastName = user.lastName;
   // For storybook
   if (appProvider.isApp) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -110,12 +111,12 @@ function GridMap(props) {
             {data.location[0].continent === null
               ? "No location"
               : formatString(data.location[0].continent) +
-                " " +
-                formatString(data.location[0].country) +
-                " " +
-                formatString(data.location[0].region) +
-                " " +
-                formatString(data.location[0].city)}
+              " " +
+              formatString(data.location[0].country) +
+              " " +
+              formatString(data.location[0].region) +
+              " " +
+              formatString(data.location[0].city)}
           </Text>
           <Text
             h="2.8rem"
@@ -130,8 +131,8 @@ function GridMap(props) {
             {data.industry[0].mainIndustry === null
               ? "No industry"
               : formatString(data.industry[0].mainIndustry) +
-                " " +
-                formatString(data.industry[0].subIndustry)}
+              " " +
+              formatString(data.industry[0].subIndustry)}
           </Text>
         </VStack>
       </Box>

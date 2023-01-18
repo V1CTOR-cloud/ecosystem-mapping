@@ -36,7 +36,7 @@ function SignIn({ setIndex }) {
   function onSubmit(values) {
     signIn(values, false).then((res) => {
       if (res === true) {
-        navigate("/dashboard/");
+        navigate("/dashboard/", { replace: true });
       }
     });
   }
@@ -133,7 +133,8 @@ function SignIn({ setIndex }) {
           <Box paddingX={10}>
             <Box w="1px" h="20px" bg="brand.500" />
           </Box>
-          <Link color="brand.500" fontSize="md" onClick={() => setIndex(1)}>
+          {/* <Link color="brand.500" fontSize="md" onClick={() => setIndex(1)}> */}
+          <Link color="brand.500" fontSize="md" onClick={() => ToastComponent("Not available for now!", "warning")}>
             {t("common.authentication.sign.in.forgot.password")}
           </Link>
         </HStack>

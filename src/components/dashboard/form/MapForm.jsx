@@ -36,7 +36,9 @@ function MapForm(props) {
     onCreateMap,
     onEditMap,
   } = props;
-  const userId = userStore((state) => state.id);
+  const currentUser = userStore((state) => state.user);
+  const userId = currentUser.id;
+
   const emptyValues = {
     title: "",
     description: "",
@@ -80,7 +82,7 @@ function MapForm(props) {
       const data = {
         title: formValues.title,
         mapStatus: "Published",
-        description: "",
+        description: formValues.description,
         owner: userId,
         creation: moment(),
         lastModification: moment(),

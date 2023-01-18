@@ -1,14 +1,16 @@
 import { GraphQLClient } from "graphql-request";
 
-const { REACT_APP_GRAPH_CMS_CONTENT_API_KEY, REACT_APP_GRAPH_CMS_TOKEN_KEY } =
-  process.env;
+import config from "../config";
 
-const authorizationKey = `Bearer ${REACT_APP_GRAPH_CMS_TOKEN_KEY}`;
-const graphCMS = new GraphQLClient(REACT_APP_GRAPH_CMS_CONTENT_API_KEY, {
+
+
+const authorizationKey = `Bearer ${config.graphCMS.TOKEN_KEY}`;
+const graphCMS = new GraphQLClient(config.graphCMS.CONTENT_API_KEY, {
   headers: {
     authorization: authorizationKey
   }
 });
+//console.log("GRAPH_CMS ",authorizationKey);
 
 export function graphCMSRequest(query, variables) {
   return graphCMS.request(query, variables);

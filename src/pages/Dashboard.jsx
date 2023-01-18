@@ -38,7 +38,10 @@ import { useStore as userStore } from "../models/userStore";
 export const DashboardProvider = createContext({});
 
 function Dashboard() {
-  const userId = userStore((state) => state.id);
+  const currentUser = userStore((state) => state.user);
+  console.log("USER ", currentUser)
+  const userId = currentUser.id;
+
   const {
     isOpen: isOpenModal,
     onOpen: onOpenModal,
@@ -80,18 +83,16 @@ function Dashboard() {
 
   // Initial load where we are getting the user maps
   useEffect(() => {
-    const userMapsPromise = new Promise((resolve, reject) => {
-      MapClass.getMapsByOwner(userId)
-        .then((res) => resolve(res))
-        .catch((error) => reject(error));
-    });
+    async function init() {
+      const result = await MapClass.getMapsByOwner(userId);
+      console.log("MAPS ", result);
+      result.forEach((map) => (map.isVisible = true));
+      handleToggleView(result, true);
+      setUserMaps(result);
+    }
 
-    userMapsPromise.then((value) => {
-      value.forEach((map) => (map.isVisible = true));
-      handleToggleView(value, true);
-      setUserMaps(value);
-    });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    init();
+  }, []);
 
   // Function that switch between the list and grid view.
   function handleToggleView(list, isGrid) {
@@ -220,6 +221,8 @@ function Dashboard() {
 
   // Function that handle the creation of the map with the handling or potential errors.
   function handleCreateMap(formattedData) {
+
+    console.log("NEW MAP ", formattedData);
     const createMapPromise = new Promise((resolve, reject) => {
       MapClass.createMap(formattedData)
         .then((res) => resolve(res))

@@ -17,7 +17,7 @@ function EmailVerification() {
   const tabsContext = useContext(TabsContext);
   const { t } = useTranslation();
 
-  const username = userStore((state) => state.username);
+  //const userID = userStore((state) => state.id);
   const email = userStore((state) => state.email);
   const signIn = userStore((state) => state.signIn);
   const emailCodeVerification = userStore(
@@ -27,7 +27,7 @@ function EmailVerification() {
   async function onSubmit(values) {
     await emailCodeVerification(values);
 
-    signIn({ username: username }, true).then((res) => {
+    signIn({}, true).then((res) => {
       // The account was created, we pass to the next steps
       if (res === true) {
         tabsContext[1](2);

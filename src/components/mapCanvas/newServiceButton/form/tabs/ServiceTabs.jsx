@@ -25,6 +25,7 @@ import MenuComponent from "../../../../basic/inputs/menu/MenuComponent";
 import { CanvasProvider } from "../../../../../pages/MapCanvasPage";
 import { AppProvider } from "../../../../../App";
 import UniqueLocationPicker from "../../../../basic/picker/locationPicker/UniqueLocationPicker";
+import ServiceFocusComponent from "../serviceFocusComponent/ServiceFocusComponent";
 
 function ServiceTabs(props) {
   const {
@@ -44,15 +45,18 @@ function ServiceTabs(props) {
         <Tab>
           <Text>{t("mapping.canvas.form.tabs.general")}</Text>
         </Tab>
+        {/* 
         <Tab>
           <Text>{t("mapping.canvas.form.tabs.availability")}</Text>
         </Tab>
+        */}
         <Tab>
           <Text>{t("mapping.canvas.form.tabs.details")}</Text>
         </Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
+          {/* 
           <LabeledMenu
             label={t("mapping.canvas.form.owner.organisation")}
             tooltipText={t("mapping.canvas.form.owner.organisation.tooltip")}
@@ -63,6 +67,7 @@ function ServiceTabs(props) {
               formValue.ownerOrganization = organisation;
             }}
           />
+*/}
           <ApplicationTypeComponent
             applicationType={formValue.serviceApplication}
             applicationTypeButtons={applicationTypeButtons}
@@ -78,7 +83,19 @@ function ServiceTabs(props) {
             />
             <SliderComponent servicePhaseRange={formValue.servicePhaseRange} />
           </Box>
-
+          <Box marginTop={6}>
+            <LabelWithTooltip
+              label={t("Service Focus")}
+              tooltipAriaLabel={t("Service Focus")}
+              tooltipText={t("Service focus tooltip")}
+            />
+            <ServiceFocusComponent
+              serviceFocus={formValue.serviceFocus}
+              onChange={(serviceFocus) =>
+                (formValue.serviceFocus = serviceFocus)
+              }
+            />
+          </Box>
           {/*TODO tags component to think about later on*/}
           {/*<Box marginTop={smallPadding}>*/}
           {/*  <LabelWithTooltip*/}
@@ -92,6 +109,7 @@ function ServiceTabs(props) {
           {/*  />*/}
           {/*</Box>*/}
         </TabPanel>
+        {/* 
         <TabPanel>
           <LabeledDatePickerComponent
             tooltipText={t("mapping.canvas.form.date.tooltip")}
@@ -143,6 +161,7 @@ function ServiceTabs(props) {
             />
           </Box>
         </TabPanel>
+        */}
         <TabPanel>
           <LabeledMultilineInputComponent
             tooltipText={t("mapping.canvas.form.description.tooltip")}
@@ -154,7 +173,18 @@ function ServiceTabs(props) {
               (formValue.serviceDescription = description)
             }
           />
+          <Box marginTop={3}>
+            <LabeledMenu
+              tooltipText={t("mapping.canvas.form.audience.tooltip")}
+              label={t("mapping.canvas.form.audience")}
+              tooltipAriaLabel={t("mapping.canvas.form.audience")}
+              initialValue={formValue.serviceAudience}
+              items={audiences}
+              onChange={(audience) => (formValue.serviceAudience = audience)}
+            />
+          </Box>
           <Box paddingTop={3}>
+
             <LabeledMultilineInputComponent
               tooltipText={t("mapping.canvas.form.outcomes.tooltip")}
               label={t("mapping.canvas.form.outcomes")}
@@ -163,8 +193,21 @@ function ServiceTabs(props) {
               initialValue={formValue.serviceOutcomes}
               onChange={(outcomes) => (formValue.serviceOutcomes = outcomes)}
             />
+
           </Box>
-          {canvasProvider.services.length >= 2 ? (
+          <Box marginTop={3}>
+
+            <LabeledInputComponent
+              tooltipText={t("mapping.canvas.form.link.tooltip")}
+              label={t("mapping.canvas.form.link")}
+              tooltipAriaLabel={t("mapping.canvas.form.link")}
+              placeholder={t("mapping.canvas.form.link.placeholder")}
+              initialValue={formValue.serviceLink}
+              onChange={(link) => (formValue.serviceLink = link)}
+            />
+
+          </Box>
+          {canvasProvider.services.length >= 2 &&
             <Box paddingTop={3}>
               <LabelWithTooltip
                 tooltipText={t("mapping.canvas.form.related.services.tooltip")}
@@ -210,9 +253,29 @@ function ServiceTabs(props) {
                 </Box>
               </HStack>
             </Box>
-          ) : (
-            <Box />
-          )}
+          }
+          <Box marginTop={3}>
+            <UniqueLocationPicker
+              initialValues={formValue.serviceLocation}
+              onChange={(value) => (formValue.serviceLocation = value)}
+              locationsList={
+                appProvider.locations ? appProvider.locations : locationsList
+              }
+            />
+          </Box>
+          <Box marginTop={3}>
+
+            <LabeledInputComponent
+              label={t("mapping.canvas.form.owner.organisation")}
+              tooltipText={t("mapping.canvas.form.owner.organisation.tooltip")}
+              tooltipAriaLabel={t("mapping.canvas.form.owner.organisation")}
+              initialValue={formValue.ownerOrganization}
+              placeholder={"Organisation"}
+
+              onChange={(organisation) => formValue.ownerOrganization = organisation}
+            />
+
+          </Box>
         </TabPanel>
       </TabPanels>
     </Tabs>

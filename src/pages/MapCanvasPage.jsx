@@ -154,10 +154,14 @@ function MapCanvasPage() {
           name: thisService.serviceName,
         });
       });
+
+      setIsDataLoaded(true);
     };
 
-    fetchData().then(() => setIsDataLoaded(true));
-  }, [mapId]); // eslint-disable-line react-hooks/exhaustive-deps
+    //fetchData().then(() => setIsDataLoaded(true));
+    fetchData();
+
+  }, [mapId]);
 
   // Update the draft and archived lists at each new service or service update
   // In addition we update the sidebar
@@ -266,12 +270,12 @@ function MapCanvasPage() {
 
       setFetchedData(tempData);
 
-    } else  if (isDataLoaded && !bool) {
+    } else if (isDataLoaded && !bool) {
       const tempData = structuredClone(fetchedData);
 
       // Reset the isVisible property to true for all services
       Object.values(tempData.services).forEach((service) => {
-        service.isVisible= true;
+        service.isVisible = true;
       });
 
       setFetchedData(tempData);
@@ -528,7 +532,9 @@ function MapCanvasPage() {
         </GridItem>
 
         <GridItem marginLeft="75px" marginTop={isOpenFilter ? "135px" : "75px"}>
-          <BackgroundCanvas />
+          {/* 
+          <BackgroundCanvas ref={backGroundRef} />
+*/}
           <Box h="100%">
             <ContentCanvas
               isFilterOpen={isOpenFilter}
@@ -536,6 +542,7 @@ function MapCanvasPage() {
               handleServiceClick={(service) => handleServiceClick(service)}
             />
           </Box>
+
         </GridItem>
       </Grid>
       {isOpenFormEdition && (

@@ -7,23 +7,29 @@ import { useNavigate } from "react-router";
 import UserAccountMenu from "./UserAccountMenu";
 import { useStore as userStore } from "../../models/userStore";
 
+
 const Authentication = () => {
   const { t } = useTranslation();
+
+
+  const isAuthenticated = userStore((state) => state.isAuthenticated);
+
   const logOut = userStore((state) => state.logOut);
-  const isLoggedIn = userStore((state) => state.isLoggedIn);
   const navigate = useNavigate();
 
   // Sign out first, then we force the redirection to the authentication page.
   function handleLogOut() {
+
     logOut().then(() => {
-      if (isLoggedIn === false) {
-        navigate("/authentication");
-      }
+
+      navigate("/login", { replace: true });
+
     });
+
   }
 
   // User is connected, we give him the menu
-  if (isLoggedIn) {
+  if (isAuthenticated) {
     return (
       <Box align="right">
         <UserAccountMenu logOut={handleLogOut} />
@@ -32,7 +38,7 @@ const Authentication = () => {
   } else {
     return (
       <Box align="right">
-        <Button onClick={() => navigate("/authentication")} variant="outline">
+        <Button onClick={() => navigate("/login", { replace: true })} variant="outline">
           {t("mapping.navigation.bar.login")}
         </Button>
       </Box>
