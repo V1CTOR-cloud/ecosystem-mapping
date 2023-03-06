@@ -24,6 +24,7 @@
     "@testing-library/user-event": "^14.2.0",
     "aws-amplify": "^4.3.30",
     "axios": "^0.27.2",
+    "dotenv": "^16.0.3",
     "eslint": "^8.17.0",
     "eslint-plugin-react": "^7.30.0",
     "formik": "^2.2.9",
