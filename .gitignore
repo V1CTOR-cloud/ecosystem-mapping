@@ -5,7 +5,7 @@ build
 package-lock.json
 
 # ignore all the file with the extensions "..env"
-*.env
+*env
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
